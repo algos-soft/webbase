@@ -1,0 +1,58 @@
+package it.algos.web.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+
+public class EM {
+
+	public static String PERSISTENCE_UNIT = "MySqlUnit";
+
+	public static Set<Attribute<?, ?>> getAttrs(Class<?> clazz) {
+		EntityType<?> type = getEntityType(clazz);
+		Set<Attribute<?, ?>> attrs = new HashSet<Attribute<?, ?>>();
+		if (type != null) {
+			Set<?> aSet = type.getAttributes();
+			for (Object ogg : aSet) {
+				if ((ogg != null) && (ogg instanceof Attribute)) {
+					Attribute<?, ?> attr = (Attribute<?, ?>) ogg;
+					attrs.add(attr);
+				}// end of if cycle
+			}// end of for cycle
+		}// end of if cycle
+		return attrs;
+	}// end of method
+
+	public static EntityType<?> getEntityType(Class<?> clazz) {
+		EntityManager manager = EM.createEntityManager();
+		Metamodel metamodel = manager.getMetamodel();
+		Set<EntityType<?>> entities = metamodel.getEntities();
+		EntityType<?> entity = null;
+		for (EntityType<?> e : entities) {
+			Class<?> type = e.getJavaType();
+			if (type.equals(clazz)) {
+				entity = e;
+				break;
+			}// end of if cycle
+		}// end of for cycle
+		manager.close();
+		return entity;
+	}// end of method
+
+	/**
+	 * Creates a new EntityManager on the current persistence unit.
+	 * <p>
+	 * @return the EntityManager
+	 */
+	public static EntityManager createEntityManager(){
+		EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+		return factory.createEntityManager();
+	}
+
+}// end of class

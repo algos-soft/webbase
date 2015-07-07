@@ -1,0 +1,14 @@
+package it.algos.domain.utente;
+
+import it.algos.web.entity.BaseEntity_;
+
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@StaticMetamodel(Utente.class)
+public class Utente_ extends BaseEntity_ {
+	public static volatile SingularAttribute<Utente, String> company;
+	public static volatile SingularAttribute<Utente, String> nickname;
+	public static volatile SingularAttribute<Utente, String> password;
+	public static volatile SingularAttribute<Utente, Boolean> enabled;
+}// end of entity class

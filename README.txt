@@ -29,13 +29,14 @@ Creazione di un nuovo progetto Vaadin con IDEA
 
 
 10b. Progetto da regolare per utilizzare WebBase
-11. Creazione di un file ivy.xml (cartella base)
-12. Creazione di un file ivysettings.xml (cartella base)
-12. Creazione di un file persistence.xml (cartella base)
+11. Creazione di un file ivy.xml (cartella del progetto)
+12. Creazione di un file ivysettings.xml (cartella del progetto)
+12. Creazione di un file persistence.xml (cartella del progetto)
 13. Configurazione del file persistence come JPA facet descriptor (suggerito in automatico)
 14. Creazione in src di un package (root directory), tipo it.algos.nomeDelProgetto
 15. Creazione nella root directory di una classe xxxServlet che estende AlgosServlet. Punto di partenza della sessione nel server.
 16. Creazione nella root directory di una classe che estende AlgosUI. Punto di partenza quando si accede dal browser.
+16b. Aggiungere nel Servlet il riferimento alla UI con l'annotazione @VaadinServletConfiguration(ui = xxxUI.class)
 17. In Project Settings -> Modules
     - aggiungere al modulo (unico) un componente di tipo IvyIDEA
     - a destra in alto, selezionare il file ivy creato poco prima
@@ -54,7 +55,7 @@ Creazione di un nuovo progetto Vaadin con IDEA
     - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase_jar
     - selezionando la CARTELLA, a destra appariranno due path: uno per i Classes ed uno per i Sources
 20. In Project Settings -> Facets
-    - riprende i 4 componenti di Modules
+    - appaiono i 4 componenti di Modules
 21. In Project Settings -> Artifacts
     - aggiungere negli artifacts la libreria webbase_jar
     - se in Project Setting appare in basso a sinistra la scritte Problems, cliccare su Fix e selezionare Add webbase_jar to the artifact
@@ -69,7 +70,7 @@ Creazione di un nuovo progetto Vaadin con IDEA
                 - ivyIDEA (Module Library)
                 - webbase_jar (Project Library)
             - un file web.xml
-22. Regolazione del file WEB-INF -> web.xml
+22. Regolazione del file WEB-INF -> web.xml, 2 possibilità:
 22a. Modifica del nome (esistente) della classe com.vaadin.server.VaadinServlet con xxxServlet (appena creata)
 22b. Utilizzo di @VaadinServletConfiguration nella classe xxxServlet che estende AlgosServlet
     - Solo una classe nel programma può avere questa Annotation che indica al server da dove far partire l'applicazione

@@ -34,7 +34,7 @@ Creazione di un nuovo progetto Vaadin con IDEA
 12. Creazione di un file persistence.xml (cartella del progetto)
 13. Configurazione del file persistence come JPA facet descriptor (suggerito in automatico)
 14. Creazione in src di un package (root directory), tipo it.algos.nomeDelProgetto
-15. Creazione nella root directory di una classe xxxServlet che estende AlgosServlet. Punto di partenza della sessione nel server.
+15. Creazione nella root directory del package di una classe xxxServlet che estende AlgosServlet. Punto di partenza della sessione nel server.
 16. Creazione nella root directory di una classe che estende AlgosUI. Punto di partenza quando si accede dal browser.
 16b. Aggiungere nel Servlet il riferimento alla UI con l'annotazione @VaadinServletConfiguration(ui = xxxUI.class)
 17. In Project Settings -> Modules
@@ -54,6 +54,7 @@ Creazione di un nuovo progetto Vaadin con IDEA
     - cancellare Vaadin Server
     - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase_jar
     - selezionando la CARTELLA, a destra appariranno due path: uno per i Classes ed uno per i Sources
+    - se in Project Setting appare in basso a sinistra la scritte Problems, cliccare su Fix e selezionare Add webbase_jar to the artifact
 20. In Project Settings -> Facets
     - appaiono i 4 componenti di Modules
 21. In Project Settings -> Artifacts

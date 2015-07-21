@@ -1,0 +1,20 @@
+package it.algos.@LOWERNAME@;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import it.algos.web.ui.AlgosUI;
+
+public class @NAME@UI extends AlgosUI {
+  
+    @Override
+    protected void init(VaadinRequest request) {
+        super.init(request);
+
+        VerticalLayout layout = new VerticalLayout();
+        setContent(layout);
+        layout.addComponent(new Label("Funziona"));
+        
+    }// end of method
+    
+}//end of UI class

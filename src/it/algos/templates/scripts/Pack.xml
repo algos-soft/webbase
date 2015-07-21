@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project name="Pack" basedir="." default="all">
+
+    <property name="servlet" value="Servlet"/>
+    <property name="ui" value="UI"/>
+    <property name="persistence" value="persistence"/>
+
+    <property name="risalita" value="/../../../../../.."/>
+    <property name="discesa" value="/src/it/algos/"/>
+
+    <property name="baseSrc" value="${basedir}/.."/>
+    <property name="srcDir" value="${baseSrc}/sources"/>
+    <property name="srcSuffix" value=".txt"/>
+    <property name="destSufJava" value=".java"/>
+    <property name="destSufXml" value=".xml"/>
+    <property name="srcServlet" value="${srcDir}/${servlet}${srcSuffix}"/>
+    <property name="srcUI" value="${srcDir}/${ui}${srcSuffix}"/>
+    <property name="srcPersistence" value="${srcDir}/${persistence}${srcSuffix}"/>
+
+    <property name="baseDest" value="${basedir}${risalita}"/>
+
+
+    <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
+        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="Prova"/>
+        <input addproperty="dataBase" message="Nome (minuscolo) del database:" defaultvalue="Test"/>
+        <lower string="${pack}" to="lowerPack"/>
+        <lower string="${dataBase}" to="lowerDataBase"/>
+
+        <property name="destDir" value="${baseDest}/${lowerPack}"/>
+        <property name="destDirIt" value="${baseDest}/${lowerPack}${discesa}${lowerPack}"/>
+        <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
+        <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
+        <property name="destPersistence" value="${destDir}/${persistence}${destSufXml}"/>
+    </target>
+
+    <target name="clean" depends="input" description="Cancella il file">
+        <delete file="${destServlet}" quiet="false"/>
+        <delete file="${destUI}" quiet="false"/>
+        <delete file="${destPersistence}" quiet="false"/>
+    </target>
+
+    <target name="copy" depends="clean" description="Copia il file">
+        <copy file="${srcServlet}" tofile="${destServlet}">
+            <filterset>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+            </filterset>
+        </copy>
+        <copy file="${srcUI}" tofile="${destUI}">
+            <filterset>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+            </filterset>
+        </copy>
+        <copy file="${srcPersistence}" tofile="${destPersistence}">
+            <filterset>
+                <filter token="LOWERNAME" value="${lowerPack}"/>
+                <filter token="NAME" value="${pack}"/>
+                <filter token="DATABASE" value="${lowerDataBase}"/>
+
+            </filterset>
+        </copy>
+    </target>
+
+    <!-- Using Javascript functions to convert the string -->
+    <!-- To lower case -->
+    <scriptdef language="javascript" name="lower">
+        <attribute name="string"/>
+        <attribute name="to"/>
+        project.setProperty(attributes.get("to"),attributes.get("string").toLowerCase());
+    </scriptdef>
+
+
+    <target name="all" depends="copy" description="Ciclo completo">
+    </target>
+
+</project>

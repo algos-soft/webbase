@@ -1,14 +1,5 @@
 package it.algos.web.module;
 
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.filter.And;
-import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.filter.Not;
-import com.vaadin.data.util.filter.Or;
-import com.vaadin.ui.Window;
 import it.algos.web.dialog.ConfirmDialog;
 import it.algos.web.entity.BaseEntity;
 import it.algos.web.entity.BaseEntity_;
@@ -21,11 +12,27 @@ import it.algos.web.table.ATable.TableListener;
 import it.algos.web.table.TablePortal;
 import it.algos.web.toolbar.TableToolbar.TableToolbarListener;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.EntityTransaction;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
+
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Container;
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.util.filter.And;
+import com.vaadin.data.util.filter.Compare;
+import com.vaadin.data.util.filter.Not;
+import com.vaadin.data.util.filter.Or;
+import com.vaadin.ui.Window;
 
 /**
  * Module displaying a table and allowing to edit the records in a form.
@@ -33,18 +40,10 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public abstract class ModulePop extends Module {
 
+    protected Class<BaseEntity> entityClass;
     private static final boolean MOSTRA_ID = true;
 
-    protected Class<BaseEntity> entityClass;
-
     protected TablePortal tablePortal;
-
-    // elenco dei campi da mostrare nel form (ordinato)
-    protected Attribute<?, ?>[] fieldsList;
-
-    protected Attribute<?, ?>[] fieldsForm;
-
-    protected Attribute<?, ?>[] fieldsSearch;
 
     // titolo del dialogo nuovo
     private String titoloNew;
@@ -55,17 +54,14 @@ public abstract class ModulePop extends Module {
     // titolo del dialogo di ricerca
     private String titoloSearch;
 
-    // indirizzo interno del modulo (serve nei menu)
-    private String menuAddress;
+    // elenco dei campi da mostrare nel form (ordinato)
+    protected Attribute<?, ?>[] fieldsList;
+    protected Attribute<?, ?>[] fieldsForm;
+    protected Attribute<?, ?>[] fieldsSearch;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ModulePop(Class entity) {
-        this(entity, "");
-    }// end of constructor
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public ModulePop(Class entity, String menuAddress) {
         super();
-        this.menuAddress = menuAddress;
 
         if (entity != null) {
             this.entityClass = (Class<BaseEntity>) entity;
@@ -300,7 +296,7 @@ public abstract class ModulePop extends Module {
      * <p>
      * Create a new item and edit it in a form
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void create() {
         Object bean = BaseEntity.createBean(getEntityClass());
         BeanItem item = new BeanItem(bean);
@@ -342,7 +338,8 @@ public abstract class ModulePop extends Module {
     /**
      * Edits an Item in a Form
      *
-     * @param item the item
+     * @param item
+     *            the item
      */
     private void editItem(Item item) {
         editItem(item, "");
@@ -351,7 +348,8 @@ public abstract class ModulePop extends Module {
     /**
      * Edits an Item in a Form
      *
-     * @param item the item
+     * @param item
+     *            the item
      */
     private void editItem(Item item, String caption) {
 
@@ -364,7 +362,7 @@ public abstract class ModulePop extends Module {
 
             form.addFormListener(new FormListener() {
 
-                @SuppressWarnings({"rawtypes", "unchecked"})
+                @SuppressWarnings({ "rawtypes", "unchecked" })
                 @Override
                 public void commit_() {
 
@@ -485,7 +483,7 @@ public abstract class ModulePop extends Module {
         getTable().refreshRowCache();
     }
 
-    public void delete(Object id) {
+    public void delete(Object id){
         // delegate to the table's JPAContainer
         getTable().getJPAContainer().removeItem(id);
     }
@@ -724,7 +722,8 @@ public abstract class ModulePop extends Module {
     }// end of method
 
     /**
-     * @param fieldsList the fieldsList to set
+     * @param fieldsList
+     *            the fieldsList to set
      */
     @SuppressWarnings("rawtypes")
     public void setFieldsList(Attribute[] fieldsList) {
@@ -740,7 +739,8 @@ public abstract class ModulePop extends Module {
     }// end of method
 
     /**
-     * @param fieldsForm the fieldsForm to set
+     * @param fieldsForm
+     *            the fieldsForm to set
      */
     @SuppressWarnings("rawtypes")
     public void setFieldsForm(Attribute[] fieldsForm) {
@@ -756,7 +756,8 @@ public abstract class ModulePop extends Module {
     }// end of method
 
     /**
-     * @param fieldsSearch the fieldsSearch to set
+     * @param fieldsSearch
+     *            the fieldsSearch to set
      */
     @SuppressWarnings("rawtypes")
     public void setFieldsSearch(Attribute[] fieldsSearch) {
@@ -771,7 +772,8 @@ public abstract class ModulePop extends Module {
     }// end of method
 
     /**
-     * @param titoloSearch the titoloSearch to set
+     * @param titoloSearch
+     *            the titoloSearch to set
      */
     public void setTitoloSearch(String titoloSearch) {
         this.titoloSearch = titoloSearch;
@@ -785,7 +787,8 @@ public abstract class ModulePop extends Module {
     }
 
     /**
-     * @param titoloNew the titoloNew to set
+     * @param titoloNew
+     *            the titoloNew to set
      */
     public void setTitoloNew(String titoloNew) {
         this.titoloNew = titoloNew;
@@ -799,14 +802,11 @@ public abstract class ModulePop extends Module {
     }
 
     /**
-     * @param titoloEdit the titoloEdit to set
+     * @param titoloEdit
+     *            the titoloEdit to set
      */
     public void setTitoloEdit(String titoloEdit) {
         this.titoloEdit = titoloEdit;
-    }
-
-    public String getMenuAddress() {
-        return menuAddress;
     }
 
     public String getClassName() {

@@ -6,6 +6,7 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="webbase" />
+          <element id="jpa-descriptors" facet="webbase/jpa/JPA" />
         </element>
         <element id="directory" name="lib" />
       </element>

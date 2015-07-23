@@ -52,6 +52,12 @@ public abstract class Application {
 	public static boolean USE_COMPANY = false;
 
 	/**
+	 * Use debug.<br>
+	 * Not final<br>
+	 */
+	public static boolean IS_DEBUG = true;
+
+	/**
 	 * Code of the company.<br>
 	 * Not final<br>
 	 */

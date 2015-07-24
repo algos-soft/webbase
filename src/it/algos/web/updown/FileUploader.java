@@ -1,6 +1,6 @@
 package it.algos.web.updown;
 
-import it.algos.web.Application;
+import it.algos.web.AlgosApp;
 import it.algos.web.BootStrap;
 
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class FileUploader implements Receiver, SucceededListener {
 	private ArrayList<UploadFinishedListener> listeners = new ArrayList<UploadFinishedListener>();
 
 	public FileUploader() {
-		this(Application.UPLOAD_FOLDER_NAME);
+		this(AlgosApp.UPLOAD_FOLDER_NAME);
 	}// end of constructor
 
 	public FileUploader(String uploadFolderName) {

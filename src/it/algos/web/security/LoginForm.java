@@ -6,7 +6,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 
 import it.algos.domain.utente.Utente;
-import it.algos.web.Application;
+import it.algos.web.AlgosApp;
 import it.algos.web.dialog.ConfirmDialog;
 import it.algos.web.field.PasswordField;
 import it.algos.web.field.TextField;
@@ -51,7 +51,7 @@ public class LoginForm extends ConfirmDialog {
 		String pass = "";
 		String company = "";
 
-		if (Application.USE_COMPANY) {
+		if (AlgosApp.USE_COMPANY) {
 			utente = Utente.read(company, nome);
 		} else {
 			utente = Utente.read(nome);

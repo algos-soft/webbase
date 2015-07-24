@@ -8,7 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.web.Application;
+import it.algos.web.AlgosApp;
 import it.algos.web.lib.LibSession;
 import it.algos.web.menu.AMenuBar;
 import it.algos.web.module.ModulePop;
@@ -127,7 +127,7 @@ public class AlgosUI extends UI {
         // crea e aggiunge il placeholder
         placeholder = new ModulePlaceholder();
 
-        if (Application.USE_SECURITY) {
+        if (AlgosApp.USE_SECURITY) {
             barraMenu = new AMenuBar(true);
         } else {
             barraMenu = new AMenuBar();
@@ -148,7 +148,7 @@ public class AlgosUI extends UI {
         Map<String, String[]> mappa = null;
 
         // legge il parametro "azienda" e regola la variabile statica
-        if (Application.USE_COMPANY) {
+        if (AlgosApp.USE_COMPANY) {
             mappa = request.getParameterMap();
 
             // ci sono 17 valori di sistema
@@ -157,7 +157,7 @@ public class AlgosUI extends UI {
             }// end of if cycle
         }// end of if cycle
 
-        Application.COMPANY_CODE = company;
+        AlgosApp.COMPANY_CODE = company;
     }// end of method
 
     /**

@@ -4,14 +4,11 @@ import java.lang.reflect.Method;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import it.algos.domain.ruolo.Ruolo;
 import it.algos.domain.ruolo.TipoRuolo;
-import it.algos.domain.utente.Utente;
-import it.algos.domain.utenteruolo.UtenteRuolo;
 import it.algos.web.entity.EM;
 import it.algos.web.query.AQuery;
 
@@ -27,9 +24,9 @@ import javax.servlet.ServletContextListener;
  * Setup non-UI logic here <br>
  * Classe eseguita solo quando l'applicazione viene caricata/parte nel server (Tomcat od altri) <br>
  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
- * Viene normalmente creata la sottoclasse <br>
+ * È OBBLIGATORIO creare la sottoclasse per regolare il valore della persistence unit che crea l'EntityManager <br>
  */
-public class BootStrap implements ServletContextListener {
+public abstract class BootStrap implements ServletContextListener {
 
 	private static ServletContext context;
 	private final static Logger logger = Logger.getLogger(BootStrap.class.getName());
@@ -47,6 +44,7 @@ public class BootStrap implements ServletContextListener {
 	 * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
 	 */
 	public void contextInitialized(ServletContextEvent contextEvent) {
+		setPersistenceEntity();
 
 		/**
 		 * Create a dummy new EntityManager to trigger initialization of the EntityManagerFactory <br>
@@ -67,16 +65,16 @@ public class BootStrap implements ServletContextListener {
 		/**
 		 * Controllo esistenza dei ruoli standard <br>
 		 */
-		if (Application.USE_SECURITY) {
+		if (AlgosApp.USE_SECURITY) {
 			SecurityBootStrap.bootStrapRuoli();
-		}// end of if cycle
+        }// fine del blocco if
 
 		/**
 		 * Creazione al volo di alcuni utenti <br>
 		 */
-		if (Application.USE_SECURITY) {
+		if (AlgosApp.USE_SECURITY) {
 			creaUtenti();
-		}// end of if cycle
+        }// fine del blocco if
 
 		context = contextEvent.getServletContext();
 		System.out.println("Context Created");
@@ -104,10 +102,10 @@ public class BootStrap implements ServletContextListener {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}// end of try/catch
-				}// end of while cycle
+				}// fine del ciclo while
 				logger.log(Level.INFO, "database ping thread stopped");
-			}// end of if cycle
-		}// end of if cycle
+            }// fine del blocco if
+        }// fine del blocco if
 
 		// shut down MySQL AbandonedConnectionCleanupThread (if found)
 		try {
@@ -117,7 +115,7 @@ public class BootStrap implements ServletContextListener {
 				logger.log(Level.INFO, "MySQL connection cleanup thread shutdown");
 				mth.invoke(null);
 				logger.log(Level.INFO, "MySQL connection cleanup thread shutdown successful");
-			}// end of if cycle
+            }// fine del blocco if
 		} catch (Throwable thr) {
 			logger.log(Level.SEVERE, "Failed to shutdown SQL connection cleanup thread: " + thr.getMessage());
 			thr.printStackTrace();
@@ -135,7 +133,7 @@ public class BootStrap implements ServletContextListener {
 			} catch (SQLException e) {
 				logger.log(Level.SEVERE, String.format("Error deregistering driver %s", driver), e);
 			}// end of try/catch
-		}// end of while cycle
+        }// fine del ciclo while
 
 		System.out.println("Context Destroyed");
 	}// end of method
@@ -170,7 +168,7 @@ public class BootStrap implements ServletContextListener {
 					e.printStackTrace();
 				}// end of try/catch
 
-			}// end of while cycle
+            }// fine del ciclo while
 
 		}// end of method
 
@@ -196,4 +194,10 @@ public class BootStrap implements ServletContextListener {
 		SecurityBootStrap.creaUtente(nickName, password, nomeRuolo);
 	}// end of method
 
-}// end of class
+	/**
+	 * Regola il valore della persistence unit per crearae l'EntityManager <br>
+	 * DEVE essere sovrascritto (obbligatorio) nella sottoclasse del progetto <br>
+	 */
+	public abstract void setPersistenceEntity();
+
+}// end of abstract class

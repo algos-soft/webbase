@@ -104,7 +104,6 @@ public class LibTest {
         ottenuto = Lib.getInt(srgDate);
         assertThat(ottenuto, instanceOf(Integer.class));
         assertEquals(ottenuto, zero);
-
     }// end of single test
 
     @Test
@@ -160,7 +159,7 @@ public class LibTest {
         previsto = "8-3-2014";
         ottenuto = LibDate.toStringDMYYYY(date);
         assertEquals(ottenuto, previsto);
-    }// end of method
+    }// end of single test
 
 //    @Test
 //    public void toStringDDMMYYYYHHMM() {
@@ -175,7 +174,7 @@ public class LibTest {
 //        previsto = "21-10-2014 07:12";
 //        ottenuto = LibDate.toStringDDMMYYYYHHMM(date);
 //        assertEquals(ottenuto, previsto);
-//    }// end of method
+//}// end of single test
 
     @Test
     public void toStringHHMM() {
@@ -190,7 +189,7 @@ public class LibTest {
         previsto = "07:12";
         ottenuto = LibDate.toStringHHMM(date);
         assertEquals(ottenuto, previsto);
-    }// end of method
+    }// end of single test
 
     @Test
     public void toStringDMMMYY() {
@@ -205,7 +204,7 @@ public class LibTest {
         previsto = "8-mar-14";
         ottenuto = LibDate.toStringDMMMYY(date);
         assertEquals(ottenuto, previsto);
-    }// end of method
+    }// end of single test
 
     @Test
     public void fromInizioMeseAnno() {
@@ -242,8 +241,7 @@ public class LibTest {
         date = LibDate.fromInizioMeseAnno(mese, anno);
         ottenuto = LibDate.toStringDMMMYY(date);
         assertEquals(ottenuto, previsto);
-
-    }// end of method
+    }// end of single test
 
     @Test
     public void fromFineMeseAnno() {
@@ -280,7 +278,7 @@ public class LibTest {
         date = LibDate.fromFineMeseAnno(mese, anno);
         ottenuto = LibDate.toStringDMMMYY(date);
         assertEquals(ottenuto, previsto);
-    }// end of method
+    }// end of single test
 
     @Test
     public void toStringDMYY() {
@@ -300,6 +298,6 @@ public class LibTest {
         previsto = "8-3-14 07:12";
         ottenuto = LibDate.toStringDMYYHHMM(date);
         assertEquals(ottenuto, previsto);
-    }// end of method
+    }// end of single test
 
 }// end of test class

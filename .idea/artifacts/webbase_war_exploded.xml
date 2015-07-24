@@ -9,6 +9,9 @@
           <element id="jpa-descriptors" facet="webbase/jpa/JPA" />
         </element>
         <element id="directory" name="lib" />
+        <element id="directory" name="img">
+          <element id="dir-copy" path="$PROJECT_DIR$/src/it/algos/web/data" />
+        </element>
       </element>
     </root>
   </artifact>

@@ -1,11 +1,11 @@
-package it.algos.@LOWERNAME@;
+package it.algos.@LOWERPACK@;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import it.algos.web.ui.AlgosUI;
 
-public class @NAME@UI extends AlgosUI {
+public class @PACK@UI extends AlgosUI {
   
     @Override
     protected void init(VaadinRequest request) {

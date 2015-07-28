@@ -1,4 +1,4 @@
-package it.algos.@LOWERNAME@;
+package it.algos.@LOWERPACK@;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.ServiceException;
@@ -20,9 +20,9 @@ import javax.servlet.annotation.WebServlet;
  * which provides you with the option to select UI by referring the UI class
  * directly toggle productionMode using a boolean and more
  */
-@WebServlet(value = "/*", asyncSupported = true, displayName = "@NAME@")
-@VaadinServletConfiguration(productionMode = false, ui = @NAME@UI.class)
-public class @NAME@Servlet extends AlgosServlet {
+@WebServlet(value = "/*", asyncSupported = true, displayName = "@PACK@")
+@VaadinServletConfiguration(productionMode = false, ui = @PACK@UI.class)
+public class @PACK@Servlet extends AlgosServlet {
 
     @Override
     public void sessionInit(SessionInitEvent event) throws ServiceException {

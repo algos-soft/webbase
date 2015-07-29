@@ -1,14 +1,20 @@
-package it.algos.domain.ruolo;
+package it.algos.domain.versione;
+/**
+ * Created by Gac on 17 lug 2015.
+ * Using specific Templates (Entity, Domain, Modulo)
+ */
 
+
+import it.algos.domain.ruolo.Ruolo;
 import it.algos.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
-public class RuoloModulo extends ModulePop {
+public class VersioneModulo extends ModulePop {
 
-    public RuoloModulo() {
-        super(Ruolo.class);
+    public VersioneModulo() {
+        super(Versione.class);
     }// end of basic constructor
 
     /**
@@ -18,7 +24,7 @@ public class RuoloModulo extends ModulePop {
      */
     @Override
     protected String getCaptionNew() {
-        return "Nuovo ruolo";
+        return "Nuova versione";
     }// end of method
 
     /**
@@ -28,7 +34,7 @@ public class RuoloModulo extends ModulePop {
      */
     @Override
     protected String getCaptionEdit() {
-        return "Modifica ruolo";
+        return "Modifica versione";
     }// end of method
 
     /**
@@ -38,7 +44,7 @@ public class RuoloModulo extends ModulePop {
      */
     @Override
     protected String getCaptionSearch() {
-        return "Ricerca ruoli";
+        return "Ricerca versione";
     }// end of method
 
     /**
@@ -51,8 +57,9 @@ public class RuoloModulo extends ModulePop {
      * Se si vuole differenziare tra Table, Form e Search, <br>
      * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
      */
+    @Override
     protected Attribute<?, ?>[] creaFieldsAll() {
-        return new Attribute[]{Ruolo_.nome};
+        return new Attribute[]{Versione_.numero, Versione_.titolo, Versione_.descrizione, Versione_.giorno};
     }// end of method/*
 
 }// end of class

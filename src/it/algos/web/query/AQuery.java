@@ -149,7 +149,7 @@ public class AQuery {
 
 	/**
 	 * Search for the all entities
-	 * 
+	 *
 	 * @param clazz
 	 *            the entity class
 	 * @return a list of entities
@@ -169,6 +169,7 @@ public class AQuery {
 		manager.close();
 		return entities;
 	}// end of method
+
 
 	/**
 	 * Return a list of entities for a given domain class and filters.

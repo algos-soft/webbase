@@ -8,11 +8,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
@@ -106,8 +103,7 @@ public class AQuery {
 	 *            null
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr,
-			Object value) {
+	public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
 		BaseEntity bean = null;
 		List<? extends BaseEntity> entities = queryList(clazz, attr, value);
 		if (entities.size() == 1) {
@@ -117,14 +113,39 @@ public class AQuery {
 	}
 
 	public static long getCount(Class<?> c) {
+//		EntityManager manager = EM.createEntityManager();
+//		CriteriaBuilder qb = manager.getCriteriaBuilder();
+//		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+//		cq.select(qb.count(cq.from(c)));
+//		long count = manager.createQuery(cq).getSingleResult();
+//		manager.close();
+//		return count;
+		return getCount(c, null, null);
+	}// end of method
+
+
+
+	/**
+	 * Ritorna il numero di record in una tabella corrispondenti a una data condizione.
+	 */
+	public static long getCount(Class<?> c, Attribute attr, Object value) {
 		EntityManager manager = EM.createEntityManager();
 		CriteriaBuilder qb = manager.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
 		cq.select(qb.count(cq.from(c)));
+
+		if(attr!=null){
+			Root root = cq.from(c);
+			Expression exp = root.get(attr.getName());
+			Predicate restrictions = qb.equal(exp, value);
+			cq.where(restrictions);
+		}
+
 		long count = manager.createQuery(cq).getSingleResult();
 		manager.close();
 		return count;
 	}// end of method
+
 
 	/**
 	 * Search for the all entities
@@ -161,10 +182,10 @@ public class AQuery {
 	 * @return the list with the entities found
 	 */
 	public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass,
-			Filter... arguments) {
+			Filter... filters) {
 		EntityItem<BaseEntity> item;
 		ArrayList<BaseEntity> list = new ArrayList<BaseEntity>();
-		JPAContainer<BaseEntity> container = getContainer(entityClass, arguments);
+		JPAContainer<BaseEntity> container = getContainer(entityClass, filters);
 		for (Object id : container.getItemIds()) {
 			item = container.getItem(id);
 			list.add(item.getEntity());

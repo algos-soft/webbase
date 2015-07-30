@@ -5,17 +5,20 @@ package it.algos.domain.versione;
  */
 
 
-import it.algos.domain.ruolo.Ruolo;
 import it.algos.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public class VersioneModulo extends ModulePop {
 
+
     public VersioneModulo() {
         super(Versione.class);
     }// end of basic constructor
+
 
     /**
      * Titolo (caption) dei dialogo nuovo record. <br>

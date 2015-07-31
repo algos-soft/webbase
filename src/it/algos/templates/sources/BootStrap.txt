@@ -20,15 +20,16 @@ public class @PACK@BootStrap extends BootStrap {
      * Valore standard suggerito per ogni progetto
      * Questo singolo progetto può modificarlo nel metodo setPersistenceEntity()
      */
-    private static final String DEFAULT_PERSISTENCE_UNIT = "MySqlUnit";
+    private static final String DEFAULT_PERSISTENCE_UNIT = EM.DEFAULT_PERSISTENCE_UNIT;
 
     /**
-     * Regola il valore della persistence unit per crearae l'EntityManager <br>
-     * DEVE essere sovrascritto (obbligatorio) nella sottoclasse del progetto <br>
+     * Regola il valore della persistence unit per creare l'EntityManager <br>
+     * Deve essere sovrascritto (obbligatorio) nella sottoclasse del progetto <br>
+     * Se si modifica qui, occorre sincronizzare il file persistence.xml <br>
      */
     @Override
     public void setPersistenceEntity() {
-        EM.PERSISTENCE_UNIT = "@SQLUNIT@";
+        EM.PERSISTENCE_UNIT = DEFAULT_PERSISTENCE_UNIT;
     }// end of method
 
 

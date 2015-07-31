@@ -3,6 +3,7 @@ package it.algos.@LOWERPACK@;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import it.algos.domain.versione.VersioneModulo;
 import it.algos.web.ui.AlgosUI;
 
 public class @PACK@UI extends AlgosUI {
@@ -13,7 +14,10 @@ public class @PACK@UI extends AlgosUI {
 
         VerticalLayout layout = new VerticalLayout();
         setContent(layout);
-        layout.addComponent(new Label("Funziona"));
+
+        // modulo di partenza - utilizza un modulo già esistente in webbase come dimostrazione iniziale
+        // tipicamente viene modificato secondo le necessità specifiche dell'applicazione
+        layout.addComponent(new VersioneModulo());
         
     }// end of method
     

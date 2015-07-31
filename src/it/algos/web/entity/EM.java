@@ -12,9 +12,12 @@ import java.util.Set;
 public class EM {
 
     /**
-     * Nella classe xxxBootStrap, DEVE essere inserito il valore
+     * Valore standard suggerito per ogni progetto
+     * Se necessario il singolo progetto può modificarlo nel metodo setPersistenceEntity()
      */
-    public static String PERSISTENCE_UNIT;
+    public static final String DEFAULT_PERSISTENCE_UNIT = "mysqlunit";
+    public static String PERSISTENCE_UNIT=DEFAULT_PERSISTENCE_UNIT;
+
 
     public static Set<Attribute<?, ?>> getAttrs(Class<?> clazz) {
         EntityType<?> type = getEntityType(clazz);

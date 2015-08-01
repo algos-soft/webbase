@@ -6,6 +6,12 @@ import com.vaadin.ui.VerticalLayout;
 import it.algos.domain.versione.VersioneModulo;
 import it.algos.web.ui.AlgosUI;
 
+//@Theme("base")        // VAADIN.themes
+//@Theme("chamelon")    // VAADIN.themes
+//@Theme("liferay")     // VAADIN.themes
+//@Theme("reindeer")    // VAADIN.themes
+//@Theme("runo")        // VAADIN.themes
+@Theme("valo")          // VAADIN.themes
 public class @PACK@UI extends AlgosUI {
   
     @Override

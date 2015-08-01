@@ -36,7 +36,7 @@ public abstract class LibVers {
     }// fine del metodo statico
 
     //--controlla la versione installata
-    public static boolean installaVersione(int numeroVersioneDaInstallare) {
+    public static boolean installa(int numeroVersioneDaInstallare) {
         boolean installa = false;
         int numeroVersioneEsistente = LibVers.getMaxVersione();
 
@@ -49,7 +49,7 @@ public abstract class LibVers {
 
     //--crea una versione
     //--la crea SOLO se non esiste già
-    public static void newVersione(String titolo, String descrizione) {
+    public static void nuova(String titolo, String descrizione) {
         Versione versione;
         int numero = getVersione() + 1;
         Date giorno = new Date();

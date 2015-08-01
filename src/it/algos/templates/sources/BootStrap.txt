@@ -2,6 +2,7 @@ package it.algos.@LOWERPACK@;
 
 import it.algos.web.BootStrap;
 import it.algos.web.entity.EM;
+import it.algos.domain.versione.LibVers;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -43,6 +44,9 @@ public class @PACK@BootStrap extends BootStrap {
         super.contextInitialized(sce);
         ServletContext svltCtx = BootStrap.getServletContext();
 
+        // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
+        this.versioneBootStrap(svltCtx);
+
         // Do server stuff here
 
     }// end of method
@@ -55,6 +59,20 @@ public class @PACK@BootStrap extends BootStrap {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         super.contextDestroyed(sce);
+    }// end of method
+
+    /**
+     * tutte le aggiunte, modifiche e patch vengono inserite con una versione<br>
+     * l'ordine di inserimento è FONDAMENTALE
+     * <p>
+     * Se le versioni aumentano, conviene spostare in una classe esterna
+     */
+    private void versioneBootStrap(ServletContext svltCtx) {
+        //--prima installazione del programma
+        //--non fa nulla, solo informativo
+        if (LibVers.installaVersione(1)) {
+            LibVers.newVersione("Setup", "Installazione iniziale");
+        }// fine del blocco if
     }// end of method
 
 }// end of boot class

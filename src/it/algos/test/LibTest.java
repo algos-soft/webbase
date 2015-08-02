@@ -1,7 +1,11 @@
 package it.algos.test;
 
+import it.algos.domain.versione.VersioneModulo;
+import it.algos.web.converter.StringToBigDecimalConverter;
 import it.algos.web.lib.Lib;
 import it.algos.web.lib.LibDate;
+import it.algos.web.module.ModulePop;
+import it.algos.web.screen.ErrorScreen;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -15,11 +19,11 @@ public class LibTest {
 
     @Test
     /**
-      * Tries to convert an Object in int.
-      *
-      * @param obj to convert
-      * @return the corresponding int
-      */
+     * Tries to convert an Object in int.
+     *
+     * @param obj to convert
+     * @return the corresponding int
+     */
     public void getInt() {
         Object srgNullo = null;
         short srgShort = 24;
@@ -298,6 +302,14 @@ public class LibTest {
         previsto = "8-3-14 07:12";
         ottenuto = LibDate.toStringDMYYHHMM(date);
         assertEquals(ottenuto, previsto);
+    }// end of single test
+
+    @Test
+    public void alVolo() {
+        StringToBigDecimalConverter mod = new StringToBigDecimalConverter();
+        Class pippo = mod.getClass();
+        String alfa=pippo.getCanonicalName();
+        int a=7;
     }// end of single test
 
 }// end of test class

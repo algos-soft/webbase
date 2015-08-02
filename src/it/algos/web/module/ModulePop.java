@@ -819,7 +819,7 @@ public abstract class ModulePop extends Module {
 
         if (!name.equals("")) {
             if (name.contains(tag)) {
-                name = name.substring(name.indexOf(tag) + 1);
+                name = name.substring(name.lastIndexOf(tag) + 1);
             }// end of if cycle
         }// end of if cycle
 

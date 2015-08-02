@@ -10,7 +10,7 @@
         </element>
         <element id="directory" name="lib" />
         <element id="directory" name="img">
-          <element id="dir-copy" path="$PROJECT_DIR$/src/it/algos/web/data" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/it/algos/webbase/web/data" />
         </element>
       </element>
     </root>

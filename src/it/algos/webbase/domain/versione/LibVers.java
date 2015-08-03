@@ -12,7 +12,7 @@ public abstract class LibVers {
 
         lista = Versione.findAll();
         if (lista != null && lista.size() > 0) {
-            numero = lista.get(0).numero;
+            numero = lista.get(0).getNumero();
         }// fine del blocco if
 
         return numero;
@@ -28,7 +28,7 @@ public abstract class LibVers {
         lista = Versione.findAll();
         if (lista != null) {
             for (Versione vers : lista) {
-                numero = Math.max(numero,vers.numero);
+                numero = Math.max(numero,vers.getNumero());
             } // fine del ciclo for-each
         }// fine del blocco if
 
@@ -55,10 +55,10 @@ public abstract class LibVers {
         Date giorno = new Date();
 
         versione = new Versione();
-        versione.numero = numero;
-        versione.giorno = giorno;
-        versione.titolo = titolo;
-        versione.descrizione = descrizione;
+        versione.setNumero(numero);
+        versione.setGiorno(giorno);
+        versione.setTitolo(titolo);
+        versione.setDescrizione(descrizione);
         versione.save();
     }// fine del metodo statico
 

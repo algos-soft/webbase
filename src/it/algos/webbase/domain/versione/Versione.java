@@ -19,16 +19,16 @@ import java.util.List;
 @Entity
 public class Versione extends BaseEntity {
 
-    int numero;
+    private int numero;
 
     @NotEmpty
-    String titolo = "";
+    private String titolo = "";
 
-    String descrizione;
+    private String descrizione;
 
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    Date giorno;
+    private Date giorno;
 
 
     public Versione() {
@@ -96,19 +96,37 @@ public class Versione extends BaseEntity {
         return titolo;
     }// end of method
 
-//	/**
-//	 * @return the titolo
-//	 */
-//	public String getTitolo() {
-//		return titolo;
-//	}
-//
-//	/**
-//	 * @param titolo the titolo to set
-//	 */
-//	public void setTitolo(String titolo) {
-//		this.titolo = titolo;
-//	}
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getTitolo() {
+        return titolo;
+    }
+
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public Date getGiorno() {
+        return giorno;
+    }
+
+    public void setGiorno(Date giorno) {
+        this.giorno = giorno;
+    }
 
     @Override
     public Versione clone() throws CloneNotSupportedException {

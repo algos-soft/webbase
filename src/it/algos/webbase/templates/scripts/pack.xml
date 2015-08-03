@@ -7,7 +7,7 @@
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
 
-    <property name="risalita" value="/../../../../../.."/>
+    <property name="risalita" value="/../../../../../../.."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
     <property name="webinf" value="/web/WEB-INF/"/>

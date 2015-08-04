@@ -14,6 +14,14 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+/**
+ * Classi di tipo JavaBean
+ * <p>
+ * 1) le sottoclassi concrete devono avere un costruttore senza argomenti
+ * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolenai al posto di get)
+ * 3) le classi deve implementare l'interfaccia Serializable (tramite questa superclasse astratta)
+ * 4) le classi non devono contenere nessun metodo per la gestione degli eventi
+ */
 @MappedSuperclass
 @SuppressWarnings("serial")
 public abstract class BaseEntity implements Serializable {

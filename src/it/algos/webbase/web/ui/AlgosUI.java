@@ -8,7 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.*;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;

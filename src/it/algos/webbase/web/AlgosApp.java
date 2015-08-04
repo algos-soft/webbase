@@ -23,12 +23,13 @@ public abstract class AlgosApp {
      * Name of the base folder for demo data.<br>
      * Demo data is loaded at bootstrap to populate empty tables.<br>
      */
-    public static final String DEMODATA_FOLDER_NAME = "/WEB-INF/data/demo/";
+    public static final String DEMODATA_FOLDER_NAME = "WEB-INF/data/demo/";
 
     /**
      * Name of the base folder for images.<br>
      */
-    public static final String IMG_FOLDER_NAME = "/it/algos/webbase/web/data/img/";
+//    public static final String IMG_FOLDER_NAME = "/it/algos/webbase/web/data/img/";
+    public static final String IMG_FOLDER_NAME = "WEB-INF/lib/webbase/it/algos/webbase/web/data/img/";
 
 //    /**
 //     * Name of the local folder for images.<br>

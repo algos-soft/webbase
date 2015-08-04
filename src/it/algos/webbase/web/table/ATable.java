@@ -3,6 +3,7 @@ package it.algos.webbase.web.table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibResource;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
@@ -27,7 +28,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
@@ -36,9 +36,8 @@ public class ATable extends Table {
 	private Class<?> entityClass;
 	protected ModulePop modulo;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	private Action actionEdit = new Action("Modifica", new ThemeResource("img/action_edit18.png"));
-	private Action actionDelete = new Action("Elimina",
-			new ThemeResource("img/action_delete18.png"));
+	private Action actionEdit = new Action("Modifica", LibResource.getImgResource("action_edit18.png"));
+	private Action actionDelete = new Action("Modifica", LibResource.getImgResource("action_delete18.png"));
 	private ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
 	private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
 

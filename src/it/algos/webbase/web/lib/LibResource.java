@@ -94,7 +94,7 @@ public abstract class LibResource {
      * @return la Resource corrispondente.
      */
     public static Resource getImgResource(String name) {
-        return getImgResource(AlgosApp.getStrProjectPath(), name);
+        return getImgResource(AlgosApp.getImgFolderPath().toString(), name);
     }// end of method
 
     /**

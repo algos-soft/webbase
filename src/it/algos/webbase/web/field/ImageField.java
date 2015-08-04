@@ -85,8 +85,8 @@ public class ImageField extends CustomField<byte[]> implements FieldInterface<by
 			super();
 			
 			setSpacing(true);
-			
-			Button bAdd = new Button(new ThemeResource("img/action_arrow_up.png"));
+
+			Button bAdd = new Button(LibResource.getImgResource("action_arrow_up.png"));
 			bAdd.addClickListener(new ClickListener() {
 				
 				@Override
@@ -94,8 +94,8 @@ public class ImageField extends CustomField<byte[]> implements FieldInterface<by
 					new UploadDialog().show(UI.getCurrent());
 				}
 			});
-			
-			Button bDel = new Button(new ThemeResource("img/action_delete.png"));
+
+			Button bDel = new Button(LibResource.getImgResource("action_delete.png"));
 			bDel.addClickListener(new ClickListener() {
 				
 				@Override

@@ -8,7 +8,7 @@ import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.DateField;
 import it.algos.webbase.web.field.DecimalField;
 import it.algos.webbase.web.field.IntegerField;
-import it.algos.webbase.web.field.*;
+import it.algos.webbase.web.field.RelatedComboField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.module.*;

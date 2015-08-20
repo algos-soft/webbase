@@ -1,6 +1,5 @@
 package it.algos.webbase.domain.versione;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public abstract class LibVers {
         lista = Versione.findAll();
         if (lista != null) {
             for (Versione vers : lista) {
-                numero = Math.max(numero,vers.getNumero());
+                numero = Math.max(numero, vers.getNumero());
             } // fine del ciclo for-each
         }// fine del blocco if
 
@@ -51,7 +50,7 @@ public abstract class LibVers {
     //--la crea SOLO se non esiste già
     public static void nuova(String titolo, String descrizione) {
         Versione versione;
-        int numero = getVersione() + 1;
+        int numero = getMaxVersione() + 1;
         Date giorno = new Date();
 
         versione = new Versione();

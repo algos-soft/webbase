@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="modulo" basedir="." default="minimocrea">
+<project name="modulo" basedir="" default="minimocrea">
 
     <property name="srcDomainTag" value="Domain"/>
     <property name="srcEntityTag" value="Entity"/>

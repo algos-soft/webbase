@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<project name="progetto" basedir="." default="newonly">
+<project name="progetto" basedir="" default="newonly">
 
+    <property name="prova" value="Provawebbase"/>
     <property name="app" value="App"/>
     <property name="boot" value="BootStrap"/>
     <property name="servlet" value="Servlet"/>
@@ -49,7 +50,7 @@
     <property name="baseDest" value="${basedir}${risalita}"/>
 
     <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
-        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="Prova"/>
+        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="${prova}"/>
         <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
         <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
         <!--<input addproperty="modulo" message="Nome (maiuscolo) del primo modulo:" defaultvalue="Bolla"/>-->

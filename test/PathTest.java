@@ -1,4 +1,4 @@
-package it.algos.webbase.test;
+package it.algos.webbase;
 
 import it.algos.webbase.web.converter.*;
 import it.algos.webbase.web.lib.*;

@@ -1,5 +1,3 @@
-package it.algos.webbase;
-
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.webbase.web.converter.*;
 import it.algos.webbase.web.lib.*;

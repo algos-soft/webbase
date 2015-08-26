@@ -1,5 +1,3 @@
-package it.algos.webbase;
-
 import com.vaadin.server.Resource;
 import it.algos.webbase.web.lib.LibResource;
 import org.junit.Test;

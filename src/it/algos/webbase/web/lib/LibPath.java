@@ -4,7 +4,7 @@ package it.algos.webbase.web.lib;
  * Created by gac on 02 ago 2015.
  *
  */
-public class LibPath {
+public abstract class LibPath {
 
     /**
      * Estrae il nome significativo di una classe

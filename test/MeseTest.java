@@ -1,5 +1,3 @@
-package it.algos.webbase;
-
 import it.algos.webbase.web.lib.Mese;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package it.algos.webbase.web.updown;
 
 import it.algos.webbase.web.AlgosApp;
-import it.algos.webbase.web.BootStrap;
+import it.algos.webbase.web.ABootStrap;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -102,7 +102,7 @@ public class FileUploader implements Receiver, SucceededListener {
 		OutputStream stream = null; // Stream to write to
 		try {
 			// Open the file for writing.
-			ServletContext sc = BootStrap.getServletContext();
+			ServletContext sc = ABootStrap.getServletContext();
 
 			// The real path returned will be in a form appropriate to the
 			// computer and operating system on which the servlet container

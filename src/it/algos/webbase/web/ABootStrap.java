@@ -26,10 +26,10 @@ import javax.servlet.ServletContextListener;
  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
  * È OBBLIGATORIO creare la sottoclasse per regolare il valore della persistence unit che crea l'EntityManager <br>
  */
-public abstract class BootStrap implements ServletContextListener {
+public abstract class ABootStrap implements ServletContextListener {
 
 	private static ServletContext context;
-	private final static Logger logger = Logger.getLogger(BootStrap.class.getName());
+	private final static Logger logger = Logger.getLogger(ABootStrap.class.getName());
 	private DBPingRunnable dbPingRunnable;
 	private Thread dbPingThread;
 	protected String ruoloUtente = TipoRuolo.user.toString();

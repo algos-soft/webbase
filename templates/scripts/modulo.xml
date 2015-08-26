@@ -49,6 +49,7 @@
         <property name="tagUI" value="this.addModulo(new ${modulo}Mod());"/>
     </target>
 
+
     <target name="clean" depends="input" description="Cancella il file">
         <delete file="${destDomain}" quiet="false"/>
         <delete file="${destEntity}" quiet="false"/>
@@ -184,5 +185,7 @@
     <target name="testper">
         <antcall target="modificapersistence"></antcall>
     </target>
+
+
 
 </project>

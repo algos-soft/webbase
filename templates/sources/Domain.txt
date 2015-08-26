@@ -2,52 +2,45 @@ package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
 
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
-
-import java.util.ArrayList;
-import javax.persistence.Entity;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Entity;
+import java.util.ArrayList;
+
+/**
+ * Classe di tipo JavaBean
+ * <p>
+ * 1) la classe deve avere un costruttore senza argomenti
+ * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolenai al posto di get)
+ * 3) la classe deve implementare l'interfaccia Serializable (la fa nella superclasse)
+ * 4) la classe non deve contenere nessun metodo per la gestione degli eventi
+ */
 @Entity
 public class @NAME@ extends BaseEntity {
 
 	@NotEmpty
 	private String nome = "";
 
+    /**
+     * Costruttore senza argomenti
+     * Necessario per le specifiche JavaBean
+     */
 	public @NAME@() {
 		this("");
-	}// end of constructor
+    }// end of nullary constructor
 
 	public @NAME@(String nome) {
 		super();
 		this.setNome(nome);
-	}// end of constructor
+	}// end of general constructor
 
-	@Override
-	public String toString() {
-		return nome;
-	}// end of method
-
-	/**
-	 * @return the nome
-	 */
-	public String getNome() {
-		return nome;
-	}
-
-	/**
-	 * @param nome
-	 *            the nome to set
-	 */
-	public void setNome(String nome) {
-		this.nome=nome;
-	}
-
-	/**
-	 * Recupera una istanza di @NAME@ usando la query specifica
-	 *
-	 * @return istanza di @NAME@, null se non trovata
-	 */
+    /**
+     * Recupera una istanza di Bolla usando la query standard della Primary Key
+     *
+     * @param id valore della Primary Key
+     * @return istanza di Bolla, null se non trovata
+     */
 	public static @NAME@ find(long id) {
 		@NAME@ instance = null;
 		BaseEntity entity = AQuery.queryById(@NAME@.class, id);
@@ -61,12 +54,13 @@ public class @NAME@ extends BaseEntity {
 		return instance;
 	}// end of method
 
-	/**
-	 * Recupera una istanza di @NAME@ usando la query specifica
-	 *
-	 * @return istanza di @NAME@, null se non trovata
-	 */
-	public static @NAME@ find(String nome) {
+    /**
+     * Recupera una istanza di Bolla usando la query di una property specifica
+     *
+     * @param nome valore della property Nome
+     * @return istanza di Bolla, null se non trovata
+     */
+	public static @NAME@ findNome(String nome) {
 		@NAME@ instance = null;
 		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.nome, nome);
 
@@ -79,6 +73,11 @@ public class @NAME@ extends BaseEntity {
 		return instance;
 	}// end of method
 
+    /**
+     * Recupera il valore del numero totale di records della Domain Class
+     *
+     * @return numero totale di records della tavola
+     */
     public synchronized static int count() {
         int totRec = 0;
         long totTmp = AQuery.getCount(@NAME@.class);
@@ -90,17 +89,51 @@ public class @NAME@ extends BaseEntity {
         return totRec;
     }// end of method
 
+    /**
+     * Recupera una lista (array) di tutti i records della Domain Class
+     *
+     * @return lista di tutte le istanze di @NAME@
+     */
+    @SuppressWarnings("unchecked")
     public synchronized static ArrayList<@NAME@> findAll() {
         return (ArrayList<@NAME@>) AQuery.getList(@NAME@.class);
     }// end of method
 
-     @Override
-     public @NAME@ clone() throws CloneNotSupportedException {
+    @Override
+    public String toString() {
+        return nome;
+    }// end of method
+
+    /**
+     * @return the nome
+     */
+    public String getNome() {
+        return nome;
+    }// end of getter method
+
+    /**
+     * @param nome the nome to set
+     */
+    public void setNome(String nome) {
+        this.nome = nome;
+    }// end of setter method
+
+
+    /**
+     * Clone di questa istanza
+     * Una DIVERSA istanza (indirizzo di memoria) con gi STESSI valori (property)
+     * È obbligatoria invocare questo metodo all'interno di un codice try/catch
+     *
+     * @return nuova istanza di @NAME@ con gli stessi valori dei parametri di questa istanza
+     */
+    @Override
+    @SuppressWarnings("all")
+    public @NAME@ clone() throws CloneNotSupportedException {
         try {
             return (@NAME@) BeanUtils.cloneBean(this);
         } catch (Exception ex) {
             throw new CloneNotSupportedException();
         }// fine del blocco try-catch
-	}// end of method
+    }// end of method
 
-}// end of entity class
+}// end of domain class

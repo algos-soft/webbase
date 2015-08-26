@@ -1,6 +1,6 @@
 package it.algos.@LOWERPACK@;
 
-import it.algos.webbase.web.BootStrap;
+import it.algos.webbase.web.ABootStrap;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.domain.versione.LibVers;
 
@@ -15,7 +15,7 @@ import javax.servlet.ServletContextEvent;
  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
  * È OBBLIGATORIO creare la sottoclasse per regolare il valore della persistence unit che crea l'EntityManager <br>
  */
-public class @PACK@BootStrap extends BootStrap {
+public class @PACK@BootStrap extends ABootStrap {
 
     /**
      * Valore standard suggerito per ogni progetto
@@ -42,7 +42,7 @@ public class @PACK@BootStrap extends BootStrap {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         super.contextInitialized(sce);
-        ServletContext svltCtx = BootStrap.getServletContext();
+        ServletContext svltCtx = ABootStrap.getServletContext();
 
         // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
         this.versioneBootStrap(svltCtx);
@@ -60,6 +60,7 @@ public class @PACK@BootStrap extends BootStrap {
     public void contextDestroyed(ServletContextEvent sce) {
         super.contextDestroyed(sce);
     }// end of method
+
 
     /**
      * tutte le aggiunte, modifiche e patch vengono inserite con una versione<br>

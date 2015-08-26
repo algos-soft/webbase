@@ -17,7 +17,7 @@
     <property name="theme" value="algos"/>
     <property name="styles" value="styles"/>
 
-    <property name="risalita" value="/../../../../../../.."/>
+    <property name="risalita" value="/../../.."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
     <property name="discesaWeb" value="/web/"/>
@@ -53,7 +53,7 @@
         <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="${prova}"/>
         <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
         <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
-        <!--<input addproperty="modulo" message="Nome (maiuscolo) del primo modulo:" defaultvalue="Bolla"/>-->
+
         <lower string="${pack}" to="lowerPack"/>
         <lower string="${sqlUnit}" to="lowerSqlUnit"/>
         <lower string="${dataBase}" to="lowerDataBase"/>
@@ -78,20 +78,24 @@
         <property name="destAddons" value="${destDirThemses}/${addons}${destSufScss}"/>
         <property name="destTheme" value="${destDirThemses}/${theme}${destSufScss}"/>
         <property name="destStyles" value="${destDirThemses}/${styles}${destSufScss}"/>
-
-        <!--<antcall target="creaPrimoModulo">-->
-        <!--</antcall>-->
     </target>
 
-    <!--<target name="creaPrimoModulo" description="Creazione del primo modulo">-->
-    <!--<echo message="modulo=${basedir}/modulo.xml"/>-->
-    <!--<ant antfile="modulo.xml" dir="${basedir}" />-->
-    <!--&lt;!&ndash;<condition>&ndash;&gt;-->
-    <!--&lt;!&ndash;<equals arg1="${modulo}" arg2=""/>&ndash;&gt;-->
-    <!--&lt;!&ndash;</condition>&ndash;&gt;-->
-    <!--<echo message="modulo=${modulo}"/>-->
-    <!--<echo message="lowerModulo=${lowerModulo}"/>-->
-    <!--</target>-->
+    <target name="testpath">
+        <antcall target="input"></antcall>
+        <echo message="baseSrc - ${baseSrc}"/>
+        <echo message="srcDir - ${srcDir}"/>
+        <echo message="srcApp - ${srcApp}"/>
+        <echo message="baseDest - ${baseDest}"/>
+        <echo message="pack - ${pack}"/>
+        <echo message="sqlUnit - ${sqlUnit}"/>
+        <echo message="dataBase - ${dataBase}"/>
+        <echo message="lowerPack - ${lowerPack}"/>
+        <echo message="destDir - ${destDir}"/>
+        <echo message="destDirIt - ${destDirIt}"/>
+        <echo message="destDirMeta - ${destDirMeta}"/>
+        <echo message="destDirIt - ${destDirIt}"/>
+        <echo message="destApp - ${destApp}"/>
+    </target>
 
 
     <target name="deleteSingoloFile" depends="input" description="Cancella il singolo file passato come parametro">

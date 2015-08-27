@@ -2,41 +2,104 @@ package it.algos.@LOWERPACK@;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
-import it.algos.vaad.log.LogMod;
-import it.algos.vaad.pref.PrefMod;
-import it.algos.vaad.ui.VaadAlgosUI;
 import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.ui.AlgosUI;
 
 @Theme("valo")
 //@Theme("algos")
-public class @PACK@UI extends VaadAlgosUI {
+public class @PACK@UI extends AlgosUI {
 
-    private ModulePop moduloPartenza;
-
-    /**
-     * Crea i menu specifici
-     * Sovrascritto nella sottoclasse
-     */
     @Override
-    protected void addAllModuli() {
-        moduloPartenza = new VersioneModulo();
-        this.addModulo(moduloPartenza);
-        this.addModulo(new PrefMod());
-        this.addModulo(new LogMod());
+    protected void init(VaadinRequest request) {
+        super.init(request);
+        startUI();
     }// end of method
 
     /**
-     * Modulo da visualizzare alla partenza
-     * Sovrascritto nella sottoclasse
+     * Mostra la UI .
      */
-    @Override
-    protected String startModulo() {
-        return LibPath.getClassName(moduloPartenza);
+    private void startUI() {
+
+        // crea la UI di base, un VerticalLayout
+        VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setMargin(true);
+        vLayout.setSpacing(false);
+        vLayout.setSizeFull();
+
+        // crea la MenuBar principale
+        MenuBar mainBar = createMenuBar();
+
+        // aggiunge la menubar principale e la menubar login
+        HorizontalLayout menuLayout = new HorizontalLayout();
+        menuLayout.setHeight("40px");
+        menuLayout.setWidth("100%");
+        menuLayout.addComponent(mainBar);
+        mainBar.setHeight("100%");
+        menuLayout.setExpandRatio(mainBar, 1.0f);
+        vLayout.addComponent(menuLayout);
+
+        // crea e aggiunge uno spaziatore verticale
+        HorizontalLayout spacer = new HorizontalLayout();
+        spacer.setMargin(false);
+        spacer.setSpacing(false);
+        spacer.setHeight("5px");
+        vLayout.addComponent(spacer);
+
+        NavPlaceholder placeholder = new NavPlaceholder(null);
+        placeholder.setSizeFull();
+        placeholder.setContent(new VersioneModulo());
+        vLayout.addComponent(placeholder);
+        vLayout.setExpandRatio(placeholder, 1.0f);
+
+        // assegna la UI
+        setContent(vLayout);
+    }
+
+    private MenuBar createMenuBar() {
+        MenuBar menubar = new MenuBar();
+
+        // Menu principali
+        menubar.addItem("Versioni", null, null);
+
+        return menubar;
     }// end of method
+
+    public class NavPlaceholder extends CustomComponent implements SingleComponentContainer {
+
+        public NavPlaceholder(Component content) {
+            super();
+            setContent(content);
+            setSizeFull();
+        }
+
+        @Override
+        public void addComponentAttachListener(ComponentAttachListener listener) {}
+
+        @Override
+        public void removeComponentAttachListener(ComponentAttachListener listener) {}
+
+        @Override
+        public void addComponentDetachListener(ComponentDetachListener listener) {}
+
+        @Override
+        public void removeComponentDetachListener(ComponentDetachListener listener) {}
+
+        @Override
+        public Component getContent() {
+            return getCompositionRoot();
+        }
+
+        @Override
+        public void setContent(Component content) {
+            setCompositionRoot(content);
+        }
+
+
+    }
     
 }//end of UI class
 

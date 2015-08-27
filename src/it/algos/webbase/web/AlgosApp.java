@@ -29,7 +29,8 @@ public abstract class AlgosApp {
      * Name of the base folder for images.<br>
      */
 //    public static final String IMG_FOLDER_NAME = "/it/algos/webbase/web/data/img/";
-    public static final String IMG_FOLDER_NAME = "WEB-INF/lib/webbase/it/algos/webbase/web/data/img/";
+//    public static final String IMG_FOLDER_NAME = "WEB-INF/lib/webbase/it/algos/webbase/web/data/img/";
+    public static final String IMG_FOLDER_NAME = "WEB-INF/img/";
 
 //    /**
 //     * Name of the local folder for images.<br>
@@ -89,8 +90,14 @@ public abstract class AlgosApp {
 //    }// end of method
 
     public static Path getImgFolderPath() {
+        Path path = null;
         ServletContext sc = AlgosApp.getServletContext();
-        return Paths.get(sc.getRealPath("/" + AlgosApp.IMG_FOLDER_NAME));
+
+        if (sc != null) {
+            path = Paths.get(sc.getRealPath("/" + AlgosApp.IMG_FOLDER_NAME));
+        }// fine del blocco if
+
+        return path;
     }// end of method
 
     public static String getStrProjectPath() {

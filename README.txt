@@ -67,8 +67,11 @@
 
 15. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
     - aprire la classe xxxUI e modificare le righe 14/15 per sostituire il theme valo con algos
-    - in Project Settings -> Artifatcs a destra nel tab Output Layout cliccare sul simbolo + (Add Copy of)
-    - selezionare Directory Content e individuare il path della cartella 'vaadin' del progetto appena creato
+    - in Project Settings -> Artifatcs selezionare l'artifact web:xxx exploded
+    - a destra nel tab Output Layout selezionare l'icona della directory (a sinistra) e crearne una nuova directory
+        dal titolo (obbligatorio) VAADIN
+    - selezionare la directory appena creata e col tasto destro selezionare Add Copy of -> Directory Content
+    - individuare il path della cartella 'vaadin' del progetto appena creato
     - il file vaadin.themes.algos.algos.scss è liberamente modificabile per personalizzare l'applicazopne
     - il file vaadin.themes.algos.algos.scss potrebbe presentare un errore in @import "../valo/valo.scss";
         È un BUG di IDEA che NON influenza la compilazione ed il corretto funzionamento dell'applicazione

@@ -19,7 +19,9 @@
     - è stata creata una configurazione col server Tomcat;
     - è stato creato (vuoto) il file web.WEB-INF.web.xml, che verrà successivamente sovrascritto
     - è stato creato il file web.index.jsp, dove si può inserire quello che appare a video
-    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona
+    - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona (anche se il browser rimane bianco)
+    - scrivendo nel file web.index.jsp (head o body) il risultato viene visualizzato
+    - successivamente il file web.index.jsp non verrà più utilizzato
 
 9. In Project Settings -> Libraries
     - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase_jar
@@ -40,22 +42,25 @@
     - creata la classe xxxBootStrap: prima classe in esecuzione del programma.
     - creata la classe xxxServlet: punto di partenza della sessione nel server.
     - creata la classe xxxUI: punto di partenza quando si accede dal browser
+    - creata la directory vaadin.themes.algos, con anche le icone (theme non ancora funzionante)
     - sostituito il file web.WEB-INF.web.xml
     - sostituito il file web.index.jsp (che non viene utilizzato)
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con già installi i 3 moduli ereditati
         dal plugin Webbase: Versione, Preferenze e Logo
 
-12. In Project Settings -> Modules
+12. In Project Settings -> Artifatcs in <outpu root> deve esserci webbase_war_exploded (come Project Library) per visualizzare le icone
+
+13. In Project Settings -> Modules
     - cliccare sul simbolo + per creare un nuovo modulo
     - selezionare un framework di tipo iviIDEA
     - nel dialogo che si apre a destra selezionare in alto la posizione del file ivy.xml appena creato
     - cliccare nel box 'use module specific ivy settings' e selezionare la posizione del file ivysettings.xml appena creato
 
-13. Aprire il plugin Webbase e lanciare (in Ant) lo script templates.script.modulo:
+14. Aprire il plugin Webbase e lanciare (in Ant) lo script templates.script.modulo:
     - nel primo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del progetto di riferimento
     - nel secondo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo modulo da creare
 
-14. È stato creato il primo modulo (del tipo più ridotto possibile):
+15. È stato creato il primo modulo (del tipo più ridotto possibile):
     - creata (sotto src.it.algos.nomeProgetto) la cartella/directory del modulo
     - creata la classe (domain) nomeModulo
     - creata la classe (entity) nomeModulo_
@@ -65,7 +70,7 @@
         aggiungendo il nome del modulo appena creato
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il nuovo modulo
 
-15. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
+16. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
     - aprire la classe xxxUI e modificare le righe 14/15 per sostituire il theme valo con algos
     - in Project Settings -> Artifatcs selezionare l'artifact web:xxx exploded
     - a destra nel tab Output Layout selezionare l'icona della directory (a sinistra) e crearne una nuova directory

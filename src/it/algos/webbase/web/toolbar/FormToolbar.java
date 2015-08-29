@@ -2,6 +2,7 @@ package it.algos.webbase.web.toolbar;
 
 import java.util.ArrayList;
 
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.lib.LibResource;
@@ -18,7 +19,7 @@ public class FormToolbar extends Toolbar {
 	}// end of constructor
 
 	protected void addButtons() {
-			addButton("Annulla", LibResource.getImgResource("action_cancel.png"), new MenuBar.Command() {
+			addButton("Annulla", new ThemeResource("img/action_cancel.png"), new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				fire(Events.cancel);
 			}// end of method
@@ -30,7 +31,7 @@ public class FormToolbar extends Toolbar {
 		// }// end of method
 		// });// end of anonymous class
 
-		addButton("Registra", LibResource.getImgResource("action_save.png"), new MenuBar.Command() {
+		addButton("Registra", new ThemeResource("img/action_save.png"), new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				fire(Events.save);
 			}// end of method

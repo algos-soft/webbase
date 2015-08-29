@@ -1,5 +1,6 @@
 package it.algos.webbase.web.toolbar;
 
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -28,7 +29,7 @@ public class TableToolbar extends Toolbar {
     }// end of constructor
 
     protected void addCreate() {
-        addButton("Nuovo", LibResource.getImgResource("action_add.png"), new MenuBar.Command() {
+        addButton("Nuovo", new ThemeResource("img/action_add.png"), new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.create);
             }// end of inner method
@@ -37,7 +38,7 @@ public class TableToolbar extends Toolbar {
     }// end of method
 
     protected void addEdit() {
-        addButton("Modifica", LibResource.getImgResource("action_edit.png"), new MenuBar.Command() {
+        addButton("Modifica", new ThemeResource("img/action_edit.png"), new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.edit);
             }// end of inner method
@@ -45,7 +46,7 @@ public class TableToolbar extends Toolbar {
     }// end of method
 
     protected void addDelete() {
-        addButton("Elimina", LibResource.getImgResource("action_delete.png"), new MenuBar.Command() {
+        addButton("Elimina", new ThemeResource("img/action_delete.png"), new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.delete);
             }// end of inner method
@@ -53,7 +54,7 @@ public class TableToolbar extends Toolbar {
     }// end of method
 
     protected void addSearch() {
-        addButton("Ricerca", LibResource.getImgResource("action_find.png"), new MenuBar.Command() {
+        addButton("Ricerca", new ThemeResource("img/action_find.png"), new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.search);
             }// end of inner method
@@ -62,7 +63,7 @@ public class TableToolbar extends Toolbar {
 
     protected void addSelect() {
 
-        MenuBar.MenuItem item = addButton("Selez.", LibResource.getImgResource("action_select.png"), null);
+        MenuBar.MenuItem item = addButton("Selez.", new ThemeResource("img/action_select.png"), null);
 
         item.addItem("Solo selezionati", null, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {

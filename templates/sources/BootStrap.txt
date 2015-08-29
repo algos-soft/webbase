@@ -47,7 +47,12 @@ public class @PACK@BootStrap extends ABootStrap {
         // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
         this.versioneBootStrap(svltCtx);
 
-        // Do server stuff here
+        // registra il servlet context non appena è disponibile
+        @PACK@App.setServletContext(svltCtx);
+
+        //modifica i bottoni
+        Toolbar.ALTEZZA_BOTTONI = 40;
+        Toolbar.LARGHEZZA_BOTTONI = 120;
 
     }// end of method
 

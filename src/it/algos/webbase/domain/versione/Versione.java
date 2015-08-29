@@ -9,6 +9,7 @@ import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,6 +20,9 @@ import java.util.List;
 @Entity
 public class Versione extends BaseEntity {
 
+    @NotNull
+    @NotEmpty
+    @Column(unique = true)
     private int numero;
 
     @NotEmpty
@@ -28,7 +32,7 @@ public class Versione extends BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    private Date giorno;
+    private Date giorno = new Date();
 
 
     public Versione() {

@@ -24,6 +24,10 @@ public class @PACK@UI extends AlgosUI {
      */
     private void startUI() {
 
+        //modifica i bottoni
+        Toolbar.ALTEZZA_BOTTONI = 40;
+        Toolbar.LARGHEZZA_BOTTONI = 120;
+
         // crea la UI di base, un VerticalLayout
         VerticalLayout vLayout = new VerticalLayout();
         vLayout.setMargin(true);

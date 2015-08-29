@@ -1,6 +1,7 @@
 package it.algos.webbase.web.toolbar;
 
 import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
@@ -72,7 +73,7 @@ public abstract class Toolbar extends VerticalLayout {
 
         // if no icon, use empty icon to keep the same vertical spacing
         if (icon == null) {
-            icon = LibResource.getImgResource("action_null.png");
+            icon = new ThemeResource("img/action_null.png");
         }// end of if cycle
 
         MenuBar.MenuItem item = menubar.addItem(caption, icon, command);

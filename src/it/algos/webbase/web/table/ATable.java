@@ -1,5 +1,6 @@
 package it.algos.webbase.web.table;
 
+import com.vaadin.server.ThemeResource;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
@@ -36,8 +37,8 @@ public class ATable extends Table {
 	private Class<?> entityClass;
 	protected ModulePop modulo;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	private Action actionEdit = new Action("Modifica", LibResource.getImgResource("action_edit18.png"));
-	private Action actionDelete = new Action("Modifica", LibResource.getImgResource("action_delete18.png"));
+	private Action actionEdit = new Action("Modifica", new ThemeResource("img/action_edit18.png"));
+	private Action actionDelete = new Action("Modifica", new ThemeResource("img/action_delete18.png"));
 	private ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
 	private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
 

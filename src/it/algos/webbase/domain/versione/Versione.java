@@ -20,9 +20,6 @@ import java.util.List;
 @Entity
 public class Versione extends BaseEntity {
 
-    @NotNull
-    @NotEmpty
-    @Column(unique = true)
     private int numero;
 
     @NotEmpty

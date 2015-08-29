@@ -26,6 +26,7 @@
     <property name="discesaThemes" value="/vaadin/themes/${theme}"/>
 
     <property name="baseSrc" value="${basedir}/.."/>
+    <property name="baseVaadProject" value="${basedir}/../.."/>
     <property name="srcDir" value="${baseSrc}/sources"/>
     <property name="srcSuffix" value=".txt"/>
     <property name="destSufJava" value=".java"/>

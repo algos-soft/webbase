@@ -10,7 +10,7 @@
     <property name="destEntityTag" value="_"/>
     <property name="destModuloTag" value="Mod"/>
 
-    <property name="risalita" value="/../../../../../../.."/>
+    <property name="risalita" value="/../../.."/>
     <property name="preClasse" value="&lt;class&gt;"/>
     <property name="postClasse" value="&lt;/class&gt;"/>
     <property name="pathClasse" value="it.algos."/>
@@ -26,8 +26,9 @@
     <property name="srcEntity" value="${srcDir}/${srcEntityTag}${srcSuffix}"/>
 
     <property name="baseDest" value="${basedir}${risalita}"/>
-    <property name="tagLastPer" value="${preClasse}it.algos.vaad.wiki.entities.wiki.Wiki${postClasse}"/>
+    <property name="tagLastPer" value="${preClasse}it.algos.webbase.web.entity.BaseEntity${postClasse}"/>
     <property name="tagLastMod" value="this.addModulo(new LogMod());"/>
+    <property name="tagLastModImport" value="import com.vaadin.annotations.Theme;"/>
 
 
     <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
@@ -45,8 +46,10 @@
         <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
         <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
         <property name="destUI" value="${destDirBase}/${progetto}${uiTag}${destSuffix}"/>
-        <property name="tagEntity" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
+        <property name="destMod" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
+        <property name="tagEntity" value="${destMod}"/>
         <property name="tagUI" value="this.addModulo(new ${modulo}Mod());"/>
+        <property name="tagUIImport" value="import ${destMod}Mod;"/>
     </target>
 
 
@@ -89,7 +92,7 @@
         <echo message="destFile=${destFile}"/>
     </target>
 
-    <target name="crea"  depends="input" description="Copia il file">
+    <target name="crea" depends="input" description="Copia il file">
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcDomain}"/>
             <param name="destFile" value="${destDomain}"/>
@@ -103,7 +106,6 @@
             <param name="destFile" value="${destModulo}"/>
         </antcall>
         <antcall target="modificapersistence"></antcall>
-        <antcall target="modificamoduli"></antcall>
     </target>
 
     <target name="sovrascrive" depends="clean" description="Copia il file">
@@ -173,19 +175,48 @@
     </target>
 
     <target name="modificapersistence" depends="input">
-        <replace file="${destPersistence}" token="${tagLastPer}" value="${tagLastPer}&#10;&#009;&#009;${preClasse}${tagEntity}${postClasse}">
+        <replace file="${destPersistence}" token="${tagLastPer}"
+                 value="${tagLastPer}&#10;&#009;&#009;${preClasse}${tagEntity}${postClasse}">
         </replace>
+        <echo message="destPersistence: ${destPersistence}"/>
+        <echo message="tagLastPer: ${tagLastPer}"/>
     </target>
 
     <target name="modificamoduli" depends="input">
-        <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}">
-        </replace>
+        <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}"></replace>
+        <replace file="${destUI}" token="${tagLastModImport}" value="${tagLastModImport}&#10;${tagUIImport}"></replace>
     </target>
 
     <target name="testper">
         <antcall target="modificapersistence"></antcall>
     </target>
 
+    <target name="messaggi" depends="input" description="Messaggi coi parametri">
+        <echo message="basedir: ${basedir}"/>
+        <echo message="baseSrc: ${baseSrc}"/>
+        <echo message="srcDir: ${srcDir}"/>
+        <echo message="baseDest: ${baseDest}"/>
+
+        <echo message=""/>
+
+        <echo message="progetto: ${progetto}"/>
+        <echo message="lowerProgetto: ${lowerProgetto}"/>
+        <echo message="modulo: ${modulo}"/>
+        <echo message="lowerModulo: ${lowerModulo}"/>
+        <echo message="destDir: ${destDir}"/>
+        <echo message="destDirBase: ${destDirBase}"/>
+        <echo message="destDirMeta: ${destDirMeta}"/>
+
+        <echo message=""/>
+
+        <echo message="destUI: ${destUI}"/>
+        <echo message="destPersistence: ${destPersistence}"/>
+        <echo message="destDomain: ${destDomain}"/>
+    </target>
+
+    <target name="debug" depends="messaggi" description="Controllo parametri">
+        <antcall target="input"></antcall>
+    </target>
 
 
 </project>

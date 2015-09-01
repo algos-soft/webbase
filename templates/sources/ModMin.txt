@@ -1,7 +1,7 @@
 package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
 
-import it.algos.vaad.ui.AlgosModulePop;
 
+import it.algos.webbase.web.module.ModulePop;
 import javax.persistence.metamodel.Attribute;
 
 /**
@@ -9,10 +9,10 @@ import javax.persistence.metamodel.Attribute;
  * Passa alla superclasse il nome e la classe specifica
  */
 @SuppressWarnings("serial")
-public class @NAME@Mod extends AlgosModulePop {
+public class @NAME@Mod extends ModulePop {
 
     public @NAME@Mod() {
-        super(@NAME@.class, "@NAME@");
+        super(@NAME@.class);
     }// end of constructor
 
 }// end of class

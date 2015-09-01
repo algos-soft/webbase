@@ -1,11 +1,16 @@
 package it.algos.webbase.web.servlet;
 
+import com.google.gwt.user.client.Cookies;
 import com.vaadin.server.*;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class AlgosServlet extends VaadinServlet implements SessionInitListener, SessionDestroyListener {
@@ -21,6 +26,7 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
     public void sessionInit(SessionInitEvent event) throws ServiceException {
         // Do session start stuff here
         LibSession.setDeveloper(false);
+
     }// end of method
 
     @Override
@@ -28,23 +34,28 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         // Do session end stuff here
     }// end of method
 
-    /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+    /**
+     * Dispatches client requests to the protected
+     * <code>service</code> method. There's no need to
+     * override this method.
+     *
+     * @param req the {@link HttpServletRequest} object that
+     * contains the request the client made of the servlet
+     *
+     * @param res the {@link HttpServletResponse} object that
+     * contains the response the servlet returns to the client
+     *
+     * @exception IOException if an input or output error occurs
+     * while the servlet is handling the HTTP request
+     *
+     * @exception ServletException if the HTTP request cannot
+     * be handled
+     *
+     * @see javax.servlet.Servlet#service
      */
     @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        super.service(req, res);
-
-//        HttpServletRequest pippo = (HttpServletRequest)req;
-//        String a = pippo.getRemoteAddr();
-//        String b = pippo.getLocalAddr();
-//        String ddd=pippo.getServerName();
-//        StringBuffer pippos= pippo.getRequestURL();
-//        String nome= pippo.getQueryString();
-//        String betta=pippo.getContextPath();
-//        String ss= pippo.getSession().toString();
-//
-//        String c="alfa";
+    public void service(ServletRequest request, ServletResponse res) throws ServletException, IOException {
+        super.service(request, res);
     }// end of method
 
 

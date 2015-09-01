@@ -5,6 +5,7 @@ import com.vaadin.server.VaadinSession;
 
 /**
  * Created by gac on 26/05/15.
+ * .
  */
 public abstract class LibSession {
 
@@ -87,7 +88,7 @@ public abstract class LibSession {
     }// end of method
 
     /**
-     * Regola lo specifico attributo.
+     * Regola lo specifico attributo della sessione.
      * Qualsiasi applicazione può registrare dei propri attributi nella session.
      */
     public static void setAttribute(String name, Object value) {
@@ -98,15 +99,29 @@ public abstract class LibSession {
     }// end of method
 
     /**
-     * Recupera un attributo.
+     * Recupera un attributo dalla sessione.
      */
     public static Object getAttribute(String name) {
-        Object attr = null;
+        Object value = null;
         VaadinSession session = VaadinSession.getCurrent();
         if (session != null) {
-            attr = session.getAttribute(name);
+            value = session.getAttribute(name);
         }
-        return attr;
+        return value;
+    }// end of method
+
+    /**
+     * Recupera un attributo dalla sessione.
+     */
+    public static String getAttributeStr(String name) {
+        String value = "";
+        Object obj = getAttribute(name);
+
+        if (obj instanceof String) {
+            value = (String) obj;
+        }// fine del blocco if
+
+        return value;
     }// end of method
 
     /**

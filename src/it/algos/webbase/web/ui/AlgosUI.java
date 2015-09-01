@@ -1,18 +1,18 @@
 package it.algos.webbase.web.ui;
 
-import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.*;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.*;
+import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.security.Login;
 
+import javax.servlet.http.Cookie;
 import java.util.Map;
 
 /**
@@ -72,6 +72,9 @@ public class AlgosUI extends UI {
 
         // Regola il menu
         this.regolaMenu();
+
+        boolean collegato= Login.isCollegato();
+
     }// end of method
 
     /**
@@ -93,16 +96,30 @@ public class AlgosUI extends UI {
      * <p>
      */
     protected void checkCookies(VaadinRequest request) {
-//		// Fetch all cookies
-//		Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
-//
-//		// Create a new cookie
-//		Cookie myCookie = new Cookie("pippo", "cookie-value");
-//		myCookie.setMaxAge(300);
-//		myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
-//		VaadinService.getCurrentResponse().addCookie(myCookie);
-//		
-//		Cookies.setCookie("pippo", "Some other value");
+        // Fetch all cookies
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+        // Store the current cookies in the service session
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
+            }// fine del blocco if
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
+            }// fine del blocco if
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
+            }// fine del blocco if
+        } // fine del ciclo for-each
+
+
+//         Create a new cookie
+//        Cookie myCookie = new Cookie(Cost.COOKIE_LOGIN_NICK, "cookie-value");
+//        myCookie.setMaxAge(300);
+//        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+//        VaadinService.getCurrentResponse().addCookie(myCookie);
+
+//        Cookies.setCookie("pippo", "Some-other-value");
 
     }// end of method
 

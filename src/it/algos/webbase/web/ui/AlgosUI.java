@@ -1,18 +1,16 @@
 package it.algos.webbase.web.ui;
 
 import com.vaadin.server.*;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import it.algos.webbase.web.AlgosApp;
-import it.algos.webbase.web.lib.Cost;
+import it.algos.webbase.web.Command.MenuCommand;
+import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
-import it.algos.webbase.web.security.Login;
+import it.algos.webbase.web.navigator.AlgosNavigator;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 
-import javax.servlet.http.Cookie;
 import java.util.Map;
 
 /**
@@ -43,8 +41,9 @@ import java.util.Map;
 public class AlgosUI extends UI {
 
     protected VerticalLayout mainLayout;
-    protected ModulePlaceholder placeholder;
     protected AMenuBar barraMenu;
+    protected NavPlaceholder placeholder;
+    private MenuBar mainBar = new MenuBar();
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -64,17 +63,12 @@ public class AlgosUI extends UI {
         // Legge eventuali parametri passati nella request
         this.checkParams(request);
 
-        // Controlla i cookies esistenti
-        this.checkCookies(request);
-
         // Controlla il login della security
         this.checkSecurity(request);
 
         // Regola il menu
-        this.regolaMenu();
-
-        boolean collegato= Login.isCollegato();
-
+        startUI();
+//        this.regolaMenu();
     }// end of method
 
     /**
@@ -91,37 +85,6 @@ public class AlgosUI extends UI {
 
     }// end of method
 
-    /**
-     * Controlla i cookies esistenti
-     * <p>
-     */
-    protected void checkCookies(VaadinRequest request) {
-        // Fetch all cookies
-        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
-
-        // Store the current cookies in the service session
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
-            }// fine del blocco if
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
-            }// fine del blocco if
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
-            }// fine del blocco if
-        } // fine del ciclo for-each
-
-
-//         Create a new cookie
-//        Cookie myCookie = new Cookie(Cost.COOKIE_LOGIN_NICK, "cookie-value");
-//        myCookie.setMaxAge(300);
-//        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
-//        VaadinService.getCurrentResponse().addCookie(myCookie);
-
-//        Cookies.setCookie("pippo", "Some-other-value");
-
-    }// end of method
 
     /**
      * Controlla il login della security
@@ -130,31 +93,92 @@ public class AlgosUI extends UI {
     protected void checkSecurity(VaadinRequest request) {
     }// end of method
 
-    /**
-     * Regola il menu
-     * <p>
-     */
-    protected void regolaMenu() {
-        mainLayout = new VerticalLayout();
-        mainLayout.setMargin(true);
-        mainLayout.setSpacing(true);
-        // mainLayout.setHeight("100%");
-        // mainLayout.setWidth("100%");
+//    /**
+//     * Regola il menu
+//     * <p>
+//     */
+//    protected void regolaMenu() {
+//        mainLayout = new VerticalLayout();
+//        mainLayout.setMargin(true);
+//        mainLayout.setSpacing(true);
+//        // mainLayout.setHeight("100%");
+//        // mainLayout.setWidth("100%");
+//
+//        // crea e aggiunge il placeholder
+//        placeholder = new ModulePlaceholder();
+//
+//        if (AlgosApp.USE_SECURITY) {
+//            barraMenu = new AMenuBar(true);
+//        } else {
+//            barraMenu = new AMenuBar();
+//        }// end of if/else cycle
+//
+//        mainLayout.addComponent(barraMenu);
+//        mainLayout.addComponent(placeholder);
+////        mainLayout.setExpandRatio(barraMenu, 1.0f);
+//        mainLayout.setExpandRatio(placeholder, 1.0f);
+//
+//        setContent(mainLayout);
+//    }// end of method
 
-        // crea e aggiunge il placeholder
-        placeholder = new ModulePlaceholder();
+    /**
+     * Mostra la UI
+     */
+    private void startUI() {
+
+        // crea la UI di base, un VerticalLayout
+        VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setMargin(true);
+        vLayout.setSpacing(false);
+        vLayout.setSizeFull();
+
+        // crea la MenuBar principale
+//        vLayout.addComponent(mainBar);
+
+        // aggiunge la menubar principale e la menubar login
+        HorizontalLayout menuLayout = new HorizontalLayout();
+        menuLayout.setHeight("40px");
+        menuLayout.setWidth("100%");
+        menuLayout.addComponent(mainBar);
+        mainBar.setHeight("100%");
+        menuLayout.setExpandRatio(mainBar, 1.0f);
 
         if (AlgosApp.USE_SECURITY) {
-            barraMenu = new AMenuBar(true);
-        } else {
-            barraMenu = new AMenuBar();
-        }// end of if/else cycle
+            MenuBar loginBar = createLoginMenuBar();
+            loginBar.setHeight("100%");
+            menuLayout.addComponent(loginBar);
+        }// fine del blocco if
 
-        mainLayout.addComponent(barraMenu);
-        mainLayout.addComponent(placeholder);
-        mainLayout.setExpandRatio(barraMenu, 1.0f);
+        vLayout.addComponent(menuLayout);
 
-        setContent(mainLayout);
+        // crea e aggiunge uno spaziatore verticale
+        HorizontalLayout spacer = new HorizontalLayout();
+        spacer.setMargin(false);
+        spacer.setSpacing(false);
+        spacer.setHeight("5px");
+        vLayout.addComponent(spacer);
+//
+        // crea e aggiunge il placeholder dove il Navigator inserirà le varie pagine
+        // a seconda delle selezioni di menu
+        // crea e aggiunge il placeholder
+        placeholder = new NavPlaceholder(null);
+        placeholder.setSizeFull();
+        vLayout.addComponent(placeholder);
+        vLayout.setExpandRatio(placeholder, 1.0f);
+
+        // assegna la UI
+        setContent(vLayout);
+
+        // crea un Navigator e lo configura in base ai contenuti della MenuBar
+        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
+        nav.configureFromMenubar(mainBar);
+        nav.navigateTo("Bolla");
+
+        this.addAllModuli();
+
+//        // set browser window title
+//        Page.getCurrent().setTitle("Sistemare");
+
     }// end of method
 
     /**
@@ -175,6 +199,57 @@ public class AlgosUI extends UI {
         }// end of if cycle
 
         AlgosApp.COMPANY_CODE = company;
+    }// end of method
+
+
+    /**
+     * Crea la menubar di Login
+     */
+    private MenuBar createLoginMenuBar() {
+        MenuBar menubar = new MenuBar();
+        MenuBar.MenuItem loginItem; // il menuItem di login
+
+
+        ThemeResource icon = new ThemeResource("img/action_user.png");
+//        MenuBar.Command command = new MenuBar.Command() {
+//
+//            @Override
+//            public void menuSelected(MenuItem selectedItem) {
+//                loginCommandSelected();
+//            }
+//        };
+
+        loginItem = menubar.addItem("Login", null, null);
+//        updateLoginUI();
+
+//        loginItem.addItem("Logout", new MenuBar.Command() {
+//            @Override
+//            public void menuSelected(MenuItem selectedItem) {
+//                logout();
+//            }
+//        });
+
+        return menubar;
+    }
+
+    /**
+     * Crea i menu specifici
+     * Sovrascritto nella sottoclasse
+     */
+    protected void addAllModuli() {
+    }// end of method
+
+    /**
+     * Crea il singolo menu
+     */
+    protected void addModulo(ModulePop modulo) {
+        UI ui = this.getUI();
+        String address = "";
+
+        address = LibPath.getClassName(modulo.getEntityClass());
+
+        MenuCommand command = new MenuCommand(ui, mainBar, address, modulo);
+        mainBar.addItem(address, null, command);
     }// end of method
 
     /**

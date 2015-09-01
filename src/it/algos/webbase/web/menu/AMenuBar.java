@@ -1,5 +1,6 @@
 package it.algos.webbase.web.menu;
 
+import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.security.LoginBar;
 import it.algos.webbase.web.ui.ModulePlaceholder;
 
@@ -81,12 +82,24 @@ public class AMenuBar extends HorizontalLayout {
 		grid.setWidth("100%");
 		loginMenuBar = createLoginMenuBar();
 
-		grid.addComponent(algosMenuBar, 0, 0);
-		grid.setComponentAlignment(algosMenuBar, Alignment.TOP_LEFT);
-		grid.addComponent(loginMenuBar, 1, 0);
-		grid.setComponentAlignment(loginMenuBar, Alignment.TOP_RIGHT);
+		// aggiunge la menubar principale e la menubar login
+		HorizontalLayout menuLayout = new HorizontalLayout();
+		menuLayout.setHeight("40px");
+		menuLayout.setWidth("100%");
+		menuLayout.addComponent(algosMenuBar);
+//        mainBar.setWidth("95%");
+		algosMenuBar.setHeight("100%");
+		menuLayout.setExpandRatio(algosMenuBar, 1.0f);
+		menuLayout.addComponent(loginMenuBar);
+		loginMenuBar.setHeight("100%");
+		this.addComponent(menuLayout);
 
-		this.addComponent(grid);
+//		grid.addComponent(algosMenuBar, 0, 0);
+//		grid.setComponentAlignment(algosMenuBar, Alignment.TOP_LEFT);
+//		grid.addComponent(loginMenuBar, 1, 0);
+//		grid.setComponentAlignment(loginMenuBar, Alignment.TOP_RIGHT);
+//
+//		this.addComponent(grid);
 	}// end of method
 
 	/**
@@ -126,7 +139,7 @@ public class AMenuBar extends HorizontalLayout {
 //		return menubar;
 	}// end of method
 
-	public void addMenu(String titolo, CustomComponent modulo, ModulePlaceholder placeholder) {
+	public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
 		MenuItem menuItem;
 		MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
 		menuItem = algosMenuBar.addItem(titolo, null, comando);

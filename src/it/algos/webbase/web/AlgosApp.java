@@ -5,7 +5,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Contenitore di costanti della applicazione
+ * Repository di costanti della applicazione
+ * <p>
+ * Alcune costanti sono 'static final', uguali per tutte le applicazioni e non modificabili
+ * Altre costanti, pur esendo utilizzate da tutti i progetti, sono solo 'static';
+ *      quindi modificabili e qui viene impostato solo il valore 'standard' iniziale
+ *      i progetti specifici possono modificare, normalmente nella classe xxxBootStrap,
+ *      queste costanti per l'utilizzo successivo
+ * I singoli progetti hanno/possono avere una classe specifica xxxApp
+ *      (tecnicamente non è una sottoclasse perché sono classi astratte di metodi statici)
+ *      per gestire delle costanti specifiche del progetto stesso che non avrebbe senso generalizzare
+ * Altre costanti 'static final' sono raggruppate nella classe it.algos.webbase.web.lib.Cost
  */
 public abstract class AlgosApp {
 

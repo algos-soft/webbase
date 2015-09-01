@@ -3,6 +3,7 @@ package it.algos.webbase.web.servlet;
 import com.google.gwt.user.client.Cookies;
 import com.vaadin.server.*;
 import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.ServletException;
@@ -27,6 +28,8 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         // Do session start stuff here
         LibSession.setDeveloper(false);
 
+        // Controlla i cookies esistenti
+        this.checkCookies();
     }// end of method
 
     @Override
@@ -58,5 +61,36 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         super.service(request, res);
     }// end of method
 
+    /**
+     * Controlla i cookies esistenti
+     * <p>
+     */
+    protected void checkCookies() {
+        // Fetch all cookies
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+        // Store the current cookies in the service session
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
+            }// fine del blocco if
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
+            }// fine del blocco if
+            if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
+                LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
+            }// fine del blocco if
+        } // fine del ciclo for-each
+
+
+//         Create a new cookie
+//        Cookie myCookie = new Cookie(Cost.COOKIE_LOGIN_NICK, "cookie-value");
+//        myCookie.setMaxAge(300);
+//        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+//        VaadinService.getCurrentResponse().addCookie(myCookie);
+
+//        Cookies.setCookie("pippo", "Some-other-value");
+
+    }// end of method
 
 }// end of abstract class

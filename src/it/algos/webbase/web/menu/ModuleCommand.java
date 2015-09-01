@@ -1,5 +1,6 @@
 package it.algos.webbase.web.menu;
 
+import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.ui.ModulePlaceholder;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 class ModuleCommand implements MenuBar.Command {
 
 	private CustomComponent component;
-	private ModulePlaceholder placeholder;
+	private NavPlaceholder placeholder;
 	private MenuBar menuBar;
 
 	/**
@@ -24,10 +25,11 @@ class ModuleCommand implements MenuBar.Command {
 	private static String MENU_ABILITATO = AMenuBar.MENU_ABILITATO;
 	private static String MENU_DISABILITATO = AMenuBar.MENU_DISABILITATO;
 
+
 	/**
 	 * Constructor
 	 */
-	public ModuleCommand(CustomComponent component, ModulePlaceholder placeholder, MenuBar menuBar) {
+	public ModuleCommand(CustomComponent component, NavPlaceholder placeholder, MenuBar menuBar) {
 		this.component = component;
 		this.placeholder = placeholder;
 		this.menuBar = menuBar;

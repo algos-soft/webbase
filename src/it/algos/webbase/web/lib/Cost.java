@@ -1,8 +1,10 @@
 package it.algos.webbase.web.lib;
 
 /**
- * Created by gac on 31 ago 2015.
- * Repository di costanti
+ * Repository di costanti della applicazione
+ * <p>
+ * Costanti per leggere/scrivere sempre uguale nelle mappe, negli attributi, nei cookies, nelle property
+ * Altre costanti 'static' sono raggruppate nella classe it.algos.webbase.web.AlgosApp
  */
 public abstract class Cost {
 

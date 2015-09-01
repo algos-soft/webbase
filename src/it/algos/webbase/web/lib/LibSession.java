@@ -93,9 +93,10 @@ public abstract class LibSession {
      */
     public static void setAttribute(String name, Object value) {
         VaadinSession session = VaadinSession.getCurrent();
+
         if (session != null) {
             session.setAttribute(name, value);
-        }
+        }// fine del blocco if
     }// end of method
 
     /**
@@ -104,9 +105,11 @@ public abstract class LibSession {
     public static Object getAttribute(String name) {
         Object value = null;
         VaadinSession session = VaadinSession.getCurrent();
+
         if (session != null) {
             value = session.getAttribute(name);
-        }
+        }// fine del blocco if
+
         return value;
     }// end of method
 

@@ -1,22 +1,20 @@
 package it.algos.webbase.web.menu;
 
+import com.vaadin.ui.*;
+import com.vaadin.ui.MenuBar.MenuItem;
+import it.algos.webbase.web.lib.LibPath;
+import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.security.LoginBar;
-import it.algos.webbase.web.ui.ModulePlaceholder;
 
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.MenuItem;
+import java.util.List;
 
 /**
- * Barra di menu.
+ * Contenitore grafico per la barra di menu principale e per il menu/bottone del Login
  * <p>
  * A sinistra i menu specifici dell'applicazione. <br>
- * A destra il menu (od i menu) della Security (login). <br>
- * Se l'applicazione non usa la security, il menu di destra non appare. <br>
+ * A destra il bottone (od i menu) della Security (login). <br>
+ * Se l'applicazione non usa la security, il bottone di destra non appare. <br>
  * Può essere sovrascritta dall'applicazione per utilizzi specifici. <br>
  * L'implementazione con GridLayout può essere modificata all'interno di questa classe. <br>
  * Se non usa la security, il GridLayout viene sostituito con HorizontalLayout. <br
@@ -28,71 +26,73 @@ import com.vaadin.ui.MenuBar.MenuItem;
 @SuppressWarnings("serial")
 public class AMenuBar extends HorizontalLayout {
 
-	private MenuBar algosMenuBar;
-	private LoginBar loginMenuBar;
+    /**
+     * Regolazioni scss.
+     */
+    public static String MENU_ABILITATO = "abilitato";
+    public static String MENU_DISABILITATO = "disabilitato";
+    private MenuBar algosMenuBar = new MenuBar();
+    private LoginBar loginMenuBar;
 
-	/**
-	 * Regolazioni scss.
-	 */
-	public static String MENU_ABILITATO = "abilitato";
-	public static String MENU_DISABILITATO = "disabilitato";
+    /**
+     * Constructor senza security
+     */
+    public AMenuBar() {
+        this(false);
+    }// end of constructor
 
-	/**
-	 * Constructor senza security
-	 */
-	public AMenuBar() {
-		this(false);
-	}// end of constructor
 
-	/**
-	 * Constructor
-	 */
-	public AMenuBar(boolean usaSecurity) {
-		init(usaSecurity);
-	}// end of constructor
+    /**
+     * Constructor
+     */
+    public AMenuBar(boolean usaSecurity) {
+        init(usaSecurity);
+    }// end of constructor
 
-	/**
-	 * Initialization
-	 * <p>
-	 * Niente margine che c'è già nel contenitore parente <br>
-	 * ˙
-	 */
-	private void init(boolean usaSecurity) {
-		this.setMargin(false);
-		this.setSpacing(true);
-		this.setHeight("10%");
-		this.setWidth("100%");
+    /**
+     * Initialization
+     * <p>
+     * Niente margine che c'è già nel contenitore parente <br>
+     * ˙
+     */
+    private void init(boolean usaSecurity) {
+        this.setMargin(false);
+        this.setSpacing(true);
+        this.setHeight("40px");
+        this.setWidth("100%");
 
-		algosMenuBar = createMenuBar();
+        algosMenuBar = createMenuBar();
+        this.addComponent(algosMenuBar);
 
-		if (usaSecurity) {
-			initConSecurity();
-		} else {
-			initSenzaSecurity();
-		}// end of if/else cycle
+        if (usaSecurity) {
+            loginMenuBar = createLoginMenuBar();
+            this.addComponent(loginMenuBar);
+        }// fine del blocco if
 
-	}// end of method
+    }// end of method
 
-	/**
-	 * Griglia di una riga con due componenti. <br>
-	 * La griglia serve per posizionare i due menu, uno a sinistra e l'altro a destra. <br>
-	 */
-	private void initConSecurity() {
-		final GridLayout grid = new GridLayout(2, 1);
-		grid.setWidth("100%");
-		loginMenuBar = createLoginMenuBar();
+    /**
+     * Griglia di una riga con due componenti. <br>
+     * La griglia serve per posizionare i due menu, uno a sinistra e l'altro a destra. <br>
+     */
+    private void initConSecurity() {
+        final GridLayout grid = new GridLayout(2, 1);
+        grid.setWidth("100%");
+        algosMenuBar = createMenuBar();
+        loginMenuBar = createLoginMenuBar();
 
-		// aggiunge la menubar principale e la menubar login
-		HorizontalLayout menuLayout = new HorizontalLayout();
-		menuLayout.setHeight("40px");
-		menuLayout.setWidth("100%");
-		menuLayout.addComponent(algosMenuBar);
+        // aggiunge la menubar principale e la menubar login
+        HorizontalLayout menuLayout = new HorizontalLayout();
+        menuLayout.setHeight("40px");
+        menuLayout.setWidth("100%");
+        menuLayout.addComponent(algosMenuBar);
 //        mainBar.setWidth("95%");
-		algosMenuBar.setHeight("100%");
-		menuLayout.setExpandRatio(algosMenuBar, 1.0f);
-		menuLayout.addComponent(loginMenuBar);
-		loginMenuBar.setHeight("100%");
-		this.addComponent(menuLayout);
+        algosMenuBar.setHeight("100%");
+        menuLayout.setExpandRatio(algosMenuBar, 1.0f);
+        menuLayout.addComponent(loginMenuBar);
+        loginMenuBar.setHeight("100%");
+        this.addComponent(menuLayout);
+        this.addComponent(new Button("Pippozbelloneterzo"));
 
 //		grid.addComponent(algosMenuBar, 0, 0);
 //		grid.setComponentAlignment(algosMenuBar, Alignment.TOP_LEFT);
@@ -100,51 +100,91 @@ public class AMenuBar extends HorizontalLayout {
 //		grid.setComponentAlignment(loginMenuBar, Alignment.TOP_RIGHT);
 //
 //		this.addComponent(grid);
-	}// end of method
+    }// end of method
 
-	/**
-	 * Layput orizzontale semplice, dato che c'è solo una menu bar. <br>
-	 */
-	private void initSenzaSecurity() {
-		final HorizontalLayout layout = new HorizontalLayout();
-		layout.setWidth("100%");
+    /**
+     * Layout orizzontale semplice, dato che c'è solo una menu bar. <br>
+     */
+    private void initSenzaSecurity() {
+        final HorizontalLayout layout = new HorizontalLayout();
+        layout.setHeight("40px");
+        layout.setWidth("100%");
 
-		layout.addComponent(algosMenuBar);
+        algosMenuBar = createMenuBar();
+        algosMenuBar.addItem("alfa", null);
+        algosMenuBar.addItem("beta", null);
+        algosMenuBar.addItem("gamma", null);
 
-		this.addComponent(layout);
-	}// end of method
+        layout.addComponent(algosMenuBar);
+        algosMenuBar.setHeight("100%");
+        layout.setExpandRatio(algosMenuBar, 1.0f);
+        this.addComponent(layout);
+    }// end of method
 
-	/**
-	 * Menu bar specifico dell'applicazione
-	 * <p>
-	 * I singoli menu vengono aggiunti dall'applicazione specifica col metodo addMenu. <br>
-	 */
-	private MenuBar createMenuBar() {
-		MenuBar menubar = new MenuBar();
-		menubar.addStyleName("algosmenubar");
+    /**
+     * Menu bar specifico dell'applicazione
+     * <p>
+     * I singoli menu vengono aggiunti dall'applicazione specifica col metodo addMenu. <br>
+     */
+    private MenuBar createMenuBar() {
+        MenuBar menubar = new MenuBar();
+        menubar.addStyleName("algosmenubar");
 
-		return menubar;
-	}// end of method
+        return menubar;
+    }// end of method
 
-	/**
-	 * Menu bar specifico della security
-	 * <p>
-	 */
-	private LoginBar createLoginMenuBar() {
-		MenuBar menubar = new MenuBar();
-		menubar.addStyleName("loginmenubar");
-		menubar.addItem("Login", null, null);
+    /**
+     * Menu bar specifico della security
+     * <p>
+     */
+    private LoginBar createLoginMenuBar() {
+        MenuBar menubar = new MenuBar();
+        menubar.addStyleName("loginmenubar");
+        menubar.addItem("Login", null, null);
 
-		return new LoginBar();
+        return new LoginBar();
 //		return menubar;
-	}// end of method
+    }// end of method
 
-	public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
-		MenuItem menuItem;
-		MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
-		menuItem = algosMenuBar.addItem(titolo, null, comando);
-		menuItem.setStyleName(MENU_DISABILITATO);
-	}// end of method
+    public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
+        MenuItem menuItem;
+        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
+        menuItem = algosMenuBar.addItem(titolo, null, comando);
+        menuItem.setStyleName(MENU_DISABILITATO);
+    }// end of method
 
+//    public void addMenu(String titolo, ModulePop modulo) {
+//        MenuItem menuItem;
+//        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
+//        menuItem = algosMenuBar.addItem(titolo, null, comando);
+//        menuItem.setStyleName(MENU_DISABILITATO);
+//    }// end of method
+
+
+    /**
+     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicatoi
+     * Aggiunge il singolo menu (item) alla barra principale di menu
+     *
+     * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
+     */
+    public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
+        String address = "";
+
+        address = LibPath.getClassName(modulo.getEntityClass());
+        this.addMenu(address, modulo, placeholder);
+    }// end of method
+
+    /**
+     * Returns a list with all the MenuItem objects in the menu bar
+     *
+     * @return a list containing the MenuItem objects in the menu bar
+     */
+    public List<MenuItem> getItems() {
+        return algosMenuBar.getItems();
+    }// end of method
+
+    public MenuBar.MenuItem addItem(String caption, MenuBar.Command command) {
+        return algosMenuBar.addItem(caption, null, command);
+    }
 
 }// end of class

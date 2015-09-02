@@ -1,110 +1,36 @@
 package it.algos.@LOWERPACK@;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.*;
-import com.vaadin.ui.Label;
-import it.algos.webbase.domain.versione.VersioneModulo;
-import it.algos.webbase.web.lib.LibPath;
-import it.algos.webbase.web.module.ModulePop;
-import it.algos.webbase.web.toolbar.Toolbar;
 import it.algos.webbase.web.ui.AlgosUI;
 
+/**
+ * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+ * <p>
+ * Qui viene regolato il theme base per tutta l'applicazione
+ * <p>
+ * Layout standard composto da:
+ * Top      - una barra composita di menu e login
+ * Body     - un placeholder per il portale della tavola/modulo
+ * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
+ * <p>
+ * Se le applicazioni specifiche vogliono una UI completamente differente,
+ * possono sovrascrivere il metodo startUI() della superclasse
+ */
 @Theme("valo")
 //@Theme("algos")
 public class @PACK@UI extends AlgosUI {
 
-    @Override
-    protected void init(VaadinRequest request) {
-        super.init(request);
-        startUI();
-    }// end of method
-
     /**
-     * Mostra la UI .
+     * Crea i menu specifici
+     * Viene normalmente sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo), DOPO le regolazioni specifiche <br>
+     * La property moduloPartenza (già regolata su VersioneModulo di default),
+     *      può essere modificata nella sottoclasse PRIMA di invocare super.addAllModuli()
      */
-    private void startUI() {
-
-        //modifica i bottoni
-        Toolbar.ALTEZZA_BOTTONI = 40;
-        Toolbar.LARGHEZZA_BOTTONI = 120;
-
-        // crea la UI di base, un VerticalLayout
-        VerticalLayout vLayout = new VerticalLayout();
-        vLayout.setMargin(true);
-        vLayout.setSpacing(false);
-        vLayout.setSizeFull();
-
-        // crea la MenuBar principale
-        MenuBar mainBar = createMenuBar();
-
-        // aggiunge la menubar principale e la menubar login
-        HorizontalLayout menuLayout = new HorizontalLayout();
-        menuLayout.setHeight("40px");
-        menuLayout.setWidth("100%");
-        menuLayout.addComponent(mainBar);
-        mainBar.setHeight("100%");
-        menuLayout.setExpandRatio(mainBar, 1.0f);
-        vLayout.addComponent(menuLayout);
-
-        // crea e aggiunge uno spaziatore verticale
-        HorizontalLayout spacer = new HorizontalLayout();
-        spacer.setMargin(false);
-        spacer.setSpacing(false);
-        spacer.setHeight("5px");
-        vLayout.addComponent(spacer);
-
-        NavPlaceholder placeholder = new NavPlaceholder(null);
-        placeholder.setSizeFull();
-        placeholder.setContent(new VersioneModulo());
-        vLayout.addComponent(placeholder);
-        vLayout.setExpandRatio(placeholder, 1.0f);
-
-        // assegna la UI
-        setContent(vLayout);
-    }
-
-    private MenuBar createMenuBar() {
-        MenuBar menubar = new MenuBar();
-
-        // Menu principali
-        menubar.addItem("Versioni", null, null);
-
-        return menubar;
+    @Override
+    protected void addAllModuli() {
+        super.addAllModuli();
     }// end of method
 
-    public class NavPlaceholder extends CustomComponent implements SingleComponentContainer {
-
-        public NavPlaceholder(Component content) {
-            super();
-            setContent(content);
-            setSizeFull();
-        }
-
-        @Override
-        public void addComponentAttachListener(ComponentAttachListener listener) {}
-
-        @Override
-        public void removeComponentAttachListener(ComponentAttachListener listener) {}
-
-        @Override
-        public void addComponentDetachListener(ComponentDetachListener listener) {}
-
-        @Override
-        public void removeComponentDetachListener(ComponentDetachListener listener) {}
-
-        @Override
-        public Component getContent() {
-            return getCompositionRoot();
-        }
-
-        @Override
-        public void setContent(Component content) {
-            setCompositionRoot(content);
-        }
-
-
-    }
-    
 }//end of UI class
 

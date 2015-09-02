@@ -5,6 +5,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import it.algos.webbase.web.Command.MenuCommand;
+import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.screen.ErrorScreen;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class AlgosNavigator extends Navigator {
      * <p/>
      * Recupera i Component dalla Menubar e crea le View per il Navigator
      */
-    public void configureFromMenubar(MenuBar mb) {
+    public void configureFromMenubar(AMenuBar mb) {
         List<MenuBar.MenuItem> items = mb.getItems();
         for (MenuBar.MenuItem item : items) {
             scanItem(item);

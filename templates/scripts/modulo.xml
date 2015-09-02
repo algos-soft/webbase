@@ -27,8 +27,8 @@
 
     <property name="baseDest" value="${basedir}${risalita}"/>
     <property name="tagLastPer" value="${preClasse}it.algos.webbase.web.entity.BaseEntity${postClasse}"/>
-    <property name="tagLastMod" value="this.addModulo(new LogMod());"/>
-    <property name="tagLastModImport" value="import com.vaadin.annotations.Theme;"/>
+    <property name="tagLastMod" value="super.addAllModuli();"/>
+    <property name="tagLastModImport" value="import it.algos.webbase.web.ui.AlgosUI;"/>
 
 
     <target name="input" description="Acquisizione del nome del progetto e del modulo da creare">
@@ -106,6 +106,7 @@
             <param name="destFile" value="${destModulo}"/>
         </antcall>
         <antcall target="modificapersistence"></antcall>
+        <antcall target="modificamoduli"></antcall>
     </target>
 
     <target name="sovrascrive" depends="clean" description="Copia il file">
@@ -185,6 +186,12 @@
     <target name="modificamoduli" depends="input">
         <replace file="${destUI}" token="${tagLastMod}" value="${tagLastMod}&#10;&#009;&#009;${tagUI}"></replace>
         <replace file="${destUI}" token="${tagLastModImport}" value="${tagLastModImport}&#10;${tagUIImport}"></replace>
+        <echo message=""/>
+        <echo message="destUI: ${destUI}"/>
+        <echo message="tagLastMod: ${tagLastMod}"/>
+        <echo message="tagLastModImport: ${tagLastModImport}"/>
+        <echo message="tagUI: ${tagUI}"/>
+        <echo message="tagUIImport: ${tagUIImport}"/>
     </target>
 
     <target name="testper">

@@ -1,19 +1,25 @@
 package it.algos.webbase.web.servlet;
 
-import com.google.gwt.user.client.Cookies;
 import com.vaadin.server.*;
-import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+/**
+ * Servlet 3.0 introduces a @WebServlet annotation which can be used to replace the traditional web.xml.
+ * <p>
+ * The straightforward approach to create a Vaadin application using servlet 3.0 annotations,
+ * is to simply move whatever is in web.xml to a custom servlet class (extends VaadinServlet)
+ * and annotate it using @WebServlet and add @WebInitParams as needed.
+ * <p><
+ * Vaadin 7.1 introduces two features which makes this a lot easier, @VaadinServletConfiguration
+ * and automatic UI finding.
+ * VaadinServletConfiguration is a type safe, Vaadin version of @WebInitParam
+ * which provides you with the option to select UI by referring the UI class
+ * directly toggle productionMode using a boolean and more
+ */
 public abstract class AlgosServlet extends VaadinServlet implements SessionInitListener, SessionDestroyListener {
 
     @Override
@@ -23,6 +29,15 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         getService().addSessionDestroyListener(this);
     }// end of method
 
+    /**
+     * Invoked when a new Vaadin service session is initialized for that service.
+     * <p>
+     * Because of the way different service instances share the same session, the listener is not necessarily notified immediately
+     * when the session is created but only when the first request for that session is handled by a specific service.
+     *
+     * @param event the initialization event
+     * @throws ServiceException a problem occurs when processing the event
+     */
     @Override
     public void sessionInit(SessionInitEvent event) throws ServiceException {
         // Do session start stuff here
@@ -32,34 +47,16 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         this.checkCookies();
     }// end of method
 
+    /**
+     * Called when a Vaadin service session is no longer used.
+     *
+     * @param event the event with details about the destroyed session
+     */
     @Override
     public void sessionDestroy(SessionDestroyEvent event) {
         // Do session end stuff here
     }// end of method
 
-    /**
-     * Dispatches client requests to the protected
-     * <code>service</code> method. There's no need to
-     * override this method.
-     *
-     * @param req the {@link HttpServletRequest} object that
-     * contains the request the client made of the servlet
-     *
-     * @param res the {@link HttpServletResponse} object that
-     * contains the response the servlet returns to the client
-     *
-     * @exception IOException if an input or output error occurs
-     * while the servlet is handling the HTTP request
-     *
-     * @exception ServletException if the HTTP request cannot
-     * be handled
-     *
-     * @see javax.servlet.Servlet#service
-     */
-    @Override
-    public void service(ServletRequest request, ServletResponse res) throws ServletException, IOException {
-        super.service(request, res);
-    }// end of method
 
     /**
      * Controlla i cookies esistenti
@@ -70,17 +67,19 @@ public abstract class AlgosServlet extends VaadinServlet implements SessionInitL
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
         // Store the current cookies in the service session
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
-            }// fine del blocco if
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
-            }// fine del blocco if
-            if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
-                LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
-            }// fine del blocco if
-        } // fine del ciclo for-each
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
+                }// fine del blocco if
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
+                }// fine del blocco if
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
 
 
 //         Create a new cookie

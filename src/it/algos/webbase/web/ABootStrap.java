@@ -34,6 +34,7 @@ public abstract class ABootStrap implements ServletContextListener {
     private DBPingRunnable dbPingRunnable;
     private Thread dbPingThread;
 
+
     public static ServletContext getServletContext() {
         return context;
     }// end of method
@@ -193,7 +194,6 @@ public abstract class ABootStrap implements ServletContextListener {
                 }// end of try/catch
 
             }// fine del ciclo while
-
         }// end of method
 
         public void stop() {

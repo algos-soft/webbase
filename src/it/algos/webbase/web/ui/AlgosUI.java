@@ -1,14 +1,13 @@
 package it.algos.webbase.web.ui;
 
 import com.vaadin.server.*;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
+import it.algos.webbase.domain.versione.VersioneModulo;
 import it.algos.webbase.web.AlgosApp;
-import it.algos.webbase.web.Command.MenuCommand;
-import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
-import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import java.util.Map;
@@ -40,10 +39,15 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AlgosUI extends UI {
 
-    protected VerticalLayout mainLayout;
-    protected AMenuBar barraMenu;
-    protected NavPlaceholder placeholder;
-    private MenuBar mainBar = new MenuBar();
+    protected static boolean DEBUG_GUI = false;
+
+    protected VerticalLayout mainLayout;        // main
+    protected AMenuBar topLayout;               // top
+    protected NavPlaceholder placeholder;       // body
+    protected HorizontalLayout footerLayout;    // footer
+
+    protected ModulePop moduloPartenza;
+//    private MenuBar mainBar = new MenuBar();
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -52,8 +56,6 @@ public class AlgosUI extends UI {
      * <p>
      * The {@link VaadinRequest} can be used to get information about the request that caused this UI to be created.
      * </p>
-     * Viene normalmente sovrascitta dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
      *
      * @param request the Vaadin request that caused this UI to be created
      */
@@ -66,9 +68,8 @@ public class AlgosUI extends UI {
         // Controlla il login della security
         this.checkSecurity(request);
 
-        // Regola il menu
-        startUI();
-//        this.regolaMenu();
+        // Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+        this.startUI();
     }// end of method
 
     /**
@@ -76,13 +77,11 @@ public class AlgosUI extends UI {
      * <p>
      */
     protected void checkParams(VaadinRequest request) {
-
         // legge il parametro "developer" (se esiste) e regola la variabile statica
         LibSession.checkDeveloper(request);
 
         // legge il parametro "debug" (se esiste) e regola la variabile statica
         LibSession.checkDebug(request);
-
     }// end of method
 
 
@@ -93,92 +92,129 @@ public class AlgosUI extends UI {
     protected void checkSecurity(VaadinRequest request) {
     }// end of method
 
-//    /**
-//     * Regola il menu
-//     * <p>
-//     */
-//    protected void regolaMenu() {
-//        mainLayout = new VerticalLayout();
-//        mainLayout.setMargin(true);
-//        mainLayout.setSpacing(true);
-//        // mainLayout.setHeight("100%");
-//        // mainLayout.setWidth("100%");
-//
-//        // crea e aggiunge il placeholder
-//        placeholder = new ModulePlaceholder();
-//
-//        if (AlgosApp.USE_SECURITY) {
-//            barraMenu = new AMenuBar(true);
-//        } else {
-//            barraMenu = new AMenuBar();
-//        }// end of if/else cycle
-//
-//        mainLayout.addComponent(barraMenu);
-//        mainLayout.addComponent(placeholder);
-////        mainLayout.setExpandRatio(barraMenu, 1.0f);
-//        mainLayout.setExpandRatio(placeholder, 1.0f);
-//
-//        setContent(mainLayout);
-//    }// end of method
 
     /**
-     * Mostra la UI
+     * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+     * Crea i menu specifici
+     * Layout standard composto da:
+     * Top      - una barra composita di menu e login
+     * Body     - un placeholder per il portale della tavola/modulo
+     * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
+     * <p>
+     * Se le applicazioni specifiche vogliono una UI differente, possono sovrascrivere questo metodo nella sottoclasse
      */
-    private void startUI() {
+    protected void startUI() {
 
         // crea la UI di base, un VerticalLayout
-        VerticalLayout vLayout = new VerticalLayout();
-        vLayout.setMargin(true);
-        vLayout.setSpacing(false);
-        vLayout.setSizeFull();
+        mainLayout = this.creaMain();
 
-        // crea la MenuBar principale
-//        vLayout.addComponent(mainBar);
-
-        // aggiunge la menubar principale e la menubar login
-        HorizontalLayout menuLayout = new HorizontalLayout();
-        menuLayout.setHeight("40px");
-        menuLayout.setWidth("100%");
-        menuLayout.addComponent(mainBar);
-        mainBar.setHeight("100%");
-        menuLayout.setExpandRatio(mainBar, 1.0f);
-
-        if (AlgosApp.USE_SECURITY) {
-            MenuBar loginBar = createLoginMenuBar();
-            loginBar.setHeight("100%");
-            menuLayout.addComponent(loginBar);
-        }// fine del blocco if
-
-        vLayout.addComponent(menuLayout);
+        // crea ed aggiunge la menubar principale e la menubar login tramite una classe dedicata
+        topLayout = this.creaTop();
+        mainLayout.addComponent(topLayout);
 
         // crea e aggiunge uno spaziatore verticale
-        HorizontalLayout spacer = new HorizontalLayout();
-        spacer.setMargin(false);
-        spacer.setSpacing(false);
-        spacer.setHeight("5px");
-        vLayout.addComponent(spacer);
-//
-        // crea e aggiunge il placeholder dove il Navigator inserirà le varie pagine
-        // a seconda delle selezioni di menu
-        // crea e aggiunge il placeholder
-        placeholder = new NavPlaceholder(null);
-        placeholder.setSizeFull();
-        vLayout.addComponent(placeholder);
-        vLayout.setExpandRatio(placeholder, 1.0f);
+        this.addSpacer();
+
+        // crea e aggiunge il placeholder dove il Navigator inserirà le varie pagine a seconda delle selezioni di menu
+        placeholder = this.creaBody();
+        mainLayout.addComponent(placeholder);
+        mainLayout.setExpandRatio(placeholder, 1.0f);
+
+        // crea ed aggiunge il footer
+        footerLayout = this.creaFooter();
+        mainLayout.addComponent(footerLayout);
 
         // assegna la UI
-        setContent(vLayout);
+        setContent(mainLayout);
 
-        // crea un Navigator e lo configura in base ai contenuti della MenuBar
-        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
-        nav.configureFromMenubar(mainBar);
-        nav.navigateTo("Bolla");
-
+//        // crea un Navigator e lo configura in base ai contenuti della MenuBar
+//        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
+//        nav.configureFromMenubar(topLayout);
+//        nav.navigateTo("Bolla");
+//
+        moduloPartenza = new VersioneModulo();
         this.addAllModuli();
 
-//        // set browser window title
-//        Page.getCurrent().setTitle("Sistemare");
+        // set browser window title
+        Page.getCurrent().setTitle("Vaadin");
 
+    }// end of method
+
+    /**
+     * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+     * Crea la UI di base, un VerticalLayout
+     * Le applicazioni specifiche, possono sovrascrivere questo metodo nella sottoclasse
+     *
+     * @return layout -  un VerticalLayout
+     */
+    protected VerticalLayout creaMain() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(false);
+        layout.setSizeFull();
+
+        if (DEBUG_GUI) {
+            layout.addStyleName("blueBg");
+        }// fine del blocco if
+
+        return layout;
+    }// end of method
+
+    /**
+     * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+     * Top  - una barra composita di menu e login
+     * Le applicazioni specifiche, possono sovrascrivere questo metodo nella sottoclasse
+     *
+     * @return layout - normalmente un AMenuBar
+     */
+    protected AMenuBar creaTop() {
+        AMenuBar menubar = new AMenuBar(AlgosApp.USE_SECURITY);
+
+        if (DEBUG_GUI) {
+            menubar.addStyleName("yellowBg");
+        }// fine del blocco if
+
+        return menubar;
+    }// end of method
+
+    /**
+     * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+     * Body - un placeholder per il portale della tavola/modulo
+     * Le applicazioni specifiche, possono sovrascrivere questo metodo nella sottoclasse
+     *
+     * @return layout - normalmente un NavPlaceholder
+     */
+    protected NavPlaceholder creaBody() {
+        NavPlaceholder placeholder = new NavPlaceholder(null);
+        placeholder.setSizeFull();
+
+        if (DEBUG_GUI) {
+            placeholder.addStyleName("greenBg");
+        }// fine del blocco if
+
+        return placeholder;
+    }// end of method
+
+    /**
+     * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
+     * Footer - un striscia per eventuali informazioni (Algo, copyright, ecc)
+     * Le applicazioni specifiche, possono sovrascrivere questo metodo nella sottoclasse
+     *
+     * @return layout - normalmente un HorizontalLayout
+     */
+    protected HorizontalLayout creaFooter() {
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setMargin(new MarginInfo(false, false, false, false));
+        footer.setSpacing(true);
+        footer.setHeight("30px");
+
+        if (DEBUG_GUI) {
+            footer.addStyleName("redBg");
+        }// fine del blocco if
+
+        footer.addComponent(new Label("Algos s.r.l."));
+
+        return footer;
     }// end of method
 
     /**
@@ -195,8 +231,8 @@ public class AlgosUI extends UI {
             // ci sono 17 valori di sistema
             if (mappa.size() == 18) {
                 company = "demo";
-            }// end of if cycle
-        }// end of if cycle
+            }// fine del blocco if
+        }// fine del blocco if
 
         AlgosApp.COMPANY_CODE = company;
     }// end of method
@@ -234,22 +270,34 @@ public class AlgosUI extends UI {
 
     /**
      * Crea i menu specifici
-     * Sovrascritto nella sottoclasse
+     * Viene normalmente sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo), DOPO le regolazioni specifiche <br>
+     * La property moduloPartenza (già regolata su VersioneModulo di default),
+     * può essere modificata nella sottoclasse PRIMA di invocare super.addAllModuli()
      */
     protected void addAllModuli() {
+        this.addModulo(moduloPartenza);
     }// end of method
 
     /**
-     * Crea il singolo menu
+     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicatoi
+     * Aggiunge il singolo menu (item) alla barra principale di menu
+     * Invocato dalla sottoclasse
+     *
+     * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
      */
     protected void addModulo(ModulePop modulo) {
-        UI ui = this.getUI();
-        String address = "";
+        if (topLayout!=null) {
+            topLayout.addModulo(modulo, placeholder);
+        }// fine del blocco if
 
-        address = LibPath.getClassName(modulo.getEntityClass());
-
-        MenuCommand command = new MenuCommand(ui, mainBar, address, modulo);
-        mainBar.addItem(address, null, command);
+//        UI ui = this.getUI();
+//        String address = "";
+//
+//        address = LibPath.getClassName(modulo.getEntityClass());
+//
+//        MenuCommand command = new MenuCommand(ui, mainBar, address, modulo);
+//        mainBar.addItem(address, null, command);
     }// end of method
 
     /**
@@ -270,9 +318,25 @@ public class AlgosUI extends UI {
         }// end of if cycle
 
         if (!titoloMenu.equals("")) {
-            barraMenu.addMenu(titoloMenu, module, placeholder);
+            topLayout.addMenu(titoloMenu, module, placeholder);
         }// end of if cycle
 
+    }// end of method
+
+    /**
+     * Crea e aggiunge uno spaziatore verticale.
+     */
+    private void addSpacer() {
+        HorizontalLayout spacer = new HorizontalLayout();
+        spacer.setMargin(false);
+        spacer.setSpacing(false);
+        spacer.setHeight("5px");
+
+        if (DEBUG_GUI) {
+            spacer.addStyleName("yellowBg");
+        }// fine del blocco if
+
+        mainLayout.addComponent(spacer);
     }// end of method
 
 }// end of class

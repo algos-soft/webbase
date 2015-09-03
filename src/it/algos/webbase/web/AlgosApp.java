@@ -9,12 +9,12 @@ import java.nio.file.Paths;
  * <p>
  * Alcune costanti sono 'static final', uguali per tutte le applicazioni e non modificabili
  * Altre costanti, pur esendo utilizzate da tutti i progetti, sono solo 'static';
- *      quindi modificabili e qui viene impostato solo il valore 'standard' iniziale
- *      i progetti specifici possono modificare, normalmente nella classe xxxBootStrap,
- *      queste costanti per l'utilizzo successivo
+ * quindi modificabili e qui viene impostato solo il valore 'standard' iniziale
+ * i progetti specifici possono modificare, normalmente nella classe xxxBootStrap,
+ * queste costanti per l'utilizzo successivo
  * I singoli progetti hanno/possono avere una classe specifica xxxApp
- *      (tecnicamente non è una sottoclasse perché sono classi astratte di metodi statici)
- *      per gestire delle costanti specifiche del progetto stesso che non avrebbe senso generalizzare
+ * (tecnicamente non è una sottoclasse perché sono classi astratte di metodi statici)
+ * per gestire delle costanti specifiche del progetto stesso che non avrebbe senso generalizzare
  * Altre costanti 'static final' sono raggruppate nella classe it.algos.webbase.web.lib.Cost
  */
 public abstract class AlgosApp {
@@ -50,9 +50,32 @@ public abstract class AlgosApp {
 
     /**
      * Use security access.<br>
-     * Not final<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
      */
     public static boolean USE_SECURITY = false;
+
+    /**
+     * Use versione entity.<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean USE_VERS = true;
+
+    /**
+     * Use preferences entity.<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean USE_LOG = false;
+
+    /**
+     * Use logo entity.<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean USE_PREF = false;
+
     /**
      * Use company.<br>
      * Not final<br>

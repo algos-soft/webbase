@@ -101,7 +101,7 @@ public class AlgosUI extends UI {
      * Body     - un placeholder per il portale della tavola/modulo
      * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
      * <p>
-     * Se le applicazioni specifiche vogliono una UI differente, possono sovrascrivere questo metodo nella sottoclasse
+     * Può essere sovrascitto per gestire la UI in maniera completamente diversa
      */
     protected void startUI() {
 
@@ -124,20 +124,20 @@ public class AlgosUI extends UI {
         footerLayout = this.creaFooter();
         mainLayout.addComponent(footerLayout);
 
-        // assegna la UI
-        setContent(mainLayout);
-
 //        // crea un Navigator e lo configura in base ai contenuti della MenuBar
 //        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
 //        nav.configureFromMenubar(topLayout);
 //        nav.navigateTo("Bolla");
 //
-        moduloPartenza = new VersioneModulo();
+        // Crea i menu specifici per la gestione dei moduli
         this.addAllModuli();
+//        moduloPartenza = new VersioneModulo();
 
         // set browser window title
         Page.getCurrent().setTitle("Vaadin");
 
+        // assegna la UI
+        setContent(mainLayout);
     }// end of method
 
     /**
@@ -269,14 +269,29 @@ public class AlgosUI extends UI {
     }
 
     /**
-     * Crea i menu specifici
-     * Viene normalmente sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo), DOPO le regolazioni specifiche <br>
-     * La property moduloPartenza (già regolata su VersioneModulo di default),
-     * può essere modificata nella sottoclasse PRIMA di invocare super.addAllModuli()
+     * Crea i menu per la gestione dei moduli
+     * Alcuni moduli sono già definiti per tutte le applicazioni e vengono usati o meno secondo i flags:
+     * AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
      */
-    protected void addAllModuli() {
-        this.addModulo(moduloPartenza);
+    private void addAllModuli() {
+//        if (AlgosApp.USE_LOG) {
+//            this.addModulo(new LogMod());
+//        }// fine del blocco if
+        if (AlgosApp.USE_VERS) {
+            this.addModulo(new VersioneModulo());
+        }// fine del blocco if
+//        if (AlgosApp.USE_LOG) {
+//            this.addModulo(new PrefMod());
+//        }// fine del blocco if
+
+        this.addModuli();
+    }// end of method
+
+    /**
+     * Crea i menu specifici per la gestione dei moduli
+     * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     */
+    protected void addModuli() {
     }// end of method
 
     /**
@@ -287,7 +302,7 @@ public class AlgosUI extends UI {
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
      */
     protected void addModulo(ModulePop modulo) {
-        if (topLayout!=null) {
+        if (topLayout != null) {
             topLayout.addModulo(modulo, placeholder);
         }// fine del blocco if
 

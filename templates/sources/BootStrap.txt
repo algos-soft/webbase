@@ -2,7 +2,7 @@ package it.algos.@LOWERPACK@;
 
 import it.algos.webbase.web.ABootStrap;
 import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.domain.versione.LibVers;
+import it.algos.webbase.domain.vers.LibVers;
 import it.algos.webbase.web.toolbar.Toolbar;
 
 import javax.servlet.ServletContext;
@@ -51,9 +51,15 @@ public class @PACK@BootStrap extends ABootStrap {
         // registra il servlet context non appena è disponibile
         @PACK@App.setServletContext(svltCtx);
 
-        //modifica i bottoni
+        // modifica le dimensioni dei bottoni
         Toolbar.ALTEZZA_BOTTONI = 40;
         Toolbar.LARGHEZZA_BOTTONI = 120;
+
+        // eventuali modifche ai flag generali di regolazione
+        // AlgosApp.USE_SECURITY = true;
+        // AlgosApp.USE_LOG= true;
+        // AlgosApp.USE_VERS= false;
+        // AlgosApp.USE_PREF= false;
 
     }// end of method
 

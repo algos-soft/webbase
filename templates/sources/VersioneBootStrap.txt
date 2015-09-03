@@ -1,6 +1,6 @@
 package it.algos.@LOWERPACK@;
 
-import it.algos.webbase.domain.versione.LibVers;
+import it.algos.webbase.domain.vers.LibVers;
 
 import javax.servlet.ServletContext;
 

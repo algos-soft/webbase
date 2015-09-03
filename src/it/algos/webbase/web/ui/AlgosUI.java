@@ -11,6 +11,7 @@ import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.servlet.http.Cookie;
@@ -50,8 +51,8 @@ public class AlgosUI extends UI {
     protected NavPlaceholder placeholder;       // body
     protected HorizontalLayout footerLayout;    // footer
 
-    protected ModulePop moduloPartenza;
-//    private MenuBar mainBar = new MenuBar();
+    protected String menuAddressModuloPartenza;
+
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -60,6 +61,9 @@ public class AlgosUI extends UI {
      * <p>
      * The {@link VaadinRequest} can be used to get information about the request that caused this UI to be created.
      * </p>
+     * Se viene sovrascritto dalla sottoclasse, deve (DEVE) richiamare anche il metodo della superclasse
+     * di norma DOPO aver effettuato alcune regolazioni <br>
+     * Nella sottoclasse specifica viene eventualmente regolato il nome del modulo di partenza <br>
      *
      * @param request the Vaadin request that caused this UI to be created
      */
@@ -166,14 +170,13 @@ public class AlgosUI extends UI {
         footerLayout = this.creaFooter();
         mainLayout.addComponent(footerLayout);
 
-//        // crea un Navigator e lo configura in base ai contenuti della MenuBar
-//        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
-//        nav.configureFromMenubar(topLayout);
-//        nav.navigateTo("Bolla");
-//
         // Crea i menu specifici per la gestione dei moduli
         this.addAllModuli();
-//        moduloPartenza = new VersioneModulo();
+
+        // crea un Navigator e lo configura in base ai contenuti della MenuBar
+        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
+        nav.configureFromMenubar(topLayout);
+//        nav.navigateTo(moduloPartenza);
 
         // set browser window title
         Page.getCurrent().setTitle("Vaadin");

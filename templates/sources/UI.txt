@@ -16,20 +16,38 @@ import it.algos.webbase.web.ui.AlgosUI;
  * Se le applicazioni specifiche vogliono una UI completamente differente,
  * possono sovrascrivere il metodo startUI() della superclasse
  */
-@Theme("valo")
-//@Theme("algos")
+//@Theme("valo")
+@Theme("algos")
 public class @PACK@UI extends AlgosUI {
 
     /**
-     * Crea i menu specifici
-     * Viene normalmente sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo), DOPO le regolazioni specifiche <br>
-     * La property moduloPartenza (già regolata su VersioneModulo di default),
-     *      può essere modificata nella sottoclasse PRIMA di invocare super.addAllModuli()
+     * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
+     * non-component functionality. Performing the initialization in a constructor is not suggested as the state of the
+     * UI is not properly set up when the constructor is invoked.
+     * <p>
+     * The {@link VaadinRequest} can be used to get information about the request that caused this UI to be created.
+     * </p>
+     * Se viene sovrascritto dalla sottoclasse, deve (DEVE) richiamare anche il metodo della superclasse
+     * di norma DOPO aver effettuato alcune regolazioni <br>
+     * Nella sottoclasse specifica viene eventualmente regolato il nome del modulo di partenza <br>
+     *
+     * @param request the Vaadin request that caused this UI to be created
      */
     @Override
-    protected void addAllModuli() {
-        super.addAllModuli();
+    protected void init(VaadinRequest request) {
+        AlgosUI.DEBUG_GUI = true;
+       //  menuAddressModuloPartenza = "Bolla";
+        super.init(request);
+    }// end of method
+
+
+    /**
+     * Crea i menu specifici per la gestione dei moduli
+     * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     */
+    @Override
+    protected void addModuli() {
+        // this.addModulo(new BollaMod());
     }// end of method
 
 }//end of UI class

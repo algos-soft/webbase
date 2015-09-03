@@ -11,9 +11,9 @@
 		<class>it.algos.webbase.domain.ruolo.Ruolo</class>
 		<class>it.algos.webbase.domain.utente.Utente</class>
 		<class>it.algos.webbase.domain.utenteruolo.UtenteRuolo</class>
-		<class>it.algos.webbase.domain.versione.Versione</class>
-        <class>it.algos.webbase.domain.pref.Pref</class>
         <class>it.algos.webbase.domain.log.Log</class>
+		<class>it.algos.webbase.domain.vers.Versione</class>
+        <class>it.algos.webbase.domain.pref.Pref</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

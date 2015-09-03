@@ -1,4 +1,4 @@
-package it.algos.webbase.domain.versione;
+package it.algos.webbase.domain.vers;
 /**
  * Created by Gac on 17 lug 2015.
  * Using specific Templates (Entity, Domain, Modulo)
@@ -8,16 +8,18 @@ package it.algos.webbase.domain.versione;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @SuppressWarnings("serial")
-public class VersioneModulo extends ModulePop {
+public class VersMod extends ModulePop {
 
 
-    public VersioneModulo() {
-        super(Versione.class);
-    }// end of basic constructor
+    // indirizzo interno del modulo (serve nei menu)
+    public static String MENU_ADDRESS = "Vers";
+
+
+    public VersMod() {
+        super(Versione.class, MENU_ADDRESS);
+    }// end of constructor
 
 
     /**

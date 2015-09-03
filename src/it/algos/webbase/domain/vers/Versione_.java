@@ -1,4 +1,4 @@
-package it.algos.webbase.domain.versione;
+package it.algos.webbase.domain.vers;
 /**
  * Created by Gac on 17 lug 2015.
  * Using specific Templates (Entity, Domain, Modulo)

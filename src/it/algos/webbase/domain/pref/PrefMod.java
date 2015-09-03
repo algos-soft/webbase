@@ -13,7 +13,7 @@ import javax.persistence.metamodel.Attribute;
 public class PrefMod extends ModulePop {
 
     // indirizzo interno del modulo (serve nei menu)
-    public static String MENU_ADDRESS = "Preferenze";
+    public static String MENU_ADDRESS = "Pref";
 
 
     public PrefMod() {

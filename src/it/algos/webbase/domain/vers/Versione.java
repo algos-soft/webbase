@@ -1,4 +1,4 @@
-package it.algos.webbase.domain.versione;
+package it.algos.webbase.domain.vers;
 /**
  * Created by Gac on 17 lug 2015.
  * Using specific Templates (Entity, Domain, Modulo)
@@ -9,7 +9,6 @@ import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;

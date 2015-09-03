@@ -56,13 +56,6 @@ public abstract class AlgosApp {
     public static boolean USE_SECURITY = false;
 
     /**
-     * Use versione entity.<br>
-     * Not final flag<br>
-     * Can be overwritten on local xxxBootStrap.contextInitialized() method
-     */
-    public static boolean USE_VERS = true;
-
-    /**
      * Use preferences entity.<br>
      * Not final flag<br>
      * Can be overwritten on local xxxBootStrap.contextInitialized() method
@@ -70,11 +63,18 @@ public abstract class AlgosApp {
     public static boolean USE_LOG = false;
 
     /**
+     * Use versione entity.<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean USE_VERS = true;
+
+    /**
      * Use logo entity.<br>
      * Not final flag<br>
      * Can be overwritten on local xxxBootStrap.contextInitialized() method
      */
-    public static boolean USE_PREF = false;
+    public static boolean USE_PREF = true;
 
     /**
      * Use company.<br>

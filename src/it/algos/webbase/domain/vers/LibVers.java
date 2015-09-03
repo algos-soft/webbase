@@ -1,4 +1,4 @@
-package it.algos.webbase.domain.versione;
+package it.algos.webbase.domain.vers;
 
 import java.util.Date;
 import java.util.List;

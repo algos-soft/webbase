@@ -3,13 +3,17 @@ package it.algos.webbase.web.ui;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
-import it.algos.webbase.domain.versione.VersioneModulo;
+import it.algos.webbase.domain.log.LogMod;
+import it.algos.webbase.domain.pref.PrefMod;
+import it.algos.webbase.domain.vers.VersMod;
 import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
+import javax.servlet.http.Cookie;
 import java.util.Map;
 
 /**
@@ -65,6 +69,9 @@ public class AlgosUI extends UI {
         // Legge eventuali parametri passati nella request
         this.checkParams(request);
 
+        // Legge i cookies dalla request
+        this.checkCookies(request);
+
         // Controlla il login della security
         this.checkSecurity(request);
 
@@ -74,6 +81,7 @@ public class AlgosUI extends UI {
 
     /**
      * Legge eventuali parametri passati nella request
+     * Legge i cookies dalla request
      * <p>
      */
     protected void checkParams(VaadinRequest request) {
@@ -84,6 +92,40 @@ public class AlgosUI extends UI {
         LibSession.checkDebug(request);
     }// end of method
 
+
+    /**
+     * Controlla i cookies esistenti
+     * <p>
+     */
+    protected void checkCookies(VaadinRequest request) {
+        // Fetch all cookies
+        Cookie[] cookies = request.getCookies();
+
+        // Store the current cookies in the service session
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
+                }// fine del blocco if
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
+                }// fine del blocco if
+                if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
+                    LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+
+//         Create a new cookie
+//        Cookie myCookie = new Cookie(Cost.COOKIE_LOGIN_NICK, "cookie-value");
+//        myCookie.setMaxAge(300);
+//        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+//        VaadinService.getCurrentResponse().addCookie(myCookie);
+
+//        Cookies.setCookie("pippo", "Some-other-value");
+
+    }// end of method
 
     /**
      * Controlla il login della security
@@ -101,7 +143,7 @@ public class AlgosUI extends UI {
      * Body     - un placeholder per il portale della tavola/modulo
      * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
      * <p>
-     * Può essere sovrascitto per gestire la UI in maniera completamente diversa
+     * Può essere sovrascritto per gestire la UI in maniera completamente diversa
      */
     protected void startUI() {
 
@@ -269,22 +311,29 @@ public class AlgosUI extends UI {
     }
 
     /**
-     * Crea i menu per la gestione dei moduli
-     * Alcuni moduli sono già definiti per tutte le applicazioni e vengono usati o meno secondo i flags:
-     * AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
+     * Crea i menu per la gestione dei moduli (standard e specifici)
+     * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
      */
     private void addAllModuli() {
-//        if (AlgosApp.USE_LOG) {
-//            this.addModulo(new LogMod());
-//        }// fine del blocco if
-        if (AlgosApp.USE_VERS) {
-            this.addModulo(new VersioneModulo());
-        }// fine del blocco if
-//        if (AlgosApp.USE_LOG) {
-//            this.addModulo(new PrefMod());
-//        }// fine del blocco if
-
+        this.addModuliStandard();
         this.addModuli();
+    }// end of method
+
+
+    /**
+     * Crea i menu per la gestione dei moduli standar definiti nel progetto webbase
+     * Vengono usati o meno secondo i flags (sovrascrivibili): AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
+     */
+    private void addModuliStandard() {
+        if (AlgosApp.USE_LOG) {
+            this.addModulo(new LogMod());
+        }// fine del blocco if
+        if (AlgosApp.USE_VERS) {
+            this.addModulo(new VersMod());
+        }// fine del blocco if
+        if (AlgosApp.USE_PREF) {
+            this.addModulo(new PrefMod());
+        }// fine del blocco if
     }// end of method
 
     /**
@@ -297,6 +346,7 @@ public class AlgosUI extends UI {
     /**
      * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicatoi
      * Aggiunge il singolo menu (item) alla barra principale di menu
+     * Rimanda al metodo omonimo della classe AMenuBar (dedicata per il menu algosMenuBar e loginMenuBar)
      * Invocato dalla sottoclasse
      *
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
@@ -305,41 +355,33 @@ public class AlgosUI extends UI {
         if (topLayout != null) {
             topLayout.addModulo(modulo, placeholder);
         }// fine del blocco if
-
-//        UI ui = this.getUI();
-//        String address = "";
-//
-//        address = LibPath.getClassName(modulo.getEntityClass());
-//
-//        MenuCommand command = new MenuCommand(ui, mainBar, address, modulo);
-//        mainBar.addItem(address, null, command);
     }// end of method
 
+//    /**
+//     * Aggiunge un modulo alla barra di menu.
+//     * <p>
+//     * Il modulo viene visualizzato nel placeholder <br>
+//     */
+//    protected void addModule(CustomComponent module) {
+//        ModulePop modulo = null;
+//        String titoloMenu = "";
+//
+//        if (module != null) {
+//            modulo = (ModulePop) module;
+//        }// end of if cycle
+//
+//        if (modulo != null) {
+//            titoloMenu = modulo.getClassName();
+//        }// end of if cycle
+//
+//        if (!titoloMenu.equals("")) {
+//            topLayout.addMenu(titoloMenu, module, placeholder);
+//        }// end of if cycle
+//
+//    }// end of method
+
     /**
-     * Aggiunge un modulo alla barra di menu.
-     * <p>
-     * Il modulo viene visualizzato nel placeholder <br>
-     */
-    protected void addModule(CustomComponent module) {
-        ModulePop modulo = null;
-        String titoloMenu = "";
-
-        if (module != null) {
-            modulo = (ModulePop) module;
-        }// end of if cycle
-
-        if (modulo != null) {
-            titoloMenu = modulo.getClassName();
-        }// end of if cycle
-
-        if (!titoloMenu.equals("")) {
-            topLayout.addMenu(titoloMenu, module, placeholder);
-        }// end of if cycle
-
-    }// end of method
-
-    /**
-     * Crea e aggiunge uno spaziatore verticale.
+     * Crea e aggiunge uno spaziatore verticale di altezza fissa
      */
     private void addSpacer() {
         HorizontalLayout spacer = new HorizontalLayout();
@@ -353,5 +395,6 @@ public class AlgosUI extends UI {
 
         mainLayout.addComponent(spacer);
     }// end of method
+
 
 }// end of class

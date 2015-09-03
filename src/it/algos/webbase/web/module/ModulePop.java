@@ -15,7 +15,7 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
-import it.algos.webbase.web.search.*;
+import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ATable.TableListener;
 import it.algos.webbase.web.table.TablePortal;
@@ -36,20 +36,34 @@ public abstract class ModulePop extends Module {
     private static final boolean MOSTRA_ID = true;
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
+
     // elenco dei campi da mostrare nel form (ordinato)
     protected Attribute<?, ?>[] fieldsList;
     protected Attribute<?, ?>[] fieldsForm;
     protected Attribute<?, ?>[] fieldsSearch;
+
     // titolo del dialogo nuovo
     private String titoloNew;
+
     // titolo del dialogo di modifica
     private String titoloEdit;
+
     // titolo del dialogo di ricerca
     private String titoloSearch;
 
+    // indirizzo interno del modulo (serve nei menu)
+    private String menuAddress;
+
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ModulePop(Class entity) {
+        this(entity, "");
+    }// end of constructor
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public ModulePop(Class entity, String menuAddress) {
         super();
+        this.setMenuAddress(menuAddress);
 
         if (entity != null) {
             this.entityClass = (Class<BaseEntity>) entity;
@@ -804,6 +818,14 @@ public abstract class ModulePop extends Module {
         }// end of if cycle
 
         return name;
+    }// end of method
+
+    public String getMenuAddress() {
+        return menuAddress;
+    }// end of method
+
+    private void setMenuAddress(String menuAddress) {
+        this.menuAddress = menuAddress;
     }// end of method
 
 }// end of class

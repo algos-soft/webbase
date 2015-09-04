@@ -38,11 +38,13 @@ public class @PACK@BootStrap extends ABootStrap {
     /**
      * Executed on container startup
      * <p>
-     * Setup non-UI logic here
+     * Setup non-UI logic here <br>
+     * Viene normalmente sovrascritta dalla sottoclasse per regolare alcuni flag dell'applicazione <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
      */
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        super.contextInitialized(sce);
+    public void contextInitialized(ServletContextEvent contextEvent) {
+        super.contextInitialized(contextEvent);
         ServletContext svltCtx = ABootStrap.getServletContext();
 
         // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)

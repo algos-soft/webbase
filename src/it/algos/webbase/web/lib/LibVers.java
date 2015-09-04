@@ -1,4 +1,6 @@
-package it.algos.webbase.domain.vers;
+package it.algos.webbase.web.lib;
+
+import it.algos.webbase.domain.vers.Versione;
 
 import java.util.Date;
 import java.util.List;
@@ -49,8 +51,14 @@ public abstract class LibVers {
     //--crea una versione
     //--la crea SOLO se non esiste già
     public static void nuova(String titolo, String descrizione) {
-        Versione versione;
         int numero = getMaxVersione() + 1;
+        nuova(numero, titolo, descrizione);
+    }// fine del metodo statico
+
+    //--crea una versione
+    //--la crea SOLO se non esiste già
+    public static void nuova(int numero, String titolo, String descrizione) {
+        Versione versione;
         Date giorno = new Date();
 
         versione = new Versione();

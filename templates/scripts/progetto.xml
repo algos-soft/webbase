@@ -7,6 +7,7 @@
     <property name="servlet" value="Servlet"/>
     <property name="ui" value="UI"/>
     <property name="versione" value="VersioneBootStrap"/>
+    <property name="security" value="SecurityBootStrap"/>
 
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
@@ -39,6 +40,7 @@
     <property name="srcServlet" value="${srcDir}/${servlet}${srcSuffix}"/>
     <property name="srcUI" value="${srcDir}/${ui}${srcSuffix}"/>
     <property name="srcVers" value="${srcDir}/${versione}${srcSuffix}"/>
+    <property name="srcSec" value="${srcDir}/${security}${srcSuffix}"/>
 
     <property name="srcPersistence" value="${srcDir}/${persistence}${srcSuffix}"/>
     <property name="srcWeb" value="${srcDir}/${web}${srcSuffix}"/>
@@ -72,6 +74,7 @@
         <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
         <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
         <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
+        <property name="destSec" value="${destDirIt}/${security}${destSufJava}"/>
 
         <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
         <property name="destWeb" value="${destDir}/${discesaWebInf}${web}${destSufXml}"/>
@@ -162,10 +165,6 @@
             <param name="sourceFile" value="${srcUI}"/>
             <param name="destFile" value="${destUI}"/>
         </antcall>
-        <antcall target="creaSingoloFile">
-            <param name="sourceFile" value="${srcVers}"/>
-            <param name="destFile" value="${destVers}"/>
-        </antcall>
 
         <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcPersistence}"/>
@@ -200,6 +199,15 @@
             <param name="sourceFile" value="${srcStyles}"/>
             <param name="destFile" value="${destStyles}"/>
         </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcVers}"/>
+            <param name="destFile" value="${destVers}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcSec}"/>
+            <param name="destFile" value="${destSec}"/>
+        </antcall>
+
         <antcall target="creaDirectory">
             <param name="srcDirectory" value="${srcImg}"/>
             <param name="destDirectory" value="${destImg}"/>
@@ -223,10 +231,6 @@
             <param name="sourceFile" value="${srcUI}"/>
             <param name="destFile" value="${destUI}"/>
         </antcall>
-        <antcall target="creaSingoloFile">
-            <param name="sourceFile" value="${srcVers}"/>
-            <param name="destFile" value="${destVers}"/>
-        </antcall>
 
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcPersistence}"/>
@@ -261,6 +265,15 @@
             <param name="sourceFile" value="${srcStyles}"/>
             <param name="destFile" value="${destStyles}"/>
         </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcVers}"/>
+            <param name="destFile" value="${destVers}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcSec}"/>
+            <param name="destFile" value="${destSec}"/>
+        </antcall>
+
         <antcall target="creaDirectory">
             <param name="srcDirectory" value="${srcImg}"/>
             <param name="destDirectory" value="${destImg}"/>

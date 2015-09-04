@@ -3,19 +3,26 @@ package it.algos.@LOWERPACK@;
 import it.algos.webbase.domain.vers.LibVers;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextListener;
 
 /**
+ * Version BootStrap
  * Log delle versioni, modifiche e patch installate
  */
 public class VersioneBootStrap {
 
     /**
+     * This method is called prior to the servlet context being
+     * initialized (when the Web application is deployed).
+     * You can initialize servlet context related data here.
+     * <p>
      * Tutte le aggiunte, modifiche e patch vengono inserite con una versione <br>
-     * l'ordine di inserimento è FONDAMENTALE
+     * L'ordine di inserimento è FONDAMENTALE
      * <p>
      * Se le versioni aumentano, conviene spostare in una classe esterna
      */
-    public static void init(ServletContext svltCtx) {
+    @Override
+    public void contextInitialized(ServletContextEvent contextEvent) {
 
         //--prima installazione del programma
         //--non fa nulla, solo informativo
@@ -24,5 +31,16 @@ public class VersioneBootStrap {
         }// fine del blocco if
 
     }// end of method
+
+
+    /**
+     * This method is invoked when the Servlet Context
+     * (the Web application) is undeployed or
+     * WebLogic Server shuts down.
+     */
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    }// end of method
+
 
 }// end of boot class

@@ -5,6 +5,9 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import it.algos.webbase.domain.log.LogMod;
 import it.algos.webbase.domain.pref.PrefMod;
+import it.algos.webbase.domain.ruolo.RuoloModulo;
+import it.algos.webbase.domain.utente.UtenteModulo;
+import it.algos.webbase.domain.utenteruolo.UtenteRuoloModulo;
 import it.algos.webbase.domain.vers.VersMod;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
@@ -15,6 +18,7 @@ import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.servlet.http.Cookie;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -52,7 +56,7 @@ public class AlgosUI extends UI {
     protected HorizontalLayout footerLayout;    // footer
 
     protected String menuAddressModuloPartenza;
-
+    protected ArrayList<ModulePop> moduli;
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -170,13 +174,11 @@ public class AlgosUI extends UI {
         footerLayout = this.creaFooter();
         mainLayout.addComponent(footerLayout);
 
-        // Crea i menu specifici per la gestione dei moduli
+        // Crea i menu per la gestione dei moduli (standard e specifici)
         this.addAllModuli();
 
         // crea un Navigator e lo configura in base ai contenuti della MenuBar
-        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
-        nav.configureFromMenubar(topLayout);
-//        nav.navigateTo(moduloPartenza);
+        this.creaPartenza();
 
         // set browser window title
         Page.getCurrent().setTitle("Vaadin");
@@ -318,6 +320,7 @@ public class AlgosUI extends UI {
      * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
      */
     private void addAllModuli() {
+        moduli = new ArrayList<ModulePop>();
         this.addModuliStandard();
         this.addModuli();
     }// end of method
@@ -328,6 +331,12 @@ public class AlgosUI extends UI {
      * Vengono usati o meno secondo i flags (sovrascrivibili): AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
      */
     private void addModuliStandard() {
+        if (LibSession.isDeveloper()) {
+            this.addModulo(new RuoloModulo());
+            this.addModulo(new UtenteModulo());
+            this.addModulo(new UtenteRuoloModulo());
+        }// fine del blocco if
+
         if (AlgosApp.USE_LOG) {
             this.addModulo(new LogMod());
         }// fine del blocco if
@@ -347,7 +356,8 @@ public class AlgosUI extends UI {
     }// end of method
 
     /**
-     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicatoi
+     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
+     * Aggiunge il modulo alla lista interna
      * Aggiunge il singolo menu (item) alla barra principale di menu
      * Rimanda al metodo omonimo della classe AMenuBar (dedicata per il menu algosMenuBar e loginMenuBar)
      * Invocato dalla sottoclasse
@@ -355,33 +365,11 @@ public class AlgosUI extends UI {
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
      */
     protected void addModulo(ModulePop modulo) {
+        moduli.add(modulo);
         if (topLayout != null) {
             topLayout.addModulo(modulo, placeholder);
         }// fine del blocco if
     }// end of method
-
-//    /**
-//     * Aggiunge un modulo alla barra di menu.
-//     * <p>
-//     * Il modulo viene visualizzato nel placeholder <br>
-//     */
-//    protected void addModule(CustomComponent module) {
-//        ModulePop modulo = null;
-//        String titoloMenu = "";
-//
-//        if (module != null) {
-//            modulo = (ModulePop) module;
-//        }// end of if cycle
-//
-//        if (modulo != null) {
-//            titoloMenu = modulo.getClassName();
-//        }// end of if cycle
-//
-//        if (!titoloMenu.equals("")) {
-//            topLayout.addMenu(titoloMenu, module, placeholder);
-//        }// end of if cycle
-//
-//    }// end of method
 
     /**
      * Crea e aggiunge uno spaziatore verticale di altezza fissa
@@ -399,5 +387,13 @@ public class AlgosUI extends UI {
         mainLayout.addComponent(spacer);
     }// end of method
 
+    /**
+     * crea un Navigator e lo configura in base ai contenuti della MenuBar
+     */
+    private void creaPartenza() {
+        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
+        nav.configureFromMenubar(topLayout);
+//        nav.navigateTo(menuAddressModuloPartenza);
+    }// end of method
 
 }// end of class

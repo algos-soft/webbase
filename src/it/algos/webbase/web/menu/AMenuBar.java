@@ -3,6 +3,7 @@ package it.algos.webbase.web.menu;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.lib.LibPath;
+import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.security.LoginBar;
@@ -128,7 +129,10 @@ public class AMenuBar extends HorizontalLayout {
      */
     private MenuBar createMenuBar() {
         MenuBar menubar = new MenuBar();
-        menubar.addStyleName("algosmenubar");
+        if (LibSession.isDeveloper()) {
+            menubar.addStyleName("mymenubar");
+        }// fine del blocco if
+
 
         return menubar;
     }// end of method

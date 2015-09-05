@@ -337,11 +337,11 @@ public class AlgosUI extends UI {
             this.addModulo(new UtenteRuoloModulo());
         }// fine del blocco if
 
-        if (AlgosApp.USE_LOG) {
-            this.addModulo(new LogMod());
-        }// fine del blocco if
         if (AlgosApp.USE_VERS) {
             this.addModulo(new VersMod());
+        }// fine del blocco if
+        if (AlgosApp.USE_LOG) {
+            this.addModulo(new LogMod());
         }// fine del blocco if
         if (AlgosApp.USE_PREF) {
             this.addModulo(new PrefMod());

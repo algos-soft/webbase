@@ -4,7 +4,9 @@ package it.algos.webbase.domain.pref;
  * Using specific Templates (Entity, Domain, Modulo)
  */
 
+import com.vaadin.ui.Notification;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.lib.LibVers;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -35,6 +37,7 @@ public class Pref extends BaseEntity {
     private BigDecimal decimale;// DECIMAL(19,2)
     private Date data;// DATETIME
     private String testo;// LONGTEXT
+
 
     public Pref() {
         super();
@@ -118,6 +121,7 @@ public class Pref extends BaseEntity {
             return suggerito;
         }// fine del blocco if-else
     } // end of method
+
 
     public Integer getInt() {
         if (type == TypePref.intero) {

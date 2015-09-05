@@ -63,7 +63,8 @@ public class UtenteModulo extends ModulePop {
 	 * @return the Form
 	 */
 	public AForm createForm(Item item) {
-		Utente uti = LoginLogic.getUtente();
+		Utente uti = null;
+//		uti=LoginLogic.getUtente();
 		if (uti != null) {
 			Notification.show("Utente loggato sempbra proprio che sia: " + uti.getNickname(),
 					Notification.Type.HUMANIZED_MESSAGE);

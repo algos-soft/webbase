@@ -2,7 +2,7 @@ package it.algos.webbase.web.lib;
 
 import it.algos.webbase.domain.vers.Versione;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public abstract class LibVers {
@@ -59,7 +59,7 @@ public abstract class LibVers {
     //--la crea SOLO se non esiste già
     public static void nuova(int numero, String titolo, String descrizione) {
         Versione versione;
-        Date giorno = new Date();
+        Timestamp giorno = new Timestamp(System.currentTimeMillis());
 
         versione = new Versione();
         versione.setNumero(numero);

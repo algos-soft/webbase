@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,8 @@ public class Versione extends BaseEntity {
 
     private String descrizione;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    private Date giorno = new Date();
+    private Timestamp giorno;
 
 
     public Versione() {
@@ -120,11 +120,11 @@ public class Versione extends BaseEntity {
         this.descrizione = descrizione;
     }
 
-    public Date getGiorno() {
+    public Timestamp getGiorno() {
         return giorno;
     }
 
-    public void setGiorno(Date giorno) {
+    public void setGiorno(Timestamp giorno) {
         this.giorno = giorno;
     }
 

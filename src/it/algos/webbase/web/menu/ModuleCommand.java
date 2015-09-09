@@ -41,6 +41,7 @@ class ModuleCommand implements MenuBar.Command {
 	 */
 	@Override
 	public void menuSelected(MenuItem selectedItem) {
+		component.setSizeFull();
 		placeholder.setContent(this.component);
 		deselezionaAllItemButOne(selectedItem);
 	}// end of method

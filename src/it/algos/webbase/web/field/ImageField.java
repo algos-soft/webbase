@@ -1,5 +1,9 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.*;
 import it.algos.webbase.web.dialog.AlertDialog;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.lib.LibResource;
@@ -9,21 +13,13 @@ import java.io.OutputStream;
 
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.FinishedListener;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
-import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings({ "serial" })
 public class ImageField extends CustomField<byte[]> implements FieldInterface<byte[]> {
@@ -97,7 +93,6 @@ public class ImageField extends CustomField<byte[]> implements FieldInterface<by
 
 			Button bDel = new Button(new ThemeResource("img/action_delete.png"));
 			bDel.addClickListener(new ClickListener() {
-				
 				@Override
 				public void buttonClick(ClickEvent event) {
 					removeImage();

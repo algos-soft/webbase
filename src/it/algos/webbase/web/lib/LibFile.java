@@ -8,7 +8,7 @@ import com.google.common.collect.Iterables;
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
 
-public class LibFile {
+public abstract class LibFile {
 
 	/**
 	 * Returns the MIME type of a file

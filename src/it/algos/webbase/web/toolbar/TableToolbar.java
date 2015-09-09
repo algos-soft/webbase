@@ -1,11 +1,12 @@
 package it.algos.webbase.web.toolbar;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.lib.LibResource;
+import it.algos.webbase.web.AlgosApp;
 
 import java.util.ArrayList;
 
@@ -28,48 +29,113 @@ public class TableToolbar extends Toolbar {
 
     }// end of constructor
 
+    /**
+     * Bottone new.
+     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
+     */
     protected void addCreate() {
-        addButton("Nuovo", new ThemeResource("img/action_add.png"), new MenuBar.Command() {
-            public void menuSelected(MenuItem selectedItem) {
-                fire(Bottoni.create);
-            }// end of inner method
-        });// end of anonymous inner class
-
+        if (AlgosApp.USE_FONT_AWESOME) {
+            addButton("Nuovo", FontAwesome.PLUS, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.create);
+                }// end of inner method
+            });// end of anonymous inner class
+        } else {
+            addButton("Nuovo", new ThemeResource("img/action_add.png"), new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.create);
+                }// end of inner method
+            });// end of anonymous inner class
+        }// fine del blocco if-else
     }// end of method
 
+    /**
+     * Bottone edit.
+     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
+     */
     protected void addEdit() {
-        addButton("Modifica", new ThemeResource("img/action_edit.png"), new MenuBar.Command() {
-            public void menuSelected(MenuItem selectedItem) {
-                fire(Bottoni.edit);
-            }// end of inner method
-        });// end of anonymous inner class
+        if (AlgosApp.USE_FONT_AWESOME) {
+            addButton("Modifica", FontAwesome.PENCIL, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.edit);
+                }// end of inner method
+            });// end of anonymous inner class
+        } else {
+            addButton("Modifica", new ThemeResource("img/action_edit.png"), new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.edit);
+                }// end of inner method
+            });// end of anonymous inner class
+        }// fine del blocco if-else
     }// end of method
 
+    /**
+     * Bottone delete.
+     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
+     */
     protected void addDelete() {
-        addButton("Elimina", new ThemeResource("img/action_delete.png"), new MenuBar.Command() {
-            public void menuSelected(MenuItem selectedItem) {
-                fire(Bottoni.delete);
-            }// end of inner method
-        });// end of anonymous inner class
+        if (AlgosApp.USE_FONT_AWESOME) {
+            addButton("Elimina", FontAwesome.TRASH_O, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.delete);
+                }// end of inner method
+            });// end of anonymous inner class
+        } else {
+            addButton("Elimina", new ThemeResource("img/action_delete.png"), new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.delete);
+                }// end of inner method
+            });// end of anonymous inner class
+        }// fine del blocco if-else
     }// end of method
 
+    /**
+     * Bottone search.
+     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
+     */
     protected void addSearch() {
-        addButton("Ricerca", new ThemeResource("img/action_find.png"), new MenuBar.Command() {
-            public void menuSelected(MenuItem selectedItem) {
-                fire(Bottoni.search);
-            }// end of inner method
-        });// end of anonymous inner class
+        if (AlgosApp.USE_FONT_AWESOME) {
+            addButton("Ricerca", FontAwesome.SEARCH, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.search);
+                }// end of inner method
+            });// end of anonymous inner class
+        } else {
+            addButton("Ricerca", new ThemeResource("img/action_find.png"), new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.search);
+                }// end of inner method
+            });// end of anonymous inner class
+        }// fine del blocco if-else
     }// end of method
 
+    /**
+     * Bottone selection.
+     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
+     */
     protected void addSelect() {
+        MenuBar.MenuItem item = null;
 
-        MenuBar.MenuItem item = addButton("Selez.", new ThemeResource("img/action_select.png"), null);
+        if (AlgosApp.USE_FONT_AWESOME) {
+            item = addButton("Selez.", FontAwesome.NAVICON, null);
+        } else {
+            item = addButton("Selez.", new ThemeResource("img/action_select.png"), null);
+        }// fine del blocco if-else
 
-        item.addItem("Solo selezionati", null, new MenuBar.Command() {
-            public void menuSelected(MenuItem selectedItem) {
-                fire(Bottoni.selectedonly);
-            }// end of inner method
-        });// end of anonymous inner class
+        if (AlgosApp.USE_FONT_AWESOME) {
+            item.addItem("Solo selezionati", null, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.selectedonly);
+                }// end of inner method
+            });// end of anonymous inner class
+        } else {
+            item.addItem("Solo selezionati", null, new MenuBar.Command() {
+                public void menuSelected(MenuItem selectedItem) {
+                    fire(Bottoni.selectedonly);
+                }// end of inner method
+            });// end of anonymous inner class
+        }// fine del blocco if-else
+
 
         item.addItem("Rimuovi selezionati", null, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {

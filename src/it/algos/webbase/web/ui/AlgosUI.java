@@ -89,7 +89,6 @@ public class AlgosUI extends UI {
 
     /**
      * Legge eventuali parametri passati nella request
-     * Legge i cookies dalla request
      * <p>
      */
     protected void checkParams(VaadinRequest request) {
@@ -102,7 +101,7 @@ public class AlgosUI extends UI {
 
 
     /**
-     * Controlla i cookies esistenti
+     * Legge i cookies dalla request
      * <p>
      */
     protected void checkCookies(VaadinRequest request) {

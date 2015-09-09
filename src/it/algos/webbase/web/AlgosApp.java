@@ -8,13 +8,16 @@ import java.nio.file.Paths;
  * Repository di costanti della applicazione
  * <p>
  * Alcune costanti sono 'static final', uguali per tutte le applicazioni e non modificabili
- * Altre costanti, pur esendo utilizzate da tutti i progetti, sono solo 'static';
- * quindi modificabili e qui viene impostato solo il valore 'standard' iniziale
+ * <p>
+ * Altre costanti, pur esendo utilizzate da tutti i progetti, sono solo 'static' e quindi modificabili;
+ * qui viene impostato solo il valore 'standard' iniziale
  * i progetti specifici possono modificare, normalmente nella classe xxxBootStrap,
  * queste costanti per l'utilizzo successivo
+ * <p>
  * I singoli progetti hanno/possono avere una classe specifica xxxApp
  * (tecnicamente non è una sottoclasse perché sono classi astratte di metodi statici)
  * per gestire delle costanti specifiche del progetto stesso che non avrebbe senso generalizzare
+ * <p>
  * Altre costanti 'static final' sono raggruppate nella classe it.algos.webbase.web.lib.Cost
  */
 public abstract class AlgosApp {
@@ -38,8 +41,6 @@ public abstract class AlgosApp {
     /**
      * Name of the base folder for images.<br>
      */
-//    public static final String IMG_FOLDER_NAME = "/it/algos/webbase/web/data/img/";
-//    public static final String IMG_FOLDER_NAME = "WEB-INF/lib/webbase/it/algos/webbase/web/data/img/";
     public static String IMG_FOLDER_NAME = "WEB-INF/img/";
 
 //    /**
@@ -79,23 +80,35 @@ public abstract class AlgosApp {
     /**
      * Use company.<br>
      * Not final<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
      */
     public static boolean USE_COMPANY = false;
+
+    /**
+     * Use Font-Awesome.<br>
+     * Not final<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean USE_FONT_AWESOME = true;
+
     /**
      * Use debug.<br>
      * Not final<br>
      */
     public static boolean IS_DEBUG = false;
+
     /**
      * Code of the company.<br>
      * Not final<br>
      */
     public static String COMPANY_CODE = "";
+
     /**
      * Servlet context<br>
      * registered as soon as possible to make it available to every component
      */
     private static ServletContext servletContext;
+
 
     /**
      * Returns the path to the Uploads folder.

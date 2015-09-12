@@ -5,6 +5,10 @@ public class LibText {
     public static final String REF = "<ref>";
     public static final String NOTE = "<!--";
     public static final String GRAFFE = "{{";
+    public static final String VUOTA = "";
+    public static final int INT_NULLO = -1;
+    public static final String PUNTO = ".";
+    public static final String VIRGOLA = ",";
 
     /**
      * Converts multiple spaces to single spaces.
@@ -244,6 +248,88 @@ public class LibText {
 
         return pos;
     }// fine del metodo
+
+
+    /**
+     * Elimina tutti i punti contenuti nella stringa.
+     * Esegue solo se la stringa è valida
+     * Se arriva un oggetto non stringa, restituisce l'oggetto
+     *
+     * @param entrata stringa in ingresso
+     * @return uscita stringa convertita
+     */
+    public static String levaPunti(String entrata) {
+        return levaTesto(entrata, PUNTO);
+    } // fine del metodo
+
+    /**
+     * Elimina tutte le virgole contenute nella stringa.
+     * Esegue solo se la stringa è valida
+     * Se arriva un oggetto non stringa, restituisce l'oggetto
+     *
+     * @param entrata stringa in ingresso
+     * @return uscita stringa convertita
+     */
+    public static String levaVirgole(String entrata) {
+        return levaTesto(entrata, VIRGOLA);
+    } // fine del metodo
+
+    /**
+     * Elimina tutti i caratteri contenuti nella stringa.
+     * Esegue solo se il testo è valido
+     *
+     * @param testoIn    in ingresso
+     * @param subStringa da eliminare
+     * @return testoOut stringa convertita
+     */
+    public static String levaTesto(String testoIn, String subStringa) {
+        String testoOut = testoIn;
+
+        if (testoIn != null && subStringa != null) {
+            testoOut = testoIn.trim();
+            if (testoOut.contains(subStringa)) {
+                testoOut = sostituisce(testoOut, subStringa, VUOTA);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return testoOut;
+    } // fine del metodo
+
+    /**
+     * Sostituisce tutte le occorrenze.
+     * Esegue solo se il testo è valido
+     * Se arriva un oggetto non stringa, restituisce null
+     *
+     * @param testoIn    in ingresso
+     * @param oldStringa da eliminare
+     * @param newStringa da sostituire
+     * @return testoOut convertito
+     */
+    public static String sostituisce(String testoIn, String oldStringa, String newStringa) {
+        String testoOut = testoIn;
+        int pos = 0;
+        String prima = VUOTA;
+
+        if (testoIn != null && oldStringa != null && newStringa != null) {
+            testoOut = testoIn.trim();
+            if (testoIn.contains(oldStringa)) {
+
+                while (pos != INT_NULLO) {
+                    pos = testoIn.indexOf(oldStringa);
+                    if (pos != INT_NULLO) {
+                        prima += testoIn.substring(0, pos);
+                        prima += newStringa;
+                        pos += oldStringa.length();
+                        testoIn = testoIn.substring(pos);
+                    }// fine del blocco if
+                }// fine di while
+
+                testoOut = prima + testoIn;
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return testoOut;
+    } // fine del metodo
 
     /**
      * Enumeration locale per il flag del primo carattere

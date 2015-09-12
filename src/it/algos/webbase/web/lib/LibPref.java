@@ -133,6 +133,6 @@ public abstract class LibPref {
         if (logVersione) {
             LibVers.nuova("Preferenze", commento);
         }// fine del blocco if
-    }// end of method
+    }// end of static method
 
 }// end of static class

@@ -9,6 +9,7 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 
 @StaticMetamodel(Pref.class)
@@ -27,6 +28,7 @@ public class Pref_ extends BaseEntity_ {
     public static volatile SingularAttribute<Pref, Double> doppio;
     public static volatile SingularAttribute<Pref, BigDecimal> decimale;
     public static volatile SingularAttribute<Pref, Date> data;
+    public static volatile SingularAttribute<Pref, ArrayList> lista;
     public static volatile SingularAttribute<Pref, String> testo;
 }// end of entity class
 

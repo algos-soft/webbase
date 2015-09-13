@@ -11,6 +11,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
@@ -86,6 +87,14 @@ public class ATable extends Table {
             });// end of anonymous inner class
         }
 
+        // adds a listener for mouse click to the table
+        this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+            @Override
+            public void itemClick(ItemClickEvent itemClickEvent) {
+                ATable.this.itemClick(itemClickEvent);
+            }// end of inner method
+        });// end of anonymous inner class
+
         // create additional columns
         createAdditionalColumns();
 
@@ -154,8 +163,7 @@ public class ATable extends Table {
      * Creates the container
      * <p>
      *
-     * @return the container Override in the subclass to use a different
-     * container
+     * @return the container Override in the subclass to use a different container
      */
     protected Container createContainer() {
         JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
@@ -713,6 +721,15 @@ public class ATable extends Table {
             return 2;
         }// end of if cycle
         return 0;
+    }// end of method
+
+    /**
+     * Action when a user click the table
+     * Must be overridden on the subclass
+     *
+     * @param itemClickEvent the event
+     */
+    protected void itemClick(ItemClickEvent itemClickEvent) {
     }// end of method
 
     /**

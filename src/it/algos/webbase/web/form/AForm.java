@@ -4,11 +4,8 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.*;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.field.CheckBoxField;
+import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.field.DateField;
-import it.algos.webbase.web.field.DecimalField;
-import it.algos.webbase.web.field.IntegerField;
-import it.algos.webbase.web.field.RelatedComboField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.module.*;
@@ -215,6 +212,11 @@ public class AForm extends VerticalLayout {
 
 			if (clazz.equals(Date.class)) {
 				field = new DateField();
+			}// end of if cycle
+
+			if (clazz.equals(ArrayList.class)) {
+				Object[] pippoz={"uno","due"};
+				field = new ArrayComboField(pippoz);
 			}// end of if cycle
 
 			if (field == null && !clazz.isEnum()) {

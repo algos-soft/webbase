@@ -13,7 +13,8 @@ public enum TypePref {
     reale("reale", "reale", "reale"),
     doppio("doppio", "doppio", "doppio"),
     decimale("decimale", "decimale", "decimale"),
-    data("data", "data", "data");
+    data("data", "data", "data"),
+    lista("array", "array", "array");
 
     String nomeDB;
 

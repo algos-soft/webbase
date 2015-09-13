@@ -7,25 +7,29 @@ import com.vaadin.ui.Button.ClickListener;
 @SuppressWarnings("serial")
 public class AlertDialog extends BaseDialog {
 
-	public AlertDialog(String title, String message) {
-		super(title, message);
-		init();
-	}
 
-	public AlertDialog(String title) {
-		this(title, "");
-	}
+    public AlertDialog(String message) {
+        this("", message);
+    }// end of constructor
 
-	private void init() {
-		Button cancelButton = new Button("Chiudi");
-		cancelButton.addClickListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				close();
-			}
-		});
-		getToolbar().addComponent(cancelButton);
 
-	}
+    public AlertDialog(String title, String message) {
+        super(title, message);
+    }// end of constructor
 
-}
+    @Override
+    protected void init() {
+        super.init();
+
+        Button cancelButton = new Button("Chiudi");
+        cancelButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                close();
+            }// end of method
+        });// end of anonymous inner class
+
+        getToolbar().addComponent(cancelButton);
+    }// end of method
+
+}// end of class

@@ -47,7 +47,7 @@ public abstract class BaseDialog extends Window {
 		this(null, null);
 	}
 
-	private void init() {
+	protected void init() {
 
 		setModal(true);
 		setClosable(false);

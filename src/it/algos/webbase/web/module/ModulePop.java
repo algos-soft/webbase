@@ -15,6 +15,7 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
+import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ATable.TableListener;
@@ -650,9 +651,15 @@ public abstract class ModulePop extends Module {
      * Invoked when table data changes
      */
     protected void tableDataChanged() {
-        long total = getTable().getTotalRows();
+        String visibleTxt="";
+        String totalTxt="";
         int visible = getTable().getVisibleRows();
-        String text = "" + visible + "/" + total + " records";
+        long total = getTable().getTotalRows();
+
+        visibleTxt= LibNum.format(visible);
+        totalTxt= LibNum.format(total);
+
+        String text =  visibleTxt + "/" + totalTxt + " records";
         getTablePortal().getToolbar().setInfoText(text);
     }// end of method
 

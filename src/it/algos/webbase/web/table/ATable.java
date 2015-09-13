@@ -765,6 +765,7 @@ public class ATable extends Table {
             Class<?> clazz = cont.getEntityClass();
             rows = (long) AQuery.getCount(clazz);
         }// end of if cycle
+
         return rows;
     }// end of method
 

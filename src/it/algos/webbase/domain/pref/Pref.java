@@ -36,7 +36,6 @@ public class Pref extends BaseEntity {
     private Double doppio; // DOUBLE
     private BigDecimal decimale;// DECIMAL(19,2)
     private Date data;// DATETIME
-    private ArrayList lista;// ARRAYLIST
     private String testo;// LONGTEXT
 
 
@@ -236,13 +235,6 @@ public class Pref extends BaseEntity {
         this.data = data;
     }
 
-    public ArrayList getLista() {
-        return lista;
-    }
-
-    public void setLista(ArrayList lista) {
-        this.lista = lista;
-    }
 
     public String getTesto() {
         return testo;

@@ -15,12 +15,10 @@ public class AlertDialog extends BaseDialog {
 
     public AlertDialog(String title, String message) {
         super(title, message);
+        init();
     }// end of constructor
 
-    @Override
-    protected void init() {
-        super.init();
-
+    private void init() {
         Button cancelButton = new Button("Chiudi");
         cancelButton.addClickListener(new ClickListener() {
             @Override

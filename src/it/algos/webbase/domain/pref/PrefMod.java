@@ -60,7 +60,7 @@ public class PrefMod extends ModulePop {
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
     protected Attribute<?, ?>[] creaFieldsList() {
-        return new Attribute[]{Pref_.ordine, Pref_.type, Pref_.code, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lista, Pref_.lungo, Pref_.decimale, Pref_.data};
+        return new Attribute[]{Pref_.ordine, Pref_.type, Pref_.code, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.decimale, Pref_.data};
     }// end of method
 
     /**
@@ -71,7 +71,7 @@ public class PrefMod extends ModulePop {
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
      */
     protected Attribute<?, ?>[] creaFieldsForm() {
-        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.type, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lista, Pref_.lungo, Pref_.reale, Pref_.doppio, Pref_.decimale, Pref_.data, Pref_.testo};
+        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.type, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.reale, Pref_.doppio, Pref_.decimale, Pref_.data, Pref_.testo};
     }// end of method
 
     /**

@@ -603,13 +603,11 @@ public class ATable extends Table {
             // cycle the totalizable columns
             for (TotalizableColumn column : totalizableColumns) {
                 Object propertyId = column.getPropertyId();
-                Property<?> prop = getContainerDataSource()
-                        .getContainerProperty(itemId, propertyId);
+                Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
                 if (prop != null) {
                     addToTotals(totalsMap, propertyId, prop);
                 }// end of if cycle
             }// end of for cycle
-
         }// end of for cycle
 
         // places the totals in the target columns

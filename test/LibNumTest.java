@@ -31,6 +31,11 @@ public  class LibNumTest extends BaseTest {
         lista.add("primo");
         lista.add(2);
 
+        sorgente = "47";
+        previsto = "47";
+        ottenuto = LibNum.format(sorgente);
+        assertEquals(ottenuto, previsto);
+
         sorgente = "123g456";
         previsto = "123g456";
         ottenuto = LibNum.format(sorgente);

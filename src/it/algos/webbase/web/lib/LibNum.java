@@ -68,7 +68,7 @@ public abstract class LibNum {
             return null;
         }// fine del blocco if-else
 
-
+        formattato = numText;
         len = numText.length();
         if (len > 3) {
             num3 = numText.substring(0, len - 3);

@@ -34,7 +34,7 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public abstract class ModulePop extends Module {
 
-    private static final boolean MOSTRA_ID = true;
+    private static boolean MOSTRA_ID = false;
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
 
@@ -201,6 +201,7 @@ public abstract class ModulePop extends Module {
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
      * Può mostrare anche il campo ID, oppure no <br>
+     * In ogni caso il campo ID viene posizionato a sinistra/per primo nel Form e nella Lista
      */
     public ArrayList<Attribute<?, ?>> getListaAttributi() {
         ArrayList<Attribute<?, ?>> lista = new ArrayList<Attribute<?, ?>>();
@@ -208,17 +209,16 @@ public abstract class ModulePop extends Module {
         Set<?> attributes = type.getAttributes();
         Attribute<?, ?> attribute;
 
+        if (MOSTRA_ID) {
+            lista.add(BaseEntity_.id);
+        }// fine del blocco if
         for (Object ogg : attributes) {
             if (ogg instanceof Attribute<?, ?>) {
                 attribute = (Attribute<?, ?>) ogg;
-                if (attribute == BaseEntity_.id) {
-                    if (MOSTRA_ID) {
-                        lista.add(attribute);
-                    }// end of if cycle
-                } else {
+                if (!attribute.getName().equals(BaseEntity_.id.getName())) {
                     lista.add(attribute);
-                }// end of if/else cycle
-            }// end of if cycle
+                }// fine del blocco if
+            }// fine del blocco if
         }// end of for cycle
 
         return lista;
@@ -651,15 +651,15 @@ public abstract class ModulePop extends Module {
      * Invoked when table data changes
      */
     protected void tableDataChanged() {
-        String visibleTxt="";
-        String totalTxt="";
+        String visibleTxt = "";
+        String totalTxt = "";
         int visible = getTable().getVisibleRows();
         long total = getTable().getTotalRows();
 
-        visibleTxt= LibNum.format(visible);
-        totalTxt= LibNum.format(total);
+        visibleTxt = LibNum.format(visible);
+        totalTxt = LibNum.format(total);
 
-        String text =  visibleTxt + "/" + totalTxt + " records";
+        String text = visibleTxt + "/" + totalTxt + " records";
         getTablePortal().getToolbar().setInfoText(text);
     }// end of method
 

@@ -283,7 +283,7 @@ public class LibTextTest {
         previsto = "TestoConSpazi";
         ottenuto = LibText.levaDopo(sorgente, tag);
         assertEquals(ottenuto, previsto);
-    } // fine del metodo
+    }// end of single test
 
     @Test
     /**
@@ -306,7 +306,7 @@ public class LibTextTest {
         previsto = "Prova di tag varii tipo con testo seguente e spazi esterni";
         ottenuto = LibText.levaDopoRef(sorgente);
         assertEquals(ottenuto, previsto);
-    } // fine del metodo
+    }// end of single test
 
     @Test
     /**
@@ -329,7 +329,7 @@ public class LibTextTest {
         previsto = "Prova di tag varii tipo <!- con testo seguente";
         ottenuto = LibText.levaDopoNote(sorgente);
         assertEquals(ottenuto, previsto);
-    } // fine del metodo
+    }// end of single test
 
     @Test
     /**
@@ -352,7 +352,7 @@ public class LibTextTest {
         previsto = "Prova di tag varii tipo con testo seguente e spazi esterni";
         ottenuto = LibText.levaDopoGraffe(sorgente);
         assertEquals(ottenuto, previsto);
-    } // fine del metodo
+    }// end of single test
 
     @Test
     /**
@@ -411,6 +411,8 @@ public class LibTextTest {
         numPrevisto = 0;
         numOttenuto = LibText.trovaPrimo(originale, tag4, tag5);
         assertEquals(numOttenuto, numOttenuto);
-    }// fine del metodo
+    }// end of single test
+
+
 
 }// end of test class

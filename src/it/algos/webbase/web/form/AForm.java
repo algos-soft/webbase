@@ -182,7 +182,7 @@ public class AForm extends VerticalLayout {
 	 * Crea i campi. I campi vengono creati del tipo grafico previsto nella Entity.
 	 */
 	@SuppressWarnings("rawtypes")
-	private Field creaField(Attribute attr) {
+	protected Field creaField(Attribute attr) {
 		Field field = null;
 		Class clazz = null;
 		String caption = "";

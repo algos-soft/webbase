@@ -10,12 +10,12 @@ import it.algos.webbase.web.lib.LibVers;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+import sun.awt.SunHints;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Vector;
+import java.security.Key;
+import java.util.*;
 
 @Entity
 public class Pref extends BaseEntity {
@@ -38,6 +38,10 @@ public class Pref extends BaseEntity {
     private Date data;// DATETIME
     private String testo;// LONGTEXT
 
+    @ElementCollection
+//    @CollectionTable(name="foo_bars", joinColumns=@JoinColumn(name="bar_id"))
+//    @Column(name="foo")
+    private List<String> collection;;
 
     public Pref() {
         super();

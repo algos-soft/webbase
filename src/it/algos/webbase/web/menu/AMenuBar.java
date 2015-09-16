@@ -30,7 +30,7 @@ public class AMenuBar extends HorizontalLayout {
     /**
      * Regolazioni scss.
      */
-    public static String MENU_ABILITATO = "abilitato";
+    public static String MENU_ABILITATO = "highlight";
     public static String MENU_DISABILITATO = "disabilitato";
     private MenuBar algosMenuBar = new MenuBar();
     private LoginBar loginMenuBar;
@@ -166,7 +166,7 @@ public class AMenuBar extends HorizontalLayout {
 
 
     /**
-     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicatoi
+     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
      * Aggiunge il singolo menu (item) alla barra principale di menu
      *
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu

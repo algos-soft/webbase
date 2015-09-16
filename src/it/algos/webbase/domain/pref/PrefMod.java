@@ -89,15 +89,15 @@ public class PrefMod extends ModulePop {
         return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.type, Pref_.descrizione};
     }// end of method
 
-    /**
-     * Returns the form used to edit an item. <br>
-     * The concrete subclass must override for a specific Form.
-     *
-     * @return the Form
-     */
-    @Override
-    public AForm createForm(Item item) {
-        return (new PrefForm(this, item));
-    }// end of method
+//    /**
+//     * Returns the form used to edit an item. <br>
+//     * The concrete subclass must override for a specific Form.
+//     *
+//     * @return the Form
+//     */
+//    @Override
+//    public AForm createForm(Item item) {
+//        return (new PrefForm(this, item));
+//    }// end of method
 
 }// end of class

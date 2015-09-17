@@ -14,36 +14,38 @@ public abstract class LibPref {
      * Crea una nuova preferenza di tipo booleano
      * La crea solo se non esistente
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
      */
-    public static void newBool(String code, String descrizione, Boolean value) {
-        newBase(false, code, descrizione, value, TypePref.booleano);
+    public static void newBool(String code, Boolean value, String descPref) {
+        newBase(false, code, value, descPref, TypePref.booleano);
     }// end of method
+
 
     /**
      * Crea una nuova preferenza di tipo stringa
      * La crea solo se non esistente
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
      */
-    public static void newStr(String code, String descrizione, String value) {
-        newBase(false, code, descrizione, value, TypePref.stringa);
+    public static void newStr(String code, String value, String descPref) {
+        newBase(false, code, value, descPref, TypePref.stringa);
     }// end of method
+
 
     /**
      * Crea una nuova preferenza di tipo intero
      * La crea solo se non esistente
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
      */
-    public static void newInt(String code, String descrizione, int value) {
-        newBase(false, code, descrizione, value, TypePref.intero);
+    public static void newInt(String code, int value, String descPref) {
+        newBase(false, code, value, descPref, TypePref.intero);
     }// end of method
 
 
@@ -52,12 +54,13 @@ public abstract class LibPref {
      * La crea solo se non esistente
      * Crea anche un record di log nella tavola Versione
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
-    public static void newVersBool(String code, String descrizione, Boolean value) {
-        newBase(true, code, descrizione, value, TypePref.booleano);
+    public static void newVersBool(String code, boolean value, String descPref, String descVers) {
+        newBase(true, code, value, descPref, descVers, TypePref.booleano);
     }// end of method
 
     /**
@@ -65,12 +68,13 @@ public abstract class LibPref {
      * La crea solo se non esistente
      * Crea anche un record di log nella tavola Versione
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
-    public static void newVersStr(String code, String descrizione, String value) {
-        newBase(true, code, descrizione, value, TypePref.stringa);
+    public static void newVersStr(String code, String value, String descPref, String descVers) {
+        newBase(true, code, value, descPref, descVers, TypePref.stringa);
     }// end of method
 
     /**
@@ -78,12 +82,27 @@ public abstract class LibPref {
      * La crea solo se non esistente
      * Crea anche un record di log nella tavola Versione
      *
-     * @param code        key code
-     * @param descrizione dettagliata
-     * @param value       di default
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
-    public static void newVersInt(String code, String descrizione, int value) {
-        newBase(true, code, descrizione, value, TypePref.intero);
+    public static void newVersInt(String code, String value, String descPref, String descVers) {
+        newBase(true, code, value, descPref, descVers, TypePref.intero);
+    }// end of method
+
+
+    /**
+     * Crea una nuova preferenza (solo se non esistente)
+     *
+     * @param logVersione flag per registrare una un record di Versione
+     * @param code        key code
+     * @param value       di default
+     * @param descPref    dettagliata (obbligatoria per Pref)
+     * @param type        di valore
+     */
+    private static void newBase(boolean logVersione, String code, Object value, String descPref, TypePref type) {
+        newBase(logVersione, code, value, descPref, "", type);
     }// end of method
 
     /**
@@ -91,20 +110,21 @@ public abstract class LibPref {
      *
      * @param logVersione flag per registrare una un record di Versione
      * @param code        key code
-     * @param descrizione dettagliata
      * @param value       di default
+     * @param descPref    dettagliata (obbligatoria per Pref)
+     * @param descVers    dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      * @param type        di valore
      */
-    private static void newBase(boolean logVersione, String code, String descrizione, Object value, TypePref type) {
+    private static void newBase(boolean logVersione, String code, Object value, String descPref, String descVers, TypePref type) {
         Pref pref;
-        String commento = code + ", di default " + value;
+        String commento = code + ", di default " + value + ".";
 
         pref = Pref.findByCode(code);
         if (pref == null) {
             pref = new Pref();
             pref.setOrdine(Pref.count() + 1);
             pref.setCode(code);
-            pref.setDescrizione(descrizione);
+            pref.setDescrizione(descPref);
             pref.setType(type);
             if (type == TypePref.booleano) {
                 try { // prova ad eseguire il codice
@@ -131,6 +151,9 @@ public abstract class LibPref {
         }// fine del blocco if
 
         if (logVersione) {
+            if (!descVers.equals("")) {
+                commento += " " + descVers;
+            }// fine del blocco if
             LibVers.nuova("Preferenze", commento);
         }// fine del blocco if
     }// end of static method

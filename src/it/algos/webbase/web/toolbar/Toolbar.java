@@ -77,7 +77,6 @@ public abstract class Toolbar extends VerticalLayout {
         }// end of if cycle
 
         MenuBar.MenuItem item = menubar.addItem(caption, icon, command);
-
         addCommandComponent(menubar);
         return item;
     }// end of method

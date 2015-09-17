@@ -57,10 +57,36 @@ public abstract class LibPref {
      * @param code     key code
      * @param value    di default
      * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newVersBool(String code, boolean value, String descPref) {
+        newBase(true, code, value, descPref, "", TypePref.booleano);
+    }// end of method
+
+    /**
+     * Crea una nuova preferenza di tipo booleano
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
     public static void newVersBool(String code, boolean value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.booleano);
+    }// end of method
+
+    /**
+     * Crea una nuova preferenza di tipo stringa
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newVersStr(String code, String value, String descPref) {
+        newBase(true, code, value, descPref, "", TypePref.stringa);
     }// end of method
 
     /**
@@ -85,9 +111,22 @@ public abstract class LibPref {
      * @param code     key code
      * @param value    di default
      * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newVersInt(String code, int value, String descPref) {
+        newBase(true, code, value, descPref, "", TypePref.intero);
+    }// end of method
+
+    /**
+     * Crea una nuova preferenza di tipo intero
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
-    public static void newVersInt(String code, String value, String descPref, String descVers) {
+    public static void newVersInt(String code, int value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.intero);
     }// end of method
 
@@ -117,7 +156,8 @@ public abstract class LibPref {
      */
     private static void newBase(boolean logVersione, String code, Object value, String descPref, String descVers, TypePref type) {
         Pref pref;
-        String commento = code + ", di default " + value + ".";
+        String commento;
+        String strValue = "";
 
         pref = Pref.findByCode(code);
         if (pref == null) {
@@ -129,6 +169,7 @@ public abstract class LibPref {
             if (type == TypePref.booleano) {
                 try { // prova ad eseguire il codice
                     pref.setBool((Boolean) value);
+                    strValue = value.toString();
                 } catch (Exception unErrore) { // intercetta l'errore
                     Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
@@ -136,6 +177,7 @@ public abstract class LibPref {
             if (type == TypePref.stringa) {
                 try { // prova ad eseguire il codice
                     pref.setStringa((String) value);
+                    strValue = (String) value;
                 } catch (Exception unErrore) { // intercetta l'errore
                     Notification.show("La preferenza " + code + " non è di tipo stringa", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
@@ -143,6 +185,7 @@ public abstract class LibPref {
             if (type == TypePref.intero) {
                 try { // prova ad eseguire il codice
                     pref.setIntero((Integer) value);
+                    strValue = LibNum.format(value);
                 } catch (Exception unErrore) { // intercetta l'errore
                     Notification.show("La preferenza " + code + " non è di tipo intero", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
@@ -151,6 +194,7 @@ public abstract class LibPref {
         }// fine del blocco if
 
         if (logVersione) {
+            commento = code + ", di default " + strValue + ".";
             if (!descVers.equals("")) {
                 commento += " " + descVers;
             }// fine del blocco if

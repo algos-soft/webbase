@@ -88,6 +88,11 @@ public class Log extends BaseEntity {
     }// end of method
 
     //--registra un avviso
+    public static void setDebug(String code, String descrizione) {
+        setBase(Livello.debug, code, descrizione);
+    }// fine del metodo
+
+    //--registra un avviso
     public static void setInfo(String code, String descrizione) {
         setBase(Livello.info, code, descrizione);
     }// fine del metodo

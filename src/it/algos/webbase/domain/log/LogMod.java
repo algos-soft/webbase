@@ -1,5 +1,7 @@
 package it.algos.webbase.domain.log;
 
+import com.vaadin.data.Item;
+import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -45,18 +47,38 @@ public class LogMod extends ModulePop {
     }// end of method
 
     /**
-     * Crea i campi visibili
+     * Crea i campi visibili nella lista (table)
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
-     * Può mostrare anche il campo ID, oppure no <br>
-     * Se si vuole differenziare tra Table, Form e Search, <br>
-     * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
     @Override
-    protected Attribute<?, ?>[] creaFieldsAll() {
-        return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione, Log_.time};
-    }// end of method/*
+    protected Attribute<?, ?>[] creaFieldsList() {
+        return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione, Log_.timestamp};
+    }// end of method
+
+    /**
+     * Crea i campi visibili nella scheda (form)
+     * <p>
+     * Come default spazzola tutti i campi della Entity <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
+     */
+    @Override
+    protected Attribute<?, ?>[] creaFieldsForm() {
+        return new Attribute[]{Log_.code, Log_.descrizione};
+    }// end of method
+
+    /**
+     * Returns the form used to edit an item. <br>
+     * The concrete subclass must override for a specific Form.
+     *
+     * @return the Form
+     */
+    @Override
+    public AForm createForm(Item item) {
+        return (new LogForm(this, item));
+    }// end of method
 
 }// end of class

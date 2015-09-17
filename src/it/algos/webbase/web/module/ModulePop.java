@@ -185,7 +185,7 @@ public abstract class ModulePop extends Module {
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
+     * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
      * Può mostrare anche il campo ID, oppure no <br>
      * Se si vuole differenziare tra Table, Form e Search, <br>
      * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
@@ -199,7 +199,7 @@ public abstract class ModulePop extends Module {
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
+     * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
      * Può mostrare anche il campo ID, oppure no <br>
      * In ogni caso il campo ID viene posizionato a sinistra/per primo nel Form e nella Lista
      */

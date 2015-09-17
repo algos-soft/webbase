@@ -39,14 +39,14 @@ public class ArrayComboField extends ComboBox implements FieldInterface<Object> 
             Item item = addItem(value);
             setItemCaption(item, value.toString());
         }
-    }// end of constructor
+    }// end of method
 
     public void initField() {
         FieldUtil.initField(this);
-    }// end of constructor
+    }// end of method
 
     public void setAlignment(FieldAlignment alignment) {
-    }// end of constructor
+    }// end of method
 
 
 }// end of class

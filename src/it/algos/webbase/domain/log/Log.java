@@ -1,39 +1,43 @@
 package it.algos.webbase.domain.log;
 
+import com.vaadin.ui.Notification;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.lib.LibTime;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 
 @Entity
 public class Log extends BaseEntity {
 
     @NotNull
-    private Livello livello;
+    private Livello livello = Livello.info;
+
     @NotEmpty
-    private String code;
+    private String code = "";
+
     @NotEmpty
-    private String descrizione;
+    private String descrizione = "";
+
     @NotNull
-    private Timestamp time;
+    private Timestamp timestamp = LibTime.adesso();
 
 
     public Log() {
         super();
     }// end of constructor
 
-    public Log(Livello livello, String code, String descrizione, Timestamp time) {
+    public Log(Livello livello, String code, String descrizione, Timestamp timestamp) {
         super();
         this.setLivello(livello);
         this.setCode(code);
         this.setDescrizione(descrizione);
-        this.setTime(time);
+        this.setTimestamp(timestamp);
     }// end of constructor
 
     /**
@@ -83,10 +87,6 @@ public class Log extends BaseEntity {
         return totRec;
     }// end of method
 
-    public synchronized static ArrayList<Log> findAll() {
-        return (ArrayList<Log>) AQuery.getList(Log.class);
-    }// end of method
-
     //--registra un avviso
     public static void setInfo(String code, String descrizione) {
         setBase(Livello.info, code, descrizione);
@@ -104,7 +104,7 @@ public class Log extends BaseEntity {
 
     //--registra un evento generico
     private static void setBase(Livello livello, String code, String descrizione) {
-        Log logo = new Log(livello, code, descrizione, new Timestamp(new Date().getTime()));
+        Log logo = new Log(livello, code, descrizione, LibTime.current());
         logo.save();
     }// fine del metodo statico
 
@@ -113,6 +113,7 @@ public class Log extends BaseEntity {
         Log logo = new Log(livello, code, descrizione, time);
         logo.save();
     }// fine del metodo statico
+
 
     @Override
     public String toString() {
@@ -135,12 +136,12 @@ public class Log extends BaseEntity {
         this.descrizione = descrizione;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setTime(Timestamp time) {
-        this.time = time;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Livello getLivello() {
@@ -159,5 +160,6 @@ public class Log extends BaseEntity {
             throw new CloneNotSupportedException();
         }// fine del blocco try-catch
     }// end of method
+
 
 }// end of entity class

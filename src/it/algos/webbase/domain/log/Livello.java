@@ -5,5 +5,5 @@ package it.algos.webbase.domain.log;
  * .
  */
 public enum Livello {
-    info, warn, error
+    debug, info, warn, error
 } // fine della Enumeration

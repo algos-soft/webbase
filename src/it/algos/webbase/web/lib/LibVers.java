@@ -13,7 +13,7 @@ public abstract class LibVers {
 
         lista = Versione.findAll();
         if (lista != null && lista.size() > 0) {
-            numero = lista.get(0).getNumero();
+            numero = lista.get(0).getOrdine();
         }// fine del blocco if
 
         return numero;
@@ -29,7 +29,7 @@ public abstract class LibVers {
         lista = Versione.findAll();
         if (lista != null) {
             for (Versione vers : lista) {
-                numero = Math.max(numero, vers.getNumero());
+                numero = Math.max(numero, vers.getOrdine());
             } // fine del ciclo for-each
         }// fine del blocco if
 
@@ -59,11 +59,11 @@ public abstract class LibVers {
     //--la crea SOLO se non esiste già
     public static void nuova(int numero, String titolo, String descrizione) {
         Versione versione;
-        Timestamp giorno = new Timestamp(System.currentTimeMillis());
+        Timestamp giorno = LibTime.current();
 
         versione = new Versione();
-        versione.setNumero(numero);
-        versione.setGiorno(giorno);
+        versione.setOrdine(numero);
+        versione.setTimestamp(giorno);
         versione.setTitolo(titolo);
         versione.setDescrizione(descrizione);
         versione.save();

@@ -3,6 +3,7 @@ package it.algos.webbase.web.module;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
@@ -38,7 +39,7 @@ public abstract class ModulePop extends Module {
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
 
-    // elenco dei campi da mostrare nel form (ordinato)
+    // elenco dei campi da mostrare (ordinati) nel list, nel form e nel search
     protected Attribute<?, ?>[] fieldsList;
     protected Attribute<?, ?>[] fieldsForm;
     protected Attribute<?, ?>[] fieldsSearch;
@@ -834,5 +835,6 @@ public abstract class ModulePop extends Module {
     private void setMenuAddress(String menuAddress) {
         this.menuAddress = menuAddress;
     }// end of method
+
 
 }// end of class

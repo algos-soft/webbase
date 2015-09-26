@@ -5,6 +5,9 @@ package it.algos.webbase.domain.vers;
  */
 
 
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -52,19 +55,69 @@ public class VersMod extends ModulePop {
         return "Ricerca versione";
     }// end of method
 
+
     /**
-     * Crea i campi visibili
+     * Crea i campi visibili nella lista (table)
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantiscel'ordine con cui vengono presentati i campi nella scheda <br>
-     * Può mostrare anche il campo ID, oppure no <br>
-     * Se si vuole differenziare tra Table, Form e Search, <br>
-     * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
     @Override
-    protected Attribute<?, ?>[] creaFieldsAll() {
-        return new Attribute[]{Versione_.numero, Versione_.titolo, Versione_.descrizione, Versione_.giorno};
-    }// end of method/*
+    protected Attribute<?, ?>[] creaFieldsList() {
+        return new Attribute[]{Versione_.ordine, Versione_.titolo, Versione_.descrizione, Versione_.timestamp};
+    }// end of method
+
+    /**
+     * Crea i campi visibili nella scheda (form)
+     * <p>
+     * Come default spazzola tutti i campi della Entity <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
+     */
+    @Override
+    protected Attribute<?, ?>[] creaFieldsForm() {
+        return new Attribute[]{Versione_.ordine, Versione_.titolo, Versione_.descrizione};
+    }// end of method
+
+
+    /**
+     * Post create / pre edit item.
+     * Legge il massimo numero esistente nel DB per la property Numero
+     * Ordina discendente per usare il primo record
+     * Nel dialogo nuovo record, suggerisce il valore incrementato di 1
+     * Riordina ascendente (default)
+     */
+    protected void postCreate(Item item) {
+        String sortField;
+        Property property;
+        JPAContainer cont;
+        Object idKey;
+        int progressivo;
+
+        if (item == null) {
+            return;
+        }// fine del blocco if
+
+        cont = getTable().getJPAContainer();
+        sortField = Versione_.ordine.getName();
+        property = item.getItemProperty(sortField);
+
+        if (property != null) {
+            cont.sort(new String[]{sortField}, new boolean[]{false});
+            idKey = cont.getIdByIndex(0);
+            if (idKey != null && idKey instanceof Long) {
+                Versione versione = Versione.find((long) idKey);
+                if (versione != null) {
+                    progressivo = versione.getOrdine();
+                    progressivo = progressivo + 1;
+                    property.setValue(progressivo);
+                }// fine del blocco if
+            }// fine del blocco if
+            cont.sort(new String[]{sortField}, new boolean[]{true});
+        }// fine del blocco if
+
+    }// end of method
+
 
 }// end of class

@@ -106,6 +106,9 @@ public class EditDialog extends ConfirmDialog {
         this.listener = listener;
     }// end of method
 
+    public TextField getField() {
+        return field;
+    }// end of getter method
 
     public interface EditListener {
         public void onClose();

@@ -9,6 +9,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.field.DateField;
@@ -29,12 +30,11 @@ import java.util.LinkedHashMap;
 @SuppressWarnings("serial")
 public class AForm extends VerticalLayout {
 
+    @SuppressWarnings("rawtypes")
+    protected LinkedHashMap<Object, Field> bindMap;
+    protected FormLayout body; //usato per i fields aggiuntivi che vengono visualizzati a comando sotto gli altri
     private ModulePop module;
     private Item item;
-
-    @SuppressWarnings("rawtypes")
-    private LinkedHashMap<Object, Field> bindMap;
-
     private FieldGroup binder;
     private Toolbar toolbar;
     private ArrayList<FormListener> listeners = new ArrayList<FormListener>();
@@ -164,16 +164,13 @@ public class AForm extends VerticalLayout {
     @SuppressWarnings("rawtypes")
     protected void createFields() {
         Field field = null;
-
         // create a field for each property
         Attribute[] attributes = getModule().getFieldsForm();
         for (Attribute attr : attributes) {
             field = creaField(attr);
-
             if (field != null) {
                 addField(attr, field);
             }// end of if cycle
-
         }// end of for cycle
     }// end of method
 
@@ -184,55 +181,103 @@ public class AForm extends VerticalLayout {
     protected Field creaField(Attribute attr) {
         Field field = null;
         Class clazz = null;
+        Object[] values;
         String caption = "";
 
         if (attr != null) {
             clazz = attr.getJavaType();
 
-            if (attr.isAssociation()) {
-                field = new RelatedComboField(clazz);
-            }// end of if cycle
+            if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
+                field = new CheckBoxField();
+            }// fine del blocco if
 
             if (clazz.equals(String.class)) {
                 field = new TextField();
-            }// end of if cycle
-
-            if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
-                field = new CheckBoxField();
-            }// end of if cycle
+            }// fine del blocco if
 
             if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
                 field = new IntegerField();
-            }// end of if cycle
-
-            if (clazz.equals(BigDecimal.class)) {
-                field = new DecimalField();
-            }// end of if cycle
+            }// fine del blocco if
 
             if (clazz.equals(Date.class)) {
                 field = new DateField();
-            }// end of if cycle
+            }// fine del blocco if
+
+            if (clazz.equals(BigDecimal.class)) {
+                field = new DecimalField();
+            }// fine del blocco if
 
             if (clazz.equals(Timestamp.class)) {
                 field = new DateField();
-            }// end of if cycle
+            }// fine del blocco if
 
-            if (clazz.equals(ArrayList.class)) {
-                Object[] pippoz = {"uno", "due"};
-                field = new ArrayComboField(pippoz);
-            }// end of if cycle
+            if (attr.isAssociation()) {
+                field = new RelatedComboField(clazz);
+            }// fine del blocco if
 
-            if (field == null && !clazz.isEnum()) {
+            if (clazz.isEnum()) {
+                values = clazz.getEnumConstants();
+                field = new ArrayComboField(values);
+                if (AlgosApp.COMBO_BOX_NULL_SELECTION_ALLOWED) {
+                    ((ArrayComboField) field).setNullSelectionAllowed(true);
+                } else {
+                    ((ArrayComboField) field).setNullSelectionAllowed(false);
+                }// fine del blocco if-else
+                field.addValueChangeListener(new Property.ValueChangeListener() {
+                    @Override
+                    public void valueChange(Property.ValueChangeEvent event) {
+                        arrayComboBoxValueChanged(event);
+                    }// end of method
+                });// end of anonymous class
+            }// fine del blocco if
+
+            if (field == null) {
                 field = new TextField();
-            }// end of if cycle
-        }// end of if cycle
+            }// fine del blocco if
+        }// fine del blocco if
 
         if (field != null) {
             caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
             field.setCaption(caption);
-        }// end of if cycle
+        }// fine del blocco if
 
         return field;
+    }// end of method
+
+
+    /**
+     * Intercetta i cambiamenti nei combobox.
+     * <p>
+     * Sovrascritto nella classe specifica
+     */
+    protected void arrayComboBoxValueChanged(Property.ValueChangeEvent event) {
+    }// end of method
+
+
+    /**
+     * Aggiunge al volo un fields
+     * <p>
+     * Il fields viene aggiunto in un body di tipo FormLayout posizionato SOTTO gli altri campi
+     * Viene usato un FormLayout per avere la caption a sinistra
+     * Il body viene viene (eventualmente) costruito nella sottoclasse (sovrascrivendo il metodo createComponent), solo se serve.
+     * La sottoclasse decide se inserire più di un field nel body, oppure di svuotarlo ogni volta che cambia il field
+     * <p>
+     * Metodo invocato dalla sottoclasse
+     */
+    protected void addBodyField(Attribute attr) {
+        String fieldName = attr.getName();
+        Field field = bindMap.get(fieldName);
+
+        if (field == null) {
+            field = creaField(attr);
+            if (field != null) {
+                addField(attr, field);
+            }// end of if cycle
+        }// fine del blocco if
+
+        if (body != null) {
+            body.addComponent(field);
+        }// fine del blocco if
     }// end of method
 
     /**

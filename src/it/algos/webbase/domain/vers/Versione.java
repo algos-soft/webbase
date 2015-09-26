@@ -5,30 +5,28 @@ package it.algos.webbase.domain.vers;
  */
 
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.lib.LibTime;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Versione extends BaseEntity {
 
-    private int numero;
+    private int ordine;
 
     @NotEmpty
     private String titolo = "";
 
-    private String descrizione;
+    private String descrizione = "";
 
     @NotNull
-    private Timestamp giorno;
+    private Timestamp timestamp = LibTime.adesso();
 
 
     public Versione() {
@@ -96,12 +94,12 @@ public class Versione extends BaseEntity {
         return titolo;
     }// end of method
 
-    public int getNumero() {
-        return numero;
+    public int getOrdine() {
+        return ordine;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setOrdine(int numero) {
+        this.ordine = numero;
     }
 
     public String getTitolo() {
@@ -120,12 +118,12 @@ public class Versione extends BaseEntity {
         this.descrizione = descrizione;
     }
 
-    public Timestamp getGiorno() {
-        return giorno;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setGiorno(Timestamp giorno) {
-        this.giorno = giorno;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

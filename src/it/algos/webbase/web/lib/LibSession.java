@@ -128,6 +128,20 @@ public abstract class LibSession {
     }// end of method
 
     /**
+     * Recupera un attributo dalla sessione.
+     */
+    public static boolean getAttributeBool(String name) {
+        boolean value = false;
+        Object obj = getAttribute(name);
+
+        if (obj instanceof Boolean) {
+            value = (Boolean) obj;
+        }// fine del blocco if
+
+        return value;
+    }// end of method
+
+    /**
      * Recupera dalla request l'attributo booleano indicato (se esiste)
      * Regola la variabile statica
      */

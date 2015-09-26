@@ -5,7 +5,9 @@ package it.algos.webbase.domain.pref;
  */
 
 
+import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
 
@@ -60,7 +62,7 @@ public class PrefMod extends ModulePop {
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
     protected Attribute<?, ?>[] creaFieldsList() {
-        return new Attribute[]{Pref_.ordine, Pref_.type, Pref_.code, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.decimale, Pref_.data};
+        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.type, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.decimale, Pref_.data};
     }// end of method
 
     /**
@@ -71,33 +73,55 @@ public class PrefMod extends ModulePop {
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
      */
     protected Attribute<?, ?>[] creaFieldsForm() {
-        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.type, Pref_.descrizione, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.reale, Pref_.doppio, Pref_.decimale, Pref_.data, Pref_.testo};
+        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.type,};
     }// end of method
 
     /**
-     * Crea i campi visibili
-     * <p>
-     * Come default spazzola tutti i campi della Entity <br>
-     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * Non garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
-     * Può mostrare anche il campo ID, oppure no <br>
-     * Se si vuole differenziare tra Table, Form e Search, <br>
-     * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
+     * Returns the form used to edit an item. <br>
+     * The concrete subclass must override for a specific Form.
+     *
+     * @return the Form
      */
-    @Override
-    protected Attribute<?, ?>[] creaFieldsAll() {
-        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.type, Pref_.descrizione};
+    public AForm createForm(Item item) {
+        return (new PrefForm(this, item));
     }// end of method
 
-//    /**
-//     * Returns the form used to edit an item. <br>
-//     * The concrete subclass must override for a specific Form.
-//     *
-//     * @return the Form
-//     */
-//    @Override
-//    public AForm createForm(Item item) {
-//        return (new PrefForm(this, item));
-//    }// end of method
+    /**
+     * Post create / pre edit item.
+     * Legge il massimo numero esistente nel DB per la property Numero
+     * Ordina discendente per usare il primo record
+     * Nel dialogo nuovo record, suggerisce il valore incrementato di 1
+     * Riordina ascendente (default)
+     */
+    protected void postCreate(Item item) {
+        String sortField;
+        Property property;
+        JPAContainer cont;
+        Object idKey;
+        int progressivo;
+
+        if (item == null) {
+            return;
+        }// fine del blocco if
+
+        cont = getTable().getJPAContainer();
+        sortField = Pref_.ordine.getName();
+        property = item.getItemProperty(sortField);
+
+        if (property != null) {
+            cont.sort(new String[]{sortField}, new boolean[]{false});
+            idKey = cont.getIdByIndex(0);
+            if (idKey != null && idKey instanceof Long) {
+                Pref pref = Pref.find((long) idKey);
+                if (pref != null) {
+                    progressivo = pref.getOrdine();
+                    progressivo = progressivo + 1;
+                    property.setValue(progressivo);
+                }// fine del blocco if
+            }// fine del blocco if
+            cont.sort(new String[]{sortField}, new boolean[]{true});
+        }// fine del blocco if
+
+    }// end of method
 
 }// end of class

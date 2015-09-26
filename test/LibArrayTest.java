@@ -459,359 +459,135 @@ public class LibArrayTest {
     } // fine del test
 
 
-//    /**
-//     * Somma due array (liste)
-//     *
-//     * Almeno uno dei due array in ingresso deve essere non nullo
-//     * I valori negli array sono unici
-//     * Normalmente si usa di meno la somma disordinata
-//     *
-//     * Se entrambi i parametri sono liste della stessa classe, restituisce la somma
-//     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//     * Se entrambi i parametri sono nulli, restituisce un nullo
-//     * Se uno dei parametri è nullo e l'altro è una lista, restituisce la lista
-//     * Se uno dei parametri è nullo e l'altro non è una lista, restituisce un nullo
-//     * Se uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma
-//     * Se uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//     *
-//     * @param arrayPrimo
-//     * @param arraySecondo
-//     * @return arraySomma disordinato
-//     */
-//    void testSommaDisordinata() {
-//        def primoNum = [7, 87, 4, 25, 1, 12]
-//        def secondoNum = [11, 7, 55, 4]
-//        def primoStr = ['due', 'otto', 'alfa']
-//        def secondoStr = ['otto', 'gamma', 'due']
-//        int num = 999
-//        String stringa = 'ultima'
-//        def ottenuto
-//        def richiestoNum = [7, 87, 4, 25, 1, 12, 11, 55]
-//        def richiestoStr = ['due', 'otto', 'alfa', 'gamma']
-//        int numRichiesto = 8
-//        int strRichiesto = 4
-//        int primoRichiesto = 7
-//
-//        // entrambi i parametri sono nulli, restituisce un nullo
-//        ottenuto = Array.sommaDisordinata(null, null)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è nullo e l'altro è una lista, restituisce la lista
-//        ottenuto = Array.sommaDisordinata(primoNum, null)
-//        assert ottenuto instanceof List
-//        assert ottenuto == primoNum
-//
-//        // uno dei parametri è nullo e l'altro è una lista, restituisce la lista
-//        ottenuto = Array.sommaDisordinata(null, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto == secondoNum
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la somma
-//        ottenuto = Array.sommaDisordinata(primoNum, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto.size() == numRichiesto
-//        assert ottenuto == richiestoNum
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la somma
-//        ottenuto = Array.sommaDisordinata(primoStr, secondoStr)
-//        assert ottenuto instanceof List
-//        assert ottenuto.size() == strRichiesto
-//        assert ottenuto == richiestoStr
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.sommaDisordinata(primoNum, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.sommaDisordinata(primoStr, secondoNum)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma
-//        ottenuto = Array.sommaDisordinata(primoNum, num)
-//        assert ottenuto instanceof List
-//        assert ottenuto.size() == primoRichiesto
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma
-//        ottenuto = Array.sommaDisordinata(primoStr, stringa)
-//        assert ottenuto instanceof List
-//        assert ottenuto.size() == strRichiesto
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//        ottenuto = Array.sommaDisordinata(primoNum, stringa)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//        ottenuto = Array.sommaDisordinata(primoStr, num)
-//        assert ottenuto == null
-//    }// fine tests
-//
-//    /**
-//     * Somma due array (liste) e restituisce una lista ordinata
-//     *
-//     * Almeno uno dei due array in ingresso deve essere non nullo
-//     * I valori nel array risultante, sono unici
-//     * Normalmente si usa di più la somma ordinata
-//     *
-//     * Se entrambi i parametri sono liste della stessa classe, restituisce la somma ordinata
-//     * Se entrambi i parametri sono liste ma di classe diversas, restituisce un nullo
-//     * Se entrambi i parametri sono nulli, restituisce un nullo
-//     * Se uno dei parametri è nullo e l'altro è una lista, restituisce la lista ordinata
-//     * Se uno dei parametri è nullo e l'altro non è una lista, restituisce un nullo
-//     * Se uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma ordinata
-//     * Se uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//     *
-//     * @param arrayPrimo
-//     * @param arraySecondo
-//     * @return arraySomma ordinato
-//     */
-//    void testSomma() {
-//        def primoNum = [7, 87, 4, 25, 1, 12]
-//        def primoNumOrd = [1, 4, 7, 12, 25, 87]
-//        def secondoNum = [11, 7, 55, 4]
-//        def secondoNumOrd = [4, 7, 11, 55]
-//        def richiestoNum = [1, 4, 7, 11, 12, 25, 55, 87]
-//        def primoStr = ['due', 'otto', 'alfa']
-//        def secondoStr = ['otto', 'gamma', 'due']
-//        def richiestoStr = ['alfa', 'due', 'gamma', 'otto']
-//        int num = 999
-//        def richiestoPrimoPiuNum = [1, 4, 7, 12, 25, 87, 999]
-//        String stringa = 'beta'
-//        def richiestoPrimoPiuStr = ['alfa', 'beta', 'due', 'otto']
-//        def ottenuto
-//
-//        // entrambi i parametri sono nulli, restituisce un nullo
-//        ottenuto = Array.somma(null, null)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è nullo e l'altro è una lista, restituisce la lista ordinata
-//        ottenuto = Array.somma(primoNum, null)
-//        assert ottenuto instanceof List
-//        assert ottenuto == primoNumOrd
-//
-//        // uno dei parametri è nullo e l'altro è una lista, restituisce la lista ordinata
-//        ottenuto = Array.somma(null, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto == secondoNumOrd
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la somma ordinata
-//        ottenuto = Array.somma(primoNum, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoNum
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la somma ordinata
-//        ottenuto = Array.somma(primoStr, secondoStr)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoStr
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.somma(primoNum, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.somma(primoStr, secondoNum)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma ordinata
-//        ottenuto = Array.somma(primoNum, num)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoPiuNum
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma è della stessa classe, restituisce la somma ordinata
-//        ottenuto = Array.somma(primoStr, stringa)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoPiuStr
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//        ottenuto = Array.somma(primoNum, stringa)
-//        assert ottenuto == null
-//
-//        // uno dei parametri è una lista, l'altro non è una lista ma non è della stessa classe, restituisce un nullo
-//        ottenuto = Array.somma(primoStr, num)
-//        assert ottenuto == null
-//    }// fine tests
-//
-//    /**
-//     * Differenza tra due array (liste) e restituisce una lista
-//     *
-//     * Il primo array in ingresso deve essere non nullo e deve essere una lista
-//     * I valori negli array sono unici
-//     * Normalmente si usa di meno la differenza disordinata
-//     *
-//     * Se entrambi i parametri sono liste della stessa classe, restituisce la differenza
-//     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//     * Se il primo parametro è nullo, restituisce un nullo
-//     * Se il primo parametro non è una lista, restituisce un nullo
-//     * Se entrambi i parametri sono nulli, restituisce un nullo
-//     * Se il secondo parametro è nullo, oppure una lista vuota (zero elementi), restituisce il primo array
-//     * Se il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza
-//     * Se il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//     *
-//     * @param arrayPrimo
-//     * @param arraySecondo
-//     * @return arrayDifferenza disordinata
-//     */
-//    void testDifferenzaDisordinata() {
-//        def primoNum = [7, 87, 4, 25, 1, 12]
-//        def secondoNum = [11, 7, 55, 4]
-//        def richiestoNum = [87, 25, 1, 12]
-//        def arrayVuoto = []
-//        def primoStr = ['due', 'otto', 'beta', 'alfa', 'omicron']
-//        def secondoStr = ['otto', 'gamma', 'due']
-//        def richiestoStr = ['beta', 'alfa', 'omicron']
-//        int num = 4
-//        def richiestoPrimoMenoNum = [7, 87, 25, 1, 12]
-//        String stringa = 'beta'
-//        def richiestoPrimoMenoStr = ['due', 'otto', 'alfa', 'omicron']
-//        def ottenuto
-//
-//        // entrambi i parametri sono nulli, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(null, null)
-//        assert ottenuto == null
-//
-//        // il primo parametro è nullo, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(null, secondoNum)
-//        assert ottenuto == null
-//
-//        // il primo parametro non è una lista, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(num, secondoNum)
-//        assert ottenuto == null
-//
-//        // il primo parametro non è una lista, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(stringa, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(primoNum, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(primoStr, secondoNum)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
-//        ottenuto = Array.differenzaDisordinata(primoNum, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoNum
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
-//        ottenuto = Array.differenzaDisordinata(primoStr, secondoStr)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoStr
-//
-//        // il secondo parametro è nullo, restituisce la differenza,restituisce il primo array
-//        ottenuto = Array.differenzaDisordinata(primoNum, null)
-//        assert ottenuto instanceof List
-//        assert ottenuto == primoNum
-//
-//        // il secondo parametro è una lista vuota (zero elementi), restituisce il primo array
-//        ottenuto = Array.differenzaDisordinata(primoNum, arrayVuoto)
-//        assert ottenuto instanceof List
-//        assert ottenuto == primoNum
-//
-//        // il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza
-//        ottenuto = Array.differenzaDisordinata(primoNum, num)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoMenoNum
-//
-//        // il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza
-//        ottenuto = Array.differenzaDisordinata(primoStr, stringa)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoMenoStr
-//
-//        // il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(primoNum, stringa)
-//        assert ottenuto == null
-//
-//        // il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//        ottenuto = Array.differenzaDisordinata(primoStr, num)
-//        assert ottenuto == null
-//    }// fine tests
-//
-//    /**
-//     * Differenza tra due array (liste) e restituisce una lista ordinata
-//     *
-//     * Il primo array in ingresso deve essere non nullo e deve essere una lista
-//     * I valori negli array sono unici
-//     * Normalmente si usa di più la differenza ordinata
-//     *
-//     * Se entrambi i parametri sono liste della stessa classe, restituisce la differenza ordinata
-//     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//     * Se il primo parametro è nullo, restituisce un nullo
-//     * Se il primo parametro non è una lista, restituisce un nullo
-//     * Se entrambi i parametri sono nulli, restituisce un nullo
-//     * Se il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza ordinata
-//     * Se il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//     *
-//     * @param arrayPrimo
-//     * @param arraySecondo
-//     * @return arrayDifferenza ordinata
-//     */
-//    void testDifferenza() {
-//        def primoNum = [7, 87, 4, 25, 1, 12]
-//        def secondoNum = [11, 7, 55, 4]
-//        def richiestoNum = [1, 12, 25, 87]
-//        def primoStr = ['due', 'otto', 'beta', 'alfa', 'omicron']
-//        def secondoStr = ['otto', 'gamma', 'due']
-//        def richiestoStr = ['alfa', 'beta', 'omicron']
-//        int num = 4
-//        def richiestoPrimoMenoNum = [1, 7, 12, 25, 87]
-//        String stringa = 'beta'
-//        def richiestoPrimoMenoStr = ['alfa', 'due', 'omicron', 'otto']
-//        def ottenuto
-//
-//        // entrambi i parametri sono nulli, restituisce un nullo
-//        ottenuto = Array.differenza(null, null)
-//        assert ottenuto == null
-//
-//        // il primo parametro è nullo, restituisce un nullo
-//        ottenuto = Array.differenza(null, secondoNum)
-//        assert ottenuto == null
-//
-//        // il primo parametro non è una lista, restituisce un nullo
-//        ottenuto = Array.differenza(num, secondoNum)
-//        assert ottenuto == null
-//
-//        // il primo parametro non è una lista, restituisce un nullo
-//        ottenuto = Array.differenza(stringa, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.differenza(primoNum, secondoStr)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
-//        ottenuto = Array.differenza(primoStr, secondoNum)
-//        assert ottenuto == null
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
-//        ottenuto = Array.differenza(primoNum, secondoNum)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoNum
-//
-//        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
-//        ottenuto = Array.differenza(primoStr, secondoStr)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoStr
-//
-//        // il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza
-//        ottenuto = Array.differenza(primoNum, num)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoMenoNum
-//
-//        // il secondo parametro non è una lista, ma è della stessa classe del primo, restituisce la differenza
-//        ottenuto = Array.differenza(primoStr, stringa)
-//        assert ottenuto instanceof List
-//        assert ottenuto == richiestoPrimoMenoStr
-//
-//        // il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//        ottenuto = Array.differenza(primoNum, stringa)
-//        assert ottenuto == null
-//
-//        // il secondo parametro non è una lista, ed è di classe diversa dal primo, restituisce un nullo
-//        ottenuto = Array.differenza(primoStr, num)
-//        assert ottenuto == null
-//    }// fine tests
-//
+    @Test
+    /**
+     * Differenza tra due array (liste) e restituisce una lista
+     * <p>
+     * Il primo array in ingresso deve essere non nullo e deve essere una lista
+     * I valori negli array sono unici
+     * Normalmente si usa di meno la differenza disordinata
+     * <p>
+     * Se entrambi i parametri sono liste della stessa classe, restituisce la differenza
+     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
+     * Se il primo parametro è nullo, restituisce un nullo
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arrayDifferenza disordinato
+     */
+    public void differenzaDisordinata() {
+        int[] primoNum = {7, 87, 4, 25, 1, 12};
+        int[] secondoNum = {11, 7, 55, 4};
+        int[] richiestoNum = {87, 25, 1, 12};
+        int sizeNumPrimo = 6;
+        int sizeNum = 4;
+        List<Integer> primoArrayNum = LibArray.fromInt(primoNum);
+        List<Integer> richiestoArrayNum = LibArray.fromInt(richiestoNum);
+        int[] arrayVuoto = {};
+        String[] primoStr = {"due", "otto", "beta", "alfa", "omicron"};
+        String[] secondoStr = {"otto", "gamma", "due"};
+        String[] richiestoStr = {"beta", "alfa", "omicron"};
+        int sizeStr = 3;
+        List<String> richiestoArrayStr = LibArray.fromString(richiestoStr);
+        List ottenuto;
+
+        // entrambi i parametri sono nulli, restituisce un nullo
+        ottenuto = LibArray.differenzaDisordinata(null, null);
+        assertNull(ottenuto);
+
+        // il primo parametro è nullo, restituisce un nullo
+        ottenuto = LibArray.differenzaDisordinata(null, (ArrayList) LibArray.fromInt(secondoNum));
+        assertNull(ottenuto);
+
+        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromInt(primoNum), (ArrayList) LibArray.fromString(secondoStr));
+        assertNull(ottenuto);
+
+        // entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromString(primoStr), (ArrayList) LibArray.fromInt(secondoNum));
+        assertNull(ottenuto);
+
+        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromInt(primoNum), (ArrayList) LibArray.fromInt(secondoNum));
+        assertEquals(ottenuto.size(), sizeNum);
+        assertEquals(ottenuto.get(0), richiestoArrayNum.get(0));
+        assertEquals(ottenuto.get(1), richiestoArrayNum.get(1));
+        assertEquals(ottenuto.get(2), richiestoArrayNum.get(2));
+        assertEquals(ottenuto.get(3), richiestoArrayNum.get(3));
+
+        // entrambi i parametri sono liste della stessa classe, restituisce la differenza
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromString(primoStr), (ArrayList) LibArray.fromString(secondoStr));
+        assertEquals(ottenuto.size(), sizeStr);
+        assertEquals(ottenuto.get(0), richiestoArrayStr.get(0));
+        assertEquals(ottenuto.get(1), richiestoArrayStr.get(1));
+        assertEquals(ottenuto.get(2), richiestoArrayStr.get(2));
+
+        // il secondo parametro è nullo, restituisce il primo array
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromInt(primoNum), null);
+        assertEquals(ottenuto.size(), sizeNumPrimo);
+        assertEquals(ottenuto.get(0), primoArrayNum.get(0));
+        assertEquals(ottenuto.get(1), primoArrayNum.get(1));
+        assertEquals(ottenuto.get(2), primoArrayNum.get(2));
+        assertEquals(ottenuto.get(3), primoArrayNum.get(3));
+        assertEquals(ottenuto.get(4), primoArrayNum.get(4));
+        assertEquals(ottenuto.get(5), primoArrayNum.get(5));
+
+        // il secondo parametro è una lista vuota (zero elementi), restituisce il primo array
+        ottenuto = LibArray.differenzaDisordinata((ArrayList) LibArray.fromInt(primoNum), (ArrayList) LibArray.fromInt(arrayVuoto));
+        assertEquals(ottenuto.size(), sizeNumPrimo);
+        assertEquals(ottenuto.get(0), primoArrayNum.get(0));
+        assertEquals(ottenuto.get(1), primoArrayNum.get(1));
+        assertEquals(ottenuto.get(2), primoArrayNum.get(2));
+        assertEquals(ottenuto.get(3), primoArrayNum.get(3));
+        assertEquals(ottenuto.get(4), primoArrayNum.get(4));
+        assertEquals(ottenuto.get(5), primoArrayNum.get(5));
+    }// fine tests
+
+
+    @Test
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param array lista di valori
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public void toStringa() {
+        int size = 7;
+        String ottenuta;
+        String richiestaPipe = "alfa|aB|c|0|2|1Ad|a10";
+        String richiestaVirgola = "alfa,aB,c,0,2,1Ad,a10";
+        List lista = LibArray.fromString(stringArray);
+        assertEquals(lista.size(), size);
+
+        ottenuta = LibArray.toStringaPipe(lista);
+        assertEquals(ottenuta, richiestaPipe);
+
+        ottenuta = LibArray.toStringaVirgola(lista);
+        assertEquals(ottenuta, richiestaVirgola);
+    }// fine tests
+
+    @Test
+    /**
+       * Costruisce una stringa con i singoli valori divisi da un separatore
+       * <p>
+       *
+       * @param stringArray to convert
+       * @param sep         carattere separatore
+       * @return stringa con i singoli valori divisi da un separatore
+       */
+    public void fromStringToStringa() {
+        String ottenuta;
+        String richiestaPipe = "alfa|aB|c|0|2|1Ad|a10";
+        String richiestaVirgola = "alfa,aB,c,0,2,1Ad,a10";
+
+        ottenuta = LibArray.fromStringToStringaPipe(stringArray);
+        assertEquals(ottenuta, richiestaPipe);
+
+        ottenuta = LibArray.fromStringToStringaVirgola(stringArray);
+        assertEquals(ottenuta, richiestaVirgola);
+    }// fine tests
+
 //
 //    void testUnivoco() {
 //        def listaNum = [7, 87, 4, 25, 1, 12]

@@ -150,12 +150,6 @@ public class AMenuBar extends HorizontalLayout {
 //		return menubar;
     }// end of method
 
-    public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
-        MenuItem menuItem;
-        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
-        menuItem = algosMenuBar.addItem(titolo, null, comando);
-        menuItem.setStyleName(MENU_DISABILITATO);
-    }// end of method
 
 //    public void addMenu(String titolo, ModulePop modulo) {
 //        MenuItem menuItem;
@@ -181,6 +175,15 @@ public class AMenuBar extends HorizontalLayout {
 
         this.addMenu(address, modulo, placeholder);
     }// end of method
+
+
+    public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
+        MenuItem menuItem;
+        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
+        menuItem = algosMenuBar.addItem(titolo, null, comando);
+        menuItem.setStyleName(MENU_DISABILITATO);
+    }// end of method
+
 
     /**
      * Returns a list with all the MenuItem objects in the menu bar

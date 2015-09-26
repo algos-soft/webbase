@@ -10,13 +10,13 @@ public enum TypePref {
     booleano("booleano", "booleano", "booleano"),
     stringa("stringa", "stringa", "stringa"),
     intero("intero", "intero", "intero"),
-    lista("array", "array", "array"),
     lungo("lungo", "lungo", "lungo"),
+    data("data", "data", "data"),
     reale("reale", "reale", "reale"),
     doppio("doppio", "doppio", "doppio"),
     decimale("decimale", "decimale", "decimale"),
-    data("data", "data", "data"),
-    testo("testo", "testo", "testo");
+    testo("testo", "testo", "testo"),
+    lista("array", "array", "array");
 
     String nomeDB;
 
@@ -30,14 +30,6 @@ public enum TypePref {
         this.setNomeFormView(nomeFormView);
     }// fine del costruttore
 
-    String getNomeDB() {
-        return nomeDB;
-    }
-
-    void setNomeDB(String nomeDB) {
-        this.nomeDB = nomeDB;
-    }
-
     public static ArrayList<String> allForm() {
         ArrayList<String> lista = new ArrayList<>();
 
@@ -46,6 +38,14 @@ public enum TypePref {
         } // fine del ciclo for-each
 
         return lista;
+    }
+
+    String getNomeDB() {
+        return nomeDB;
+    }
+
+    void setNomeDB(String nomeDB) {
+        this.nomeDB = nomeDB;
     }
 
     String getNomeListView() {

@@ -4,44 +4,40 @@ package it.algos.webbase.domain.pref;
  * Using specific Templates (Entity, Domain, Modulo)
  */
 
-import com.vaadin.ui.Notification;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.lib.LibVers;
+import it.algos.webbase.web.lib.LibDate;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
-import sun.awt.SunHints;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
-import java.security.Key;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Vector;
 
 @Entity
 public class Pref extends BaseEntity {
 
     private int ordine;
-    private TypePref type;
+    private TypePref type ;
 
     @NotEmpty
-    private String code;
-    private String descrizione;
+    private String code = "";
+    private String descrizione = "";
     private Date dateCreated;
     private Date lastUpdated;
-    private String stringa;      // VARCHAR(255)
-    private Boolean bool;     // BIT(1)
-    private Integer intero;    // INTEGER
-    private Long lungo;   // BIGINT(20)
-    private Float reale;  // FLOAT
-    private Double doppio; // DOUBLE
-    private BigDecimal decimale;// DECIMAL(19,2)
-    private Date data;// DATETIME
-    private String testo;// LONGTEXT
+    private String stringa = "";      // VARCHAR(255)
+    private Boolean bool = false;     // BIT(1)
+    private Integer intero = 0;    // INTEGER
+    private Long lungo = 0L;   // BIGINT(20)
+    private Float reale = 0F;  // FLOAT
+    private Double doppio = 0D; // DOUBLE
+    private BigDecimal decimale = null;// DECIMAL(19,2)
+    private Date data = null;// DATETIME
+    private String testo = "";// LONGTEXT
 
-    @ElementCollection
-//    @CollectionTable(name="foo_bars", joinColumns=@JoinColumn(name="bar_id"))
-//    @Column(name="foo")
-    private List<String> collection;;
+//    private List<String> collection;;
 
     public Pref() {
         super();
@@ -107,6 +103,20 @@ public class Pref extends BaseEntity {
 
         if (pref != null && pref.type == TypePref.booleano) {
             return pref.getBool();
+        } else {
+            return suggerito;
+        }// fine del blocco if-else
+    } // end of method
+
+    public static String getStr(String code) {
+        return findByCode(code).getStringa();
+    } // end of method
+
+    public static String getStr(String code, String suggerito) {
+        Pref pref = findByCode(code);
+
+        if (pref != null && pref.type == TypePref.stringa) {
+            return pref.getStringa();
         } else {
             return suggerito;
         }// fine del blocco if-else

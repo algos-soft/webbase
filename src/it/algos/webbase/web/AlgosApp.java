@@ -109,6 +109,12 @@ public abstract class AlgosApp {
      */
     private static ServletContext servletContext;
 
+    /**
+     * Null selection allowed in combobox.<br>
+     * Not final<br>
+     * Can be overwritten on local xxxBootStrap.contextInitialized() method
+     */
+    public static boolean COMBO_BOX_NULL_SELECTION_ALLOWED = true;
 
     /**
      * Returns the path to the Uploads folder.

@@ -3,6 +3,7 @@ package it.algos.webbase.domain.log;
 import com.vaadin.data.Item;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.table.TablePortal;
 
 import javax.persistence.metamodel.Attribute;
 
@@ -79,6 +80,16 @@ public class LogMod extends ModulePop {
     @Override
     public AForm createForm(Item item) {
         return (new LogForm(this, item));
+    }// end of method
+
+    /**
+     * Create the Table Portal
+     *
+     * @return the TablePortal
+     */
+    @Override
+    public TablePortal createTablePortal() {
+        return new LogTablePortal(this);
     }// end of method
 
 }// end of class

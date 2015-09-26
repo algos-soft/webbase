@@ -305,4 +305,124 @@ public abstract class LibArray {
     } // fine del metodo
 
 
+    /**
+     * Differenza tra due array (liste) e restituisce una lista
+     * <p>
+     * Il primo array in ingresso deve essere non nullo e deve essere una lista
+     * I valori negli array sono unici
+     * Normalmente si usa di meno la differenza disordinata
+     * <p>
+     * Se entrambi i parametri sono liste della stessa classe, restituisce la differenza
+     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
+     * Se il primo parametro è nullo, restituisce un nullo
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arrayDifferenza disordinato
+     */
+    @SuppressWarnings("all")
+    public static ArrayList differenzaDisordinata(ArrayList arrayPrimo, ArrayList arraySecondo) {
+        ArrayList arrayDifferenza = null;
+        if (arraySecondo == null) {
+            return arrayPrimo;
+        }// fine del blocco if
+
+        if (arraySecondo.size() == 0) {
+            return arrayPrimo;
+        }// fine del blocco if
+
+        if (arrayPrimo != null) {
+            if (arrayPrimo.get(0).getClass() == arraySecondo.get(0).getClass()) {
+                arrayDifferenza = new ArrayList();
+                for (Object obj : arrayPrimo) {
+                    if (!arraySecondo.contains(obj)) {
+                        arrayDifferenza.add(obj);
+                    }// fine del blocco if
+                } // fine del ciclo for-each
+            }// fine del blocco if
+        }// fine del blocco if
+
+        // valore di ritorno
+        return arrayDifferenza;
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param array lista di valori
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String toStringaPipe(List array) {
+        return toStringa(array, "|");
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da una virgola
+     * <p>
+     *
+     * @param array lista di valori
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String toStringaVirgola(List array) {
+        return toStringa(array, ",");
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore
+     * <p>
+     *
+     * @param array lista di valori
+     * @param sep   carattere separatore
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String toStringa(List array, String sep) {
+        String testo;
+        StringBuilder textBuffer = new StringBuilder();
+
+        for (Object obj : array) {
+            textBuffer.append(obj.toString());
+            textBuffer.append(sep);
+        } // fine del ciclo for-each
+        testo = textBuffer.toString();
+        testo = LibText.levaCoda(testo, sep);
+
+        return testo;
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param stringArray to convert
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String fromStringToStringaPipe(String[] stringArray) {
+        return fromStringToStringa(stringArray, "|");
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da una virgola
+     * <p>
+     *
+     * @param stringArray to convert
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String fromStringToStringaVirgola(String[] stringArray) {
+        return fromStringToStringa(stringArray, ",");
+    } // fine del metodo
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore
+     * <p>
+     *
+     * @param stringArray to convert
+     * @param sep         carattere separatore
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public static String fromStringToStringa(String[] stringArray, String sep) {
+        List array = LibArray.fromString(stringArray);
+        return toStringa(array, sep);
+    } // fine del metodo
+
 }// end of static class

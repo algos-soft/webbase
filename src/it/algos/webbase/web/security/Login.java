@@ -57,21 +57,24 @@ public class Login {
     }// end of method
 
     /**
-     * Controllo developer
+     * Controllo <br>
+     * Vero se esiste un utente collegato ed ha il ruolo di developer <br>
      */
     public boolean isDeveloper() {
         return isRuoloBase(TipoRuolo.developer);
     }// end of method
 
     /**
-     * Controllo admin
+     * Controllo <br>
+     * Vero se esiste un utente collegato ed ha il ruolo di admin <br>
      */
     public boolean isAdmin() {
         return isRuoloBase(TipoRuolo.admin);
     }// end of method
 
     /**
-     * Controllo user
+     * Controllo <br>
+     * Vero se esiste un utente collegato ed ha il ruolo di user <br>
      */
     public boolean isUser() {
         return isRuoloBase(TipoRuolo.user);
@@ -86,9 +89,47 @@ public class Login {
 
 
     /**
+     * Controllo <br>
+     * Vero se esiste un utente collegato ed ha il ruolo di admin o superiore<br>
+     */
+    public boolean isAdminOrMore() {
+        return (isDeveloper() || isAdmin());
+    }// end of method
+
+    /**
+     * Controllo <br>
+     * Vero se esiste un utente collegato ed ha il ruolo di utente o superiore<br>
+     */
+    public boolean isUserOrMore() {
+        return (isAdmin() || isUser());
+    }// end of method
+
+
+    /**
      * Controllo base del ruolo
      */
-    private boolean isRuoloBase(TipoRuolo ruoloPrevisto) {
+    public boolean isRuoloBase(TipoRuolo ruoloPrevisto) {
+        boolean status = false;
+        UtenteRuolo userRole = null;
+        Ruolo ruolo = Ruolo.read(ruoloPrevisto.toString());
+
+        if (utente != null) {
+            userRole = UtenteRuolo.read(utente, ruolo);
+            if (userRole != null) {
+                status = true;
+            }// end of if cycle
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
+     * Controllo base del ruolo
+     *
+     * @deprecated
+     */
+    private boolean isRuoloBaseOld(TipoRuolo ruoloPrevisto) {
         boolean status = false;
         Utente utente = this.getUtente();
         ArrayList<UtenteRuolo> lista = UtenteRuolo.findUtente(utente);

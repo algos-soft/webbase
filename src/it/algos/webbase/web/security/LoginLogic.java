@@ -2,10 +2,7 @@ package it.algos.webbase.web.security;
 
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
-import it.algos.webbase.domain.ruolo.Ruolo;
-import it.algos.webbase.domain.ruolo.TipoRuolo;
 import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.module.Module;
@@ -82,8 +79,6 @@ public class LoginLogic extends Module implements LogUtenteListener, LogBottoniL
             login.setUtente(utente);
         }// fine del blocco if
 
-//        LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, utente.getNickname());
-
         // Scrive (modificando) un cookie dedicato
         writeCookie(utente);
 
@@ -126,78 +121,6 @@ public class LoginLogic extends Module implements LogUtenteListener, LogBottoniL
         return utenteCollegato;
     }// end of method
 
-    /**
-     * Controllo <br>
-     * Vero se esiste un utente collegato ed ha il ruolo di developer <br>
-     */
-    public boolean isDeveloper() {
-        boolean developer = false;
-        UtenteRuolo userRole = null;
-        Ruolo ruoloDeveloper = Ruolo.read(TipoRuolo.developer.toString());
-
-        if (utenteCollegato != null) {
-            userRole = UtenteRuolo.read(utenteCollegato, ruoloDeveloper);
-            if (userRole != null) {
-                developer = true;
-            }// end of if cycle
-        }// end of if cycle
-
-        return developer;
-    }// end of method
-
-    /**
-     * Controllo <br>
-     * Vero se esiste un utente collegato ed ha il ruolo di admin <br>
-     */
-    public boolean isAdmin() {
-        boolean admin = false;
-        UtenteRuolo userRole = null;
-        Ruolo ruoloAdmin = Ruolo.read(TipoRuolo.admin.toString());
-
-        if (utenteCollegato != null) {
-            userRole = UtenteRuolo.read(utenteCollegato, ruoloAdmin);
-            if (userRole != null) {
-                admin = true;
-            }// end of if cycle
-        }// end of if cycle
-
-        return admin;
-    }// end of method
-
-    /**
-     * Controllo <br>
-     * Vero se esiste un utente collegato ed ha il ruolo di user <br>
-     */
-    public boolean isUser() {
-        boolean user = false;
-        UtenteRuolo userRole = null;
-        Ruolo ruoloUser = Ruolo.read(TipoRuolo.user.toString());
-
-        if (utenteCollegato != null) {
-            userRole = UtenteRuolo.read(utenteCollegato, ruoloUser);
-            if (userRole != null) {
-                user = true;
-            }// end of if cycle
-        }// end of if cycle
-
-        return user;
-    }// end of method
-
-    /**
-     * Controllo <br>
-     * Vero se esiste un utente collegato ed ha il ruolo di admin o superiore<br>
-     */
-    public boolean isAdminOrMore() {
-        return (isDeveloper() || isAdmin());
-    }// end of method
-
-    /**
-     * Controllo <br>
-     * Vero se esiste un utente collegato ed ha il ruolo di utente o superiore<br>
-     */
-    public boolean isUserOrMore() {
-        return (isAdmin() || isUser());
-    }// end of method
 
     /**
      * Controllo <br>

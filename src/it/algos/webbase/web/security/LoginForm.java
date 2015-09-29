@@ -50,11 +50,14 @@ public class LoginForm extends ConfirmDialog {
         String pass = "";
         String company = "";
 
-        if (AlgosApp.USE_COMPANY) {
-            utente = Utente.read(company, nome);
-        } else {
-            utente = Utente.read(nome);
-        }// end of if/else cycle
+//        if (AlgosApp.USE_COMPANY) {
+//            utente = Utente.read(company, nome);
+//        } else {
+//            utente = Utente.read(nome);
+//        }// end of if/else cycle
+
+        utente = Utente.read(nome);
+
 
         if (utente != null) {
             if (utente.isEnabled()) {

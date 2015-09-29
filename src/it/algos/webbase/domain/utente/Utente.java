@@ -19,7 +19,7 @@ public class Utente extends BaseEntity {
 
 	private String password = "";
 
-	private String company = "";
+//	private String company = "";
 
 	private boolean enabled = true;
 
@@ -28,15 +28,16 @@ public class Utente extends BaseEntity {
 	}// end of constructor
 
 	public Utente(String nickname, String password) {
-		this(nickname, password, "");
-	}// end of constructor
-
-	public Utente(String nickname, String password, String company) {
-		super();
 		this.setNickname(nickname);
 		this.setPassword(password);
-		this.setCompany(company);
 	}// end of constructor
+
+//	public Utente(String nickname, String password, String company) {
+//		super();
+//		this.setNickname(nickname);
+//		this.setPassword(password);
+////		this.setCompany(company);
+//	}// end of constructor
 
 	public String getPassword() {
 		return password;
@@ -74,20 +75,20 @@ public class Utente extends BaseEntity {
 		this.nickname = nickname;
 	}
 
-	/**
-	 * @return the company
-	 */
-	public String getCompany() {
-		return company;
-	}
-
-	/**
-	 * @param company
-	 *            the company to set
-	 */
-	public void setCompany(String company) {
-		this.company = company;
-	}
+//	/**
+//	 * @return the company
+//	 */
+//	public String getCompany() {
+//		return company;
+//	}
+//
+//	/**
+//	 * @param company
+//	 *            the company to set
+//	 */
+//	public void setCompany(String company) {
+//		this.company = company;
+//	}
 
 	/**
 	 * Recupera l'utente usando la query specifica
@@ -125,31 +126,31 @@ public class Utente extends BaseEntity {
 		return instance;
 	}// end of method
 
-	/**
-	 * Recupera l'utente usando la query specifica
-	 * 
-	 * @return l'utente, null se non trovato
-	 */
-	public static Utente read(String company, String nome) {
-		Utente instance = null;
-		BaseEntity entity = null;
-		Filter filtroAzienda = FilterFactory.create(Utente_.company, company);
-		Filter filtroNome = FilterFactory.create(Utente_.nickname, nome);
-
-		if (company.equals("")) {
-			entity = AQuery.getEntity(Utente.class, filtroNome);
-		} else {
-			entity = AQuery.getEntity(Utente.class, filtroNome, filtroAzienda);
-		}// end of if/else cycle
-
-		if (entity != null) {
-			if (entity instanceof Utente) {
-				instance = (Utente) entity;
-			}// end of if cycle
-		}// end of if cycle
-
-		return instance;
-	}// end of method
+//	/**
+//	 * Recupera l'utente usando la query specifica
+//	 *
+//	 * @return l'utente, null se non trovato
+//	 */
+//	public static Utente read(String company, String nome) {
+//		Utente instance = null;
+//		BaseEntity entity = null;
+//		Filter filtroAzienda = FilterFactory.create(Utente_.company, company);
+//		Filter filtroNome = FilterFactory.create(Utente_.nickname, nome);
+//
+//		if (company.equals("")) {
+//			entity = AQuery.getEntity(Utente.class, filtroNome);
+//		} else {
+//			entity = AQuery.getEntity(Utente.class, filtroNome, filtroAzienda);
+//		}// end of if/else cycle
+//
+//		if (entity != null) {
+//			if (entity instanceof Utente) {
+//				instance = (Utente) entity;
+//			}// end of if cycle
+//		}// end of if cycle
+//
+//		return instance;
+//	}// end of method
 
 
 	/**

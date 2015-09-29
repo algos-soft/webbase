@@ -88,6 +88,7 @@ public class LoginLogic extends Module implements LogUtenteListener, LogBottoniL
     @Override
     public void esciLogin() {
         utenteCollegato = null;
+        LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, null);
     }// end of method
 
     @Override

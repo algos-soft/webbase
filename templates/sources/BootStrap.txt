@@ -2,7 +2,7 @@ package it.algos.@LOWERPACK@;
 
 import it.algos.webbase.web.ABootStrap;
 import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.domain.vers.LibVers;
+import it.algos.webbase.web.lib.LibVers;
 import it.algos.webbase.web.toolbar.Toolbar;
 
 import javax.servlet.ServletContext;

@@ -4,30 +4,40 @@ import it.algos.webbase.domain.ruolo.Ruolo;
 import it.algos.webbase.domain.ruolo.TipoRuolo;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
+import it.algos.webbase.web.lib.LibSecurity;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.util.ArrayList;
 
 /**
  * Security BootStrap.<br>
  */
-public abstract class SecurityBootStrap {
+public  class SecurityBootStrap implements ServletContextListener {
 
 	/**
-	 * Controllo esistenza dei ruoli standard <br>
-	 * Se mancano, li crea <br>
+	 * This method is called prior to the servlet context being
+	 * initialized (when the Web application is deployed).
+	 * You can initialize servlet context related data here.
+	 * <p>
+	 * Tutte le aggiunte, modifiche e patch vengono inserite con una versione <br>
+	 * L'ordine di inserimento è FONDAMENTALE
+	 * <p>
+	 * Se le versioni aumentano, conviene spostare in una classe esterna
 	 */
-	public static void bootStrapRuoli() {
-		Ruolo ruolo = null;
-		ArrayList<String> listaNomiRuoli = TipoRuolo.getAllNames();
+	@Override
+	public void contextInitialized(ServletContextEvent contextEvent) {
+		creaRuoli();
+	}// end of method
 
-		for (String nome : listaNomiRuoli) {
-			ruolo = Ruolo.read(nome);
-
-			if (ruolo == null) {
-				ruolo = new Ruolo(nome);
-				ruolo.save();
-			}// end of if cycle
-		}// fine del ciclo for
+	/**
+	 * Crea una serie di ruoli
+	 * <p/>
+	 * Alcuni generali controlla se esistono (dovrebbero esserci) e li crea solo se mancano (la prima volta)
+	 * Alcuni specifici di questa applicazione e li crea
+	 */
+	private void creaRuoli() {
+//		LibSecurity.checkRuoli();
 	}// end of method
 
 	/**
@@ -50,5 +60,13 @@ public abstract class SecurityBootStrap {
 
 	}// end of method
 
-}// end of abstract class
+	/**
+	 * This method is invoked when the Servlet Context
+	 * (the Web application) is undeployed or
+	 * WebLogic Server shuts down.
+	 */
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+	}// end of method
 
+}// end of  class

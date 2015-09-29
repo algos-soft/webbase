@@ -12,6 +12,9 @@ import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.FilterFactory;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 @Entity
 public class UtenteRuolo extends BaseEntity {
 
@@ -49,6 +52,13 @@ public class UtenteRuolo extends BaseEntity {
 	public void setRuolo(Ruolo ruolo) {
 		this.ruolo = ruolo;
 	}
+
+	public synchronized static ArrayList<UtenteRuolo> findUtente(Utente utente) {
+		ArrayList<UtenteRuolo> lista;
+		Vector vettore = (Vector) AQuery.queryList(UtenteRuolo.class, UtenteRuolo_.utente,utente);
+		lista = new ArrayList<UtenteRuolo>(vettore);
+		return lista;
+	}// end of method
 
 	/**
 	 * Recupera il record usando la query specifica

@@ -16,6 +16,7 @@ import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
+import it.algos.webbase.web.security.Login;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
@@ -81,7 +82,9 @@ public class AlgosUI extends UI {
         this.checkCookies(request);
 
         // Controlla il login della security
-        this.checkSecurity(request);
+        if (AlgosApp.USE_SECURITY) {
+            this.checkSecurity(request);
+        }// fine del blocco if
 
         // Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
         this.startUI();
@@ -137,8 +140,10 @@ public class AlgosUI extends UI {
     /**
      * Controlla il login della security
      * <p>
+     * Creazione del wrapper di informazioni mantenuto nella sessione <br>
      */
     protected void checkSecurity(VaadinRequest request) {
+        LibSession.setAttribute(Cost.LOGIN_INFO, new Login());
     }// end of method
 
 

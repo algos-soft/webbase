@@ -66,12 +66,23 @@ public class LoginLogic extends Module implements LogUtenteListener, LogBottoniL
      */
     @Override
     public void setUtenteLogin(Utente utente) {
+        Object loginObj;
+        Login login = null;
 
         // Registra l'utente nella property di questa classe (per controlli)
         utenteCollegato = utente;
 
-        // Registra l'utente (nome?) nella sessione
-        LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, utente.getNickname());
+//        // Registra l'utente (nome?) nella sessione
+//        LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, utente.getNickname());
+
+        // Registra nella sessione le informazioni del login
+        loginObj = LibSession.getAttribute(Cost.LOGIN_INFO);
+        if (loginObj instanceof Login) {
+            login = (Login) loginObj;
+            login.setUtente(utente);
+        }// fine del blocco if
+
+//        LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, utente.getNickname());
 
         // Scrive (modificando) un cookie dedicato
         writeCookie(utente);

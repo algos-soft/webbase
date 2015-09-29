@@ -1,15 +1,16 @@
 package it.algos.@LOWERPACK@;
 
-import it.algos.webbase.domain.vers.LibVers;
+import it.algos.webbase.web.lib.LibVers;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
  * Version BootStrap
  * Log delle versioni, modifiche e patch installate
  */
-public class VersioneBootStrap {
+public class VersioneBootStrap implements ServletContextListener{
 
     /**
      * This method is called prior to the servlet context being
@@ -41,6 +42,3 @@ public class VersioneBootStrap {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }// end of method
-
-
-}// end of boot class

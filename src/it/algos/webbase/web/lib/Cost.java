@@ -8,6 +8,8 @@ package it.algos.webbase.web.lib;
  */
 public abstract class Cost {
 
+    public static final String LOGIN_INFO = "loginInfo";
+
     public static final String COOKIE_LOGIN_NICK = "cookieLoginNick";
     public static final String COOKIE_LOGIN_PASS = "cookieLoginPass";
     public static final String COOKIE_LOGIN_ROLE = "cookieLoginRole";

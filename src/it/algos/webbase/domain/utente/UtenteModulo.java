@@ -46,15 +46,12 @@ public class UtenteModulo extends ModulePop {
 		return "Ricerca utenti";
 	}// end of method
 
-	// come default spazzola tutti i campi della Entity
-	// non garantisce l'ordine con cui vengono presentati i campi
-	// può essere sovrascritto nelle sottoclassi specifiche (garantendo l'ordine)
-	// può mostrare anche il campo ID, oppure no
-	// se si vuole differenziare tra Table, Form e Search, sovrascrivere
-	// creaFieldsList, creaFieldsForm e creaFieldsSearch
-	protected Attribute<?, ?>[] creaFieldsAll() {
-		return new Attribute[] { Utente_.nickname, Utente_.password, Utente_.enabled };
-	}// end of method
+
+
+	@Override
+	protected Attribute<?, ?>[] creaFieldsList() {
+		return new Attribute[] { Utente_.nickname, Utente_.enabled };
+	}
 
 	/**
 	 * Returns the form used to edit an item. <br>
@@ -63,16 +60,7 @@ public class UtenteModulo extends ModulePop {
 	 * @return the Form
 	 */
 	public AForm createForm(Item item) {
-		Utente uti = null;
-//		uti=LoginLogic.getUtente();
-		if (uti != null) {
-			Notification.show("Utente loggato sempbra proprio che sia: " + uti.getNickname(),
-					Notification.Type.HUMANIZED_MESSAGE);
-		} else {
-			Notification.show("Non c'è proprio nessuno loggato !", Notification.Type.HUMANIZED_MESSAGE);
-		}// end of if/else cycle
-		
-		return super.createForm(item);
+		return new UtenteForm(this, item);
 	}// end of method
 
 }// end of class

@@ -27,6 +27,7 @@ public class Login {
         String cookieLoginNick;
         String cookieLoginPass;
         String cookieLoginRole;
+        LoginLogic alfa= new LoginLogic();
 
         cookieLoginNick = LibSession.getAttributeStr(Cost.COOKIE_LOGIN_NICK);
         cookieLoginPass = LibSession.getAttributeStr(Cost.COOKIE_LOGIN_PASS);

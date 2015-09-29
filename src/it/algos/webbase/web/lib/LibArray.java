@@ -104,7 +104,7 @@ public abstract class LibArray {
      */
     public static List valoriUniciDisordinati(List listaValoriDoppi) {
         return valoriUniciBase(listaValoriDoppi, false);
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -115,7 +115,7 @@ public abstract class LibArray {
      */
     public static List valoriUniciDisordinati(Object[] objArray) {
         return valoriUniciDisordinati(fromObj(objArray));
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -130,7 +130,7 @@ public abstract class LibArray {
      */
     public static List valoriUnici(List listaValoriDoppi) {
         return valoriUniciBase(listaValoriDoppi, true);
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -145,7 +145,7 @@ public abstract class LibArray {
      */
     public static List valoriUnici(Object[] objArray) {
         return valoriUnici(fromObj(objArray));
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
@@ -159,7 +159,7 @@ public abstract class LibArray {
      */
     public static List valoriUnici(int[] intArray) {
         return valoriUnici(fromInt(intArray));
-    } // fine del metodo
+        }// end of static method
 
     /**
      * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
@@ -173,7 +173,7 @@ public abstract class LibArray {
      */
     public static List valoriUnici(long[] longArray) {
         return valoriUnici(fromLong(longArray));
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -202,7 +202,7 @@ public abstract class LibArray {
         }// fine del blocco if
 
         return null;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Ordina la lista
@@ -222,7 +222,7 @@ public abstract class LibArray {
         objList = fromObj(objArray);
 
         return objList;
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -241,7 +241,7 @@ public abstract class LibArray {
         }// fine del blocco if
 
         return aggiunto;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Somma due array (liste) e restituisce una lista disordinata
@@ -277,7 +277,7 @@ public abstract class LibArray {
         }// fine del blocco if
 
         return arraySomma;
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -302,7 +302,7 @@ public abstract class LibArray {
         }// fine del blocco if
 
         return arraySomma;
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -342,9 +342,8 @@ public abstract class LibArray {
             }// fine del blocco if
         }// fine del blocco if
 
-        // valore di ritorno
         return arrayDifferenza;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da un pipe
@@ -355,7 +354,7 @@ public abstract class LibArray {
      */
     public static String toStringaPipe(List array) {
         return toStringa(array, "|");
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da una virgola
@@ -366,7 +365,7 @@ public abstract class LibArray {
      */
     public static String toStringaVirgola(List array) {
         return toStringa(array, ",");
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da un separatore
@@ -388,7 +387,7 @@ public abstract class LibArray {
         testo = LibText.levaCoda(testo, sep);
 
         return testo;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da un pipe
@@ -399,7 +398,7 @@ public abstract class LibArray {
      */
     public static String fromStringToStringaPipe(String[] stringArray) {
         return fromStringToStringa(stringArray, "|");
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da una virgola
@@ -410,7 +409,7 @@ public abstract class LibArray {
      */
     public static String fromStringToStringaVirgola(String[] stringArray) {
         return fromStringToStringa(stringArray, ",");
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Costruisce una stringa con i singoli valori divisi da un separatore
@@ -423,6 +422,6 @@ public abstract class LibArray {
     public static String fromStringToStringa(String[] stringArray, String sep) {
         List array = LibArray.fromString(stringArray);
         return toStringa(array, sep);
-    } // fine del metodo
+    }// end of static method
 
-}// end of static class
+}// end of abstract static class

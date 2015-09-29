@@ -1,6 +1,8 @@
 package it.algos.webbase.web.lib;
 
-public class LibText {
+import java.util.ArrayList;
+
+public abstract class LibText {
 
     public static final String REF = "<ref>";
     public static final String NOTE = "<!--";
@@ -18,7 +20,7 @@ public class LibText {
      */
     public static String zapMultiSpaces(String string) {
         return string.replaceAll("\\s+", " ");
-    }// end of method
+    }// end of static method
 
     /**
      * Removes heading and trailing spaces and converts multiple spaces to single spaces.
@@ -30,7 +32,7 @@ public class LibText {
         string = string.trim();
         string = zapMultiSpaces(string);
         return string;
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -65,7 +67,7 @@ public class LibText {
         }// fine del blocco if
 
         return uscita;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Forza il primo carattere della stringa a maiuscolo
@@ -78,7 +80,7 @@ public class LibText {
      */
     public static String primaMaiuscola(String entrata) {
         return primoCarattere(entrata, PrimoCarattere.maiuscolo);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Forza il primo carattere della stringa a minuscolo
@@ -91,7 +93,7 @@ public class LibText {
      */
     public static String primaMinuscola(String entrata) {
         return primoCarattere(entrata, PrimoCarattere.minuscolo);
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -120,7 +122,7 @@ public class LibText {
         }// fine del blocco if
 
         return uscita;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina la coda terminale della stringa, se esiste. <br>
@@ -148,7 +150,7 @@ public class LibText {
         }// fine del blocco if
 
         return uscita;
-    } // fine del metodo
+    }// end of static method
 
 
     /**
@@ -176,7 +178,7 @@ public class LibText {
         }// fine del blocco if
 
         return uscita;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina la parte di stringa successiva al tag <ref>, se esiste.
@@ -190,7 +192,7 @@ public class LibText {
      */
     public static String levaDopoRef(String entrata) {
         return levaDopo(entrata, REF);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina la parte di stringa successiva al tag <!--, se esiste.
@@ -204,7 +206,7 @@ public class LibText {
      */
     public static String levaDopoNote(String entrata) {
         return levaDopo(entrata, NOTE);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina la parte di stringa successiva al tag {{, se esiste.
@@ -218,7 +220,7 @@ public class LibText {
      */
     public static String levaDopoGraffe(String entrata) {
         return levaDopo(entrata, GRAFFE);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Trova nel testo, la prima occorrenza di un tag compreso nella lista di tag
@@ -247,7 +249,7 @@ public class LibText {
         }// fine del blocco if
 
         return pos;
-    }// fine del metodo
+    }// end of static method
 
 
     /**
@@ -260,7 +262,7 @@ public class LibText {
      */
     public static String levaPunti(String entrata) {
         return levaTesto(entrata, PUNTO);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina tutte le virgole contenute nella stringa.
@@ -272,7 +274,7 @@ public class LibText {
      */
     public static String levaVirgole(String entrata) {
         return levaTesto(entrata, VIRGOLA);
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Elimina tutti i caratteri contenuti nella stringa.
@@ -293,7 +295,7 @@ public class LibText {
         }// fine del blocco if
 
         return testoOut;
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Sostituisce tutte le occorrenze.
@@ -329,6 +331,64 @@ public class LibText {
         }// fine del blocco if
 
         return testoOut;
+    }// end of static method
+
+
+    /**
+     * Restituisce la posizione di un tag in un testo
+     * Riceve una lista di tag da provare
+     * Restituisce la prima posizione tra tutti i tag trovati
+     *
+     * @param testo in ingresso
+     * @param lista di stringhe, oppure singola stringa
+     * @return posizione della prima stringa trovata
+     * -1 se non ne ha trovato nessuna
+     * -1 se il primo parametro è nullo o vuoto
+     * -1 se il secondo parametro è nullo
+     * -1 se il secondo parametro non è ne una lista di stringhe, ne una stringa
+     */
+    public static int getPos(String testo, ArrayList<String> lista) {
+        int pos = testo.length();
+        int posTmp;
+        ArrayList<Integer> posizioni = new ArrayList<Integer>();
+
+        if (!testo.equals("") && lista != null) {
+
+            for (String stringa : lista) {
+                posTmp = testo.indexOf(stringa);
+                if (posTmp != INT_NULLO) {
+                    posizioni.add(posTmp);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+
+            if (posizioni.size() > 0) {
+                for (Integer num : posizioni) {
+                    pos = Math.min(pos, num);
+                } // fine del ciclo for-each
+            } else {
+                pos = 0;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return pos;
+    } // fine del metodo
+
+
+    /**
+     * Restituisce la posizione di un tag in un testo
+     * Riceve una lista di tag da provare
+     * Restituisce la prima posizione tra tutti i tag trovati
+     *
+     * @param testo in ingresso
+     * @param lista di stringhe, oppure singola stringa
+     * @return posizione della prima stringa trovata
+     * -1 se non ne ha trovato nessuna
+     * -1 se il primo parametro è nullo o vuoto
+     * -1 se il secondo parametro è nullo
+     * -1 se il secondo parametro non è ne una lista di stringhe, ne una stringa
+     */
+    public static int getPos(String testo, String... lista) {
+        return getPos(testo, (ArrayList) LibArray.fromString(lista));
     } // fine del metodo
 
     /**
@@ -336,6 +396,6 @@ public class LibText {
      */
     private enum PrimoCarattere {
         maiuscolo, minuscolo
-    }// fine della classe interna
+    }// end of inner enumeration
 
 }// end of static class

@@ -99,4 +99,4 @@ public abstract class LibNum {
         return formattato;
     }// end of static method
 
-}// end of static class
+}// end of abstract static class

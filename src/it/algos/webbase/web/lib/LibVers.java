@@ -17,7 +17,7 @@ public abstract class LibVers {
         }// fine del blocco if
 
         return numero;
-    }// fine del metodo statico
+    }// end of static method
 
     //--patch
     //--mancando la possibilità (29-7-15) di un sort della lista
@@ -34,7 +34,7 @@ public abstract class LibVers {
         }// fine del blocco if
 
         return numero;
-    }// fine del metodo statico
+    }// end of static method
 
     //--controlla la versione installata
     public static boolean installa(int numeroVersioneDaInstallare) {
@@ -46,14 +46,14 @@ public abstract class LibVers {
         }// fine del blocco if
 
         return installa;
-    }// fine del metodo statico
+    }// end of static method
 
     //--crea una versione
     //--la crea SOLO se non esiste già
     public static void nuova(String titolo, String descrizione) {
         int numero = getMaxVersione() + 1;
         nuova(numero, titolo, descrizione);
-    }// fine del metodo statico
+    }// end of static method
 
     //--crea una versione
     //--la crea SOLO se non esiste già
@@ -67,6 +67,6 @@ public abstract class LibVers {
         versione.setTitolo(titolo);
         versione.setDescrizione(descrizione);
         versione.save();
-    }// fine del metodo statico
+    }// end of static method
 
-} // fine della classe astratta
+}// end of abstract static class

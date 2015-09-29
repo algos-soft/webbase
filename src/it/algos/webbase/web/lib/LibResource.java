@@ -40,7 +40,7 @@ public abstract class LibResource {
      */
     public static byte[] getImgBytes(String name) {
         return getImgBytes(AlgosApp.getStrProjectPath(), name);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna una immagine dalle risorse come byte array.
@@ -72,7 +72,7 @@ public abstract class LibResource {
         }// fine del blocco if
 
         return bytes;
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna una immagine dalle risorse LOCALI come resource.
@@ -84,7 +84,7 @@ public abstract class LibResource {
      */
     public static Resource getLocImgResource(String name) {
         return getImgResource(AlgosApp.getStrProjectPath(), name);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna una immagine dalle risorse BASE come resource.
@@ -102,7 +102,7 @@ public abstract class LibResource {
             return null;
         }// fine del blocco if-else
 
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna una immagine dalle risorse come resource.
@@ -122,7 +122,7 @@ public abstract class LibResource {
         }// fine del blocco if
 
         return res;
-    }// end of method
+    }// end of static method
 
     /**
      * Create a StreamResource form a byte array
@@ -149,6 +149,6 @@ public abstract class LibResource {
         resource = new StreamResource(streamSource, resName);
 
         return resource;
-    }// end of method
+    }// end of static method
 
-}// end of static class
+}// end of abstract static class

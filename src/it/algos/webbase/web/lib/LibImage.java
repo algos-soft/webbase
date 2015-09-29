@@ -4,7 +4,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Image;
 
-public class LibImage {
+public abstract class LibImage {
 
 	/**
 	 * Create an Image form a resource
@@ -15,7 +15,7 @@ public class LibImage {
 	public static Image getImage(final Resource resource){
 		Image image = new Image("", resource);
 	    return image;
-	}
+	}// end of static method
 
 	/**
 	 * Create an Image form a byte array
@@ -28,8 +28,8 @@ public class LibImage {
 	    StreamResource resource = LibResource.getStreamResource(bytes);
 	    image.setSource(resource);
 	    return image;
-	}
-	
+	}// end of static method
 
 
-}
+
+}// end of abstract static class

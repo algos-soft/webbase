@@ -15,7 +15,7 @@ public abstract class LibPath {
      */
     public static String getClassName(Object classe) {
         return getClassName(classe.getClass());
-    } // fine del metodo
+    }// end of static method
 
     /**
      * Estrae il nome significativo di una classe
@@ -42,6 +42,6 @@ public abstract class LibPath {
         }// fine del blocco if
 
         return nomeSignificativo;
-    } // fine del metodo
+    }// end of static method
 
-}// end of static class
+}// end of abstract static class

@@ -20,7 +20,7 @@ public abstract class LibPref {
      */
     public static void newBool(String code, Boolean value, String descPref) {
         newBase(false, code, value, descPref, TypePref.booleano);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -33,7 +33,7 @@ public abstract class LibPref {
      */
     public static void newStr(String code, String value, String descPref) {
         newBase(false, code, value, descPref, TypePref.stringa);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -46,7 +46,7 @@ public abstract class LibPref {
      */
     public static void newInt(String code, int value, String descPref) {
         newBase(false, code, value, descPref, TypePref.intero);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -74,7 +74,7 @@ public abstract class LibPref {
      */
     public static void newVersBool(String code, boolean value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.booleano);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una nuova preferenza di tipo stringa
@@ -87,7 +87,7 @@ public abstract class LibPref {
      */
     public static void newVersStr(String code, String value, String descPref) {
         newBase(true, code, value, descPref, "", TypePref.stringa);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una nuova preferenza di tipo stringa
@@ -101,7 +101,7 @@ public abstract class LibPref {
      */
     public static void newVersStr(String code, String value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.stringa);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una nuova preferenza di tipo intero
@@ -114,7 +114,7 @@ public abstract class LibPref {
      */
     public static void newVersInt(String code, int value, String descPref) {
         newBase(true, code, value, descPref, "", TypePref.intero);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una nuova preferenza di tipo intero
@@ -128,7 +128,7 @@ public abstract class LibPref {
      */
     public static void newVersInt(String code, int value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.intero);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -142,7 +142,7 @@ public abstract class LibPref {
      */
     private static void newBase(boolean logVersione, String code, Object value, String descPref, TypePref type) {
         newBase(logVersione, code, value, descPref, "", type);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una nuova preferenza (solo se non esistente)
@@ -202,4 +202,4 @@ public abstract class LibPref {
         }// fine del blocco if
     }// end of static method
 
-}// end of static class
+}// end of abstract static class

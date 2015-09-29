@@ -29,7 +29,7 @@ public abstract class LibFile {
 			}
 		}
 		return mimeType;
-	}
+	}// end of static method
 
 	/**
 	 * Converts a size in bytes in human readable form.
@@ -47,7 +47,7 @@ public abstract class LibFile {
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
-	}
+	}// end of static method
 
 	/**
 	 * Create directory.
@@ -85,4 +85,4 @@ public abstract class LibFile {
 		return nome;
 	}// end of static method
 
-}// end of static class
+}// end of abstract static class

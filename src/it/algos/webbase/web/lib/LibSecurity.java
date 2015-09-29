@@ -29,7 +29,7 @@ public abstract class LibSecurity {
                 ruolo.save();
             }// end of if cycle
         }// fine del ciclo for
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -37,7 +37,7 @@ public abstract class LibSecurity {
      */
     public static void creaDeveloper(String nickName, String password) {
         creaUtente(nickName, password, TipoRuolo.developer.toString());
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -45,7 +45,7 @@ public abstract class LibSecurity {
      */
     public static void creaAdmin(String nickName, String password) {
         creaUtente(nickName, password, TipoRuolo.admin.toString());
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -53,7 +53,7 @@ public abstract class LibSecurity {
      */
     public static void creaUser(String nickName, String password) {
         creaUtente(nickName, password, TipoRuolo.user.toString());
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -61,7 +61,7 @@ public abstract class LibSecurity {
      */
     public static void creaGuest(String nickName, String password) {
         creaUtente(nickName, password, TipoRuolo.guest.toString());
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -74,7 +74,7 @@ public abstract class LibSecurity {
             creaUtente(nickName, password, ruolo);
         }// end of if cycle
 
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -94,6 +94,6 @@ public abstract class LibSecurity {
             }// end of if cycle
         }// end of if cycle
 
-    }// end of method
+    }// end of static method
 
-}// end of static abstract class
+}// end of abstract static class

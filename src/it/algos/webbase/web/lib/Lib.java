@@ -35,7 +35,7 @@ public abstract class Lib {
         }// fine del blocco if
 
         return 0;
-    }// end of method
+    }// end of static method
 
     /**
      * Tries to convert an Object in long.
@@ -63,7 +63,7 @@ public abstract class Lib {
         }
 
         return 0;
-    }// end of method
+    }// end of static method
 
     /**
      * Tries to convert an Object in String.
@@ -84,7 +84,7 @@ public abstract class Lib {
         }
 
         return obj.toString();
-    }// end of method
+    }// end of static method
 
     /**
      * Tries to convert an Object in BigDecimal.
@@ -124,7 +124,7 @@ public abstract class Lib {
         }
 
         return bd;
-    }// end of method
+    }// end of static method
 
     /**
      * Tries to convert an Object in Boolean.
@@ -144,7 +144,7 @@ public abstract class Lib {
         }
 
         return b;
-    }// end of method
+    }// end of static method
 
     /**
      * Parser di una stringa
@@ -154,7 +154,7 @@ public abstract class Lib {
      */
     public static ArrayList<String> getArrayDaTesto(String testo) {
         return getArrayDaTesto(testo, ",");
-    }// end of method
+    }// end of static method
 
     /**
      * Parser di una stringa
@@ -178,6 +178,6 @@ public abstract class Lib {
         }// end of if cycle
 
         return array;
-    }// end of method
+    }// end of static method
 
-}// end of static class
+}// end of abstract static class

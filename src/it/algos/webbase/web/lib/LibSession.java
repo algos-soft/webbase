@@ -15,7 +15,7 @@ public abstract class LibSession {
      */
     public static void checkDeveloper(VaadinRequest request) {
         LibSession.checkBool(request, Attribute.developer);
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera dalla request l'attributo debug (se esiste)
@@ -23,36 +23,35 @@ public abstract class LibSession {
      */
     public static void checkDebug(VaadinRequest request) {
         LibSession.checkBool(request, Attribute.debug);
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera dalla sessione l'attributo developer
      */
     public static boolean isDeveloper() {
         return isBool(Attribute.developer);
-    }// end of method
+    }// end of static method
 
     /**
      * Regola per la sessione corrente l'attributo developer
      */
     public static void setDeveloper(boolean status) {
         setBool(Attribute.developer, status);
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera dalla sessione l'attributo debug
      */
     public static boolean isDebug() {
         return isBool(Attribute.debug);
-    }// end of method
+    }// end of static method
 
     /**
      * Regola per la sessione corrente l'attributo debug
      */
     public static void setDebug(boolean status) {
         setBool(Attribute.debug, status);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Recupera dalla sessione l'attributo specifico
@@ -72,8 +71,7 @@ public abstract class LibSession {
         }// fine del blocco if
 
         return status;
-    }// end of method
-
+    }// end of static method
 
     /**
      * Regola lo specifico attributo
@@ -85,7 +83,7 @@ public abstract class LibSession {
         if (attributo != null && sessione != null) {
             sessione.setAttribute(attributo.toString(), status);
         }// fine del blocco if
-    }// end of method
+    }// end of static method
 
     /**
      * Regola lo specifico attributo della sessione.
@@ -97,7 +95,7 @@ public abstract class LibSession {
         if (session != null) {
             session.setAttribute(name, value);
         }// fine del blocco if
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera un attributo dalla sessione.
@@ -111,7 +109,7 @@ public abstract class LibSession {
         }// fine del blocco if
 
         return value;
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera un attributo dalla sessione.
@@ -125,7 +123,7 @@ public abstract class LibSession {
         }// fine del blocco if
 
         return value;
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera un attributo dalla sessione.
@@ -139,7 +137,7 @@ public abstract class LibSession {
         }// fine del blocco if
 
         return value;
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera dalla request l'attributo booleano indicato (se esiste)
@@ -148,7 +146,7 @@ public abstract class LibSession {
     public static void checkBool(VaadinRequest request, Attribute attribute) {
         boolean status = LibSession.getBool(request, attribute);
         LibSession.setBool(attribute, status);
-    }// end of method
+    }// end of static method
 
     /**
      * Recupera dalla request l'attributo booleano indicato (se esiste)
@@ -174,10 +172,10 @@ public abstract class LibSession {
         }// fine del blocco if
 
         return status;
-    }// end of method
+    }// end of static method
 
+    public enum Attribute {
+        developer, debug
+    }// end of inner enumeration
 
-    public enum Attribute {developer, debug}
-
-
-}// end of static abstract class
+}// end of abstract static class

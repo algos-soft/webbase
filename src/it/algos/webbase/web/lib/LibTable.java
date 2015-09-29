@@ -51,4 +51,4 @@ public abstract class LibTable {
         return source.getContainerProperty(itemId, columnId);
     }// end of static method
 
-}// end of static abstract class
+}// end of abstract static class

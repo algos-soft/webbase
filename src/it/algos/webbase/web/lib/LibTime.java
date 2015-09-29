@@ -88,7 +88,7 @@ public abstract class LibTime {
      */
     public static String difText(long inizio) {
         return toText(getLong() - inizio);
-    } // fine del metodo statico
+    }// end of static method
 
     /**
      * Restituisce come stringa (intelligente) la differenza tra due date

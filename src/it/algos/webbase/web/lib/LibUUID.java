@@ -2,7 +2,7 @@ package it.algos.webbase.web.lib;
 
 import java.util.UUID;
 
-public class LibUUID {
+public abstract class LibUUID {
 	
 	/**
 	 * Checks if a given string represents a valid UUID
@@ -17,5 +17,6 @@ public class LibUUID {
 		} catch (IllegalArgumentException e) {
 		}
 	    return valid;
-	}
-}
+	}// end of static method
+
+}// end of abstract static class

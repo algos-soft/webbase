@@ -7,12 +7,12 @@ import javax.persistence.metamodel.Attribute;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 
-public class LibBean {
+public abstract class LibBean {
 
 	public static Annotation[] getAnnotations(java.lang.reflect.Field field) {
 		Annotation[] annotations = new Annotation[0];
 		return annotations;
-	}
+	}// end of static method
 
 	public static Annotation[] getAnnotations(Object bean, Attribute attribute) {
 		Annotation[] annotations = new Annotation[0];
@@ -23,7 +23,7 @@ public class LibBean {
 			field.getDeclaredAnnotations();
 		}
 		return annotations;
-	}
+	}// end of static method
 
 //	public static Annotation getAnnotation(Attribute attribute) {
 //		Annotation annotation = null;
@@ -39,7 +39,7 @@ public class LibBean {
 		Class javaType = attribute.getJavaType();
 		Field field = factory.createFieldByPropertyType(javaType);
 		return field;
-	}
+	}// end of static method
 
 	// /**
 	// * Create field from attribute
@@ -48,4 +48,4 @@ public class LibBean {
 	// return null;
 	// }
 
-}
+}// end of abstract static class

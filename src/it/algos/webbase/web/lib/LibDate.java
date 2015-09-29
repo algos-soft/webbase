@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
-
 public abstract class LibDate {
 
     /**
@@ -32,7 +31,6 @@ public abstract class LibDate {
     private static DateTimeFormatter TIME_SECONDS = DateTimeFormat.forPattern("HH:mm:ss");
     private static DateTimeFormatter TIME_LONG_SECONDS = DateTimeFormat.forPattern("dd-MM-YY HH:mm:ss");
 
-
     /**
      * Converte una data in stringa nel formato dd-MMMM-YYYY
      * <p>
@@ -42,11 +40,12 @@ public abstract class LibDate {
      * Four numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDDMMMMYYYY(Date date) {
         return DATE_EXTRA_LONG.print(new DateTime(date));
-    }// end of method
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato dd-MMM-YYYY
@@ -57,11 +56,12 @@ public abstract class LibDate {
      * Four numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDDMMMYYYY(Date date) {
         return DATE_LONG.print(new DateTime(date));
-    }// end of method
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato d-MMM-YY
@@ -72,12 +72,12 @@ public abstract class LibDate {
      * Two numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDMMMYY(Date date) {
         return DATE_NORMAL.print(new DateTime(date));
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato d-M-YY
@@ -88,11 +88,12 @@ public abstract class LibDate {
      * Two numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDMYY(Date date) {
         return DATE_SHORT.print(new DateTime(date));
-    }// end of method
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato d-M-YYYY
@@ -103,15 +104,16 @@ public abstract class LibDate {
      * Four numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
+     *
      * @deprecated
      */
     public static String toStringDMYYYY(Date date) {
         DateTime dt = new DateTime(date);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("d-M-YYYY");
         return fmt.print(dt);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato dd-MM-YYYY
@@ -123,14 +125,14 @@ public abstract class LibDate {
      * Four numbers for year <b>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDDMMYYYY(Date date) {
         DateTime dt = new DateTime(date);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-YYYY");
         return fmt.print(dt);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato dd-MM-YYYY-HH:mm
@@ -144,12 +146,12 @@ public abstract class LibDate {
      * Using leading zeroes in minute <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDDMMYYYYHHMM(Date date) {
         return TIME_EXTRA_LONG.print(new DateTime(date));
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato d-MMM-YY-HH:mm
@@ -162,12 +164,12 @@ public abstract class LibDate {
      * Using leading zeroes in minute <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDMMMYYHHMM(Date date) {
         return TIME_LONG.print(new DateTime(date));
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato d-M-YY-HH:mm
@@ -179,12 +181,12 @@ public abstract class LibDate {
      * Using leading zeroes in minute <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDMYYHHMM(Date date) {
         return TIME_SHORT.print(new DateTime(date));
-    }// end of method
-
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato HH:mm
@@ -194,11 +196,12 @@ public abstract class LibDate {
      * Using leading zeroes in minute <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringHHMM(Date date) {
         return TIME_ONLY.print(new DateTime(date));
-    }// end of method
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato HH:mm:ss
@@ -209,11 +212,12 @@ public abstract class LibDate {
      * Using leading zeroes in second <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringHHMMSS(Date date) {
         return TIME_SECONDS.print(new DateTime(date));
-    }// end of method
+    }// end of static method
 
     /**
      * Converte una data in stringa nel formato dd-MM-YY HH:mm:ss
@@ -228,12 +232,12 @@ public abstract class LibDate {
      * Using leading zeroes in second <br>
      *
      * @param date da convertire
+     *
      * @return la data sotto forma di stringa
      */
     public static String toStringDDMMYYHHMMSS(Date date) {
         return TIME_LONG_SECONDS.print(new DateTime(date));
-    }// end of method
-
+    }// end of static method
 
     /**
      * Restituisce la data corrente
@@ -244,8 +248,7 @@ public abstract class LibDate {
      */
     public static Date today() {
         return new DateTime().withTimeAtStartOfDay().toDate();
-    }// end of method
-
+    }// end of static method
 
     /**
      * Restituisce la data del primo giorno del mese dell'anno
@@ -254,11 +257,12 @@ public abstract class LibDate {
      *
      * @param numMeseDellAnno L'anno parte da gennaio che è il mese numero 1
      * @param anno            di riferimento
+     *
      * @return la data in formato data
      */
     public static Date fromInizioMeseAnno(int numMeseDellAnno, int anno) {
         return fromMeseAnno(numMeseDellAnno, anno, InizioOppureFine.inizio);
-    }// end of method
+    }// end of static method
 
     /**
      * Restituisce la data del primo giorno del mese dell'anno
@@ -267,13 +271,13 @@ public abstract class LibDate {
      *
      * @param nomeBreveLungo (descrizione short o long)
      * @param anno           di riferimento
+     *
      * @return la data in formato data
      */
     public static Date fromInizioMeseAnno(String nomeBreveLungo, int anno) {
         int numMeseDellAnno = Mese.getOrd(nomeBreveLungo);
         return fromInizioMeseAnno(numMeseDellAnno, anno);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Restituisce la data dell'ultimo giorno del mese dell'anno
@@ -282,11 +286,12 @@ public abstract class LibDate {
      *
      * @param numMeseDellAnno L'anno parte da gennaio che è il mese numero 1
      * @param anno            di riferimento
+     *
      * @return la data in formato data
      */
     public static Date fromFineMeseAnno(int numMeseDellAnno, int anno) {
         return fromMeseAnno(numMeseDellAnno, anno, InizioOppureFine.fine);
-    }// end of method
+    }// end of static method
 
     /**
      * Restituisce la data dell'ultimo giorno del mese dell'anno
@@ -295,12 +300,13 @@ public abstract class LibDate {
      *
      * @param nomeBreveLungo (descrizione short o long)
      * @param anno           di riferimento
+     *
      * @return la data in formato data
      */
     public static Date fromFineMeseAnno(String nomeBreveLungo, int anno) {
         int numMeseDellAnno = Mese.getOrd(nomeBreveLungo);
         return fromFineMeseAnno(numMeseDellAnno, anno);
-    }// end of method
+    }// end of static method
 
     /**
      * Restituisce la data del primo giorno del mese dell'anno
@@ -310,6 +316,7 @@ public abstract class LibDate {
      * @param numMeseDellAnno L'anno parte da gennaio che è il mese numero 1
      * @param anno            di riferimento
      * @param flag            di inizio oppure fine
+     *
      * @return la data in formato data
      */
     private static Date fromMeseAnno(int numMeseDellAnno, int anno, InizioOppureFine flag) {
@@ -349,8 +356,7 @@ public abstract class LibDate {
         } // fine del blocco switch
 
         return data;
-    }// end of method
-
+    }// end of static method
 
     /**
      * Aggiunge (o sottrae) ad un una data i mesi indicati.
@@ -360,14 +366,14 @@ public abstract class LibDate {
      *
      * @param data di riferimento
      * @param mesi da aggiungere
+     *
      * @return la data risultante
      */
     public static Date addMonths(Date data, int mesi) {
         Calendar calendario = getCal(data);
         calendario.add(Calendar.MONTH, mesi);
         return calendario.getTime();
-    }// end of method
-
+    }// end of static method
 
     /**
      * Aggiunge (o sottrae) ad un una data i giorni indicati.
@@ -377,13 +383,14 @@ public abstract class LibDate {
      *
      * @param data   di riferimento
      * @param giorni da aggiungere
+     *
      * @return la data risultante
      */
     public static Date addDays(Date data, int giorni) {
         Calendar calendario = getCal(data);
         calendario.add(Calendar.DAY_OF_MONTH, giorni);
         return calendario.getTime();
-    }// end of method
+    }// end of static method
 
     /**
      * Aggiunge (o sottrae) ad un una data le ore indicate.
@@ -393,14 +400,14 @@ public abstract class LibDate {
      *
      * @param data di riferimento
      * @param ore  da aggiungere
+     *
      * @return la data risultante
      */
     public static Date addHour(Date data, int ore) {
         Calendar calendario = getCal(data);
         calendario.add(Calendar.HOUR, ore);
         return calendario.getTime();
-    }// end of method
-
+    }// end of static method
 
     /**
      * Aggiunge (o sottrae) ad un una data i giorni indicati.
@@ -410,11 +417,12 @@ public abstract class LibDate {
      *
      * @param data   di riferimento
      * @param giorni da aggiungere
+     *
      * @return la data risultante
      */
     public static Date add(Date data, int giorni) {
         return addDays(data, giorni);
-    }// end of method
+    }// end of static method
 
     /**
      * Differenza in giorni tra le date indicate.
@@ -424,13 +432,14 @@ public abstract class LibDate {
      *
      * @param dataIniziale data iniziale
      * @param dataFinale   data finale
+     *
      * @return il numero di giorni passati tra le due date (positivo se la prima data e' precedente la seconda,
      * altrimenti negativo)
      */
     public static int diffDays(Date dataIniziale, Date dataFinale) {
         long diff = dataFinale.getTime() - dataIniziale.getTime();
         return (int) TimeUnit.MILLISECONDS.toDays(diff);
-    }// end of method
+    }// end of static method
 
     /**
      * Differenza effettiva in ore tra le date indicate.
@@ -439,12 +448,13 @@ public abstract class LibDate {
      *
      * @param dataIniziale data iniziale
      * @param dataFinale   data finale
+     *
      * @return ore effettive di differenza
      */
     public static int diffHours(Date dataIniziale, Date dataFinale) {
         long diff = dataFinale.getTime() - dataIniziale.getTime();
         return (int) TimeUnit.MILLISECONDS.toHours(diff);
-    }// end of method
+    }// end of static method
 
     /**
      * Differenza effettiva in minuti tra le date indicate.
@@ -453,12 +463,13 @@ public abstract class LibDate {
      *
      * @param dataIniziale data iniziale
      * @param dataFinale   data finale
+     *
      * @return minuti effettivi di differenza
      */
     public static int diffMinutes(Date dataIniziale, Date dataFinale) {
         long diff = dataFinale.getTime() - dataIniziale.getTime();
         return (int) TimeUnit.MILLISECONDS.toMinutes(diff);
-    }// end of method
+    }// end of static method
 
     /**
      * Differenza effettiva in secondi tra le date indicate.
@@ -467,12 +478,13 @@ public abstract class LibDate {
      *
      * @param dataIniziale data iniziale
      * @param dataFinale   data finale
+     *
      * @return secondi effettivi di differenza
      */
     public static int diffSeconds(Date dataIniziale, Date dataFinale) {
         long diff = dataFinale.getTime() - dataIniziale.getTime();
         return (int) TimeUnit.MILLISECONDS.toSeconds(diff);
-    }// end of method
+    }// end of static method
 
     /**
      * Differenza in giorni tra le date indicate.
@@ -482,112 +494,117 @@ public abstract class LibDate {
      *
      * @param dataIniziale data iniziale
      * @param dataFinale   data finale
+     *
      * @return il numero di giorni passati tra le due date (positivo se la prima data e' precedente la seconda,
      * altrimenti negativo)
      */
     public static int diff(Date dataIniziale, Date dataFinale) {
         return diffDays(dataIniziale, dataFinale);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero della settimana dell'anno di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero della settimana dell'anno
      */
     public static int getWeekYear(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.WEEK_OF_YEAR);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero della settimana del mese di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero della settimana del mese
      */
     public static int getWeekMonth(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.WEEK_OF_MONTH);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno dell'anno di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero del giorno dell'anno
      */
     public static int getDayYear(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.DAY_OF_YEAR);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno del mese di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero del giorno del mese
      */
     public static int getDayMonth(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.DAY_OF_MONTH);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno della settimana di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero del giorno della settimana (1=dom, 7=sab)
      */
     public static int getDayWeek(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.DAY_OF_WEEK);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna il numero delle ore di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero delle ore
      */
     public static int getOre(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.HOUR_OF_DAY);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna il numero dei minuti di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero dei minuti
      */
     public static int getMinuti(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.MINUTE);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero dei secondi di una data fornita.
      * <p>
      *
      * @param data fornita
+     *
      * @return il numero dei secondi
      */
     public static int getSecondi(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.SECOND);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno dell'anno della data corrente.
@@ -597,7 +614,7 @@ public abstract class LibDate {
      */
     public static int getDayYear() {
         return getDayYear(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno del mese della data corrente.
@@ -607,7 +624,7 @@ public abstract class LibDate {
      */
     public static int getDayMonth() {
         return getDayMonth(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero del giorno della settimana della data corrente.
@@ -617,7 +634,7 @@ public abstract class LibDate {
      */
     public static int getDayWeek() {
         return getDayWeek(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero delle ore della data corrente.
@@ -626,8 +643,7 @@ public abstract class LibDate {
      */
     public static int getOre() {
         return getOre(new Date());
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna il numero dei minuti della data corrente.
@@ -636,7 +652,7 @@ public abstract class LibDate {
      */
     public static int getMinuti() {
         return getMinuti(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero dei secondi della data corrente.
@@ -645,31 +661,32 @@ public abstract class LibDate {
      */
     public static int getSecondi() {
         return getSecondi(new Date());
-    }// end of method
-
+    }// end of static method
 
     /**
      * Costruisce la data per il 1° gennaio dell'anno indicato.
      * <p>
      *
      * @param anno di riferimento
+     *
      * @return primo gennaio dell'anno
      */
     public static Date getPrimoGennaio(int anno) {
         return creaData(1, 1, anno);
-    }// end of method
+    }// end of static method
 
     /**
      * Costruisce la data per il 31° dicembre dell'anno indicato.
      * <p>
      *
      * @param anno di riferimento
+     *
      * @return ultimo dell'anno
      */
     public static Date getTrentunoDicembre(int anno) {
         Date data = creaData(31, 12, anno);
         return lastTime(data);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una data.
@@ -678,11 +695,12 @@ public abstract class LibDate {
      * @param giorno          il giorno del mese (1 per il primo)
      * @param numMeseDellAnno il mese dell'anno (1 per gennaio)
      * @param anno            l'anno
+     *
      * @return la data creata
      */
     public static Date creaData(int giorno, int numMeseDellAnno, int anno) {
         return creaData(giorno, numMeseDellAnno, anno, 0, 0, 0);
-    }// end of method
+    }// end of static method
 
     /**
      * Crea una data.
@@ -694,6 +712,7 @@ public abstract class LibDate {
      * @param ora             ora (24H)
      * @param minuto          il minuto
      * @param secondo         il secondo
+     *
      * @return la data creata
      */
     public static Date creaData(int giorno, int numMeseDellAnno, int anno, int ora, int minuto, int secondo) {
@@ -705,14 +724,14 @@ public abstract class LibDate {
 
         calendario = new GregorianCalendar(anno, numMeseDellAnno, giorno, ora, minuto, secondo);
         return calendario.getTime();
-    }// end of method
-
+    }// end of static method
 
     /**
      * Elimina ore/minuti/secondi da una data.
      * <p>
      *
      * @param dateIn la data dalla quale eliminare ore/minuti/secondi
+     *
      * @return la data senza ore/minuti/secondi
      */
     public static Date dropTime(Date dateIn) {
@@ -724,13 +743,14 @@ public abstract class LibDate {
         calendario.set(Calendar.MILLISECOND, 0);
 
         return calendario.getTime();
-    }// end of method
+    }// end of static method
 
     /**
      * Forza la data all'ultimo millisecondo.
      * <p>
      *
      * @param dateIn la data da forzare
+     *
      * @return la data con ore/minuti/secondi/millisecondi al valore massimo
      */
     public static Date lastTime(Date dateIn) {
@@ -742,7 +762,7 @@ public abstract class LibDate {
         calendario.set(Calendar.MILLISECOND, 999);
 
         return calendario.getTime();
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è precedente ad una data di riferimento.
@@ -753,6 +773,7 @@ public abstract class LibDate {
      * @param dataTest da controllare
      * @param dataRif  di riferimento
      * @param flag     sugli estremi dell'intervallo
+     *
      * @return vero se la seconda data è precedente alla prima
      */
     private static boolean isPrecedenteBase(Date dataTest, Date dataRif, Estremi flag) {
@@ -771,7 +792,7 @@ public abstract class LibDate {
         }// fine del blocco if
 
         return status;
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è precedente ad una data di riferimento.
@@ -782,11 +803,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è precedente alla prima
      */
     public static boolean isPrecedente(Date dataTest, Date dataRif) {
         return isPrecedenteEsclusi(dataTest, dataRif);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è precedente ad una data di riferimento.
@@ -797,11 +819,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è precedente alla prima
      */
     public static boolean isPrecedenteEsclusi(Date dataTest, Date dataRif) {
         return isPrecedenteBase(dataTest, dataRif, Estremi.esclusi);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è precedente ad una data di riferimento.
@@ -812,12 +835,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è precedente alla prima
      */
     public static boolean isPrecedenteUguale(Date dataTest, Date dataRif) {
         return isPrecedenteBase(dataTest, dataRif, Estremi.compresi);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Controlla se una data è successiva ad una data di riferimento.
@@ -828,6 +851,7 @@ public abstract class LibDate {
      * @param dataTest da controllare
      * @param dataRif  di riferimento
      * @param flag     sugli estremi dell'intervallo
+     *
      * @return vero se la seconda data è successiva alla prima
      */
     private static boolean isSuccessivaBase(Date dataTest, Date dataRif, Estremi flag) {
@@ -846,7 +870,7 @@ public abstract class LibDate {
         }// fine del blocco if
 
         return status;
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è successiva ad una data di riferimento.
@@ -857,11 +881,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è successiva alla prima
      */
     public static boolean isSuccessiva(Date dataTest, Date dataRif) {
         return isSuccessivaEsclusi(dataTest, dataRif);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è successiva ad una data di riferimento.
@@ -872,11 +897,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è successiva alla prima
      */
     public static boolean isSuccessivaEsclusi(Date dataTest, Date dataRif) {
         return isSuccessivaBase(dataTest, dataRif, Estremi.esclusi);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è successiva ad una data di riferimento.
@@ -887,12 +913,12 @@ public abstract class LibDate {
      *
      * @param dataTest da controllare
      * @param dataRif  di riferimento
+     *
      * @return vero se la seconda data è successiva alla prima
      */
     public static boolean isSuccessivaUguale(Date dataTest, Date dataRif) {
         return isSuccessivaBase(dataTest, dataRif, Estremi.compresi);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Controlla se una data è compresa tra due date di riferimento.
@@ -904,6 +930,7 @@ public abstract class LibDate {
      * @param dataInizio data di riferimento iniziale dell'intervallo
      * @param dataFine   data di riferimento finale dell'intervallo
      * @param flag       sugli estremi dell'intervallo
+     *
      * @return vero se la data è compresa nell'intervallo di date
      */
     private static boolean isCompresaBase(Date dataTest, Date dataInizio, Date dataFine, Estremi flag) {
@@ -922,8 +949,7 @@ public abstract class LibDate {
         }// fine del blocco if
 
         return status;
-    }// end of method
-
+    }// end of static method
 
     /**
      * Controlla se una data è compresa tra due date di riferimento.
@@ -935,11 +961,12 @@ public abstract class LibDate {
      * @param dataTest   data da controllare
      * @param dataInizio data di riferimento iniziale dell'intervallo
      * @param dataFine   data di riferimento finale dell'intervallo
+     *
      * @return vero se la data è compresa nell'intervallo di date
      */
     public static boolean isCompresa(Date dataTest, Date dataInizio, Date dataFine) {
         return isCompresaEsclusi(dataTest, dataInizio, dataFine);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è compresa tra due date di riferimento.
@@ -951,11 +978,12 @@ public abstract class LibDate {
      * @param dataTest   data da controllare
      * @param dataInizio data di riferimento iniziale dell'intervallo
      * @param dataFine   data di riferimento finale dell'intervallo
+     *
      * @return vero se la data è compresa nell'intervallo di date
      */
     public static boolean isCompresaEsclusi(Date dataTest, Date dataInizio, Date dataFine) {
         return isCompresaBase(dataTest, dataInizio, dataFine, Estremi.esclusi);
-    }// end of method
+    }// end of static method
 
     /**
      * Controlla se una data è compresa tra due date di riferimento.
@@ -967,18 +995,19 @@ public abstract class LibDate {
      * @param dataTest   data da controllare
      * @param dataInizio data di riferimento iniziale dell'intervallo
      * @param dataFine   data di riferimento finale dell'intervallo
+     *
      * @return vero se la data è compresa nell'intervallo di date
      */
     public static boolean isCompresaUguale(Date dataTest, Date dataInizio, Date dataFine) {
         return isCompresaBase(dataTest, dataInizio, dataFine, Estremi.compresi);
-    }// end of method
-
+    }// end of static method
 
     /**
      * Ritorna la data del primo giorno del mese relativo a una data fornita.
      * <p>
      *
      * @param dataIn fornita
+     *
      * @return la data rappresentante il giorno del mese
      */
     public static Date getInizioMese(Date dataIn) {
@@ -987,13 +1016,14 @@ public abstract class LibDate {
         calendario.set(Calendar.DAY_OF_MONTH, num);
 
         return calendario.getTime();
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna la data dell'ultimo giorno del mese relativo a una data fornita.
      * <p>
      *
      * @param dataIn fornita
+     *
      * @return la data rappresentante l'ultimo giorno del mese
      */
     public static Date getFineMese(Date dataIn) {
@@ -1002,7 +1032,7 @@ public abstract class LibDate {
         calendario.set(Calendar.DAY_OF_MONTH, num);
 
         return calendario.getTime();
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna la data del primo giorno del mese della data corrente.
@@ -1012,7 +1042,7 @@ public abstract class LibDate {
      */
     public static Date getInizioMese() {
         return getInizioMese(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna la data dell'ultimo giorno del mese della data corrente.
@@ -1022,7 +1052,7 @@ public abstract class LibDate {
      */
     public static Date getFineMese() {
         return getFineMese(new Date());
-    }// end of method
+    }// end of static method
 
     /**
      * Calendario gregoriano
@@ -1038,34 +1068,33 @@ public abstract class LibDate {
         calendario.setLenient(false);
 
         return calendario;
-    }// end of method
+    }// end of static method
 
     /**
      * Calendario con regolata la data
      *
      * @param data da inserire nel calendario
+     *
      * @return calendario regolato
      */
     private static Calendar getCal(Date data) {
         Calendar calendario = getCal();
         calendario.setTime(data);
         return calendario;
-    }// end of method
-
+    }// end of static method
 
     /**
      * Enumeration locale per il flag di inizio oppure fine
      */
     private enum InizioOppureFine {
         inizio, fine
-    }// fine della classe interna
+    }// end of inner class
 
     /**
      * Enumeration locale per il flag sugli estremi dell'intervallo
      */
     private enum Estremi {
         esclusi, compresi
-    }// fine della classe interna
+    }// end of inner class
 
-
-}// end of static class
+}// end of abstract static class

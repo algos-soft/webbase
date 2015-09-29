@@ -159,11 +159,13 @@ public class AForm extends VerticalLayout {
      * I campi vengono creti del tipo grafico previsto nella Entity.<br>
      * Se si vuole aggiungere un campo (solo nel form e non nel Modello),<br>
      * usare il metodo sovrascritto nella sottoclasse
-     * richiamando prima (o dopo) il metodo della superclasse.
+     * invocando prima (o dopo) il metodo della superclasse.
+     * Se si vuole un layout completamente diverso sovrascrivere
+     * senza invocare il metodo della superclasse
      */
-    @SuppressWarnings("rawtypes")
     protected void createFields() {
         Field field = null;
+
         // create a field for each property
         Attribute[] attributes = getModule().getFieldsForm();
         for (Attribute attr : attributes) {
@@ -177,7 +179,6 @@ public class AForm extends VerticalLayout {
     /**
      * Crea i campi. I campi vengono creati del tipo grafico previsto nella Entity.
      */
-    @SuppressWarnings("rawtypes")
     protected Field creaField(Attribute attr) {
         Field field = null;
         Class clazz = null;

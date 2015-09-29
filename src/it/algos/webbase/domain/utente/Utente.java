@@ -2,171 +2,118 @@ package it.algos.webbase.domain.utente;
 
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
-import it.algos.webbase.web.query.FilterFactory;
-import com.vaadin.data.Container.Filter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class Utente extends BaseEntity {
 
-	private static final long serialVersionUID = -8963424744780350658L;
+    private static final long serialVersionUID = -8963424744780350658L;
 
-	@NotEmpty
-	private String nickname = "";
+    @NotEmpty
+    private String nickname = "";
 
-	private String password = "";
+    private String password = "";
 
-//	private String company = "";
+    private boolean enabled = true;
 
-	private boolean enabled = true;
+    public Utente() {
+        this("", "");
+    }// end of constructor
 
-	public Utente() {
-		this("", "");
-	}// end of constructor
+    public Utente(String nickname, String password) {
+        this.setNickname(nickname);
+        this.setPassword(password);
+    }// end of constructor
 
-	public Utente(String nickname, String password) {
-		this.setNickname(nickname);
-		this.setPassword(password);
-	}// end of constructor
+    /**
+     * Recupera l'utente usando la query specifica
+     *
+     * @param id key id
+     * @return l'utente, null se non trovato
+     */
+    public static Utente read(long id) {
+        Utente instance = null;
+        BaseEntity entity = AQuery.queryById(Utente.class, id);
 
-//	public Utente(String nickname, String password, String company) {
-//		super();
-//		this.setNickname(nickname);
-//		this.setPassword(password);
-////		this.setCompany(company);
-//	}// end of constructor
+        if (entity != null) {
+            if (entity instanceof Utente) {
+                instance = (Utente) entity;
+            }// end of if cycle
+        }// end of if cycle
 
-	public String getPassword() {
-		return password;
-	}
+        return instance;
+    }// end of method
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * Recupera l'utente usando la query specifica
+     *
+     * @param nickname dell'utente
+     * @return l'utente, null se non trovato
+     */
+    public static Utente read(String nickname) {
+        Utente instance = null;
+        BaseEntity entity = AQuery.queryOne(Utente.class, Utente_.nickname, nickname);
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+        if (entity != null) {
+            if (entity instanceof Utente) {
+                instance = (Utente) entity;
+            }// end of if cycle
+        }// end of if cycle
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+        return instance;
+    }// end of method
 
-	@Override
-	public String toString() {
-		return nickname;
-	}// end of method
+    /**
+     * Valida nome e password e ritorna l'utente corrispondente.
+     * Se le credenziali sono errate o l'utente è disabilitato ritorna null
+     *
+     * @param nickname dell'utente
+     * @param password dell'utente
+     * @return l'utente, null se non trovato
+     */
+    public static Utente validate(String nickname, String password) {
+        Utente user = null;
+        Utente aUser = read(nickname);
 
-	/**
-	 * @return the nome
-	 */
-	public String getNickname() {
-		return nickname;
-	}
+        if (aUser.isEnabled()) {
+            if (aUser.getPassword().equals(password)) {
+                user = aUser;
+            }// end of if cycle
+        }// end of if cycle
 
-	/**
-	 * @param nickname
-	 *            the nome to set
-	 */
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-//	/**
-//	 * @return the company
-//	 */
-//	public String getCompany() {
-//		return company;
-//	}
-//
-//	/**
-//	 * @param company
-//	 *            the company to set
-//	 */
-//	public void setCompany(String company) {
-//		this.company = company;
-//	}
-
-	/**
-	 * Recupera l'utente usando la query specifica
-	 * 
-	 * @return l'utente, null se non trovato
-	 */
-	public static Utente read(long id) {
-		Utente instance = null;
-		BaseEntity entity = AQuery.queryById(Utente.class, id);
-
-		if (entity != null) {
-			if (entity instanceof Utente) {
-				instance = (Utente) entity;
-			}// end of if cycle
-		}// end of if cycle
-
-		return instance;
-	}// end of method
-
-	/**
-	 * Recupera l'utente usando la query specifica
-	 * 
-	 * @return l'utente, null se non trovato
-	 */
-	public static Utente read(String nome) {
-		Utente instance = null;
-		BaseEntity entity = AQuery.queryOne(Utente.class, Utente_.nickname, nome);
-
-		if (entity != null) {
-			if (entity instanceof Utente) {
-				instance = (Utente) entity;
-			}// end of if cycle
-		}// end of if cycle
-
-		return instance;
-	}// end of method
-
-//	/**
-//	 * Recupera l'utente usando la query specifica
-//	 *
-//	 * @return l'utente, null se non trovato
-//	 */
-//	public static Utente read(String company, String nome) {
-//		Utente instance = null;
-//		BaseEntity entity = null;
-//		Filter filtroAzienda = FilterFactory.create(Utente_.company, company);
-//		Filter filtroNome = FilterFactory.create(Utente_.nickname, nome);
-//
-//		if (company.equals("")) {
-//			entity = AQuery.getEntity(Utente.class, filtroNome);
-//		} else {
-//			entity = AQuery.getEntity(Utente.class, filtroNome, filtroAzienda);
-//		}// end of if/else cycle
-//
-//		if (entity != null) {
-//			if (entity instanceof Utente) {
-//				instance = (Utente) entity;
-//			}// end of if cycle
-//		}// end of if cycle
-//
-//		return instance;
-//	}// end of method
+        return user;
+    }// end of method
 
 
-	/**
-	 * Valida nome e password e ritorna l'utente corrispondente.
-	 * Se le credenziali sono errate o l'utente è disabilitato ritorna null
-	 */
-	public static Utente validate(String username, String password){
-		Utente user=null;
-		Utente aUser = (Utente)AQuery.queryOne(Utente.class, Utente_.nickname, username);
-		if(aUser.isEnabled()){
-			if(aUser.getPassword().equals(password)){
-				user=aUser;
-			}
-		}
-		return user;
-	}
+    @Override
+    public String toString() {
+        return nickname;
+    }// end of method
 
+    public String getNickname() {
+        return nickname;
+    }// end of getter method
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }//end of setter method
+
+    public String getPassword() {
+        return password;
+    }// end of getter method
+
+    public void setPassword(String password) {
+        this.password = password;
+    }//end of setter method
+
+    public boolean isEnabled() {
+        return enabled;
+    }// end of getter method
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }//end of setter method
 
 }// end of entity class

@@ -3,7 +3,6 @@ package it.algos.webbase.web.module;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
@@ -279,6 +278,7 @@ public abstract class ModulePop extends Module {
      * Returns the form used to edit an item. <br>
      * The concrete subclass must override for a specific Form.
      *
+     * @param item singola istanza della classe
      * @return the Form
      */
     public AForm createForm(Item item) {

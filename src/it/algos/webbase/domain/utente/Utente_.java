@@ -7,7 +7,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(Utente.class)
 public class Utente_ extends BaseEntity_ {
-//	public static volatile SingularAttribute<Utente, String> company;
 	public static volatile SingularAttribute<Utente, String> nickname;
 	public static volatile SingularAttribute<Utente, String> password;
 	public static volatile SingularAttribute<Utente, Boolean> enabled;

@@ -67,7 +67,7 @@ public class Utente extends BaseEntity {
 	}
 
 	/**
-	 * @param nome
+	 * @param nickname
 	 *            the nome to set
 	 */
 	public void setNickname(String nickname) {
@@ -150,6 +150,22 @@ public class Utente extends BaseEntity {
 
 		return instance;
 	}// end of method
+
+
+	/**
+	 * Valida nome e password e ritorna l'utente corrispondente.
+	 * Se le credenziali sono errate o l'utente è disabilitato ritorna null
+	 */
+	public static Utente validate(String username, String password){
+		Utente user=null;
+		Utente aUser = (Utente)AQuery.queryOne(Utente.class, Utente_.nickname, username);
+		if(aUser.isEnabled()){
+			if(aUser.getPassword().equals(password)){
+				user=aUser;
+			}
+		}
+		return user;
+	}
 
 
 }// end of entity class

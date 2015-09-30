@@ -94,11 +94,11 @@ public class AlgosUI extends UI {
      * Legge eventuali parametri passati nella request
      * <p>
      */
-    protected void checkParams(VaadinRequest request) {
-        // legge il parametro "developer" (se esiste) e regola la variabile statica
+    public void checkParams(VaadinRequest request) {
+        // legge il parametro "developer" (se esiste) e regola la variabile nella sessione
         LibSession.checkDeveloper(request);
 
-        // legge il parametro "debug" (se esiste) e regola la variabile statica
+        // legge il parametro "debug" (se esiste) e regola la variabile nella sessione
         LibSession.checkDebug(request);
     }// end of method
 

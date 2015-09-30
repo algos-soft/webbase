@@ -76,13 +76,13 @@ public class Utente extends BaseEntity {
     public static Utente validate(String nickname, String password) {
         Utente user = null;
         Utente aUser = read(nickname);
-
-        if (aUser.isEnabled()) {
-            if (aUser.getPassword().equals(password)) {
-                user = aUser;
+        if(aUser!=null){
+            if (aUser.isEnabled()) {
+                if (aUser.getPassword().equals(password)) {
+                    user = aUser;
+                }// end of if cycle
             }// end of if cycle
-        }// end of if cycle
-
+        }
         return user;
     }// end of method
 

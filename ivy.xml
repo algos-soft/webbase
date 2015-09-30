@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.4.7">
+	<!ENTITY vaadin.version "7.5.6">
 ]>
 <ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -97,6 +97,7 @@
 
 		<!-- Replacement for Vaadin scrollable table - uses paging, should be faster  -->
 		<!--<dependency org="org.vaadin.addons" name="pagedtable" rev="0.6.5" />-->
+
 
 	</dependencies>
 </ivy-module>

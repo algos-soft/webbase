@@ -51,7 +51,7 @@ public class UtenteForm extends AForm {
         addField(Utente_.nickname, field);
 
         //@todo Questo form viene visto solo dal developer - se l'utente gli chiede la password dimenticata, come fa a leggerla?
-        field = new PasswordField(FIELD_PASSWORD_LABEL);
+        field = new TextField(FIELD_PASSWORD_LABEL);
         addField(Utente_.password, field);
 
         field = new CheckBoxField(FIELD_ABILITATO_LABEL);

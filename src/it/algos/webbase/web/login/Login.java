@@ -11,58 +11,64 @@ import java.util.ArrayList;
 
 /**
  * Main Login object (Login logic).
+ * An instance of this object is created and stored in the current session
+ * when getLogin() in invoked. Subsequent calls to getLogin() return the same object
+ * from the session.
  */
 public class Login {
 
-    private static final int EXPIRY_TIME_SEC=604800;    // 1 week
+    // defaults
+    private static final int DEFAULT_EXPIRY_TIME_SEC = 604800;    // 1 week
+    private static final boolean DEFAULT_RENEW_COOKIES_ON_LOGIN = true;    // renews the cookies on login
 
     // key to store the Login object in the session
-    public static String KEY_LOGIN="login";
-    public static String KEY_PASSWORD="password";
-    public static String KEY_REMEMBER="rememberlogin";
+    public static String KEY_LOGIN = "login";
+    public static String KEY_PASSWORD = "password";
+    public static String KEY_REMEMBER = "rememberlogin";
 
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
     private Utente user;
     private LoginForm loginForm;
 
+    private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
+    private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
     public Login() {
-        setLoginForm(new BaseLoginForm());
+        setLoginForm(new BaseLoginForm());  // default login form
     }
 
     // displays the Login form
-    public void showLoginForm(UI ui){
-        if(loginForm!=null){
+    public void showLoginForm(UI ui) {
+        if (loginForm != null) {
 
 
-            String username="";
-            String password="";
-            boolean remember=false;
+            String username = "";
+            String password = "";
+            boolean remember = false;
 
             // retrieve login data from the cookies
-            Cookie remCookie=LibCookie.getCookie(KEY_REMEMBER);
-            if(remCookie!=null){
-                String str=remCookie.getValue();
-                if(str.equalsIgnoreCase("true")){
+            Cookie remCookie = LibCookie.getCookie(KEY_REMEMBER);
+            if (remCookie != null) {
+                String str = remCookie.getValue();
+                if (str.equalsIgnoreCase("true")) {
 
-                    Cookie userCookie= LibCookie.getCookie(KEY_LOGIN);
-                    if(userCookie!=null){
-                        username=userCookie.getValue();
-                        if(!username.equals("")){
+                    Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
+                    if (userCookie != null) {
+                        username = userCookie.getValue();
+                        if (!username.equals("")) {
 
-                            Cookie passCookie=LibCookie.getCookie(KEY_PASSWORD);
-                            if(passCookie!=null){
-                                password=passCookie.getValue();
+                            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
+                            if (passCookie != null) {
+                                password = passCookie.getValue();
                             }
 
-                            remember=true;
+                            remember = true;
 
                         }
                     }
 
                 }
             }
-
 
             loginForm.setUsername(username);
             loginForm.setPassword(password);
@@ -75,19 +81,22 @@ public class Login {
     }
 
     /**
-     * Invoked after a successful login happened using the Login form
+     * Invoked after a successful login happened using the Login form.
+     *
+     * @param user     the logged user
+     * @param remember the value for the Remember option
      */
-    protected void userLogin(Utente user, boolean remember){
+    protected void userLogin(Utente user, boolean remember) {
 
         // register user
-        this.user=user;
+        this.user = user;
 
-        if(remember){
+        if (remember) {
             // create/update the cookies
-            LibCookie.setCookie(KEY_LOGIN, user.getNickname(), EXPIRY_TIME_SEC);
-            LibCookie.setCookie(KEY_PASSWORD, user.getPassword(), EXPIRY_TIME_SEC);
-            LibCookie.setCookie(KEY_REMEMBER, "true", EXPIRY_TIME_SEC);
-        }else{
+            LibCookie.setCookie(KEY_LOGIN, user.getNickname(), expiryTime);
+            LibCookie.setCookie(KEY_PASSWORD, user.getPassword(), expiryTime);
+            LibCookie.setCookie(KEY_REMEMBER, "true", expiryTime);
+        } else {
             // delete the cookies
             LibCookie.deleteCookie(KEY_LOGIN);
             LibCookie.deleteCookie(KEY_PASSWORD);
@@ -96,7 +105,7 @@ public class Login {
 
 
         // notify the listeners
-        for(LoginListener l : loginListeners){
+        for (LoginListener l : loginListeners) {
             l.onUserLogin(user, remember);
         }
     }
@@ -106,7 +115,11 @@ public class Login {
     }
 
 
-
+    /**
+     * Assigns a new LoginForm.
+     *
+     * @param loginForm the new LoginForm
+     */
     public void setLoginForm(LoginForm loginForm) {
         this.loginForm = loginForm;
         this.loginForm.setLoginListener(new LoginListener() {
@@ -120,27 +133,39 @@ public class Login {
 
     /**
      * Attempts a login from the cookies.
+     *
      * @return true if success
      */
-    public boolean loginFromCookies(){
-        boolean success=false;
+    public boolean loginFromCookies() {
+        boolean success = false;
         Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
-        if(userCookie!=null){
+        if (userCookie != null) {
             Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
-            if (passCookie!=null){
-                String username=userCookie.getValue();
-                String password=passCookie.getValue();
-                if((!username.equals("")) && (!password.equals(""))){
-                    user = Utente.validate(username,password);
-                    if(user!=null){
-                        success=true;
+            if (passCookie != null) {
+                String username = userCookie.getValue();
+                String password = passCookie.getValue();
+                if ((!username.equals("")) && (!password.equals(""))) {
+                    user = Utente.validate(username, password);
+                    if (user != null) {
+                        success = true;
                     }
                 }
             }
         }
 
-        // if not success, delete the cookies if existing
-        if(!success){
+        // if success, renew the cookies (if the option is on)
+        // if failed, delete the cookies (if existing)
+        if (success) {
+            if (renewCookiesOnLogin) {
+                Cookie cookie;
+                cookie = LibCookie.getCookie(KEY_LOGIN);
+                LibCookie.setCookie(KEY_LOGIN, cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(KEY_PASSWORD);
+                LibCookie.setCookie(KEY_PASSWORD, cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(KEY_REMEMBER);
+                LibCookie.setCookie(KEY_REMEMBER, cookie.getValue(), expiryTime);
+            }
+        } else {
             LibCookie.deleteCookie(KEY_LOGIN);
             LibCookie.deleteCookie(KEY_PASSWORD);
             LibCookie.deleteCookie(KEY_REMEMBER);
@@ -153,14 +178,14 @@ public class Login {
     /**
      * Adds a LoginListener.
      */
-    public void addLoginListener(LoginListener l){
+    public void addLoginListener(LoginListener l) {
         loginListeners.add(l);
     }
 
     /**
      * Removes all the login listeners
      */
-    public void removeAllListeners(){
+    public void removeAllListeners() {
         loginListeners.clear();
     }
 
@@ -168,44 +193,47 @@ public class Login {
      * Registers a unique LoginListener.
      * All the previous LoginListeners are deleted
      */
-    public void setLoginListener(LoginListener l){
+    public void setLoginListener(LoginListener l) {
         removeAllListeners();
         addLoginListener(l);
     }
 
+    /**
+     * @return the expiry time of the cookies in seconds
+     */
+    public int getExpiryTime() {
+        return expiryTime;
+    }
 
+    /**
+     * Sets the expiry time for the cookies
+     *
+     * @param expiryTime the expiry time of the cookies in seconds
+     */
+    public void setExpiryTime(int expiryTime) {
+        this.expiryTime = expiryTime;
+    }
 
+    /**
+     * Whether the cookies are renewed after a successful login.
+     *
+     * @return true if the cookies are renewed
+     */
+    public boolean isRenewCookiesOnLogin() {
+        return renewCookiesOnLogin;
+    }
+
+    /**
+     * Whether the cookies are renewed after a successful login.
+     *
+     * @param renewCookiesOnLogin true to renew the expiry time on each login
+     */
+    public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
+        this.renewCookiesOnLogin = renewCookiesOnLogin;
+    }
 
 
 //    private void writeCookie(){
-//
-//
-//
-//        String name = user.getNickname();
-//
-//        // See if name cookie is already set
-//        Cookie nameCookie = getCookieByName("login");
-//
-//        if (nameCookie != null) {
-//            String oldName = nameCookie.getValue();
-//            nameCookie.setValue(name);
-//            Notification.show("Updated name in cookie from " + oldName + " to " + name);
-//
-//        } else {
-//            // Create a new cookie
-//            nameCookie = new Cookie("login", name);
-//            nameCookie .setComment("Cookie for storing the name of the user");
-//            Notification.show("Stored name " + name + " in cookie");
-//        }
-//
-//        // Make cookie expire in 2 minutes
-//        nameCookie.setMaxAge(120);
-//
-//        // Set the cookie path.
-//        nameCookie.setPath(VaadinService.getCurrentRequest() .getContextPath());
-//
-//        // Save cookie
-//        VaadinService.getCurrentResponse().addCookie(nameCookie);
 //
 //
 ////        String value = this.user.getNickname();

@@ -102,11 +102,6 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
         rememberField.setValue(remember);
     }
 
-    @Override
-    public boolean isRemember() {
-        return rememberField.getValue();
-    }
-
 
 }
 

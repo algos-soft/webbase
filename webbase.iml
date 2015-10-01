@@ -114,9 +114,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/jars/vaadin-shared-7.5.6.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-themes/jars/vaadin-themes-7.5.6.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-push/jars/vaadin-push-7.5.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/bundles/atmosphere-runtime-2.2.7.vaadin1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client-compiled/jars/vaadin-client-compiled-7.5.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/jars/vaadin-client-7.5.6.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/commons-beanutils/commons-beanutils/jars/commons-beanutils-1.8.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/commons-io/commons-io/jars/commons-io-2.2.jar!/" />

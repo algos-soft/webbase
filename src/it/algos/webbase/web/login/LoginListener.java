@@ -8,4 +8,3 @@ import it.algos.webbase.domain.utente.Utente;
 public interface LoginListener {
     public void onUserLogin(Utente user, boolean remember);
 }
-

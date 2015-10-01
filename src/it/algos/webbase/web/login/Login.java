@@ -27,7 +27,7 @@ public class Login {
 
 
     public Login() {
-        setLoginForm(new it.algos.evento.login.BaseLoginForm());
+        setLoginForm(new BaseLoginForm());
     }
 
     // displays the Login form
@@ -238,7 +238,7 @@ public class Login {
         Login login;
         Object obj = LibSession.getAttribute(Login.KEY_LOGIN);
         if (obj == null) {
-            login = new EventoLogin();
+            login = new Login();
             LibSession.setAttribute(Login.KEY_LOGIN, login);
         } else {
             login = (Login) obj;

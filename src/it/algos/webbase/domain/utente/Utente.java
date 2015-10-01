@@ -67,7 +67,7 @@ public class Utente extends BaseEntity {
 
     /**
      * Valida nome e password e ritorna l'utente corrispondente.
-     * Se le credenziali sono errate o l'utente è disabilitato ritorna null
+     * Se le credenziali sono nulle, errate o l'utente è disabilitato ritorna null
      *
      * @param nickname dell'utente
      * @param password dell'utente
@@ -76,13 +76,17 @@ public class Utente extends BaseEntity {
     public static Utente validate(String nickname, String password) {
         Utente user = null;
         Utente aUser = read(nickname);
-        if(aUser!=null){
-            if (aUser.isEnabled()) {
-                if (aUser.getPassword().equals(password)) {
-                    user = aUser;
+
+        if ((!nickname.equals("")) && (!password.equals(""))) {
+            if (aUser != null) {
+                if (aUser.isEnabled()) {
+                    if (aUser.getPassword().equals(password)) {
+                        user = aUser;
+                    }// end of if cycle
                 }// end of if cycle
             }// end of if cycle
-        }
+        }// end of if cycle
+
         return user;
     }// end of method
 

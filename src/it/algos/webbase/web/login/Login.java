@@ -51,13 +51,11 @@ import java.util.ArrayList;
 
 public class Login implements LogformListener, LoginListener {
 
+    // key to store the Login object in the session
+    public static final String LOGIN_KEY_IN_SESSION = "login";
     // defaults
     private static final int DEFAULT_EXPIRY_TIME_SEC = 604800;    // 1 week
     private static final boolean DEFAULT_RENEW_COOKIES_ON_LOGIN = true;    // renews the cookies on login
-
-    // key to store the Login object in the session
-    public static final String LOGIN_KEY_IN_SESSION = "login";
-
     // default cookie names
     private static final String COOKIENAME_LOGIN = "login_username";
     private static final String COOKIENAME_PASSWORD = "login_password";
@@ -71,9 +69,8 @@ public class Login implements LogformListener, LoginListener {
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
     private Utente user;
-//    private BaseLoginForm loginForm;
 
-    private String cookiePrefix="";
+    private String cookiePrefix = "";
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
@@ -96,6 +93,15 @@ public class Login implements LogformListener, LoginListener {
         }// end of if/else cycle
 
         return login;
+    }// end of method
+
+    public static void invalidateUser() {
+        Login login = getLogin();
+
+        if (login != null) {
+            login.user = null;
+        }// end of if cycle
+
     }// end of method
 
     /**
@@ -149,10 +155,6 @@ public class Login implements LogformListener, LoginListener {
 
     }// end of method
 
-    public Utente getUser() {
-        return user;
-    }// end of method
-
     /**
      * Attempts a login from the cookies.
      *
@@ -189,7 +191,6 @@ public class Login implements LogformListener, LoginListener {
         return success;
     }// end of method
 
-
     /**
      * @return the expiry time of the cookies in seconds
      */
@@ -215,7 +216,6 @@ public class Login implements LogformListener, LoginListener {
         return renewCookiesOnLogin;
     }// end of method
 
-
     /**
      * Whether the cookies are renewed after a successful login.
      *
@@ -229,28 +229,28 @@ public class Login implements LogformListener, LoginListener {
         this.cookiePrefix = cookiePrefix;
     }
 
-    private String getLoginKey(){
-        String name="";
-        if(!cookiePrefix.equals("")){
-            name+=cookiePrefix+".";
+    private String getLoginKey() {
+        String name = "";
+        if (!cookiePrefix.equals("")) {
+            name += cookiePrefix + ".";
         }
-        return name+=COOKIENAME_LOGIN;
+        return name += COOKIENAME_LOGIN;
     }// end of method
 
-    private String getPasswordKey(){
-        String name="";
-        if(!cookiePrefix.equals("")){
-            name+=cookiePrefix+".";
+    private String getPasswordKey() {
+        String name = "";
+        if (!cookiePrefix.equals("")) {
+            name += cookiePrefix + ".";
         }
-        return name+=COOKIENAME_PASSWORD;
+        return name += COOKIENAME_PASSWORD;
     }
 
-    private String getRememberKey(){
-        String name="";
-        if(!cookiePrefix.equals("")){
-            name+=cookiePrefix+".";
+    private String getRememberKey() {
+        String name = "";
+        if (!cookiePrefix.equals("")) {
+            name += cookiePrefix + ".";
         }
-        return name+=COOKIENAME_REMEMBER;
+        return name += COOKIENAME_REMEMBER;
     }
 
     /**
@@ -267,7 +267,6 @@ public class Login implements LogformListener, LoginListener {
         loginListeners.add(l);
     }// end of method
 
-
     /**
      * Registers a unique LoginListener.
      * All the previous LoginListeners are deleted
@@ -276,7 +275,6 @@ public class Login implements LogformListener, LoginListener {
         removeAllLoginListeners();
         addLoginListener(l);
     }// end of method
-
 
     /**
      * Evento ricevuto dalla classe LoginBar quando si clicca il bottone Login <br>
@@ -289,9 +287,13 @@ public class Login implements LogformListener, LoginListener {
     /**
      * @return true if a user is logged
      */
-    public boolean isLogged(){
-        return (getUser()!=null);
-    }
+    public boolean isLogged() {
+        return (getUser() != null);
+    }// end of method
+
+    public Utente getUser() {
+        return user;
+    }// end of method
 
     /**
      * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>

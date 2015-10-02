@@ -71,7 +71,7 @@ public class Login implements LogformListener, LoginListener {
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
     private Utente user;
-    private BaseLoginForm loginForm;
+//    private BaseLoginForm loginForm;
 
     private String cookiePrefix="";
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
@@ -79,8 +79,6 @@ public class Login implements LogformListener, LoginListener {
 
 
     public Login() {
-        this.loginForm=new BaseLoginForm();
-        loginForm.setLoginListener(this);
     }// end of constructor
 
     /**
@@ -104,7 +102,7 @@ public class Login implements LogformListener, LoginListener {
      * Displays the Login form
      */
     public void showLoginForm() {
-        loginForm = new BaseLoginForm();
+        BaseLoginForm loginForm = new BaseLoginForm();
         loginForm.setLoginListener(this);
 
         if (loginForm != null) {

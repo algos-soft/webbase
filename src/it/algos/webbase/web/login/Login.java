@@ -4,6 +4,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibCookie;
+import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;

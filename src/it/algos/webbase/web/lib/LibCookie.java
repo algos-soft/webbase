@@ -60,11 +60,12 @@ public class LibCookie {
 
         JavaScript js = JavaScript.getCurrent();
 
-        if (expirySec == 0) {
-            String cmd = String.format("document.cookie = '%s=; expires=Thu, 01 Jan 1970 00:00:01 GMT';", key);
-            js.execute(cmd);
-            return;
-        }
+        if(js!=null){
+            if (expirySec == 0) {
+                String cmd = String.format("document.cookie = '%s=; expires=Thu, 01 Jan 1970 00:00:01 GMT';", key);
+                js.execute(cmd);
+                return;
+            }
 
         if (expirySec > 0) {
             Instant i = Instant.now().plusSeconds(expirySec);
@@ -75,10 +76,11 @@ public class LibCookie {
             return;
         }
 
-        if (expirySec < 0) {
-            String cmd = String.format("document.cookie = '%s=%s; path=%s';", key, value, path);
-            js.execute(cmd);
-            return;
+            if (expirySec < 0) {
+                String cmd = String.format("document.cookie = '%s=%s; path=%s';", key, value, path);
+                js.execute(cmd);
+                return;
+            }
         }
 
     }
@@ -102,9 +104,13 @@ public class LibCookie {
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
         // Iterate to find cookie by its name
-        for (Cookie cookie : cookies) {
-            if (name.equals(cookie.getName())) {
-                return cookie;
+        if(name!=null && cookies!=null){
+            for (Cookie cookie : cookies) {
+                if(cookie!=null){
+                    if (name.equals(cookie.getName())) {
+                        return cookie;
+                    }
+                }
             }
         }
 

@@ -60,7 +60,7 @@ public abstract class LibSession {
      */
     public static boolean isLogged(){
         boolean logged=false;
-        Object obj=getAttribute(Login.KEY_LOGIN);
+        Object obj=getAttribute(Login.LOGIN_KEY_IN_SESSION);
         if(obj!=null){
             Login login = (Login)obj;
             logged=login.isLogged();

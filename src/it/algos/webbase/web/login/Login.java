@@ -27,7 +27,13 @@ public class Login {
     public static String KEY_PASSWORD = "password";
     public static String KEY_REMEMBER = "rememberlogin";
 
+    /**
+     * Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+     * Lancia il fire di questo evento, se l'utente è valido.
+     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
+
     private Utente user;
     private LoginForm loginForm;
 
@@ -36,6 +42,22 @@ public class Login {
 
     public Login() {
         setLoginForm(new BaseLoginForm());  // default login form
+    }
+
+    /**
+     * Recupera l'oggetto Login dalla sessione.
+     * Se manca lo crea ora e lo registra nella sessione.
+     */
+    public static Login getLogin() {
+        Login login;
+        Object obj = LibSession.getAttribute(Login.KEY_LOGIN);
+        if (obj == null) {
+            login = new Login();
+            LibSession.setAttribute(Login.KEY_LOGIN, login);
+        } else {
+            login = (Login) obj;
+        }
+        return login;
     }
 
     // displays the Login form
@@ -105,16 +127,16 @@ public class Login {
         }
 
 
-        // notify the listeners
-        for (LoginListener l : loginListeners) {
-            l.onUserLogin(user, remember);
-        }
-    }
+        // notify all the listeners
+        for (LoginListener listener : loginListeners) {
+            listener.onUserLogin(user, remember);
+        }// end of for cycle
+
+    }// end of method
 
     public Utente getUser() {
         return user;
     }
-
 
     /**
      * Assigns a new LoginForm.
@@ -131,7 +153,6 @@ public class Login {
         });
     }
 
-
     /**
      * Attempts a login from the cookies.
      *
@@ -139,20 +160,13 @@ public class Login {
      */
     public boolean loginFromCookies() {
         boolean success = false;
-        Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
-        if (userCookie != null) {
-            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
-            if (passCookie != null) {
-                String username = userCookie.getValue();
-                String password = passCookie.getValue();
-                if ((!username.equals("")) && (!password.equals(""))) {
-                    user = Utente.validate(username, password);
-                    if (user != null) {
-                        success = true;
-                    }
-                }
-            }
-        }
+        String username = LibCookie.getCookieValue(KEY_LOGIN);
+        String password = LibCookie.getCookieValue(KEY_PASSWORD);
+
+        user = Utente.validate(username, password);
+        if (user != null) {
+            success = true;
+        }// end of if cycle
 
         // if success, renew the cookies (if the option is on)
         // if failed, delete the cookies (if existing)
@@ -170,25 +184,24 @@ public class Login {
             LibCookie.deleteCookie(KEY_LOGIN);
             LibCookie.deleteCookie(KEY_PASSWORD);
             LibCookie.deleteCookie(KEY_REMEMBER);
-        }
+        }// end of if/else cycle
 
         return success;
-    }
-
+    }// end of method
 
     /**
      * Adds a LoginListener.
      */
     public void addLoginListener(LoginListener l) {
         loginListeners.add(l);
-    }
+    }// end of method
 
     /**
      * Removes all the login listeners
      */
     public void removeAllListeners() {
         loginListeners.clear();
-    }
+    }// end of method
 
     /**
      * Registers a unique LoginListener.
@@ -197,7 +210,7 @@ public class Login {
     public void setLoginListener(LoginListener l) {
         removeAllListeners();
         addLoginListener(l);
-    }
+    }// end of method
 
     /**
      * @return the expiry time of the cookies in seconds
@@ -222,15 +235,6 @@ public class Login {
      */
     public boolean isRenewCookiesOnLogin() {
         return renewCookiesOnLogin;
-    }
-
-    /**
-     * Whether the cookies are renewed after a successful login.
-     *
-     * @param renewCookiesOnLogin true to renew the expiry time on each login
-     */
-    public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
-        this.renewCookiesOnLogin = renewCookiesOnLogin;
     }
 
 
@@ -260,19 +264,12 @@ public class Login {
 //    }
 
     /**
-     * Recupera l'oggetto Login dalla sessione.
-     * Se manca lo crea ora e lo registra nella sessione.
+     * Whether the cookies are renewed after a successful login.
+     *
+     * @param renewCookiesOnLogin true to renew the expiry time on each login
      */
-    public static Login getLogin() {
-        Login login;
-        Object obj = LibSession.getAttribute(Login.KEY_LOGIN);
-        if (obj == null) {
-            login = new Login();
-            LibSession.setAttribute(Login.KEY_LOGIN, login);
-        } else {
-            login = (Login) obj;
-        }
-        return login;
+    public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
+        this.renewCookiesOnLogin = renewCookiesOnLogin;
     }
 
 

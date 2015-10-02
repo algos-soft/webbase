@@ -16,7 +16,7 @@ import java.util.SimpleTimeZone;
  */
 public class LibCookie {
 
-    private static final  SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
 
     /**
      * Creates or updates a cookie in the browser.
@@ -67,14 +67,14 @@ public class LibCookie {
                 return;
             }
 
-            if (expirySec > 0) {
-                Instant i = Instant.now().plusSeconds(expirySec);
-                Date d=Date.from(i);
-                String utc = getUTCString(d);
-                String cmd = String.format("document.cookie = '%s=%s; path=%s; expires=%s';", key, value, path, utc);
-                js.execute(cmd);
-                return;
-            }
+        if (expirySec > 0) {
+            Instant i = Instant.now().plusSeconds(expirySec);
+            Date d = Date.from(i);
+            String utc = getUTCString(d);
+            String cmd = String.format("document.cookie = '%s=%s; path=%s; expires=%s';", key, value, path, utc);
+            js.execute(cmd);
+            return;
+        }
 
             if (expirySec < 0) {
                 String cmd = String.format("document.cookie = '%s=%s; path=%s';", key, value, path);
@@ -89,7 +89,7 @@ public class LibCookie {
      * Creates or updates a cookie in the browser.
      * Uses the root path ("/") and makes the cookie session-scoped (not persistent)
      *
-     * @param key   the key
+     * @param key the key
      */
     public static void deleteCookie(String key) {
         setCookie(key, "", "/", 0);
@@ -117,14 +117,28 @@ public class LibCookie {
         return null;
     }
 
+    /**
+     * Return a cookie's value by name
+     */
+    public static String getCookieValue(String name) {
+        String value = "";
+        Cookie cookie = getCookie(name);
+
+        if (cookie != null) {
+            value = cookie.getValue();
+        }// fine del blocco if
+
+        return value;
+    }// end of method
+
 
     /**
      * Convert a date in JS cookie format
      */
-    private static String getUTCString(Date date){
+    private static String getUTCString(Date date) {
         DATE_FORMAT.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-        String str=DATE_FORMAT.format(date);
-        str +=" UTC";
+        String str = DATE_FORMAT.format(date);
+        str += " UTC";
         return str;
     }
 

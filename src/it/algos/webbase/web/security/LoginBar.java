@@ -3,6 +3,8 @@ package it.algos.webbase.web.security;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickListener;
 import it.algos.webbase.domain.utente.Utente;
+import it.algos.webbase.web.login.LoginListener;
+import it.algos.webbase.web.login.LogoutListener;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,13 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
     private Label label;
     private Button buttonLogin;
     private Button buttonEsci;
+
+    /**
+     * LoginBar gestisce il bottone/menu per il logout
+     * Lancia il fire di questo evento, se si clicca il bottone/menu Esci/Logout.
+     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     */
+    private ArrayList<LogoutListener> logoutListeners = new ArrayList<>();
 
     /**
      * Constructor
@@ -207,6 +216,29 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
     public void setUtenteLogin(Utente utente) {
         this.utente = utente;
         this.reset();
+    }// end of method
+
+    /**
+     * Adds a LogoutListener.
+     */
+    public void addLogoutListener(LogoutListener listener) {
+        logoutListeners.add(listener);
+    }// end of method
+
+    /**
+     * Removes all the LogoutListeners
+     */
+    public void removeAllLogoutListeners() {
+        logoutListeners.clear();
+    }// end of method
+
+    /**
+     * Registers a unique LogoutListener.
+     * All the previous LogoutListeners are deleted
+     */
+    public void setLogoutListener(LogoutListener listener) {
+        removeAllLogoutListeners();
+        addLogoutListener(listener);
     }// end of method
 
 }// end of class

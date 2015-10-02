@@ -4,9 +4,9 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.lib.LibSession;
+import it.algos.webbase.web.login.LoginBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
-import it.algos.webbase.web.security.LoginBar;
 
 import java.util.List;
 

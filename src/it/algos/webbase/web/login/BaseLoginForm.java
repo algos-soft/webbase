@@ -18,6 +18,14 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
     private TextField nameField;
     private PasswordField passField;
     private CheckBoxField rememberField;
+
+    /**
+     * Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+     * Lancia il fire di questo evento, se l'utente è valido.
+     * Si registra qui il solo listener di Login perché BaseLoginForm e Login sono 1=1
+     * Login a sua volta rilancia l'evento per i propri listeners
+     * (che si registrano a Login che è singleton nella sessione, mentre BaseLoginForm può essere instanziata diverse volte)
+     */
     private LoginListener loginListener;
 
     /**
@@ -40,7 +48,7 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
         nameField.setWidthUndefined();
         passField = new PasswordField("Password");
         passField.setWidthUndefined();
-        rememberField=new CheckBoxField("Ricordami su questo computer");
+        rememberField = new CheckBoxField("Ricordami su questo computer");
 
         // aggiunge i campi al layout
         layout.addComponent(nameField);
@@ -49,7 +57,6 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
 
         addComponent(layout);
     }// end of method
-
 
 
     @Override
@@ -69,13 +76,13 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
     /**
      * Evento generato quando si modifica l'utente loggato <br>
      * <p>
-     * Informa (tramite listener) chi è interessato <br>
+     * Informa (tramite listener) chi è interessato (solo la classe Login, che poi rilancia) <br>
      */
     private void utenteLoggato(Utente utente) {
-        if(loginListener!=null){
+        if (loginListener != null) {
             loginListener.onUserLogin(utente, rememberField.getValue());
-        }
-    }
+        }// end of if cycle
+    }// end of method
 
     @Override
     public void setLoginListener(LoginListener listener) {
@@ -101,7 +108,6 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
     public void setRemember(boolean remember) {
         rememberField.setValue(remember);
     }
-
 
 }
 

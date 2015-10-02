@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * when getLogin() in invoked. Subsequent calls to getLogin() return the same object
  * from the session.
  */
-public class Login {
+public class Login implements LogformListener, LoginListener {
 
     // defaults
     private static final int DEFAULT_EXPIRY_TIME_SEC = 604800;    // 1 week
@@ -34,13 +34,15 @@ public class Login {
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
     private Utente user;
-    private LoginForm loginForm;
+    private BaseLoginForm loginForm;
 
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
     public Login() {
-        setLoginForm(new BaseLoginForm());  // default login form
+//        loginForm = new BaseLoginForm();
+//        loginForm.setLoginListener(this);
+//        setLoginForm(loginForm);  // default login form
     }
 
     /**
@@ -138,19 +140,21 @@ public class Login {
     }
 
     /**
-     * Assigns a new LoginForm.
-     *
-     * @param loginForm the new LoginForm
+     * Open a new LoginForm.
      */
-    public void setLoginForm(LoginForm loginForm) {
-        this.loginForm = loginForm;
-        this.loginForm.setLoginListener(new LoginListener() {
-            @Override
-            public void onUserLogin(Utente user, boolean remember) {
-                userLogin(user, remember);
-            }
-        });
-    }
+    public void openLoginForm() {
+        loginForm = new BaseLoginForm();
+        loginForm.setLoginListener(this);
+        loginForm.show(UI.getCurrent());
+
+//        this.loginForm = loginForm;
+//        this.loginForm.setLoginListener(new LoginListener() {
+//            @Override
+//            public void onUserLogin(Utente user, boolean remember) {
+//                userLogin(user, remember);
+//            }
+//        } );
+    }// end of method
 
     /**
      * Attempts a login from the cookies.
@@ -188,28 +192,6 @@ public class Login {
         return success;
     }// end of method
 
-    /**
-     * Adds a LoginListener.
-     */
-    public void addLoginListener(LoginListener l) {
-        loginListeners.add(l);
-    }// end of method
-
-    /**
-     * Removes all the login listeners
-     */
-    public void removeAllListeners() {
-        loginListeners.clear();
-    }// end of method
-
-    /**
-     * Registers a unique LoginListener.
-     * All the previous LoginListeners are deleted
-     */
-    public void setLoginListener(LoginListener l) {
-        removeAllListeners();
-        addLoginListener(l);
-    }// end of method
 
     /**
      * @return the expiry time of the cookies in seconds
@@ -270,6 +252,56 @@ public class Login {
     public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
         this.renewCookiesOnLogin = renewCookiesOnLogin;
     }
+
+
+    /**
+     * Adds a LoginListener.
+     */
+    public void addLoginListener(LoginListener l) {
+        loginListeners.add(l);
+    }// end of method
+
+    /**
+     * Removes all the login listeners
+     */
+    public void removeAllListeners() {
+        loginListeners.clear();
+    }// end of method
+
+    /**
+     * Registers a unique LoginListener.
+     * All the previous LoginListeners are deleted
+     */
+    public void setLoginListener(LoginListener l) {
+        removeAllListeners();
+        addLoginListener(l);
+    }// end of method
+
+
+    /**
+     * Evento ricevuto dalla classe LoginBar quando si clicca il bottone Login <br>
+     */
+    @Override
+    public void onLogFormRequest() {
+        openLoginForm();
+    }// end of method
+
+    /**
+     * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>
+     * <p>
+     * Registra l'utente
+     * Rilancia l'evento ed informa (tramite listener) chi è interessato e registrato presso questa classe <br>
+     */
+    @Override
+    public void onUserLogin(Utente user, boolean remember) {
+        this.user = user;
+
+        if (loginListeners != null) {
+            for (LoginListener listener : loginListeners) {
+                listener.onUserLogin(user, remember);
+            }// end of for cycle
+        }// end of if cycle
+    }// end of method
 
 
 }

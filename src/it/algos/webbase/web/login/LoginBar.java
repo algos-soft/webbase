@@ -1,10 +1,8 @@
-package it.algos.webbase.web.security;
+package it.algos.webbase.web.login;
 
 import com.vaadin.ui.*;
-import com.vaadin.ui.Button.ClickListener;
 import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.web.login.LoginListener;
-import it.algos.webbase.web.login.LogoutListener;
+import it.algos.webbase.web.lib.LibSession;
 
 import java.util.ArrayList;
 
@@ -14,16 +12,21 @@ import java.util.ArrayList;
  * Se si è loggati, mostra il nickname ed un popup per modificare/uscire <br>
  * Se non si è loggati, mostra un bottone per entrare <br>
  */
-@SuppressWarnings("serial")
-public class LoginBar extends HorizontalLayout implements LogBottoniListener, LogUtenteListener {
-
+public class LoginBar extends HorizontalLayout implements LoginListener{
     private static String TESTO_NON_LOGGATO = "Loggato come Anonymous";
     private static boolean USA_TESTO = false;
-    private ArrayList<LogBottoniListener> listeners = new ArrayList<LogBottoniListener>();
+    //    private ArrayList<LogBottoniListener> listeners = new ArrayList<LogBottoniListener>();
     private Utente utente;
     private Label label;
     private Button buttonLogin;
     private Button buttonEsci;
+
+    /**
+     * La classe LoginBar gestisce il bottone/menu per il login
+     * Lancia il fire di questo evento, se si clicca il bottone/menu Login.
+     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     */
+    private ArrayList<LogformListener> logformListeners = new ArrayList<>();
 
     /**
      * LoginBar gestisce il bottone/menu per il logout
@@ -54,7 +57,7 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
 //		this.setWidth("100%");
 
         // si autoregistra per rispondere al menu/bottone
-        this.addLogBottoneListener(this);
+//        this.addLogBottoneListener(this);
 
         creaLabelAndBottoni();
 
@@ -93,6 +96,8 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
 
     }// end of method
 
+
+
     /**
      * Visualizzazione da loggato
      */
@@ -107,16 +112,7 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
         this.barraLoggato(buttonLogin);
     }// end of method
 
-    /**
-     * Evento generato dal bottone di comando <br>
-     * <p>
-     * Informa (tramite listener) chi è interessato <br>
-     */
-    protected void bottoneLoginPremuto() {
-        for (LogBottoniListener listener : listeners) {
-            listener.openLogin();
-        }// end of for cycle
-    }// end of method
+
 
     /**
      * Evento generato dal bottone di comando <br>
@@ -124,9 +120,9 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
      * Informa (tramite listener) chi è interessato <br>
      */
     protected void bottoneEsciPremuto() {
-        for (LogBottoniListener listener : listeners) {
-            listener.esciLogin();
-        }// end of for cycle
+//        for (LogBottoniListener listener : listeners) {
+//            listener.esciLogin();
+//        }// end of for cycle
     }// end of method
 
     /**
@@ -135,7 +131,7 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
     private Button creaBottoneLogin() {
         Button button = new Button("Login");
 
-        button.addClickListener(new ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
                 bottoneLoginPremuto();
@@ -152,7 +148,7 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
     private Button creaBottoneEsci() {
         Button button = new Button("Esci");
 
-        button.addClickListener(new ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
                 bottoneEsciPremuto();
@@ -163,31 +159,31 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
         return button;
     }// end of method
 
-    /**
-     * Listener notificato quando si preme il bottone login
-     */
-    public void addLogBottoneListener(LogBottoniListener listener) {
-        listeners.add(listener);
-    }// end of method
-
-    /**
-     * Azione effettuata quando si preme il bottone login <br>
-     * Passa il controllo a LoginLogic <br>
-     */
-    @Override
-    public void openLogin() {
-        LoginLogic loginLogic = new LoginLogic(UI.getCurrent());
-        loginLogic.addUtenteLoginListener(this);
-    }// end of method
-
-    /**
-     * Azione effettuata quando si preme il bottone esci <br>
-     */
-    @Override
-    public void esciLogin() {
-        this.utente = null;
-        this.reset();
-    }// end of method
+//    /**
+//     * Listener notificato quando si preme il bottone login
+//     */
+//    public void addLogBottoneListener(LogBottoniListener listener) {
+//        listeners.add(listener);
+//    }// end of method
+//
+//    /**
+//     * Azione effettuata quando si preme il bottone login <br>
+//     * Passa il controllo a LoginLogic <br>
+//     */
+//    @Override
+//    public void openLogin() {
+//        LoginLogic loginLogic = new LoginLogic(UI.getCurrent());
+//        loginLogic.addUtenteLoginListener(this);
+//    }// end of method
+//
+//    /**
+//     * Azione effettuata quando si preme il bottone esci <br>
+//     */
+//    @Override
+//    public void esciLogin() {
+//        this.utente = null;
+//        this.reset();
+//    }// end of method
 
     /**
      * Crea la componente grafica <br>
@@ -219,6 +215,29 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
     }// end of method
 
     /**
+     * Adds a LogformListener.
+     */
+    public void addLogformListener(LogformListener listener) {
+        logformListeners.add(listener);
+    }// end of method
+
+    /**
+     * Removes all the LogformListeners
+     */
+    public void removeAllLogformListener() {
+        logformListeners.clear();
+    }// end of method
+
+    /**
+     * Registers a unique LogformListener.
+     * All the previous LogformListeners are deleted
+     */
+    public void setLogformListener(LogformListener listener) {
+        removeAllLogformListener();
+        addLogformListener(listener);
+    }// end of method
+
+    /**
      * Adds a LogoutListener.
      */
     public void addLogoutListener(LogoutListener listener) {
@@ -241,5 +260,26 @@ public class LoginBar extends HorizontalLayout implements LogBottoniListener, Lo
         addLogoutListener(listener);
     }// end of method
 
+    /**
+     * Evento generato dal bottone di comando <br>
+     * <p>
+     * Informa (tramite listener) chi è interessato <br>
+     */
+    protected void bottoneLoginPremuto() {
+        for (LogformListener listener : logformListeners) {
+            listener.onLogFormRequest();
+        }// end of for cycle
+    }// end of method
+
+    /**
+     * Invoked after a successful login happened using the Login form.
+     * <p>
+     * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+     * Lancia il fire di questo evento, se l'utente è valido.
+     */
+    @Override
+    public void onUserLogin(Utente user, boolean remember) {
+        // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
+    }// end of method
 }// end of class
 

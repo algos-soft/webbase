@@ -61,6 +61,7 @@ public class AlgosUI extends UI implements LoginListener {
     protected String menuAddressModuloPartenza;
     protected ArrayList<ModulePop> moduli;
     protected MenuBar.MenuItem loginItem; // il menuItem di login
+    AMenuBar menubar;
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -226,7 +227,8 @@ public class AlgosUI extends UI implements LoginListener {
      * @return layout - normalmente un AMenuBar
      */
     protected AMenuBar creaTop() {
-        AMenuBar menubar = new AMenuBar(AlgosApp.USE_SECURITY);
+        menubar = new AMenuBar(AlgosApp.USE_SECURITY);
+        regolaLoginListenerConLoginBar();
 
         if (DEBUG_GUI) {
             menubar.addStyleName("yellowBg");
@@ -273,6 +275,18 @@ public class AlgosUI extends UI implements LoginListener {
 //        footer.addComponent(new Label("Algos s.r.l."));
 
         return footer;
+    }// end of method
+
+    /**
+     * Registra l'istanza di login (singleton nel servlet/sessione) presso la LoginBar, dopo averla creata
+     */
+    protected void regolaLoginListenerConLoginBar() {
+        Login login = Login.getLogin();
+
+        if (login != null) {
+            menubar.getLoginBar().addLogformListener(login);
+        }// end of if cycle
+
     }// end of method
 
     /**
@@ -416,7 +430,6 @@ public class AlgosUI extends UI implements LoginListener {
     @Override
     public void onUserLogin(Utente user, boolean remember) {
         // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
-        int a=78;
     }// end of method
 
 }// end of class

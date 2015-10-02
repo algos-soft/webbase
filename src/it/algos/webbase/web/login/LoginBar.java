@@ -96,7 +96,6 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
      * Annulla l'oggetto Login nella sessione
      */
     private void logout() {
-//        LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, null);
         Login.invalidateUser();
         updateLoginUI();
     }// end of method

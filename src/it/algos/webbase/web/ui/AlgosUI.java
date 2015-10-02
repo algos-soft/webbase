@@ -290,8 +290,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
             loginBar = menubar.getLoginBar();
 
             if (loginBar != null) {
-                login.setLoginListener(this);
-                login.setLoginListener(loginBar);
+                login.addLoginListener(this);
+                login.addLoginListener(loginBar);
 
                 loginBar.addLogformListener(login);
                 loginBar.addLogoutListener(this);

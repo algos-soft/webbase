@@ -32,8 +32,8 @@ public class AMenuBar extends HorizontalLayout {
      */
     public static String MENU_ABILITATO = "highlight";
     public static String MENU_DISABILITATO = "disabilitato";
-    private MenuBar algosMenuBar = new MenuBar();
-    private LoginBar loginMenuBar;
+    private MenuBar algosBar = new MenuBar();
+    private LoginBar loginBar;
 
     /**
      * Constructor senza security
@@ -62,12 +62,12 @@ public class AMenuBar extends HorizontalLayout {
         this.setHeight("40px");
         this.setWidth("100%");
 
-        algosMenuBar = createMenuBar();
-        this.addComponent(algosMenuBar);
+        algosBar = createMenuBar();
+        this.addComponent(algosBar);
 
         if (usaSecurity) {
-            loginMenuBar = createLoginMenuBar();
-            this.addComponent(loginMenuBar);
+            loginBar = createLoginMenuBar();
+            this.addComponent(loginBar);
         }// fine del blocco if
 
     }// end of method
@@ -79,26 +79,26 @@ public class AMenuBar extends HorizontalLayout {
     private void initConSecurity() {
         final GridLayout grid = new GridLayout(2, 1);
         grid.setWidth("100%");
-        algosMenuBar = createMenuBar();
-        loginMenuBar = createLoginMenuBar();
+        algosBar = createMenuBar();
+        loginBar = createLoginMenuBar();
 
         // aggiunge la menubar principale e la menubar login
         HorizontalLayout menuLayout = new HorizontalLayout();
         menuLayout.setHeight("40px");
         menuLayout.setWidth("100%");
-        menuLayout.addComponent(algosMenuBar);
+        menuLayout.addComponent(algosBar);
 //        mainBar.setWidth("95%");
-        algosMenuBar.setHeight("100%");
-        menuLayout.setExpandRatio(algosMenuBar, 1.0f);
-        menuLayout.addComponent(loginMenuBar);
-        loginMenuBar.setHeight("100%");
+        algosBar.setHeight("100%");
+        menuLayout.setExpandRatio(algosBar, 1.0f);
+        menuLayout.addComponent(loginBar);
+        loginBar.setHeight("100%");
         this.addComponent(menuLayout);
         this.addComponent(new Button("Pippozbelloneterzo"));
 
-//		grid.addComponent(algosMenuBar, 0, 0);
-//		grid.setComponentAlignment(algosMenuBar, Alignment.TOP_LEFT);
-//		grid.addComponent(loginMenuBar, 1, 0);
-//		grid.setComponentAlignment(loginMenuBar, Alignment.TOP_RIGHT);
+//		grid.addComponent(algosBar, 0, 0);
+//		grid.setComponentAlignment(algosBar, Alignment.TOP_LEFT);
+//		grid.addComponent(loginBar, 1, 0);
+//		grid.setComponentAlignment(loginBar, Alignment.TOP_RIGHT);
 //
 //		this.addComponent(grid);
     }// end of method
@@ -111,14 +111,14 @@ public class AMenuBar extends HorizontalLayout {
         layout.setHeight("40px");
         layout.setWidth("100%");
 
-        algosMenuBar = createMenuBar();
-        algosMenuBar.addItem("alfa", null);
-        algosMenuBar.addItem("beta", null);
-        algosMenuBar.addItem("gamma", null);
+        algosBar = createMenuBar();
+        algosBar.addItem("alfa", null);
+        algosBar.addItem("beta", null);
+        algosBar.addItem("gamma", null);
 
-        layout.addComponent(algosMenuBar);
-        algosMenuBar.setHeight("100%");
-        layout.setExpandRatio(algosMenuBar, 1.0f);
+        layout.addComponent(algosBar);
+        algosBar.setHeight("100%");
+        layout.setExpandRatio(algosBar, 1.0f);
         this.addComponent(layout);
     }// end of method
 
@@ -153,8 +153,8 @@ public class AMenuBar extends HorizontalLayout {
 
 //    public void addMenu(String titolo, ModulePop modulo) {
 //        MenuItem menuItem;
-//        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
-//        menuItem = algosMenuBar.addItem(titolo, null, comando);
+//        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosBar);
+//        menuItem = algosBar.addItem(titolo, null, comando);
 //        menuItem.setStyleName(MENU_DISABILITATO);
 //    }// end of method
 
@@ -179,8 +179,8 @@ public class AMenuBar extends HorizontalLayout {
 
     public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
         MenuItem menuItem;
-        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosMenuBar);
-        menuItem = algosMenuBar.addItem(titolo, null, comando);
+        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosBar);
+        menuItem = algosBar.addItem(titolo, null, comando);
         menuItem.setStyleName(MENU_DISABILITATO);
     }// end of method
 
@@ -191,11 +191,18 @@ public class AMenuBar extends HorizontalLayout {
      * @return a list containing the MenuItem objects in the menu bar
      */
     public List<MenuItem> getItems() {
-        return algosMenuBar.getItems();
+        return algosBar.getItems();
     }// end of method
 
     public MenuBar.MenuItem addItem(String caption, MenuBar.Command command) {
-        return algosMenuBar.addItem(caption, null, command);
+        return algosBar.addItem(caption, null, command);
     }
 
+    public LoginBar getLoginBar() {
+        return loginBar;
+    }// end of getter method
+
+    public void setLoginBar(LoginBar loginBar) {
+        this.loginBar = loginBar;
+    }//end of setter method
 }// end of class

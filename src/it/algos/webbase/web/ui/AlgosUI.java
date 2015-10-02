@@ -6,17 +6,19 @@ import com.vaadin.ui.*;
 import it.algos.webbase.domain.log.LogMod;
 import it.algos.webbase.domain.pref.PrefMod;
 import it.algos.webbase.domain.ruolo.RuoloModulo;
+import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.domain.utente.UtenteModulo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuoloModulo;
 import it.algos.webbase.domain.vers.VersMod;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
+import it.algos.webbase.web.login.Login;
+import it.algos.webbase.web.login.LoginListener;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
-import it.algos.webbase.web.security.Login;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ import java.util.Map;
  * @since 7.0
  */
 @SuppressWarnings("serial")
-public class AlgosUI extends UI {
+public class AlgosUI extends UI implements LoginListener {
 
     protected static boolean DEBUG_GUI = false;
 
@@ -58,6 +60,7 @@ public class AlgosUI extends UI {
 
     protected String menuAddressModuloPartenza;
     protected ArrayList<ModulePop> moduli;
+    protected MenuBar.MenuItem loginItem; // il menuItem di login
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -85,6 +88,10 @@ public class AlgosUI extends UI {
         if (AlgosApp.USE_SECURITY) {
             this.checkSecurity(request);
         }// fine del blocco if
+
+        // Si registra per il LoginListener presso l'istanza (della sessione) di Login
+        // Riceve un evento di tipo LoginListener che invoca il metodo onUserLogin() in questa classe
+        Login.getLogin().setLoginListener(this);
 
         // Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
         this.startUI();
@@ -398,6 +405,18 @@ public class AlgosUI extends UI {
         AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
         nav.configureFromMenubar(topLayout);
 //        nav.navigateTo(menuAddressModuloPartenza);
+    }// end of method
+
+    /**
+     * Invoked after a successful login happened using the Login form.
+     * <p>
+     * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+     * Lancia il fire di questo evento, se l'utente è valido.
+     */
+    @Override
+    public void onUserLogin(Utente user, boolean remember) {
+        // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
+        int a=78;
     }// end of method
 
 }// end of class

@@ -26,7 +26,13 @@ public class Login {
     public static String KEY_PASSWORD = "password";
     public static String KEY_REMEMBER = "rememberlogin";
 
+    /**
+     * Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+     * Lancia il fire di questo evento, se l'utente è valido.
+     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
+
     private Utente user;
     private LoginForm loginForm;
 
@@ -120,11 +126,12 @@ public class Login {
         }
 
 
-        // notify the listeners
-        for (LoginListener l : loginListeners) {
-            l.onUserLogin(user, remember);
-        }
-    }
+        // notify all the listeners
+        for (LoginListener listener : loginListeners) {
+            listener.onUserLogin(user, remember);
+        }// end of for cycle
+
+    }// end of method
 
     public Utente getUser() {
         return user;
@@ -186,14 +193,14 @@ public class Login {
      */
     public void addLoginListener(LoginListener l) {
         loginListeners.add(l);
-    }
+    }// end of method
 
     /**
      * Removes all the login listeners
      */
     public void removeAllListeners() {
         loginListeners.clear();
-    }
+    }// end of method
 
     /**
      * Registers a unique LoginListener.
@@ -202,7 +209,7 @@ public class Login {
     public void setLoginListener(LoginListener l) {
         removeAllListeners();
         addLoginListener(l);
-    }
+    }// end of method
 
     /**
      * @return the expiry time of the cookies in seconds

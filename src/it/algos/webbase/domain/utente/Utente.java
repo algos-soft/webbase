@@ -1,10 +1,14 @@
 package it.algos.webbase.domain.utente;
 
+import it.algos.webbase.domain.ruolo.Ruolo;
+import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.query.AQuery;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
 
 @Entity
 public class Utente extends BaseEntity {
@@ -119,5 +123,31 @@ public class Utente extends BaseEntity {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }//end of setter method
+
+
+    /**
+     * Checks if this user has a given Role.
+     *
+     * @param role the role
+     * @return true if this user has the role
+     */
+    public boolean hasRole(Ruolo role) {
+        // controlla se l'utente ha ruolo di admin
+        boolean found=false;
+        if (role!=null){
+            ArrayList<UtenteRuolo> urs = UtenteRuolo.findUtente(this);
+            if(urs.size()>0){
+                for(UtenteRuolo uruolo : urs){
+                    if(uruolo.getRuolo().equals(role)){
+                        found=true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return found;
+
+    }
 
 }// end of entity class

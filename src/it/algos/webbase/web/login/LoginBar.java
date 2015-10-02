@@ -16,7 +16,7 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
 
     private static String TESTO_NON_LOGGATO = "Loggato come Anonymous";
     private static boolean USA_TESTO = false;
-    MenuBar menubar;
+    private MenuBar menubar;
     //    private ArrayList<LogBottoniListener> listeners = new ArrayList<LogBottoniListener>();
     private Utente utente;
     private Label label;

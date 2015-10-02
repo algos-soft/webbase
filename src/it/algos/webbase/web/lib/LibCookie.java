@@ -20,18 +20,19 @@ public class LibCookie {
 
     /**
      * Creates or updates a cookie in the browser.
-     * Uses the root path ("/") and makes the cookie session-scoped (not persistent)
+     * Uses the default path and makes the cookie session-scoped (not persistent)
      *
      * @param key   the key
      * @param value the value
      */
     public static void setCookie(String key, String value) {
-        setCookie(key, value, "/", -1);
+        setCookie(key, value, getPath(), -1);
+//        setCookie(key, value, "/", -1);
     }
 
     /**
      * Creates or updates a cookie in the browser.
-     * Uses the root path ("/")
+     * Uses the default path
      *
      * @param key       the key
      * @param value     the value
@@ -41,7 +42,8 @@ public class LibCookie {
      *                  A zero value causes the cookie to be deleted.
      */
     public static void setCookie(String key, String value, int expirySec) {
-        setCookie(key, value, "/", expirySec);
+        setCookie(key, value, getPath(), expirySec);
+//        setCookie(key, value, "/", expirySec);
     }
 
 
@@ -86,13 +88,14 @@ public class LibCookie {
     }
 
     /**
-     * Creates or updates a cookie in the browser.
-     * Uses the root path ("/") and makes the cookie session-scoped (not persistent)
+     * Deletes a cookie in the browser.
+     * Uses the default path
      *
      * @param key the key
      */
     public static void deleteCookie(String key) {
-        setCookie(key, "", "/", 0);
+//        setCookie(key, "", "/", 0);
+        setCookie(key, "", getPath(), 0);
     }
 
 
@@ -140,6 +143,15 @@ public class LibCookie {
         String str = DATE_FORMAT.format(date);
         str += " UTC";
         return str;
+    }
+
+    /**
+     * @return the path for the cookie
+     */
+    private static String getPath(){
+//        String path = VaadinService.getCurrentRequest().getContextPath();
+        String path = "";
+        return path;
     }
 
 }

@@ -2,6 +2,7 @@ package it.algos.webbase.web.lib;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import it.algos.webbase.web.login.Login;
 
 /**
  * Created by gac on 26/05/15.
@@ -52,6 +53,20 @@ public abstract class LibSession {
     public static void setDebug(boolean status) {
         setBool(Attribute.debug, status);
     }// end of static method
+
+
+    /**
+     * @return true if a user is logged in
+     */
+    public static boolean isLogged(){
+        boolean logged=false;
+        Object obj=getAttribute(Login.LOGIN_KEY_IN_SESSION);
+        if(obj!=null){
+            Login login = (Login)obj;
+            logged=login.isLogged();
+        }
+        return logged;
+    }
 
     /**
      * Recupera dalla sessione l'attributo specifico

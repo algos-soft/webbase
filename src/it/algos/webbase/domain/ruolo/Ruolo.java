@@ -89,4 +89,19 @@ public class Ruolo extends BaseEntity {
 		return read(tipo.toString());
 	}// end of method
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Ruolo ruolo = (Ruolo) o;
+
+		return nome.equals(ruolo.nome);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return nome.hashCode();
+	}
 }// end of entity class

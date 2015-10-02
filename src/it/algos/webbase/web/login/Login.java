@@ -4,7 +4,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibCookie;
-import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
@@ -23,9 +22,12 @@ public class Login implements LogformListener, LoginListener {
     private static final boolean DEFAULT_RENEW_COOKIES_ON_LOGIN = true;    // renews the cookies on login
 
     // key to store the Login object in the session
-    public static String KEY_LOGIN = "login";
-    public static String KEY_PASSWORD = "password";
-    public static String KEY_REMEMBER = "rememberlogin";
+    public static final String LOGIN_KEY_IN_SESSION = "login";
+
+    // default cookie names
+    private static final String COOKIENAME_LOGIN = "login_username";
+    private static final String COOKIENAME_PASSWORD = "login_password";
+    private static final String COOKIENAME_REMEMBER = "login_remember";
 
     /**
      * Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
@@ -36,6 +38,9 @@ public class Login implements LogformListener, LoginListener {
 
     private Utente user;
     private BaseLoginForm loginForm;
+
+    // prefix for the cookie names (optional)
+    private String cookiePrefix="";
 
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
@@ -52,10 +57,10 @@ public class Login implements LogformListener, LoginListener {
      */
     public static Login getLogin() {
         Login login;
-        Object obj = LibSession.getAttribute(Login.KEY_LOGIN);
+        Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
         if (obj == null) {
             login = new Login();
-            LibSession.setAttribute(Login.KEY_LOGIN, login);
+            LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, login);
         } else {
             login = (Login) obj;
         }
@@ -64,6 +69,7 @@ public class Login implements LogformListener, LoginListener {
 
     // displays the Login form
     public void showLoginForm(UI ui) {
+
         if (loginForm != null) {
 
 
@@ -72,17 +78,17 @@ public class Login implements LogformListener, LoginListener {
             boolean remember = false;
 
             // retrieve login data from the cookies
-            Cookie remCookie = LibCookie.getCookie(KEY_REMEMBER);
+            Cookie remCookie = LibCookie.getCookie(getRememberKey());
             if (remCookie != null) {
                 String str = remCookie.getValue();
                 if (str.equalsIgnoreCase("true")) {
 
-                    Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
+                    Cookie userCookie = LibCookie.getCookie(getLoginKey());
                     if (userCookie != null) {
                         username = userCookie.getValue();
                         if (!username.equals("")) {
 
-                            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
+                            Cookie passCookie = LibCookie.getCookie(getPasswordKey());
                             if (passCookie != null) {
                                 password = passCookie.getValue();
                             }
@@ -113,19 +119,21 @@ public class Login implements LogformListener, LoginListener {
      */
     protected void userLogin(Utente user, boolean remember) {
 
+
         // register user
         this.user = user;
 
         if (remember) {
+
             // create/update the cookies
-            LibCookie.setCookie(KEY_LOGIN, user.getNickname(), expiryTime);
-            LibCookie.setCookie(KEY_PASSWORD, user.getPassword(), expiryTime);
-            LibCookie.setCookie(KEY_REMEMBER, "true", expiryTime);
+            LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
+            LibCookie.setCookie(getPasswordKey(), user.getPassword(), expiryTime);
+            LibCookie.setCookie(getRememberKey(), "true", expiryTime);
         } else {
             // delete the cookies
-            LibCookie.deleteCookie(KEY_LOGIN);
-            LibCookie.deleteCookie(KEY_PASSWORD);
-            LibCookie.deleteCookie(KEY_REMEMBER);
+            LibCookie.deleteCookie(getLoginKey());
+            LibCookie.deleteCookie(getPasswordKey());
+            LibCookie.deleteCookie(getRememberKey());
         }
 
 
@@ -164,8 +172,8 @@ public class Login implements LogformListener, LoginListener {
      */
     public boolean loginFromCookies() {
         boolean success = false;
-        String username = LibCookie.getCookieValue(KEY_LOGIN);
-        String password = LibCookie.getCookieValue(KEY_PASSWORD);
+        String username = LibCookie.getCookieValue(getLoginKey());
+        String password = LibCookie.getCookieValue(getPasswordKey());
 
         user = Utente.validate(username, password);
         if (user != null) {
@@ -177,22 +185,29 @@ public class Login implements LogformListener, LoginListener {
         if (success) {
             if (renewCookiesOnLogin) {
                 Cookie cookie;
-                cookie = LibCookie.getCookie(KEY_LOGIN);
-                LibCookie.setCookie(KEY_LOGIN, cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(KEY_PASSWORD);
-                LibCookie.setCookie(KEY_PASSWORD, cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(KEY_REMEMBER);
-                LibCookie.setCookie(KEY_REMEMBER, cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getLoginKey());
+                LibCookie.setCookie(getLoginKey(), cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getPasswordKey());
+                LibCookie.setCookie(getPasswordKey(), cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getRememberKey());
+                LibCookie.setCookie(getRememberKey(), cookie.getValue(), expiryTime);
             }
         } else {
-            LibCookie.deleteCookie(KEY_LOGIN);
-            LibCookie.deleteCookie(KEY_PASSWORD);
-            LibCookie.deleteCookie(KEY_REMEMBER);
+            LibCookie.deleteCookie(getLoginKey());
+            LibCookie.deleteCookie(getPasswordKey());
+            LibCookie.deleteCookie(getRememberKey());
         }// end of if/else cycle
 
         return success;
     }// end of method
 
+
+    /**
+     * @return true if a user is logged
+     */
+    public boolean isLogged(){
+        return (getUser()!=null);
+    }
 
     /**
      * @return the expiry time of the cookies in seconds
@@ -220,31 +235,6 @@ public class Login implements LogformListener, LoginListener {
     }
 
 
-//    private void writeCookie(){
-//
-//
-////        String value = this.user.getNickname();
-////        createCookie("login", value, 600);
-//
-////        byte[] pass = "www.javacodegeeks.com".getBytes();
-////
-////        byte[] pKey = new byte[]{0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xab, (byte) 0xcd,(byte) 0xef};
-////
-////        ObjectCrypter crypter = new ObjectCrypter(pass, pKey);
-////
-////        String userpass = user.getPassword();
-////        String encpass="";
-////        try {
-////            byte[] bytes = crypter.encrypt(userpass);
-////            encpass = new String(bytes, StandardCharsets.UTF_8);
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////
-////        Cookies.setCookie("login", user.getNickname());
-//////        Cookies.setCookie("password", encpass);
-//    }
-
     /**
      * Whether the cookies are renewed after a successful login.
      *
@@ -253,6 +243,35 @@ public class Login implements LogformListener, LoginListener {
     public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
         this.renewCookiesOnLogin = renewCookiesOnLogin;
     }
+
+    public void setCookiePrefix(String cookiePrefix) {
+        this.cookiePrefix = cookiePrefix;
+    }
+
+    private String getLoginKey(){
+        String name="";
+        if(!cookiePrefix.equals("")){
+            name+=cookiePrefix+".";
+        }
+        return name+=COOKIENAME_LOGIN;
+    }
+
+    private String getPasswordKey(){
+        String name="";
+        if(!cookiePrefix.equals("")){
+            name+=cookiePrefix+".";
+        }
+        return name+=COOKIENAME_PASSWORD;
+    }
+
+    private String getRememberKey(){
+        String name="";
+        if(!cookiePrefix.equals("")){
+            name+=cookiePrefix+".";
+        }
+        return name+=COOKIENAME_REMEMBER;
+    }
+
 
 
     /**

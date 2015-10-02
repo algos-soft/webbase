@@ -226,7 +226,7 @@ public class Login implements LogformListener, LoginListener {
      */
     public int getExpiryTime() {
         return expiryTime;
-    }
+    }// end of method
 
     /**
      * Sets the expiry time for the cookies
@@ -235,7 +235,7 @@ public class Login implements LogformListener, LoginListener {
      */
     public void setExpiryTime(int expiryTime) {
         this.expiryTime = expiryTime;
-    }
+    }// end of method
 
     /**
      * Whether the cookies are renewed after a successful login.
@@ -244,7 +244,7 @@ public class Login implements LogformListener, LoginListener {
      */
     public boolean isRenewCookiesOnLogin() {
         return renewCookiesOnLogin;
-    }
+    }// end of method
 
 
 //    private void writeCookie(){

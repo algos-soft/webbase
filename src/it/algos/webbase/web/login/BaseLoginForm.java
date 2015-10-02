@@ -14,7 +14,7 @@ import it.algos.webbase.web.lib.LibCrypto;
 /**
  * Base Login form (UI).
  */
-public class BaseLoginForm extends ConfirmDialog implements LoginForm {
+public class BaseLoginForm extends ConfirmDialog  {
 
     private TextField nameField;
     private PasswordField passField;
@@ -85,27 +85,22 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
         }// end of if cycle
     }// end of method
 
-    @Override
     public void setLoginListener(LoginListener listener) {
         this.loginListener = listener;
     }
 
-    @Override
     public Window getWindow() {
         return this;
     }
 
-    @Override
     public void setUsername(String name) {
         nameField.setValue(name);
     }
 
-    @Override
     public void setPassword(String password) {
         passField.setValue(LibCrypto.decrypt(password));
     }
 
-    @Override
     public void setRemember(boolean remember) {
         rememberField.setValue(remember);
     }

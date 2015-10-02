@@ -112,7 +112,7 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
 
         if (user == null) {
 
-            loginItem.setText("Login2");
+            loginItem.setText("Login");
             loginItem.setCommand(new MenuBar.Command() {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {

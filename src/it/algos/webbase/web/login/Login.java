@@ -84,10 +84,10 @@ public class Login implements LogformListener, LoginListener {
      */
     public static Login getLogin() {
         Login login;
-        Object obj = LibSession.getAttribute(Login.COOKIENAME_LOGIN);
+        Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
         if (obj == null) {
             login = new Login();
-            LibSession.setAttribute(Login.COOKIENAME_LOGIN, login);
+            LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, login);
         } else {
             login = (Login) obj;
         }// end of if/else cycle

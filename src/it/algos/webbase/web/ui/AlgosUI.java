@@ -14,7 +14,9 @@ import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.Login;
+import it.algos.webbase.web.login.LoginBar;
 import it.algos.webbase.web.login.LoginListener;
+import it.algos.webbase.web.login.LogoutListener;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
@@ -49,7 +51,7 @@ import java.util.Map;
  * @since 7.0
  */
 @SuppressWarnings("serial")
-public class AlgosUI extends UI implements LoginListener {
+public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     protected static boolean DEBUG_GUI = false;
 
@@ -89,10 +91,6 @@ public class AlgosUI extends UI implements LoginListener {
         if (AlgosApp.USE_SECURITY) {
             this.checkSecurity(request);
         }// fine del blocco if
-
-        // Si registra per il LoginListener presso l'istanza (della sessione) di Login
-        // Riceve un evento di tipo LoginListener che invoca il metodo onUserLogin() in questa classe
-        Login.getLogin().setLoginListener(this);
 
         // Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
         this.startUI();
@@ -197,6 +195,8 @@ public class AlgosUI extends UI implements LoginListener {
 
         // assegna la UI
         setContent(mainLayout);
+
+        regolaListenerLog();
     }// end of method
 
     /**
@@ -228,7 +228,6 @@ public class AlgosUI extends UI implements LoginListener {
      */
     protected AMenuBar creaTop() {
         menubar = new AMenuBar(AlgosApp.USE_SECURITY);
-        regolaLoginListenerConLoginBar();
 
         if (DEBUG_GUI) {
             menubar.addStyleName("yellowBg");
@@ -278,15 +277,26 @@ public class AlgosUI extends UI implements LoginListener {
     }// end of method
 
     /**
-     * Registra l'istanza di login (singleton nel servlet/sessione) presso la LoginBar, dopo averla creata
+     * Dopo aver creato questa classe, registra nella Login (singleton nel servlet/sessione) l'istanza di questa classe per l'evento LoginListener
+     * Dopo aver creato la LoginBar, registra nella Login (singleton nel servlet/sessione) l'istanza di LoginBar per l'evento LoginListener
+     * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di login (singleton nel servlet/sessione) per l'evento LogformListener
+     * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di AlgoUi (questa classe) per l'evento LogoutListener
      */
-    protected void regolaLoginListenerConLoginBar() {
+    protected void regolaListenerLog() {
         Login login = Login.getLogin();
+        LoginBar loginBar;
 
         if (login != null) {
-            menubar.getLoginBar().addLogformListener(login);
-        }// end of if cycle
+            loginBar = menubar.getLoginBar();
 
+            if (loginBar != null) {
+                login.setLoginListener(this);
+                login.setLoginListener(loginBar);
+
+                loginBar.addLogformListener(login);
+                loginBar.addLogoutListener(this);
+            }// end of if cycle
+        }// end of if cycle
     }// end of method
 
     /**
@@ -422,6 +432,18 @@ public class AlgosUI extends UI implements LoginListener {
     }// end of method
 
     /**
+     * Logout
+     * Annulla l'oggetto Login nella sessione
+     */
+    private void logout() {
+        // Show the splash page
+        getUI().getNavigator().navigateTo("splash");
+
+        // Reload the current page and get a new session
+        getPage().reload();
+    }// end of method
+
+    /**
      * Invoked after a successful login happened using the Login form.
      * <p>
      * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
@@ -430,6 +452,17 @@ public class AlgosUI extends UI implements LoginListener {
     @Override
     public void onUserLogin(Utente user, boolean remember) {
         // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
+    }// end of method
+
+    //    /**
+//     * Invoked after a successful login happened using the Login form.
+//     * <p>
+//     * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
+//     * Lancia il fire di questo evento, se l'utente è valido.
+//     */
+    @Override
+    public void onUserLogout() {
+        logout();
     }// end of method
 
 }// end of class

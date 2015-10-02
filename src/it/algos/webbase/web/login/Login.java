@@ -4,7 +4,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibCookie;
-import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
@@ -16,6 +15,40 @@ import java.util.ArrayList;
  * when getLogin() in invoked. Subsequent calls to getLogin() return the same object
  * from the session.
  */
+
+/**
+ * Eventi inerenti il login.
+ * <p>
+ * LOGIN CLICK  -> Open Form
+ * LoginBar regista i listeners: addLogformListener(), removeAllLogformListener(), setLogformListener()
+ * LoginBar fire evento in loginCommandSelected()
+ * 1.Login si registra presso LoginBar, col metodo AlgosUI.regolaListenerLog()
+ * 1.Login implementa l'interfaccia LogformListener
+ * 1.Login ascolta e riceve l'evento in onLogFormRequest()
+ * <p>
+ * FORM CONFIRM  -> Convalida utente
+ * LoginForm regista un solo listener: setLoginListener()
+ * LoginForm fire evento in utenteLoggato()
+ * 1.Login si registra presso LoginForm, col metodo Login.openLoginForm()
+ * 1.Login implementa l'interfaccia LoginListener
+ * 1.Login ascolta e riceve l'evento in onUserLogin()
+ * Login regista i listeners: addLoginListener(), removeAllLoginListeners(), setLoginListener()
+ * LoginBar fire evento in onUserLogin() - Rilancia quello ricevuto
+ * 2.LoginBar si registra presso login, col metodo AlgosUI.regolaListenerLog()
+ * 2.LoginBar implementa l'interfaccia LoginListener
+ * 2.LoginBar ascolta e riceve l'evento in onUserLogin()
+ * 3.AlgosUI si registra presso login, col metodo AlgosUI.regolaListenerLog()
+ * 3.AlgosUI implementa l'interfaccia LoginListener
+ * 3.AlgosUI ascolta e riceve l'evento in onUserLogin()
+ * <p>
+ * LOGOUT CLICK  -> Disabilita utente
+ * LoginBar regista i listeners: addLogoutListener(), removeAllLogoutListeners(), setLogoutListener()
+ * LoginBar fire evento in logoutCommandSelected()
+ * 1.AlgosUI si registra presso LoginBar, col metodo AlgosUI.regolaListenerLog()
+ * 1.AlgosUI implementa l'interfaccia LogoutListener
+ * 1.AlgosUI ascolta e riceve l'evento in onUserLogout()
+ */
+
 public class Login implements LogformListener, LoginListener {
 
     // defaults
@@ -40,11 +73,9 @@ public class Login implements LogformListener, LoginListener {
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
+
     public Login() {
-//        loginForm = new BaseLoginForm();
-//        loginForm.setLoginListener(this);
-//        setLoginForm(loginForm);  // default login form
-    }
+    }// end of constructor
 
     /**
      * Recupera l'oggetto Login dalla sessione.
@@ -58,42 +89,43 @@ public class Login implements LogformListener, LoginListener {
             LibSession.setAttribute(Login.KEY_LOGIN, login);
         } else {
             login = (Login) obj;
-        }
+        }// end of if/else cycle
+
         return login;
-    }
+    }// end of method
 
     // displays the Login form
     public void showLoginForm(UI ui) {
         if (loginForm != null) {
 
-
-            String username = "";
-            String password = "";
-            boolean remember = false;
-
             // retrieve login data from the cookies
-            Cookie remCookie = LibCookie.getCookie(KEY_REMEMBER);
-            if (remCookie != null) {
-                String str = remCookie.getValue();
-                if (str.equalsIgnoreCase("true")) {
+            String username = LibCookie.getCookieValue(KEY_LOGIN);
+            String password = LibCookie.getCookieValue(KEY_PASSWORD);
+            String rememberStr = LibCookie.getCookieValue(KEY_REMEMBER);
+            boolean remember = (rememberStr.equalsIgnoreCase("true"));
 
-                    Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
-                    if (userCookie != null) {
-                        username = userCookie.getValue();
-                        if (!username.equals("")) {
-
-                            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
-                            if (passCookie != null) {
-                                password = passCookie.getValue();
-                            }
-
-                            remember = true;
-
-                        }
-                    }
-
-                }
-            }
+//            Cookie remCookie = LibCookie.getCookie(KEY_REMEMBER);
+//            if (remCookie != null) {
+//                String str = remCookie.getValue();
+//                if (str.equalsIgnoreCase("true")) {
+//
+//                    Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
+//                    if (userCookie != null) {
+//                        username = userCookie.getValue();
+//                        if (!username.equals("")) {
+//
+//                            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
+//                            if (passCookie != null) {
+//                                password = passCookie.getValue();
+//                            }
+//
+//                            remember = true;
+//
+//                        }
+//                    }
+//
+//                }
+//            }
 
             loginForm.setUsername(username);
             loginForm.setPassword(password);
@@ -102,8 +134,9 @@ public class Login implements LogformListener, LoginListener {
             Window window = loginForm.getWindow();
             window.center();
             ui.addWindow(window);
-        }
-    }
+        }// end of if cycle
+
+    }// end of method
 
     /**
      * Invoked after a successful login happened using the Login form.
@@ -127,12 +160,6 @@ public class Login implements LogformListener, LoginListener {
             LibCookie.deleteCookie(KEY_PASSWORD);
             LibCookie.deleteCookie(KEY_REMEMBER);
         }
-
-
-        // notify all the listeners
-        for (LoginListener listener : loginListeners) {
-            listener.onUserLogin(user, remember);
-        }// end of for cycle
 
     }// end of method
 
@@ -265,7 +292,7 @@ public class Login implements LogformListener, LoginListener {
     /**
      * Removes all the login listeners
      */
-    public void removeAllListeners() {
+    public void removeAllLoginListeners() {
         loginListeners.clear();
     }// end of method
 
@@ -274,7 +301,7 @@ public class Login implements LogformListener, LoginListener {
      * All the previous LoginListeners are deleted
      */
     public void setLoginListener(LoginListener l) {
-        removeAllListeners();
+        removeAllLoginListeners();
         addLoginListener(l);
     }// end of method
 
@@ -295,8 +322,9 @@ public class Login implements LogformListener, LoginListener {
      */
     @Override
     public void onUserLogin(Utente user, boolean remember) {
-        this.user = user;
+        userLogin(user,remember);
 
+        // notify all the listeners
         if (loginListeners != null) {
             for (LoginListener listener : loginListeners) {
                 listener.onUserLogin(user, remember);
@@ -304,5 +332,4 @@ public class Login implements LogformListener, LoginListener {
         }// end of if cycle
     }// end of method
 
-
-}
+}// end of class

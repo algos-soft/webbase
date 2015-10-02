@@ -104,6 +104,9 @@ public class Login implements LogformListener, LoginListener {
      * Displays the Login form
      */
     public void showLoginForm() {
+        loginForm = new BaseLoginForm();
+        loginForm.setLoginListener(this);
+
         if (loginForm != null) {
 
             // retrieve login data from the cookies

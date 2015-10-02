@@ -94,8 +94,10 @@ public class Login implements LogformListener, LoginListener {
         return login;
     }// end of method
 
-    // displays the Login form
-    public void showLoginForm(UI ui) {
+    /**
+     * Displays the Login form
+     */
+    public void showLoginForm() {
         if (loginForm != null) {
 
             // retrieve login data from the cookies
@@ -104,36 +106,13 @@ public class Login implements LogformListener, LoginListener {
             String rememberStr = LibCookie.getCookieValue(KEY_REMEMBER);
             boolean remember = (rememberStr.equalsIgnoreCase("true"));
 
-//            Cookie remCookie = LibCookie.getCookie(KEY_REMEMBER);
-//            if (remCookie != null) {
-//                String str = remCookie.getValue();
-//                if (str.equalsIgnoreCase("true")) {
-//
-//                    Cookie userCookie = LibCookie.getCookie(KEY_LOGIN);
-//                    if (userCookie != null) {
-//                        username = userCookie.getValue();
-//                        if (!username.equals("")) {
-//
-//                            Cookie passCookie = LibCookie.getCookie(KEY_PASSWORD);
-//                            if (passCookie != null) {
-//                                password = passCookie.getValue();
-//                            }
-//
-//                            remember = true;
-//
-//                        }
-//                    }
-//
-//                }
-//            }
-
             loginForm.setUsername(username);
             loginForm.setPassword(password);
             loginForm.setRemember(remember);
 
             Window window = loginForm.getWindow();
             window.center();
-            ui.addWindow(window);
+            UI.getCurrent().addWindow(window);
         }// end of if cycle
 
     }// end of method
@@ -159,29 +138,12 @@ public class Login implements LogformListener, LoginListener {
             LibCookie.deleteCookie(KEY_LOGIN);
             LibCookie.deleteCookie(KEY_PASSWORD);
             LibCookie.deleteCookie(KEY_REMEMBER);
-        }
+        }// end of if/else cycle
 
     }// end of method
 
     public Utente getUser() {
         return user;
-    }
-
-    /**
-     * Open a new LoginForm.
-     */
-    public void openLoginForm() {
-        loginForm = new BaseLoginForm();
-        loginForm.setLoginListener(this);
-        loginForm.show(UI.getCurrent());
-
-//        this.loginForm = loginForm;
-//        this.loginForm.setLoginListener(new LoginListener() {
-//            @Override
-//            public void onUserLogin(Utente user, boolean remember) {
-//                userLogin(user, remember);
-//            }
-//        } );
     }// end of method
 
     /**
@@ -279,7 +241,12 @@ public class Login implements LogformListener, LoginListener {
      */
     public void setRenewCookiesOnLogin(boolean renewCookiesOnLogin) {
         this.renewCookiesOnLogin = renewCookiesOnLogin;
-    }
+    }// end of method
+
+
+    public boolean isLogged() {
+        return (user != null);
+    }// end of method
 
 
     /**
@@ -311,7 +278,7 @@ public class Login implements LogformListener, LoginListener {
      */
     @Override
     public void onLogFormRequest() {
-        openLoginForm();
+        showLoginForm();
     }// end of method
 
     /**
@@ -322,7 +289,7 @@ public class Login implements LogformListener, LoginListener {
      */
     @Override
     public void onUserLogin(Utente user, boolean remember) {
-        userLogin(user,remember);
+        userLogin(user, remember);
 
         // notify all the listeners
         if (loginListeners != null) {

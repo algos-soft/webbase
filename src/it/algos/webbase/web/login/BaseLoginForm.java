@@ -9,6 +9,7 @@ import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.PasswordField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AFormLayout;
+import it.algos.webbase.web.lib.LibCrypto;
 
 /**
  * Base Login form (UI).
@@ -94,7 +95,7 @@ public class BaseLoginForm extends ConfirmDialog implements LoginForm {
 
     @Override
     public void setPassword(String password) {
-        passField.setValue(password);
+        passField.setValue(LibCrypto.decrypt(password));
     }
 
     @Override

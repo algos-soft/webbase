@@ -97,6 +97,43 @@ public class LoginBar extends HorizontalLayout implements LoginListener{
     }// end of method
 
 
+//    /**
+//     * Aggiorna la UI di bottone/menu in base ai contenuti della session
+//     */
+//    private void updateLoginUI() {
+//        Object attr = LibSession.getAttribute(Login.KEY_LOGIN);
+//        Utente user = null;
+//        if (attr != null && attr instanceof Login) {
+//            Login login = (Login) attr;
+//            user = login.getUser();
+//        }
+//
+//        if (user == null) {
+//
+//            loginItem.setText("Login");
+//            loginItem.setCommand(new MenuBar.Command() {
+//                @Override
+//                public void menuSelected(MenuBar.MenuItem selectedItem) {
+//                    loginCommandSelected();
+//                }
+//            });
+//
+//        } else {
+//
+//            String username = user.getNickname();
+//            loginItem.setCommand(null);
+//            loginItem.setText(username);
+//            loginItem.removeChildren();
+//            loginItem.addItem("Logout", new MenuBar.Command() {
+//                @Override
+//                public void menuSelected(MenuBar.MenuItem selectedItem) {
+//                    logoutCommandSelected();
+//                }
+//            });
+//
+//        }
+//
+//    }// end of method
 
     /**
      * Visualizzazione da loggato

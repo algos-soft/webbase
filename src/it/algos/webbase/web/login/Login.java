@@ -115,9 +115,9 @@ public class Login implements LogformListener, LoginListener {
         if (loginForm != null) {
 
             // retrieve login data from the cookies
-            String username = LibCookie.getCookieValue(COOKIENAME_LOGIN);
-            String password = LibCookie.getCookieValue(COOKIENAME_PASSWORD);
-            String rememberStr = LibCookie.getCookieValue(COOKIENAME_REMEMBER);
+            String username = LibCookie.getCookieValue(getLoginKey());
+            String password = LibCookie.getCookieValue(getPasswordKey());
+            String rememberStr = LibCookie.getCookieValue(getRememberKey());
             boolean remember = (rememberStr.equalsIgnoreCase("true"));
 
             loginForm.setUsername(username);
@@ -144,14 +144,14 @@ public class Login implements LogformListener, LoginListener {
 
         if (remember) {
             // create/update the cookies
-            LibCookie.setCookie(COOKIENAME_LOGIN, user.getNickname(), expiryTime);
-            LibCookie.setCookie(COOKIENAME_PASSWORD, user.getPassword(), expiryTime);
-            LibCookie.setCookie(COOKIENAME_REMEMBER, "true", expiryTime);
+            LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
+            LibCookie.setCookie(getPasswordKey(), user.getPassword(), expiryTime);
+            LibCookie.setCookie(getRememberKey(), "true", expiryTime);
         } else {
             // delete the cookies
-            LibCookie.deleteCookie(COOKIENAME_LOGIN);
-            LibCookie.deleteCookie(COOKIENAME_PASSWORD);
-            LibCookie.deleteCookie(COOKIENAME_REMEMBER);
+            LibCookie.deleteCookie(getLoginKey());
+            LibCookie.deleteCookie(getPasswordKey());
+            LibCookie.deleteCookie(getRememberKey());
         }// end of if/else cycle
 
     }// end of method
@@ -163,8 +163,8 @@ public class Login implements LogformListener, LoginListener {
      */
     public boolean loginFromCookies() {
         boolean success = false;
-        String username = LibCookie.getCookieValue(COOKIENAME_LOGIN);
-        String password = LibCookie.getCookieValue(COOKIENAME_PASSWORD);
+        String username = LibCookie.getCookieValue(getLoginKey());
+        String password = LibCookie.getCookieValue(getPasswordKey());
 
         user = Utente.validate(username, password);
         if (user != null) {
@@ -176,17 +176,17 @@ public class Login implements LogformListener, LoginListener {
         if (success) {
             if (renewCookiesOnLogin) {
                 Cookie cookie;
-                cookie = LibCookie.getCookie(COOKIENAME_LOGIN);
-                LibCookie.setCookie(COOKIENAME_LOGIN, cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(COOKIENAME_PASSWORD);
-                LibCookie.setCookie(COOKIENAME_PASSWORD, cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(COOKIENAME_REMEMBER);
-                LibCookie.setCookie(COOKIENAME_REMEMBER, cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getLoginKey());
+                LibCookie.setCookie(getLoginKey(), cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getPasswordKey());
+                LibCookie.setCookie(getPasswordKey(), cookie.getValue(), expiryTime);
+                cookie = LibCookie.getCookie(getRememberKey());
+                LibCookie.setCookie(getRememberKey(), cookie.getValue(), expiryTime);
             }
         } else {
-            LibCookie.deleteCookie(COOKIENAME_LOGIN);
-            LibCookie.deleteCookie(COOKIENAME_PASSWORD);
-            LibCookie.deleteCookie(COOKIENAME_REMEMBER);
+            LibCookie.deleteCookie(getLoginKey());
+            LibCookie.deleteCookie(getPasswordKey());
+            LibCookie.deleteCookie(getRememberKey());
         }// end of if/else cycle
 
         return success;

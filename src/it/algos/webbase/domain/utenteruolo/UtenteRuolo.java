@@ -1,6 +1,8 @@
 package it.algos.webbase.domain.utenteruolo;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.vaadin.data.Container.Filter;
 
@@ -20,7 +22,12 @@ public class UtenteRuolo extends BaseEntity {
 
 	private static final long serialVersionUID = 7452557596156158519L;
 
+	@ManyToOne
+	@NotNull
 	private Utente utente;
+
+	@ManyToOne
+	@NotNull
 	private Ruolo ruolo;
 
 	public UtenteRuolo() {

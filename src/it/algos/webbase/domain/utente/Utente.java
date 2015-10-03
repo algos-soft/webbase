@@ -5,10 +5,13 @@ import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.query.AQuery;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Utente extends BaseEntity {
@@ -21,6 +24,10 @@ public class Utente extends BaseEntity {
     private String password = "";
 
     private boolean enabled = true;
+
+    @OneToMany(mappedBy = "utente")
+    @CascadeOnDelete
+    private List<UtenteRuolo> ruoliutente;
 
     public Utente() {
         this("", "");

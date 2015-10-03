@@ -305,7 +305,7 @@ public abstract class ModulePop extends Module {
         Object bean = BaseEntity.createBean(getEntityClass());
         BeanItem item = new BeanItem(bean);
         postCreate(item);
-        editItem(item, getTitoloNew());
+        editItem(item, true, getTitoloNew());
 
     }// end of method
 
@@ -315,6 +315,17 @@ public abstract class ModulePop extends Module {
     protected void postCreate(Item item) {
     }// end of method
 
+
+    /**
+     * Post save item.
+     * A item has been saved. Chance for subclasses to do something.
+     *
+     * @param item      the saved item
+     * @param newRecord if the saved item is a new record
+     */
+    protected void postSave(Item item, boolean newRecord) {
+    }
+
     /**
      * Edit button pressed in table Display the item in a form
      */
@@ -323,7 +334,7 @@ public abstract class ModulePop extends Module {
         Object itemId = getTable().getSelectedId();
         if (itemId != null) {
             Item item = getTable().getItem(itemId);
-            editItem(item, getTitoloEdit());
+            editItem(item, false, getTitoloEdit());
         }
     }// end of method
 
@@ -343,17 +354,20 @@ public abstract class ModulePop extends Module {
      * Edits an Item in a Form
      *
      * @param item the item
+     * @param newRecord if the edited item is a new record
      */
-    private void editItem(Item item) {
-        editItem(item, "");
+    private void editItem(Item item, boolean newRecord) {
+        editItem(item, newRecord, "");
     }// end of method
 
     /**
      * Edits an Item in a Form
      *
-     * @param item the item
+     * @param item      the item
+     * @param newRecord if the edited item is a new record
+     * @param caption   title for the window
      */
-    private void editItem(Item item, String caption) {
+    private void editItem(Item item, boolean newRecord, String caption) {
 
         final AForm form = createForm(item);
 
@@ -367,6 +381,8 @@ public abstract class ModulePop extends Module {
                 @SuppressWarnings({"rawtypes", "unchecked"})
                 @Override
                 public void commit_() {
+
+                    postSave(item, newRecord);
 
                     window.close();
 

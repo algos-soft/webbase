@@ -146,6 +146,11 @@ public abstract class BaseDialog extends Window {
 		ui.addWindow(this);
 	}
 
+	public void show() {
+		show(UI.getCurrent());
+	}
+
+
 	public DialogToolbar getToolbar() {
 		return toolbar;
 	}

@@ -3,6 +3,7 @@ package it.algos.webbase.domain.utente;
 import it.algos.webbase.domain.ruolo.Ruolo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.query.AQuery;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
@@ -81,22 +82,28 @@ public class Utente extends BaseEntity {
      * Se le credenziali sono nulle, errate o l'utente è disabilitato ritorna null
      *
      * @param nickname dell'utente
-     * @param password dell'utente
+     * @param password dell'utente - in chiaro!
      * @return l'utente, null se non trovato
      */
     public static Utente validate(String nickname, String password) {
         Utente user = null;
-        Utente aUser = read(nickname);
 
-        if ((!nickname.equals("")) && (!password.equals(""))) {
-            if (aUser != null) {
-                if (aUser.isEnabled()) {
-                    if (aUser.getPassword().equals(password)) {
-                        user = aUser;
+        if((nickname!=null) && (password!=null)){
+            if (!nickname.equals("")) {
+                Utente aUser = read(nickname);
+                if (aUser != null) {
+                    if (aUser.isEnabled()) {
+                        String encPassword=aUser.getPassword();
+                        String clearPass= LibCrypto.decrypt(encPassword);
+                        if(clearPass!=null){
+                            if (clearPass.equals(password)) {
+                                user = aUser;
+                            }// end of if cycle
+                        }
                     }// end of if cycle
                 }// end of if cycle
             }// end of if cycle
-        }// end of if cycle
+        }
 
         return user;
     }// end of method

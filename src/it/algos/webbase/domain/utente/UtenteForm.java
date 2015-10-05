@@ -1,12 +1,17 @@
 package it.algos.webbase.domain.utente;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.PasswordField;
 import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.lib.Lib;
+import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.module.ModulePop;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by alex on 29-09-2015.
@@ -28,6 +33,13 @@ public class UtenteForm extends AForm {
 
     private void doInit() {
         setWidth("500px");
+
+        // decrypt the password for the UI
+        Property prop = getItem().getItemProperty(Utente_.password.getName());
+        String encryptedpass=Lib.getString(prop.getValue());
+        String plainpass=LibCrypto.decrypt(encryptedpass);
+        getItem().getItemProperty(Utente_.password.getName()).setValue(plainpass);
+
     }// end of method
 
     /**
@@ -58,4 +70,15 @@ public class UtenteForm extends AForm {
         addField(Utente_.enabled, field);
     }// end of method
 
+
+
+
+    @Override
+    protected boolean onPreSave(LinkedHashMap<Object, Field> fieldMap, boolean newRecord) {
+        Field pField = fieldMap.get(Utente_.password.getName());
+        String pass = Lib.getString(pField.getValue());
+        pass= LibCrypto.encrypt(pass);
+        pField.setValue(pass);
+        return super.onPreSave(fieldMap, newRecord);
+    }
 }// end of class

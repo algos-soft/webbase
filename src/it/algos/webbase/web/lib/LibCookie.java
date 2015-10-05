@@ -27,7 +27,6 @@ public class LibCookie {
      */
     public static void setCookie(String key, String value) {
         setCookie(key, value, getPath(), -1);
-//        setCookie(key, value, "/", -1);
     }
 
     /**
@@ -43,7 +42,6 @@ public class LibCookie {
      */
     public static void setCookie(String key, String value, int expirySec) {
         setCookie(key, value, getPath(), expirySec);
-//        setCookie(key, value, "/", expirySec);
     }
 
 
@@ -62,21 +60,25 @@ public class LibCookie {
 
         JavaScript js = JavaScript.getCurrent();
 
-        if(js!=null){
+        if (js != null) {
+
+            // protects the value
+            value = protect(value);
+
             if (expirySec == 0) {
                 String cmd = String.format("document.cookie = '%s=; expires=Thu, 01 Jan 1970 00:00:01 GMT';", key);
                 js.execute(cmd);
                 return;
             }
 
-        if (expirySec > 0) {
-            Instant i = Instant.now().plusSeconds(expirySec);
-            Date d = Date.from(i);
-            String utc = getUTCString(d);
-            String cmd = String.format("document.cookie = '%s=%s; path=%s; expires=%s';", key, value, path, utc);
-            js.execute(cmd);
-            return;
-        }
+            if (expirySec > 0) {
+                Instant i = Instant.now().plusSeconds(expirySec);
+                Date d = Date.from(i);
+                String utc = getUTCString(d);
+                String cmd = String.format("document.cookie = '%s=%s; path=%s; expires=%s';", key, value, path, utc);
+                js.execute(cmd);
+                return;
+            }
 
             if (expirySec < 0) {
                 String cmd = String.format("document.cookie = '%s=%s; path=%s';", key, value, path);
@@ -94,7 +96,6 @@ public class LibCookie {
      * @param key the key
      */
     public static void deleteCookie(String key) {
-//        setCookie(key, "", "/", 0);
         setCookie(key, "", getPath(), 0);
     }
 
@@ -107,10 +108,15 @@ public class LibCookie {
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
         // Iterate to find cookie by its name
-        if(name!=null && cookies!=null){
+        if (name != null && cookies != null) {
             for (Cookie cookie : cookies) {
-                if(cookie!=null){
+                if (cookie != null) {
                     if (name.equals(cookie.getName())) {
+
+                        // unprotect the value
+                        String value = cookie.getValue();
+                        cookie.setValue(unprotect(value));
+
                         return cookie;
                     }
                 }
@@ -148,10 +154,52 @@ public class LibCookie {
     /**
      * @return the path for the cookie
      */
-    private static String getPath(){
-//        String path = VaadinService.getCurrentRequest().getContextPath();
+    private static String getPath() {
         String path = "";
         return path;
     }
+
+    /**
+     * Protects some characters not allowed in cookie values.
+     * As of RFC 6265, excluded characters are:
+     * whitespace, double quote, comma, semicolon, and backslash
+     * The equal character should be ok but some browsers mess with it,
+     * so we protect this character too.
+     *
+     * @param in the original value
+     * @return the protected value (safe to write in cookie)
+     */
+    private static String protect(String in) {
+        String out=in;
+        if(in!=null){
+            out=out.replace(" ","/xspc/");
+            out=out.replace("\"","/xquote/");
+            out=out.replace(",","/xcomma/");
+            out=out.replace(";","/xsemi/");
+            out=out.replace("\\","/xback/");
+            out=out.replace("=","/xeq/");
+        }
+        return out;
+    }
+
+    /**
+     * Unprotects some characters not allowed in cookie values.
+     *
+     * @param in the protected value
+     * @return the original value
+     */
+    private static String unprotect(String in) {
+        String out=in;
+        if(in!=null){
+            out=out.replace("/xspc/"," ");
+            out=out.replace("/xquote/","\"");
+            out=out.replace("/xcomma/",",");
+            out=out.replace("/xsemi/",";");
+            out=out.replace("/xback/","\\");
+            out=out.replace("/xeq/","=");
+        }
+        return out;
+    }
+
 
 }

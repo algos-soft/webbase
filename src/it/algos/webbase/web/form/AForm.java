@@ -24,6 +24,7 @@ import javax.persistence.metamodel.Attribute;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -309,7 +310,11 @@ public class AForm extends VerticalLayout {
 
             @Override
             public void save_() {
-                save();
+                if (onPreSave(bindMap, isNewRecord())) {
+                    if(save(bindMap, isNewRecord())){
+                        onPostSave(getItem(), isNewRecord());
+                    }
+                }
             }// end of method
 
             @Override
@@ -386,8 +391,11 @@ public class AForm extends VerticalLayout {
     /**
      * Saves the current values to the storage.
      * <p>
+     * @param fieldMap        bindMap map of the fields, the key is the field name
+     * @param newRecord true if it is a new record
+     * @return true if saved successfully
      */
-    protected boolean save() {
+    protected boolean save(LinkedHashMap<Object, Field> fieldMap, boolean newRecord) {
         boolean saved = false;
         ArrayList<String> reasons = isValid();
         if (reasons.size() == 0) {
@@ -401,8 +409,7 @@ public class AForm extends VerticalLayout {
                 binder.commit();
 
                 // if the item is a new record we have to persist it now
-                if (isNewRecord()) {
-                    Item item = getItem();
+                if (newRecord) {
                     if (item instanceof BeanItem) {
                         BeanItem<?> bi = (BeanItem<?>) item;
                         BaseEntity entity = (BaseEntity) bi.getBean();
@@ -436,6 +443,29 @@ public class AForm extends VerticalLayout {
 
         return saved;
     }// end of method
+
+
+    /**
+     * Invoked before saving the item.
+     * Chance for subclasses to override.
+     *
+     * @param fieldMap        bindMap map of the fields, the key is the field name
+     * @param newRecord true if it is a new record
+     * @return true to continue saving, false to stop saving
+     */
+    protected boolean onPreSave(LinkedHashMap<Object, Field> fieldMap, boolean newRecord) {
+        return true;
+    }
+
+    /**
+     * Invoked after the item has been saved.
+     * Chance for subclasses to override.
+     *
+     * @param item        the saved item
+     * @param newRecord true if it was a new record
+     */
+    protected void onPostSave(Item item, boolean newRecord) {
+    }
 
 
     /**

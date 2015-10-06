@@ -142,21 +142,22 @@ public abstract class AlgosApp {
 //    }// end of method
 
 
-    public static Path getImgFolderPath() {
-        Path path = null;
-        ServletContext sc = AlgosApp.getServletContext();
-        String pathTxt = AlgosApp.IMG_FOLDER_NAME;
+//    public static Path getImgFolderPath() {
+//        Path path = null;
+//        ServletContext sc = AlgosApp.getServletContext();
+//        String pathTxt = AlgosApp.IMG_FOLDER_NAME;
+//
+//        if (sc != null) {
+//            if (!pathTxt.startsWith("it")) {   //come può iniziare per it ? a cosa serve?
+//                pathTxt = "/" + pathTxt;
+//            }// fine del blocco if
+//
+//            path = Paths.get(sc.getRealPath(pathTxt));
+//        }// fine del blocco if
+//
+//        return path;
+//    }// end of method
 
-        if (sc != null) {
-            if (!pathTxt.startsWith("it")) {   //come può iniziare per it ? a cosa serve?
-                pathTxt = "/" + pathTxt;
-            }// fine del blocco if
-
-            path = Paths.get(sc.getRealPath(pathTxt));
-        }// fine del blocco if
-
-        return path;
-    }// end of method
 
     public static String getStrProjectPath() {
         ServletContext sc = AlgosApp.getServletContext();

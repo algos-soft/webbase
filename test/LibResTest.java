@@ -1,5 +1,6 @@
 import com.vaadin.server.Resource;
 import it.algos.webbase.web.lib.LibResource;
+import it.algos.webbase.web.lib.LibResourceOld;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

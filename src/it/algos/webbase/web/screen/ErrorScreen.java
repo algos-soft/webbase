@@ -1,13 +1,12 @@
 package it.algos.webbase.web.screen;
 
-import it.algos.webbase.web.lib.LibImage;
-import it.algos.webbase.web.lib.LibResource;
-
 import com.vaadin.server.Resource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import it.algos.webbase.web.lib.LibImage;
+import it.algos.webbase.web.lib.LibResource;
 
 /**
  * A view to show a standard error message to the user.

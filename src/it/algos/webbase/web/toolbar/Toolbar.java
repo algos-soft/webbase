@@ -7,7 +7,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.lib.LibResource;
 
 /**
  * Base toolbar composed by:<br>

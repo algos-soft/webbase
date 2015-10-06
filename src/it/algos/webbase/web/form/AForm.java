@@ -311,7 +311,7 @@ public class AForm extends VerticalLayout {
             @Override
             public void save_() {
                 if (onPreSave(bindMap, isNewRecord())) {
-                    if(save(bindMap, isNewRecord())){
+                    if (save(bindMap, isNewRecord())) {
                         onPostSave(getItem(), isNewRecord());
                     }
                 }
@@ -391,7 +391,19 @@ public class AForm extends VerticalLayout {
     /**
      * Saves the current values to the storage.
      * <p>
-     * @param fieldMap        bindMap map of the fields, the key is the field name
+     *
+     * @return true if saved successfully
+     */
+    protected boolean save() {
+        return save(bindMap, isNewRecord());
+    }
+
+
+    /**
+     * Saves the current values to the storage.
+     * <p>
+     *
+     * @param fieldMap  bindMap map of the fields, the key is the field name
      * @param newRecord true if it is a new record
      * @return true if saved successfully
      */
@@ -449,7 +461,7 @@ public class AForm extends VerticalLayout {
      * Invoked before saving the item.
      * Chance for subclasses to override.
      *
-     * @param fieldMap        bindMap map of the fields, the key is the field name
+     * @param fieldMap  bindMap map of the fields, the key is the field name
      * @param newRecord true if it is a new record
      * @return true to continue saving, false to stop saving
      */
@@ -461,7 +473,7 @@ public class AForm extends VerticalLayout {
      * Invoked after the item has been saved.
      * Chance for subclasses to override.
      *
-     * @param item        the saved item
+     * @param item      the saved item
      * @param newRecord true if it was a new record
      */
     protected void onPostSave(Item item, boolean newRecord) {

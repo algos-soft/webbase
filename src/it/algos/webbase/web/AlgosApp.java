@@ -41,7 +41,7 @@ public abstract class AlgosApp {
     /**
      * Name of the base folder for images.<br>
      */
-    public static String IMG_FOLDER_NAME = "WEB-INF/img/";
+    public static final String IMG_FOLDER_NAME = "WEB-INF/img/";
 
 //    /**
 //     * Name of the local folder for images.<br>
@@ -141,13 +141,14 @@ public abstract class AlgosApp {
 //        return Paths.get(sc.getRealPath("/" + AlgosApp.LOC_IMG_FOLDER_NAME));
 //    }// end of method
 
+
     public static Path getImgFolderPath() {
         Path path = null;
         ServletContext sc = AlgosApp.getServletContext();
         String pathTxt = AlgosApp.IMG_FOLDER_NAME;
 
         if (sc != null) {
-            if (!pathTxt.startsWith("it")) {
+            if (!pathTxt.startsWith("it")) {   //come può iniziare per it ? a cosa serve?
                 pathTxt = "/" + pathTxt;
             }// fine del blocco if
 

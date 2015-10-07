@@ -66,7 +66,7 @@ public class SingletonBootStrap {
      */
     public static synchronized void executeStop() {
 
-        if (istanza == null) {
+        if (istanza != null) {
             istanza.executeStopOnlyOne();
         }// end of if cycle
 

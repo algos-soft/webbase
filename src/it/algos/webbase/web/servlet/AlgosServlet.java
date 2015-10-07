@@ -1,14 +1,9 @@
 package it.algos.webbase.web.servlet;
 
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
-import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
-import it.algos.webbase.web.ui.AlgosUI;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 
 /**
  * Servlet 3.0 introduces a @WebServlet annotation which can be used to replace the traditional web.xml.

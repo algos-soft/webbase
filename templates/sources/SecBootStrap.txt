@@ -1,4 +1,4 @@
-package it.algos.@LOWERPACK@;
+package it.algos.@LOWERPROGETTO@;
 
 import it.algos.webbase.web.bootstrap.SecurityBootStrap;
 

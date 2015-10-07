@@ -1,4 +1,4 @@
-package it.algos.@LOWERPACK@;
+package it.algos.@LOWERPROGETTO@;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.ServiceException;
@@ -20,9 +20,9 @@ import javax.servlet.annotation.WebServlet;
  * which provides you with the option to select UI by referring the UI class
  * directly toggle productionMode using a boolean and more
  */
-@WebServlet(value = "/*", asyncSupported = true, displayName = "@PACK@")
-@VaadinServletConfiguration(productionMode = false, ui = @PACK@UI.class)
-public class @PACK@Servlet extends AlgosServlet {
+@WebServlet(value = "/*", asyncSupported = true, displayName = "@PROGETTO@")
+@VaadinServletConfiguration(productionMode = false, ui = @PROGETTO@UI.class)
+public class @PROGETTO@Servlet extends AlgosServlet {
 
     /**
      * Invoked when a new Vaadin service session is initialized for that service.
@@ -36,5 +36,11 @@ public class @PACK@Servlet extends AlgosServlet {
      * @throws ServiceException a problem occurs when processing the event
      */
     @Override
+    public void sessionInit(SessionInitEvent event) throws ServiceException {
+        super.sessionInit(event);
+
+        // Do session start stuff here
+
+    }// end of method
 
 }// end of servlet class

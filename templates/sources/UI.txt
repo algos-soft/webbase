@@ -1,4 +1,4 @@
-package it.algos.@LOWERPACK@;
+package it.algos.@LOWERPROGETTO@;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
@@ -18,7 +18,7 @@ import it.algos.webbase.web.ui.AlgosUI;
  */
 @Theme("valo")
 //@Theme("algos")
-public class @PACK@UI extends AlgosUI {
+public class @PROGETTO@UI extends AlgosUI {
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure

@@ -55,24 +55,23 @@
     <property name="baseDest" value="${basedir}${risalita}"/>
 
     <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
-        <input addproperty="pack" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="${prova}"/>
-        <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
+        <input addproperty="progetto" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="${prova}"/>
+        <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="mysqlunit"/>
         <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
 
-        <lower string="${pack}" to="lowerPack"/>
+        <lower string="${progetto}" to="lowerProgetto"/>
         <lower string="${sqlUnit}" to="lowerSqlUnit"/>
         <lower string="${dataBase}" to="lowerDataBase"/>
-        <lower string="${modulo}" to="lowerModulo"/>
 
-        <property name="destDir" value="${baseDest}/${lowerPack}"/>
-        <property name="destDirIt" value="${baseDest}/${lowerPack}${discesa}${lowerPack}"/>
-        <property name="destDirMeta" value="${baseDest}/${lowerPack}${discesaMeta}"/>
-        <property name="destDirThemses" value="${baseDest}/${lowerPack}${discesaThemes}"/>
+        <property name="destDir" value="${baseDest}/${lowerProgetto}"/>
+        <property name="destDirIt" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}"/>
+        <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
+        <property name="destDirThemses" value="${baseDest}/${lowerProgetto}${discesaThemes}"/>
 
-        <property name="destApp" value="${destDirIt}/${pack}${app}${destSufJava}"/>
-        <property name="destBoot" value="${destDirIt}/${pack}${boot}${destSufJava}"/>
-        <property name="destServlet" value="${destDirIt}/${pack}${servlet}${destSufJava}"/>
-        <property name="destUI" value="${destDirIt}/${pack}${ui}${destSufJava}"/>
+        <property name="destApp" value="${destDirIt}/${progetto}${app}${destSufJava}"/>
+        <property name="destBoot" value="${destDirIt}/${progetto}${boot}${destSufJava}"/>
+        <property name="destServlet" value="${destDirIt}/${progetto}${servlet}${destSufJava}"/>
+        <property name="destUI" value="${destDirIt}/${progetto}${ui}${destSufJava}"/>
         <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
         <property name="destSec" value="${destDirIt}/${security}${destSufJava}"/>
 
@@ -93,10 +92,10 @@
         <echo message="srcDir - ${srcDir}"/>
         <echo message="srcApp - ${srcApp}"/>
         <echo message="baseDest - ${baseDest}"/>
-        <echo message="pack - ${pack}"/>
+        <echo message="progetto - ${progetto}"/>
         <echo message="sqlUnit - ${sqlUnit}"/>
         <echo message="dataBase - ${dataBase}"/>
-        <echo message="lowerPack - ${lowerPack}"/>
+        <echo message="lowerPack - ${lowerProgetto}"/>
         <echo message="destDir - ${destDir}"/>
         <echo message="destDirIt - ${destDirIt}"/>
         <echo message="destDirMeta - ${destDirMeta}"/>
@@ -115,8 +114,8 @@
     <target name="creaSingoloFile" description="Copia il singolo file passato come parametro">
         <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
             <filterset>
-                <filter token="PACK" value="${pack}"/>
-                <filter token="LOWERPACK" value="${lowerPack}"/>
+                <filter token="PROGETTO" value="${progetto}"/>
+                <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
                 <filter token="SQLUNIT" value="${lowerSqlUnit}"/>
                 <filter token="DATABASE" value="${lowerDataBase}"/>
             </filterset>
@@ -300,8 +299,8 @@
 
         <echo message=""/>
 
-        <echo message="pack: ${pack}"/>
-        <echo message="lowerPack: ${lowerPack}"/>
+        <echo message="pack: ${progetto}"/>
+        <echo message="lowerPack: ${lowerProgetto}"/>
         <echo message="sqlUnit: ${sqlUnit}"/>
         <echo message="dataBase: ${dataBase}"/>
         <echo message="lowerDataBase: ${lowerDataBase}"/>
@@ -310,7 +309,7 @@
         <echo message="destServlet: ${destServlet}"/>
         <echo message="destUI: ${destUI}"/>
         <echo message="destPersistence: ${destPersistence}"/>
-        <echo message="pack: ${pack}"/>
+        <echo message="pack: ${progetto}"/>
     </target>
 
     <target name="debug" depends="messaggi" description="Controllo parametri">

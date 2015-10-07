@@ -1,5 +1,6 @@
-package it.algos.@LOWERPACK@;
+package it.algos.@LOWERPROGETTO@;
 
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.bootstrap.ABootStrap;
 import it.algos.webbase.web.toolbar.Toolbar;
 
@@ -15,7 +16,7 @@ import javax.servlet.ServletContextEvent;
   * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
   * È OBBLIGATORIO aggiungere questa classe nei listeners del file web.WEB-INF.web.xml
   */
-public class @PACK@BootStrap extends ABootStrap {
+public class @PROGETTO@BootStrap extends ABootStrap {
 
     /**
      * Executed on container startup
@@ -35,14 +36,14 @@ public class @PACK@BootStrap extends ABootStrap {
         ServletContext svltCtx = ABootStrap.getServletContext();
 
         // registra il servlet context non appena è disponibile
-        @PACK@App.setServletContext(svltCtx);
+        @PROGETTO@App.setServletContext(svltCtx);
 
         // eventuali modifiche allle dimensioni dei bottoni
 //        Toolbar.ALTEZZA_BOTTONI = 40;
 //        Toolbar.LARGHEZZA_BOTTONI = 120;
 
         // eventuali modifiche ai flag generali di regolazione
-//        AlgosApp.USE_SECURITY = true;
+        AlgosApp.USE_SECURITY = true;
 //        AlgosApp.USE_LOG = true;
 //        AlgosApp.USE_VERS = false;
 //        AlgosApp.USE_PREF = false;

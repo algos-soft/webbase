@@ -1,6 +1,7 @@
 package it.algos.webbase.domain.log;
 
 import com.vaadin.data.Item;
+import com.vaadin.server.FontAwesome;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.table.TablePortal;
@@ -15,6 +16,7 @@ public class LogMod extends ModulePop {
 
     public LogMod() {
         super(Log.class, MENU_ADDRESS);
+        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
     /**

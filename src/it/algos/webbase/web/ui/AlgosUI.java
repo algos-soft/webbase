@@ -57,13 +57,11 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     protected VerticalLayout mainLayout;        // main
     protected AMenuBar topLayout;               // top
-    protected NavPlaceholder placeholder;       // body
+    protected NavPlaceholder bodyLayout;       // body
     protected HorizontalLayout footerLayout;    // footer
 
     protected String menuAddressModuloPartenza;
     protected ArrayList<ModulePop> moduli;
-    protected MenuBar.MenuItem loginItem; // il menuItem di login
-    AMenuBar menubar;
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -176,9 +174,9 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
         this.addSpacer();
 
         // crea e aggiunge il placeholder dove il Navigator inserirà le varie pagine a seconda delle selezioni di menu
-        placeholder = this.creaBody();
-        mainLayout.addComponent(placeholder);
-        mainLayout.setExpandRatio(placeholder, 1.0f);
+        bodyLayout = this.creaBody();
+        mainLayout.addComponent(bodyLayout);
+        mainLayout.setExpandRatio(bodyLayout, 1.0f);
 
         // crea ed aggiunge il footer
         footerLayout = this.creaFooter();
@@ -227,7 +225,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * @return layout - normalmente un AMenuBar
      */
     protected AMenuBar creaTop() {
-        menubar = new AMenuBar(AlgosApp.USE_SECURITY);
+        AMenuBar menubar = new AMenuBar(AlgosApp.USE_SECURITY);
 
         if (DEBUG_GUI) {
             menubar.addStyleName("yellowBg");
@@ -287,7 +285,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
         LoginBar loginBar;
 
         if (login != null) {
-            loginBar = menubar.getLoginBar();
+            loginBar = topLayout.getLoginBar();
 
             if (loginBar != null) {
                 login.addLoginListener(this);
@@ -351,18 +349,24 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     }
 
     /**
-     * Crea i menu per la gestione dei moduli (standard e specifici)
+     * Aggiunge i moduli (standard e specifici)
+     * <p>
+     * Mantiene un array di tutti i moduli
+     * Alcuni moduli sono specifici di un collegamento come programmatore
      * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
+     * Crea l'array e vi aggiunge i moduli interessati
+     * Spazzola l'array dei moduli per creare/recuperare il menuItem ed aggiungerlo alla UI
      */
     private void addAllModuli() {
         moduli = new ArrayList<ModulePop>();
         this.addModuliStandard();
         this.addModuli();
+        this.creaMenu();
     }// end of method
 
 
     /**
-     * Crea i menu per la gestione dei moduli standar definiti nel progetto webbase
+     * Aggiunge i moduli standard definiti nel progetto webbase
      * Vengono usati o meno secondo i flags (sovrascrivibili): AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
      */
     private void addModuliStandard() {
@@ -384,10 +388,22 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     }// end of method
 
     /**
-     * Crea i menu specifici per la gestione dei moduli
+     * Aggiunge i moduli specifici
      * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
      */
     protected void addModuli() {
+    }// end of method
+
+    /**
+     * Crea i menu per la gestione dei moduli (standard e specifici)
+     * Spazzola l'array dei moduli per creare/recuperare il menuItem ed aggiungerlo alla UI
+     */
+    private void creaMenu() {
+        if (moduli != null && moduli.size() > 0) {
+            for (ModulePop modulo : moduli) {
+                modulo.createMenuItem(topLayout.getAlgosBar(), bodyLayout);
+            }// end of for cycle
+        }// end of if cycle
     }// end of method
 
     /**
@@ -401,9 +417,9 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      */
     protected void addModulo(ModulePop modulo) {
         moduli.add(modulo);
-        if (topLayout != null) {
-            topLayout.addModulo(modulo, placeholder);
-        }// fine del blocco if
+//        if (topLayout != null) {
+//            topLayout.addModulo(modulo, bodyLayout);
+//        }// fine del blocco if
     }// end of method
 
     /**
@@ -426,7 +442,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * crea un Navigator e lo configura in base ai contenuti della MenuBar
      */
     private void creaPartenza() {
-        AlgosNavigator nav = new AlgosNavigator(getUI(), placeholder);
+        AlgosNavigator nav = new AlgosNavigator(getUI(), bodyLayout);
         nav.configureFromMenubar(topLayout);
 //        nav.navigateTo(menuAddressModuloPartenza);
     }// end of method

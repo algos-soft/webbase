@@ -8,6 +8,7 @@ package it.algos.webbase.domain.vers;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.server.FontAwesome;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -22,6 +23,7 @@ public class VersMod extends ModulePop {
 
     public VersMod() {
         super(Versione.class, MENU_ADDRESS);
+        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
 

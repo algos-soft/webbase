@@ -1,8 +1,12 @@
 package it.algos.webbase.web.login;
 
-import com.vaadin.ui.*;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.MenuBar;
 import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.web.lib.LibSession;
+import it.algos.webbase.web.AlgosApp;
 
 import java.util.ArrayList;
 
@@ -16,7 +20,7 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
 
     private static String TESTO_NON_LOGGATO = "Loggato come Anonymous";
     private static boolean USA_TESTO = false;
-     MenuBar menubar;
+    MenuBar menubar;
     private MenuBar.MenuItem loginItem; // il menuItem di login
 
     /**
@@ -62,29 +66,41 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
      */
     private void updateLoginUI() {
         Utente user = Login.getLogin().getUser();
+        Resource exitIcon;
 
         if (user == null) {
 
             loginItem.setText("Login");
+            if (AlgosApp.USE_FONT_AWESOME) {
+                loginItem.setIcon(FontAwesome.SIGN_IN);
+            }// fine del blocco if
             loginItem.setCommand(new MenuBar.Command() {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {
                     loginCommandSelected();
                 }// end of method
-            });
+            });// end of anonymous inner class
 
         } else {
 
             String username = user.getNickname();
             loginItem.setCommand(null);
             loginItem.setText(username);
+            if (AlgosApp.USE_FONT_AWESOME) {
+                loginItem.setIcon(FontAwesome.USER);
+            }// fine del blocco if
             loginItem.removeChildren();
-            loginItem.addItem("Logout", new MenuBar.Command() {
+            if (AlgosApp.USE_FONT_AWESOME) {
+                exitIcon = FontAwesome.SIGN_OUT;
+            } else {
+                exitIcon = null;
+            }// end of if/else cycle
+            loginItem.addItem("Logout", exitIcon, new MenuBar.Command() {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {
                     logoutCommandSelected();
                 }// end of method
-            });
+            });// end of anonymous inner class
 
         }// end of if/else cycle
 

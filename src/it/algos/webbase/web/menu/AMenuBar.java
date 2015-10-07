@@ -1,5 +1,7 @@
 package it.algos.webbase.web.menu;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.lib.LibPath;
@@ -129,6 +131,7 @@ public class AMenuBar extends HorizontalLayout {
      */
     private MenuBar createMenuBar() {
         MenuBar menubar = new MenuBar();
+        menubar.setAutoOpen(true);
         if (LibSession.isDeveloper()) {
             menubar.addStyleName("mymenubar");
         }// fine del blocco if
@@ -164,23 +167,26 @@ public class AMenuBar extends HorizontalLayout {
      * Aggiunge il singolo menu (item) alla barra principale di menu
      *
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param placeholder di riferimento
      */
     public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
         String address = "";
+        MenuItem menuItem=modulo.getMenuItem();
+        Resource icon = modulo.getIcon();
         address = modulo.getMenuAddress();
 
         if (address.equals("")) {
             address = LibPath.getClassName(modulo.getEntityClass());
         }// fine del blocco if
 
-        this.addMenu(address, modulo, placeholder);
+        this.addMenu(address, icon, modulo, placeholder);
     }// end of method
 
 
-    public void addMenu(String titolo, CustomComponent modulo, NavPlaceholder placeholder) {
+    public void addMenu(String titolo, Resource icon, CustomComponent modulo, NavPlaceholder placeholder) {
         MenuItem menuItem;
         MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosBar);
-        menuItem = algosBar.addItem(titolo, null, comando);
+        menuItem = algosBar.addItem(titolo, icon, comando);
         menuItem.setStyleName(MENU_DISABILITATO);
     }// end of method
 
@@ -204,5 +210,13 @@ public class AMenuBar extends HorizontalLayout {
 
     public void setLoginBar(LoginBar loginBar) {
         this.loginBar = loginBar;
+    }//end of setter method
+
+    public MenuBar getAlgosBar() {
+        return algosBar;
+    }// end of getter method
+
+    public void setAlgosBar(MenuBar algosBar) {
+        this.algosBar = algosBar;
     }//end of setter method
 }// end of class

@@ -54,9 +54,11 @@ public class Login implements LogformListener, LoginListener {
 
     // key to store the Login object in the session
     public static final String LOGIN_KEY_IN_SESSION = "login";
+
     // defaults
     private static final int DEFAULT_EXPIRY_TIME_SEC = 604800;    // 1 week
     private static final boolean DEFAULT_RENEW_COOKIES_ON_LOGIN = true;    // renews the cookies on login
+
     // default cookie names
     private static final String COOKIENAME_LOGIN = "login_username";
     private static final String COOKIENAME_PASSWORD = "login_password";
@@ -84,13 +86,27 @@ public class Login implements LogformListener, LoginListener {
      * Se manca lo crea ora e lo registra nella sessione.
      */
     public static Login getLogin() {
-        Login login;
+        it.algos.webbase.web.login.Login login = null;
         Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
         if (obj == null) {
-            login = new Login();
+            login = new it.algos.webbase.web.login.Login();
             LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, login);
         } else {
-            login = (Login) obj;
+
+            try { // prova ad eseguire il codice
+                login = (it.algos.webbase.web.login.Login) obj;
+            } catch (Exception unErrore) { // intercetta l'errore
+                int a=87;
+            }// fine del blocco try-catch
+//            if (obj instanceof Login) {
+//                login = (Login) obj;
+//            } else {
+//                Object clazze = obj.getClass();
+//                int a=87;
+//            }// end of if/else cycle
+
+
+
         }// end of if/else cycle
 
         return login;

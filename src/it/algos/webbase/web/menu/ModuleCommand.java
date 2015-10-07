@@ -13,7 +13,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * Command for main modules
  */
 @SuppressWarnings("serial")
-class ModuleCommand implements MenuBar.Command {
+public class ModuleCommand implements MenuBar.Command {
 
 	private CustomComponent component;
 	private NavPlaceholder placeholder;

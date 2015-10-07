@@ -8,6 +8,9 @@ import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
+import com.vaadin.server.Resource;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.entity.BaseEntity;
@@ -16,6 +19,10 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 import it.algos.webbase.web.lib.LibNum;
+import it.algos.webbase.web.lib.LibPath;
+import it.algos.webbase.web.menu.AMenuBar;
+import it.algos.webbase.web.menu.ModuleCommand;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ATable.TableListener;
@@ -54,6 +61,12 @@ public abstract class ModulePop extends Module {
 
     // indirizzo interno del modulo (serve nei menu)
     private String menuAddress;
+
+    // icona del modulo (serve nei menu)
+    protected Resource icon;
+
+    // menuitem del modulo (serve nei menu)
+    private MenuBar.MenuItem menuItem;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -294,6 +307,48 @@ public abstract class ModulePop extends Module {
         SearchManager manager = new SearchManager(this);
         return manager;
     }// end of method
+
+
+    /**
+     * Create the MenuBar Item for this module
+     * PUO essere sovrascritto dalla sottoclasse
+     */
+    public void createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        MenuBar.MenuItem menuItem;
+        MenuBar.Command comando = new ModuleCommand(this, placeholder, menuBar);
+        menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
+        menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
+    }// end of method
+
+
+//    /**
+//     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
+//     * Aggiunge il singolo menu (item) alla barra principale di menu
+//     *
+//     * @param modulo      da visualizzare nel placeholder alla pressione del bottone di menu
+//     * @param placeholder di riferimento
+//     */
+//    public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
+//        String address = "";
+//        MenuBar.MenuItem menuItem = modulo.getMenuItem();
+//        Resource icon = modulo.getIcon();
+//        address = modulo.getMenuAddress();
+//
+//        if (address.equals("")) {
+//            address = LibPath.getClassName(modulo.getEntityClass());
+//        }// fine del blocco if
+//
+//        this.addMenu(address, icon, modulo, placeholder);
+//    }// end of method
+//
+//
+//    public void addMenu(String titolo, Resource icon, CustomComponent modulo, NavPlaceholder placeholder) {
+//        MenuBar.MenuItem menuItem;
+//        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosBar);
+//        menuItem = algosBar.addItem(titolo, icon, comando);
+//        menuItem.setStyleName(MENU_DISABILITATO);
+//    }// end of method
+
 
     /**
      * Create button pressed in table
@@ -852,5 +907,22 @@ public abstract class ModulePop extends Module {
         this.menuAddress = menuAddress;
     }// end of method
 
+//    @Override
+//    public Resource getIcon() {
+//        return icon;
+//    }// end of getter method
+//
+//    @Override
+//    public void setIcon(Resource icon) {
+//        this.icon = icon;
+//    }//end of setter method
 
+
+    public MenuBar.MenuItem getMenuItem() {
+        return menuItem;
+    }// end of getter method
+
+    public void setMenuItem(MenuBar.MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }//end of setter method
 }// end of class

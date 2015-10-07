@@ -8,6 +8,7 @@ package it.algos.webbase.domain.pref;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.server.FontAwesome;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
 
@@ -22,6 +23,7 @@ public class PrefMod extends ModulePop {
 
     public PrefMod() {
         super(Pref.class, MENU_ADDRESS);
+        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
     /**

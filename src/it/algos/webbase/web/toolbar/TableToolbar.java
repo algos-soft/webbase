@@ -1,6 +1,7 @@
 package it.algos.webbase.web.toolbar;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;

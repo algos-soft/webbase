@@ -4,6 +4,7 @@ import it.algos.webbase.web.ABootStrap;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.lib.LibVers;
 import it.algos.webbase.web.toolbar.Toolbar;
+import it.algos.webbase.web.AlgosApp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

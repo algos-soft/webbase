@@ -15,7 +15,7 @@ public class EM {
      * Valore standard suggerito per ogni progetto
      * Se necessario il singolo progetto può modificarlo nel metodo setPersistenceEntity()
      */
-    public static final String DEFAULT_PERSISTENCE_UNIT = "mysqlunit";
+    public static final String DEFAULT_PERSISTENCE_UNIT = "MySqlUnit";
     public static String PERSISTENCE_UNIT=DEFAULT_PERSISTENCE_UNIT;
 
 

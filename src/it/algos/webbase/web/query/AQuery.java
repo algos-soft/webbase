@@ -96,6 +96,7 @@ public class AQuery {
         return bean;
     }
 
+
     public static long getCount(Class<?> c) {
 //		EntityManager manager = EM.createEntityManager();
 //		CriteriaBuilder qb = manager.getCriteriaBuilder();

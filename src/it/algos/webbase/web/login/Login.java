@@ -314,6 +314,9 @@ public class Login implements LogformListener, LoginListener {
         return user;
     }// end of method
 
+    public void setUser(Utente user){
+        this.user=user;
+    }
     /**
      * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>
      * <p>

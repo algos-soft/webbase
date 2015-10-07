@@ -9,6 +9,8 @@
     <property name="versione" value="VersBootStrap"/>
     <property name="security" value="SecBootStrap"/>
 
+    <property name="cartellaBoot" value="bootstrap"/>
+
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
     <property name="index" value="index"/>
@@ -65,15 +67,16 @@
 
         <property name="destDir" value="${baseDest}/${lowerProgetto}"/>
         <property name="destDirIt" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}"/>
+        <property name="destDirBoot" value="${destDirIt}/${cartellaBoot}"/>
         <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
         <property name="destDirThemses" value="${baseDest}/${lowerProgetto}${discesaThemes}"/>
 
         <property name="destApp" value="${destDirIt}/${progetto}${app}${destSufJava}"/>
-        <property name="destBoot" value="${destDirIt}/${progetto}${boot}${destSufJava}"/>
+        <property name="destBoot" value="${destDirBoot}/${progetto}${boot}${destSufJava}"/>
         <property name="destServlet" value="${destDirIt}/${progetto}${servlet}${destSufJava}"/>
         <property name="destUI" value="${destDirIt}/${progetto}${ui}${destSufJava}"/>
-        <property name="destVers" value="${destDirIt}/${versione}${destSufJava}"/>
-        <property name="destSec" value="${destDirIt}/${security}${destSufJava}"/>
+        <property name="destVers" value="${destDirBoot}/${versione}${destSufJava}"/>
+        <property name="destSec" value="${destDirBoot}/${security}${destSufJava}"/>
 
         <property name="destPersistence" value="${destDirMeta}/${persistence}${destSufXml}"/>
         <property name="destWeb" value="${destDir}/${discesaWebInf}${web}${destSufXml}"/>

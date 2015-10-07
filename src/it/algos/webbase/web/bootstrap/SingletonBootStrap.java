@@ -32,6 +32,7 @@ public class SingletonBootStrap {
      */
     private SingletonBootStrap() {
         executeStartOnlyOne();
+
     }// end of constructor
 
     /**

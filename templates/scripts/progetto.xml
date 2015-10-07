@@ -7,7 +7,7 @@
     <property name="servlet" value="Servlet"/>
     <property name="ui" value="UI"/>
     <property name="versione" value="VersioneBootStrap"/>
-    <property name="security" value="SecurityBootStrap"/>
+    <property name="security" value="SecBootStrap"/>
 
     <property name="persistence" value="persistence"/>
     <property name="web" value="web"/>
@@ -269,7 +269,7 @@
             <param name="sourceFile" value="${srcVers}"/>
             <param name="destFile" value="${destVers}"/>
         </antcall>
-        <antcall target="creaSingoloFile">
+        <antcall target="sovrascriveSingoloFile">
             <param name="sourceFile" value="${srcSec}"/>
             <param name="destFile" value="${destSec}"/>
         </antcall>

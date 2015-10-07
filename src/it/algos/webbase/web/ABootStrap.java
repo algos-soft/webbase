@@ -18,11 +18,12 @@ import java.util.logging.Logger;
 
 /**
  * Executed on container startup
+ * Setup non-UI logic here
  * <p>
- * Setup non-UI logic here <br>
  * Classe eseguita solo quando l'applicazione viene caricata/parte nel server (Tomcat od altri) <br>
  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
  * È OBBLIGATORIO creare la sottoclasse per regolare il valore della persistence unit che crea l'EntityManager <br>
+ * È OBBLIGATORIO aggiungere questa classe nei listeners del file web.WEB-INF.web.xml <br>
  */
 public abstract class ABootStrap implements ServletContextListener {
 
@@ -41,10 +42,16 @@ public abstract class ABootStrap implements ServletContextListener {
 
     /**
      * Executed on container startup
+     * Setup non-UI logic here
      * <p>
-     * Setup non-UI logic here <br>
-     * Viene normalmente sovrascritta dalla sottoclasse per regolare alcuni flag dell'applicazione <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
+     * Viene normalmente sovrascritta dalla sottoclasse:
+     *  - per registrare nella xxxApp, il servlet context non appena è disponibile
+     *  - per regolare eventualmente alcuni flag dell'applicazione <br>
+     *  - per lanciare eventualmente gli schedulers in background <br>
+     *  - per regolare eventualmente una versione demo <br>
+     *  - per controllare eventualmente l'esistenza di utenti abilitati all'accesso <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo)
+     * prima (PRIMA) delle regolazioni specifiche della sottoclasse <br>
      */
     public void contextInitialized(ServletContextEvent contextEvent) {
         setPersistenceEntity();
@@ -83,7 +90,7 @@ public abstract class ABootStrap implements ServletContextListener {
      * Creazione al volo di alcuni utenti <br>
      */
     protected void regolaSecurity() {
-        SecurityBootStrap.bootStrapRuoli();
+//        SecurityBootStrap.bootStrapRuoli();
         creaUtenti();
     }// end of method
 
@@ -158,7 +165,7 @@ public abstract class ABootStrap implements ServletContextListener {
      * Invocato dalla sottoclasse <br>
      */
     protected void creaUtente(String nickName, String password, String nomeRuolo) {
-        SecurityBootStrap.creaUtente(nickName, password, nomeRuolo);
+//        SecurityBootStrap.creaUtente(nickName, password, nomeRuolo);
     }// end of method
 
     /**

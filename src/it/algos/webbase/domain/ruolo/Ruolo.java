@@ -1,11 +1,17 @@
 package it.algos.webbase.domain.ruolo;
 
+import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.metamodel.SingularAttribute;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.List;
 
 @Entity
 public class Ruolo extends BaseEntity {
@@ -69,7 +75,8 @@ public class Ruolo extends BaseEntity {
 	 */
 	public static Ruolo read(String nome) {
 		Ruolo instance = null;
-		BaseEntity entity = AQuery.queryOne(Ruolo.class, Ruolo_.nome, nome);
+		SingularAttribute pippo=Ruolo_.nome;
+		BaseEntity entity = AQuery.queryOne(Ruolo.class, pippo, nome);
 
 		if (entity != null) {
 			if (entity instanceof Ruolo) {

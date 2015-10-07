@@ -23,33 +23,17 @@ public class FormToolbar extends Toolbar {
      * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
      */
     protected void addButtons() {
-        if (AlgosApp.USE_FONT_AWESOME) {
-            addButton("Annulla", FontAwesome.TIMES, new MenuBar.Command() {
-                public void menuSelected(MenuItem selectedItem) {
-                    fire(Events.cancel);
-                }// end of method
-            });// end of anonymous inner class
-        } else {
-            addButton("Annulla", new ThemeResource("img/action_cancel.png"), new MenuBar.Command() {
-                public void menuSelected(MenuItem selectedItem) {
-                    fire(Events.cancel);
-                }// end of method
-            });// end of anonymous inner class
-        }// fine del blocco if-else
+        addButton("Annulla", FontAwesome.TIMES, new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                fire(Events.cancel);
+            }// end of method
+        });// end of anonymous inner class
 
-        if (AlgosApp.USE_FONT_AWESOME) {
-            addButton("Registra", FontAwesome.CHECK, new MenuBar.Command() {
-                public void menuSelected(MenuItem selectedItem) {
-                    fire(Events.save);
-                }// end of method
-            });// end of anonymous inner class
-        } else {
-            addButton("Registra", new ThemeResource("img/action_save.png"), new MenuBar.Command() {
-                public void menuSelected(MenuItem selectedItem) {
-                    fire(Events.save);
-                }// end of method
-            });// end of anonymous inner class
-        }// fine del blocco if-else
+        addButton("Registra", FontAwesome.CHECK, new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                fire(Events.save);
+            }// end of method
+        });// end of anonymous inner class
     }// end of method
 
     public void addToolbarListener(FormToolbarListener listener) {

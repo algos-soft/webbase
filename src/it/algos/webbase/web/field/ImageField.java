@@ -1,5 +1,6 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.*;
@@ -74,7 +75,7 @@ public class ImageField extends CustomField<byte[]> implements FieldInterface<by
 			
 			setSpacing(true);
 
-			Button bAdd = new Button(new ThemeResource("img/action_arrow_up.png"));
+			Button bAdd = new Button(FontAwesome.UPLOAD);
 			bAdd.addClickListener(new ClickListener() {
 				
 				@Override
@@ -83,7 +84,7 @@ public class ImageField extends CustomField<byte[]> implements FieldInterface<by
 				}
 			});
 
-			Button bDel = new Button(new ThemeResource("img/action_delete.png"));
+			Button bDel = new Button(FontAwesome.TRASH_O);
 			bDel.addClickListener(new ClickListener() {
 				@Override
 				public void buttonClick(ClickEvent event) {

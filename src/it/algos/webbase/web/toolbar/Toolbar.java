@@ -72,10 +72,10 @@ public abstract class Toolbar extends VerticalLayout {
         menubar.setWidth(wPixel, Unit.PIXELS);
         menubar.setHeight(ALTEZZA_BOTTONI, Unit.PIXELS);
 
-        // if no icon, use empty icon to keep the same vertical spacing
-        if (icon == null) {
-            icon = new ThemeResource("img/action_null.png");
-        }// end of if cycle
+//        // if no icon, use empty icon to keep the same vertical spacing
+//        if (icon == null) {
+//            icon = new ThemeResource("img/action_null.png");
+//        }// end of if cycle
 
         MenuBar.MenuItem item = menubar.addItem(caption, icon, command);
         addCommandComponent(menubar);

@@ -1,4 +1,4 @@
-package it.algos.webbase.web;
+package it.algos.webbase.web.bootstrap;
 
 import it.algos.webbase.web.lib.LibSecurity;
 

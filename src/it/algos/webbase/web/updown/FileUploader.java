@@ -1,7 +1,7 @@
 package it.algos.webbase.web.updown;
 
 import it.algos.webbase.web.AlgosApp;
-import it.algos.webbase.web.ABootStrap;
+import it.algos.webbase.web.bootstrap.ABootStrap;
 
 import java.io.IOException;
 import java.io.OutputStream;

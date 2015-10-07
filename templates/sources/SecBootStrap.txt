@@ -1,22 +1,17 @@
 package it.algos.@LOWERPACK@;
 
-import it.algos.webbase.domain.ruolo.Ruolo;
-import it.algos.webbase.domain.ruolo.TipoRuolo;
-import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
-import it.algos.webbase.web.lib.LibSecurity;
-import it.algos.webbase.web.SecurityBootStrap;
+import it.algos.webbase.web.bootstrap.SecurityBootStrap;
 
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.ArrayList;
 
 /**
   * Security dell'applicazione
   * Executed on container startup
   * Setup non-UI logic here
   * <p>
-  * È OBBLIGATORIO aggiungere questa classe nei listeners del file web.WEB-INF.web.xml
+  * Classe eseguita solo quando l'applicazione viene caricata/parte nel server (Tomcat od altri) <br>
+  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
+  * Se usata, è OBBLIGATORIO aggiungere questa classe nei listeners del file web.WEB-INF.web.xml
   * Se non utilizzata, può essere cancellata:
   * 1) - deve essere cancellata come classe
   * 2) - deve essere cancellata come listener del file web.WEB-INF.web.xml
@@ -32,7 +27,7 @@ public class SecBootStrap extends SecurityBootStrap {
      * You can initialize servlet context related data here.
      * <p/>
      * Viene sovrascritta dalla sottoclasse:
-     * - per controllare i ruoli specifici esistenti e creare quelli eventualmente mancanti <br>
+     * - per controllare e creare eventuali ruoli specifici <br>
      * - per controllare gli utenti abilitati esistenti e creare quelli eventualmente mancanti <br>
      * Deve (DEVE) richiamare anche il metodo della superclasse (questo)
      * prima (PRIMA) di eseguire le regolazioni specifiche <br>
@@ -41,8 +36,10 @@ public class SecBootStrap extends SecurityBootStrap {
     public void contextInitialized(ServletContextEvent contextEvent) {
         super.contextInitialized(contextEvent);
 
-        // eventuali
+        // controlla e crea eventuali ruoli specifici
 //        super.creaRuolo("nuovoRuolo");
+
+        // controlla e crea utenti abilitati
 //        super.creaUtente("nickname", "password", "nuovoRuolo");
     }// end of method
 
@@ -56,4 +53,4 @@ public class SecBootStrap extends SecurityBootStrap {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }// end of method
 
-}// end of class
+}// end of bootstrap class

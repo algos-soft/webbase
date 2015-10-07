@@ -28,7 +28,7 @@
     </listener>
     <listener>
         <listener-class>
-            it.algos.@LOWERPACK@.VersioneBootStrap
+            it.algos.@LOWERPACK@.VersBootStrap
         </listener-class>
     </listener>
 

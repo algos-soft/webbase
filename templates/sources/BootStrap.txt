@@ -1,94 +1,61 @@
 package it.algos.@LOWERPACK@;
 
-import it.algos.webbase.web.ABootStrap;
-import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.lib.LibVers;
+import it.algos.webbase.web.bootstrap.ABootStrap;
 import it.algos.webbase.web.toolbar.Toolbar;
-import it.algos.webbase.web.AlgosApp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
- * Executed on container startup
- * <p>
- * Setup non-UI logic here <br>
- * Classe eseguita solo quando l'applicazione viene caricata/parte nel server (Tomcat od altri) <br>
- * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
- * È OBBLIGATORIO creare la sottoclasse per regolare il valore della persistence unit che crea l'EntityManager <br>
- */
+  * Bootstrap dell'applicazione
+  * Executed on container startup
+  * Setup non-UI logic here
+  * <p/>
+  * Classe eseguita solo quando l'applicazione viene caricata/parte nel server (Tomcat od altri) <br>
+  * Eseguita quindi ad ogni avvio/riavvio del server e NON ad ogni sessione <br>
+  * È OBBLIGATORIO aggiungere questa classe nei listeners del file web.WEB-INF.web.xml
+  */
 public class @PACK@BootStrap extends ABootStrap {
 
     /**
-     * Valore standard suggerito per ogni progetto
-     * Questo singolo progetto può modificarlo nel metodo setPersistenceEntity()
-     */
-    private static final String DEFAULT_PERSISTENCE_UNIT = EM.DEFAULT_PERSISTENCE_UNIT;
-
-    /**
-     * Regola il valore della persistence unit per creare l'EntityManager <br>
-     * Deve essere sovrascritto (obbligatorio) nella sottoclasse del progetto <br>
-     * Se si modifica qui, occorre sincronizzare il file persistence.xml <br>
-     */
-    @Override
-    public void setPersistenceEntity() {
-        EM.PERSISTENCE_UNIT = DEFAULT_PERSISTENCE_UNIT;
-    }// end of method
-
-
-    /**
      * Executed on container startup
-     * <p>
-     * Setup non-UI logic here <br>
+     * Setup non-UI logic here
+     * <p/>
+     * This method is called prior to the servlet context being
+     * initialized (when the Web application is deployed).
+     * You can initialize servlet context related data here.
+     * <p/>
      * Viene normalmente sovrascritta dalla sottoclasse per regolare alcuni flag dell'applicazione <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo)
+     * prima (PRIMA) di eseguire le regolazioni specifiche <br>
      */
     @Override
     public void contextInitialized(ServletContextEvent contextEvent) {
         super.contextInitialized(contextEvent);
         ServletContext svltCtx = ABootStrap.getServletContext();
 
-        // Controllo, aggiunta, esecuzione di pacth e versioni (principalmente dei dati)
-        this.versioneBootStrap(svltCtx);
-
         // registra il servlet context non appena è disponibile
         @PACK@App.setServletContext(svltCtx);
 
-        // modifica le dimensioni dei bottoni
-        Toolbar.ALTEZZA_BOTTONI = 40;
-        Toolbar.LARGHEZZA_BOTTONI = 120;
+        // eventuali modifiche allle dimensioni dei bottoni
+//        Toolbar.ALTEZZA_BOTTONI = 40;
+//        Toolbar.LARGHEZZA_BOTTONI = 120;
 
-        // eventuali modifche ai flag generali di regolazione
-        // AlgosApp.USE_SECURITY = true;
-        // AlgosApp.USE_LOG= true;
-        // AlgosApp.USE_VERS= false;
-        // AlgosApp.USE_PREF= false;
-
+        // eventuali modifiche ai flag generali di regolazione
+//        AlgosApp.USE_SECURITY = true;
+//        AlgosApp.USE_LOG = true;
+//        AlgosApp.USE_VERS = false;
+//        AlgosApp.USE_PREF = false;
     }// end of method
 
 
     /**
-     * Tear down logic here<br>
-     * Sovrascritto
+     * This method is invoked when the Servlet Context
+     * (the Web application) is undeployed or
+     * WebLogic Server shuts down.
      */
     @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        super.contextDestroyed(sce);
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
     }// end of method
 
-
-    /**
-     * tutte le aggiunte, modifiche e patch vengono inserite con una versione<br>
-     * l'ordine di inserimento è FONDAMENTALE
-     * <p>
-     * Se le versioni aumentano, conviene spostare in una classe esterna
-     */
-    private void versioneBootStrap(ServletContext svltCtx) {
-        //--prima installazione del programma
-        //--non fa nulla, solo informativo
-        if (LibVers.installa(1)) {
-            LibVers.nuova("Setup", "Installazione iniziale");
-        }// fine del blocco if
-    }// end of method
-
-}// end of boot class
+}// end of bootstrap class

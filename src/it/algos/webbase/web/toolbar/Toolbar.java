@@ -21,8 +21,10 @@ import com.vaadin.ui.VerticalLayout;
 public abstract class Toolbar extends VerticalLayout {
 
     private static final boolean DEBUG_GUI = false;
-    public static int ALTEZZA_BOTTONI = 32;
-    public static int LARGHEZZA_BOTTONI = 100;
+//    public static int ALTEZZA_BOTTONI = 32;
+//    public static int LARGHEZZA_BOTTONI = 100;
+    public static int ALTEZZA_BOTTONI = 40;
+    public static int LARGHEZZA_BOTTONI = 120;
     protected HorizontalLayout commandLayout = new HorizontalLayout();
     protected HorizontalLayout helperLayout = new HorizontalLayout();
 

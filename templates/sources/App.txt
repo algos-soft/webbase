@@ -1,11 +1,11 @@
-package it.algos.@LOWERPACK@;
+package it.algos.@LOWERPROGETTO@;
 
 import it.algos.webbase.web.AlgosApp;
 
 /**
  * Contenitore di costanti della applicazione
  */
-public abstract class @PACK@App extends AlgosApp {
+public abstract class @PROGETTO@App extends AlgosApp {
 
 
 }// end of static abstract class

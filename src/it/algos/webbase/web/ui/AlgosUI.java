@@ -389,7 +389,9 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Aggiunge i moduli specifici
+     * <p>
      * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
      */
     protected void addModuli() {
     }// end of method

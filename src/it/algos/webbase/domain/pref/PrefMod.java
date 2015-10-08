@@ -9,8 +9,10 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.persistence.metamodel.Attribute;
 
@@ -23,7 +25,6 @@ public class PrefMod extends ModulePop {
 
     public PrefMod() {
         super(Pref.class, MENU_ADDRESS);
-        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
     /**
@@ -124,6 +125,21 @@ public class PrefMod extends ModulePop {
             cont.sort(new String[]{sortField}, new boolean[]{true});
         }// fine del blocco if
 
+    }// end of method
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
+     */
+    @Override
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
     }// end of method
 
 }// end of class

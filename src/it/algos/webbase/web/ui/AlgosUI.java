@@ -53,7 +53,7 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
-    protected static boolean DEBUG_GUI = false;
+    public static boolean DEBUG_GUI = false;
 
     protected VerticalLayout mainLayout;        // main
     protected AMenuBar topLayout;               // top

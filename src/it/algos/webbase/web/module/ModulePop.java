@@ -309,9 +309,10 @@ public abstract class ModulePop extends Module {
      *
      * @param menuBar     a cui agganciare il menuitem
      * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
      */
-    public void createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-        createMenuItem(menuBar, placeholder, icon);
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return createMenuItem(menuBar, placeholder, icon);
     }// end of method
 
     /**
@@ -323,12 +324,15 @@ public abstract class ModulePop extends Module {
      * @param menuBar     a cui agganciare il menuitem
      * @param placeholder in cui visualizzare il modulo
      * @param icon        del menuitem
+     * @return menuItem appena creato
      */
-    protected void createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
+    protected MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
         MenuBar.MenuItem menuItem;
         MenuBar.Command comando = new ModuleCommand(this, placeholder, menuBar);
         menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
+
+        return menuItem;
     }// end of method
 
 

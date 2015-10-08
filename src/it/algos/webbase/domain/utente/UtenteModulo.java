@@ -1,17 +1,24 @@
 package it.algos.webbase.domain.utente;
 
 import com.vaadin.data.Item;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
 public class UtenteModulo extends ModulePop {
 
+    // indirizzo interno del modulo (serve nei menu)
+    public static String MENU_ADDRESS = "Utente";
+
     public UtenteModulo() {
-        super(Utente.class);
-    }// end of constructor
+        super(Utente.class, MENU_ADDRESS);
+    }// end of basic constructor
+
 
     /**
      * Titolo (caption) dei dialogo nuovo record. <br>
@@ -68,6 +75,20 @@ public class UtenteModulo extends ModulePop {
         return new UtenteForm(this, item);
     }// end of method
 
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
+     */
+    @Override
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return super.createMenuItem(menuBar, placeholder, FontAwesome.KEY);
+    }// end of method
 
 
 }// end of class

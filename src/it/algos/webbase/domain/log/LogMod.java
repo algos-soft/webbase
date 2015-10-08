@@ -18,7 +18,6 @@ public class LogMod extends ModulePop {
 
     public LogMod() {
         super(Log.class, MENU_ADDRESS);
-//        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
     /**
@@ -75,19 +74,6 @@ public class LogMod extends ModulePop {
         return new Attribute[]{Log_.code, Log_.descrizione};
     }// end of method
 
-    /**
-     * Create the MenuBar Item for this module
-     * <p>
-     * Invocato dal metodo AlgosUI.creaMenu()
-     * PUO essere sovrascritto dalla sottoclasse
-     *
-     * @param menuBar     a cui agganciare il menuitem
-     * @param placeholder in cui visualizzare il modulo
-     */
-    @Override
-    public void createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-        super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
-    }// end of method
 
     /**
      * Returns the form used to edit an item. <br>
@@ -108,6 +94,21 @@ public class LogMod extends ModulePop {
     @Override
     public TablePortal createTablePortal() {
         return new LogTablePortal(this);
+    }// end of method
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
+     */
+    @Override
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
     }// end of method
 
 }// end of class

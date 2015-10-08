@@ -58,7 +58,7 @@
 
     <target name="input" description="Acquisizione del nome del progetto in cui creare le nuove classi">
         <input addproperty="progetto" message="Nome (maiuscolo) del nuovo progetto:" defaultvalue="${prova}"/>
-        <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="mysqlunit"/>
+        <input addproperty="sqlUnit" message="Unit per legare persistence ed entity:" defaultvalue="MySqlUnit"/>
         <input addproperty="dataBase" message="Nome (minuscolo) del database mysql:" defaultvalue="test"/>
 
         <lower string="${progetto}" to="lowerProgetto"/>

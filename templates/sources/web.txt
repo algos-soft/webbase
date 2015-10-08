@@ -18,17 +18,17 @@
 
     <listener>
         <listener-class>
-            it.algos.@LOWERPROGETTO@.@PROGETTO@BootStrap
+            it.algos.@LOWERPROGETTO@.bootstrap.@PROGETTO@BootStrap
         </listener-class>
     </listener>
     <listener>
         <listener-class>
-            it.algos.@LOWERPROGETTO@.SecBootStrap
+            it.algos.@LOWERPROGETTO@.bootstrap.SecBootStrap
         </listener-class>
     </listener>
     <listener>
         <listener-class>
-            it.algos.@LOWERPROGETTO@.VersBootStrap
+            it.algos.@LOWERPROGETTO@.bootstrap.VersBootStrap
         </listener-class>
     </listener>
 

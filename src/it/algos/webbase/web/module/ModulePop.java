@@ -9,7 +9,6 @@ import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
@@ -19,7 +18,6 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 import it.algos.webbase.web.lib.LibNum;
-import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.menu.ModuleCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
@@ -49,22 +47,16 @@ public abstract class ModulePop extends Module {
     protected Attribute<?, ?>[] fieldsList;
     protected Attribute<?, ?>[] fieldsForm;
     protected Attribute<?, ?>[] fieldsSearch;
-
-    // titolo del dialogo nuovo
-    private String titoloNew;
-
-    // titolo del dialogo di modifica
-    private String titoloEdit;
-
-    // titolo del dialogo di ricerca
-    private String titoloSearch;
-
-    // indirizzo interno del modulo (serve nei menu)
-    private String menuAddress;
-
     // icona del modulo (serve nei menu)
     protected Resource icon;
-
+    // titolo del dialogo nuovo
+    private String titoloNew;
+    // titolo del dialogo di modifica
+    private String titoloEdit;
+    // titolo del dialogo di ricerca
+    private String titoloSearch;
+    // indirizzo interno del modulo (serve nei menu)
+    private String menuAddress;
     // menuitem del modulo (serve nei menu)
     private MenuBar.MenuItem menuItem;
 
@@ -311,13 +303,36 @@ public abstract class ModulePop extends Module {
 
     /**
      * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
      */
-    public void createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return createMenuItem(menuBar, placeholder, icon);
+    }// end of method
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @param icon        del menuitem
+     * @return menuItem appena creato
+     */
+    protected MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
         MenuBar.MenuItem menuItem;
         MenuBar.Command comando = new ModuleCommand(this, placeholder, menuBar);
         menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
+
+        return menuItem;
     }// end of method
 
 
@@ -408,7 +423,7 @@ public abstract class ModulePop extends Module {
     /**
      * Edits an Item in a Form
      *
-     * @param item the item
+     * @param item      the item
      * @param newRecord if the edited item is a new record
      */
     private void editItem(Item item, boolean newRecord) {

@@ -2,8 +2,10 @@ package it.algos.webbase.domain.log;
 
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.table.TablePortal;
 
 import javax.persistence.metamodel.Attribute;
@@ -16,7 +18,6 @@ public class LogMod extends ModulePop {
 
     public LogMod() {
         super(Log.class, MENU_ADDRESS);
-        this.setIcon(FontAwesome.BARS);
     }// end of constructor
 
     /**
@@ -73,6 +74,7 @@ public class LogMod extends ModulePop {
         return new Attribute[]{Log_.code, Log_.descrizione};
     }// end of method
 
+
     /**
      * Returns the form used to edit an item. <br>
      * The concrete subclass must override for a specific Form.
@@ -92,6 +94,21 @@ public class LogMod extends ModulePop {
     @Override
     public TablePortal createTablePortal() {
         return new LogTablePortal(this);
+    }// end of method
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
+     */
+    @Override
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
     }// end of method
 
 }// end of class

@@ -1,14 +1,20 @@
 package it.algos.webbase.domain.ruolo;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
 public class RuoloModulo extends ModulePop {
 
+    // indirizzo interno del modulo (serve nei menu)
+    public static String MENU_ADDRESS = "Ruolo";
+
     public RuoloModulo() {
-        super(Ruolo.class);
+        super(Ruolo.class,MENU_ADDRESS);
     }// end of basic constructor
 
     /**
@@ -54,5 +60,20 @@ public class RuoloModulo extends ModulePop {
     protected Attribute<?, ?>[] creaFieldsAll() {
         return new Attribute[]{Ruolo_.nome};
     }// end of method/*
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param menuBar     a cui agganciare il menuitem
+     * @param placeholder in cui visualizzare il modulo
+     * @return menuItem appena creato
+     */
+    @Override
+    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+        return super.createMenuItem(menuBar, placeholder, FontAwesome.KEY);
+    }// end of method
 
 }// end of class

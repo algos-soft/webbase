@@ -1,6 +1,5 @@
 package it.algos.webbase.web.menu;
 
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -9,6 +8,7 @@ import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.LoginBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
+import it.algos.webbase.web.ui.AlgosUI;
 
 import java.util.List;
 
@@ -132,7 +132,7 @@ public class AMenuBar extends HorizontalLayout {
     private MenuBar createMenuBar() {
         MenuBar menubar = new MenuBar();
         menubar.setAutoOpen(true);
-        if (LibSession.isDeveloper()) {
+        if (LibSession.isDeveloper() && AlgosUI.DEBUG_GUI) {
             menubar.addStyleName("mymenubar");
         }// fine del blocco if
 
@@ -166,12 +166,12 @@ public class AMenuBar extends HorizontalLayout {
      * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
      * Aggiunge il singolo menu (item) alla barra principale di menu
      *
-     * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param modulo      da visualizzare nel placeholder alla pressione del bottone di menu
      * @param placeholder di riferimento
      */
     public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
         String address = "";
-        MenuItem menuItem=modulo.getMenuItem();
+        MenuItem menuItem = modulo.getMenuItem();
         Resource icon = modulo.getIcon();
         address = modulo.getMenuAddress();
 

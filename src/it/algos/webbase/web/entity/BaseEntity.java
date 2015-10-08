@@ -85,8 +85,7 @@ public abstract class BaseEntity implements Serializable {
 		try {
 			
 			manager.getTransaction().begin();
-
-			if (getId() != null) {
+			if ((getId() != null) && (getId()!=0)) {
 				manager.merge(this);
 			} else {
 				manager.persist(this);

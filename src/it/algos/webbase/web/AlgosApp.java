@@ -85,13 +85,6 @@ public abstract class AlgosApp {
     public static boolean USE_COMPANY = false;
 
     /**
-     * Use Font-Awesome.<br>
-     * Not final<br>
-     * Can be overwritten on local xxxBootStrap.contextInitialized() method
-     */
-    public static boolean USE_FONT_AWESOME = true;
-
-    /**
      * Use debug.<br>
      * Not final<br>
      */

@@ -71,9 +71,7 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
         if (user == null) {
 
             loginItem.setText("Login");
-            if (AlgosApp.USE_FONT_AWESOME) {
-                loginItem.setIcon(FontAwesome.SIGN_IN);
-            }// fine del blocco if
+            loginItem.setIcon(FontAwesome.SIGN_IN);
             loginItem.setCommand(new MenuBar.Command() {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {
@@ -86,15 +84,9 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
             String username = user.getNickname();
             loginItem.setCommand(null);
             loginItem.setText(username);
-            if (AlgosApp.USE_FONT_AWESOME) {
-                loginItem.setIcon(FontAwesome.USER);
-            }// fine del blocco if
+            loginItem.setIcon(FontAwesome.USER);
             loginItem.removeChildren();
-            if (AlgosApp.USE_FONT_AWESOME) {
-                exitIcon = FontAwesome.SIGN_OUT;
-            } else {
-                exitIcon = null;
-            }// end of if/else cycle
+            exitIcon = FontAwesome.SIGN_OUT;
             loginItem.addItem("Logout", exitIcon, new MenuBar.Command() {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {

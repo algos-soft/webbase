@@ -8,6 +8,7 @@ import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**

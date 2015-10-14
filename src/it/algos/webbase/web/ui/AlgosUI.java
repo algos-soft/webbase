@@ -2,7 +2,10 @@ package it.algos.webbase.web.ui;
 
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import it.algos.webbase.domain.log.LogMod;
 import it.algos.webbase.domain.pref.PrefMod;
 import it.algos.webbase.domain.ruolo.RuoloModulo;
@@ -376,9 +379,10 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
             this.addModulo(new UtenteRuoloModulo());
         }// fine del blocco if
 
-        if (AlgosApp.USE_VERS) {
+        if (LibSession.isDeveloper() || AlgosApp.USE_VERS) {
             this.addModulo(new VersMod());
         }// fine del blocco if
+
         if (AlgosApp.USE_LOG) {
             this.addModulo(new LogMod());
         }// fine del blocco if

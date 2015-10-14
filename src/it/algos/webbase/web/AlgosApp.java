@@ -68,7 +68,7 @@ public abstract class AlgosApp {
      * Not final flag<br>
      * Can be overwritten on local xxxBootStrap.contextInitialized() method
      */
-    public static boolean USE_VERS = true;
+    public static boolean USE_VERS = false;
 
     /**
      * Use logo entity.<br>

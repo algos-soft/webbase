@@ -377,7 +377,7 @@ public class ATable extends Table {
      * Returns the ids of the single selected row
      * <p>
      * Usable for single-select or multi-select tables
-     *
+     *@deprecated
      * @return the selected row id (if a single row is selected, otherwise null)
      */
     public Object getSelectedId() {
@@ -396,6 +396,36 @@ public class ATable extends Table {
             // if multi select is disabled
             if (ids instanceof Long) {
                 selectedId = ids;
+            }// end of if cycle
+
+        }// end of if cycle
+
+        return selectedId;
+    }// end of method
+
+    /**
+     * Returns the ids of the single selected row
+     * <p>
+     * Usable for single-select or multi-select tables
+     *
+     * @return the selected row id (if a single row is selected, otherwise 0)
+     */
+    public long getSelectedKey() {
+        long selectedId = 0;
+        Object ids = getValue();
+        if (ids != null) {
+
+            // if multi select is enabled
+            if (ids instanceof Collection) {
+                Collection<Long> cIds = (Collection<Long>) ids;
+                if (cIds.size() == 1) {
+                    selectedId = Iterables.get(cIds, 0);
+                }// end of if cycle
+            }// end of if cycle
+
+            // if multi select is disabled
+            if (ids instanceof Long) {
+                selectedId = (Long)ids;
             }// end of if cycle
 
         }// end of if cycle
@@ -434,6 +464,7 @@ public class ATable extends Table {
 
         return selected;
     }// end of method
+
 
     // /**
     // * Returns the ids of the selected row

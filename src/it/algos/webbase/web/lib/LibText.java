@@ -223,6 +223,20 @@ public abstract class LibText {
     }// end of static method
 
     /**
+     * Elimina la parte di stringa successiva al tag -virgola-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     * @return uscita stringa ridotta
+     */
+    public static String levaDopoVirgola(String entrata) {
+        return levaDopo(entrata, VIRGOLA);
+    }// end of static method
+
+    /**
      * Trova nel testo, la prima occorrenza di un tag compreso nella lista di tag
      *
      * @param testo    da controllare

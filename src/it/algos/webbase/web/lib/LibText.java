@@ -11,6 +11,7 @@ public abstract class LibText {
     public static final int INT_NULLO = -1;
     public static final String PUNTO = ".";
     public static final String VIRGOLA = ",";
+    public static final String PARENTESI = "(";
 
     /**
      * Converts multiple spaces to single spaces.
@@ -234,6 +235,20 @@ public abstract class LibText {
      */
     public static String levaDopoVirgola(String entrata) {
         return levaDopo(entrata, VIRGOLA);
+    }// end of static method
+
+    /**
+     * Elimina la parte di stringa successiva al tag -aperta parentesi-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     * @return uscita stringa ridotta
+     */
+    public static String levaDopoParentesi(String entrata) {
+        return levaDopo(entrata, PARENTESI);
     }// end of static method
 
     /**

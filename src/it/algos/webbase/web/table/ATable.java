@@ -13,15 +13,16 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibEvent;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
 import javax.persistence.metamodel.Attribute;
+import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -31,17 +32,21 @@ import java.util.Date;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
-public class ATable extends Table {
+public class ATable extends Table implements ListSelection {
 
     protected ModulePop modulo;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
-//    private Action actionEdit = new Action("Modifica", new ThemeResource("img/action_edit18.png"));
     private Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
-//    private Action actionDelete = new Action("Elimina", new ThemeResource("img/action_delete18.png"));
     private Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
     private ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
     private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
+
+    /**
+     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     */
+    private ArrayList<ListSelectionListener> selectionListeners = new ArrayList<>();
+
 
     /**
      * Creates a new table for a given Entity class.
@@ -95,6 +100,7 @@ public class ATable extends Table {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
                 ATable.this.itemClick(itemClickEvent);
+                selectionChanged(itemClickEvent);
             }// end of inner method
         });// end of anonymous inner class
 
@@ -140,7 +146,6 @@ public class ATable extends Table {
 
         // fire table created
         fire(TableEvent.created);
-
     }// end of method
 
     /**
@@ -377,8 +382,9 @@ public class ATable extends Table {
      * Returns the ids of the single selected row
      * <p>
      * Usable for single-select or multi-select tables
-     *@deprecated
+     *
      * @return the selected row id (if a single row is selected, otherwise null)
+     * @deprecated
      */
     public Object getSelectedId() {
         Object selectedId = null;
@@ -425,7 +431,7 @@ public class ATable extends Table {
 
             // if multi select is disabled
             if (ids instanceof Long) {
-                selectedId = (Long)ids;
+                selectedId = (Long) ids;
             }// end of if cycle
 
         }// end of if cycle
@@ -465,6 +471,17 @@ public class ATable extends Table {
         return selected;
     }// end of method
 
+    /**
+     * Controlla se è selezionata una ed una sola riga
+     *
+     * @return vero se è selezionata una riga
+     * falso se nessuna riga è selezionata
+     * falso se sono selezionate due o più righe
+     **/
+    public boolean isSingleRowSelected() {
+        Long idKey = this.getSelectedKey();
+        return (idKey != null && idKey > 0);
+    }// end of method
 
     // /**
     // * Returns the ids of the selected row
@@ -762,6 +779,7 @@ public class ATable extends Table {
      * @param itemClickEvent the event
      */
     protected void itemClick(ItemClickEvent itemClickEvent) {
+
     }// end of method
 
     /**
@@ -808,6 +826,116 @@ public class ATable extends Table {
      */
     public int getVisibleRows() {
         return getContainerDataSource().size();
+    }// end of method
+
+    @Override
+    public void addListListener(ListSelectionListener list) {
+        selectionListeners.add(list);
+    }// end of method
+
+    @Override
+    public void removeAllListListeners() {
+        selectionListeners.clear();
+    }// end of method
+
+
+    @Override
+    public void setListListener(ListSelectionListener list) {
+        removeAllListListeners();
+        addListListener(list);
+    }// end of method
+
+
+    /**
+     * Evento generato quando si modifica la selezione delle righe
+     * <p>
+     * Informa (tramite listener) chi è interessato <br>
+     */
+    public void selectionChanged(ItemClickEvent itemClickEvent) {
+        ListSelectionEvent evento;
+        Object id;
+        Long longKey;
+        int intKeyOld;
+        int intKeyNew = 0;
+        Object[] selez;
+        int firstIndex = 0;
+        int lastIndex = 0;
+
+        if (itemClickEvent == null) {
+            evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+            fireSelectionListener(evento);
+            return;
+        }// end of if cycle
+
+        id = itemClickEvent.getItemId();
+        if (id instanceof Long) {
+            intKeyNew = ((Long) id).intValue();
+        }// end of if cycle
+
+        if (itemClickEvent.isDoubleClick()) {
+            return;
+        }// end of if cycle
+
+        if (itemClickEvent.isCtrlKey()) {
+            return;
+        }// end of if cycle
+
+        // selezione discontinua
+        if (itemClickEvent.isMetaKey()) {
+            return;
+        }// end of if cycle
+
+        // selezione continua
+        if (itemClickEvent.isShiftKey()) {
+            // c'era una sola riga selezionata precedentemente
+            if (isSingleRowSelected()) {
+                longKey = getSelectedKey();
+                intKeyOld = longKey.intValue();
+
+                if (intKeyNew > intKeyOld) {
+                    firstIndex = intKeyOld;
+                    lastIndex = intKeyNew;
+                } else {
+                    firstIndex = intKeyNew;
+                    lastIndex = intKeyOld;
+                }// end of if/else cycle
+            } else {
+//                selez = getSelectedIds();
+//                if (selez != null && selez.length > 0) {
+//                    firstIndex = (Integer) selez[0];
+//                    lastIndex = (Integer) selez[selez.length - 1];
+//                }// end of if cycle
+            }// end of if/else cycle
+        }// end of if cycle
+
+        // selezione singola
+        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
+            id = itemClickEvent.getItemId();
+            if (id instanceof Long) {
+                firstIndex = ((Long) id).intValue();
+                lastIndex = ((Long) id).intValue();
+            }// end of if cycle
+        }// end of if cycle
+
+        // crea l'evento
+        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+
+        // notify all the listeners
+        fireSelectionListener(evento);
+    }// end of method
+
+    /**
+     * Evento generato quando si modifica la selezione delle righe
+     * <p>
+     * Informa (tramite listener) chi è interessato <br>
+     */
+    private void fireSelectionListener(ListSelectionEvent evento) {
+        // notify all the listeners
+        if (selectionListeners != null) {
+            for (ListSelectionListener listener : selectionListeners) {
+                listener.valueChanged(evento);
+            }// end of for cycle
+        }// end of if cycle
     }// end of method
 
     public enum TableEvent {

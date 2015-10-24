@@ -24,8 +24,11 @@ import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
+import it.algos.webbase.web.table.ATable;
 
 import javax.servlet.http.Cookie;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -197,6 +200,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
         // assegna la UI
         setContent(mainLayout);
 
+        // Sincronizzazione dei listener per il funzionamento del Login
         regolaListenerLog();
     }// end of method
 
@@ -278,6 +282,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     }// end of method
 
     /**
+     * Sincronizzazione dei listener per il funzionamento del Login
+     *
      * Dopo aver creato questa classe, registra nella Login (singleton nel servlet/sessione) l'istanza di questa classe per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella Login (singleton nel servlet/sessione) l'istanza di LoginBar per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di login (singleton nel servlet/sessione) per l'evento LogformListener
@@ -299,6 +305,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
             }// end of if cycle
         }// end of if cycle
     }// end of method
+
 
     /**
      * Legge il parametro "azienda" e regola la variabile statica
@@ -487,4 +494,11 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
         logout();
     }// end of method
 
+    public ArrayList<ModulePop> getModuli() {
+        return moduli;
+    }// end of getter method
+
+    public void setModuli(ArrayList<ModulePop> moduli) {
+        this.moduli = moduli;
+    }//end of setter method
 }// end of class

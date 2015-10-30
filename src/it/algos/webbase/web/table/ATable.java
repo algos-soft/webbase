@@ -17,7 +17,6 @@ import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.lib.LibEvent;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
@@ -929,7 +928,7 @@ public class ATable extends Table implements ListSelection {
      * <p>
      * Informa (tramite listener) chi è interessato <br>
      */
-    private void fireSelectionListener(ListSelectionEvent evento) {
+    public void fireSelectionListener(ListSelectionEvent evento) {
         // notify all the listeners
         if (selectionListeners != null) {
             for (ListSelectionListener listener : selectionListeners) {

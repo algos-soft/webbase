@@ -12,6 +12,7 @@ public abstract class LibText {
     public static final String PUNTO = ".";
     public static final String VIRGOLA = ",";
     public static final String PARENTESI = "(";
+    public static final String INTERROGATIVO = "?";
 
     /**
      * Converts multiple spaces to single spaces.
@@ -249,6 +250,20 @@ public abstract class LibText {
      */
     public static String levaDopoParentesi(String entrata) {
         return levaDopo(entrata, PARENTESI);
+    }// end of static method
+
+    /**
+     * Elimina la parte di stringa successiva al tag -punto interrogativo-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     * @return uscita stringa ridotta
+     */
+    public static String levaDopoInterrogativo(String entrata) {
+        return levaDopo(entrata, INTERROGATIVO);
     }// end of static method
 
     /**

@@ -388,15 +388,21 @@ public class AForm extends VerticalLayout {
     }// end of method
 
 
-    /**
-     * Saves the current values to the storage.
-     * <p>
-     *
-     * @return true if saved successfully
-     */
-    protected boolean save() {
-        return save(bindMap, isNewRecord());
-    }
+    // Rimuovo questo metodo perché non viene chiamato dalle
+    // classi base e se faccio l'override da una classe
+    // specifica non funziona. Vedi RappresentazioneForm.
+    // Se serve, al suo posto sovrascrivere il metodo
+    // save(LinkedHashMap<Object, Field> fieldMap, boolean newRecord)
+    // alex 3-nov-2015
+//    /**
+//     * Saves the current values to the storage.
+//     * <p>
+//     *
+//     * @return true if saved successfully
+//     */
+//    protected boolean save() {
+//        return save(bindMap, isNewRecord());
+//    }
 
 
     /**

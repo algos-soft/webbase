@@ -44,9 +44,12 @@ public class LibArrayTest {
     @SuppressWarnings("all")
     private Object[] valoriDoppiObj = {primoTxt, primoLungo, primoTxt, primoInt, primoInt, primoTxt};
 
+    private List<String> listaUno = LibArray.fromString(stringArray);
+    private String prevista = "";
+    private String ottenuta = "";
+
     private List ottenuto;
     private int k = 0;
-
 
     @Test
     /**
@@ -68,7 +71,6 @@ public class LibArrayTest {
         assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
-
     @Test
     /**
      * Convert a intArray to ArrayList
@@ -88,7 +90,6 @@ public class LibArrayTest {
         assertEquals(intArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
         assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
-
 
     @Test
     /**
@@ -110,7 +111,6 @@ public class LibArrayTest {
         assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
 
-
     @Test
     /**
      * Convert a objArray to ArrayList
@@ -130,7 +130,6 @@ public class LibArrayTest {
         assertEquals(objArray.length, SIZE); // per essere sicuri che non venga modificata la matrice originaria
         assertEquals(ottenuto.size(), NEW_SIZE);
     } // end of single test
-
 
     @Test
     /**
@@ -302,7 +301,6 @@ public class LibArrayTest {
         assertEquals(ottenuto.get(2), primoInt);
     } // fine del test
 
-
     @Test
     /**
      * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
@@ -376,7 +374,6 @@ public class LibArrayTest {
         LibArray.add(ottenuto, secondo);
         assertEquals(ottenuto.size(), NEW_SIZE);
     } // fine del test
-
 
     @Test
     /**
@@ -457,7 +454,6 @@ public class LibArrayTest {
             System.out.println(++k + ") " + obj);
         } // fine del ciclo for-each
     } // fine del test
-
 
     @Test
     /**
@@ -543,7 +539,6 @@ public class LibArrayTest {
         assertEquals(ottenuto.get(5), primoArrayNum.get(5));
     }// fine tests
 
-
     @Test
     /**
      * Costruisce una stringa con i singoli valori divisi da un pipe
@@ -569,13 +564,13 @@ public class LibArrayTest {
 
     @Test
     /**
-       * Costruisce una stringa con i singoli valori divisi da un separatore
-       * <p>
-       *
-       * @param stringArray to convert
-       * @param sep         carattere separatore
-       * @return stringa con i singoli valori divisi da un separatore
-       */
+     * Costruisce una stringa con i singoli valori divisi da un separatore
+     * <p>
+     *
+     * @param stringArray to convert
+     * @param sep         carattere separatore
+     * @return stringa con i singoli valori divisi da un separatore
+     */
     public void fromStringToStringa() {
         String ottenuta;
         String richiestaPipe = "alfa|aB|c|0|2|1Ad|a10";
@@ -586,6 +581,101 @@ public class LibArrayTest {
 
         ottenuta = LibArray.fromStringToStringaVirgola(stringArray);
         assertEquals(ottenuta, richiestaVirgola);
+    }// fine tests
+
+    @Test
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param array lista di valori
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public void testToStringaPipe() throws Exception {
+        prevista = "alfa|aB|c|0|2|1Ad|a10";
+        ottenuta = LibArray.toStringaPipe(listaUno);
+        assertEquals(ottenuta, prevista);
+    }// fine tests
+
+    @Test
+    /**
+     * Costruisce una stringa con i singoli valori divisi da una virgola
+     * <p>
+     *
+     * @param array lista di valori
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public void testToStringaVirgola() throws Exception {
+        prevista = "alfa,aB,c,0,2,1Ad,a10";
+        ottenuta = LibArray.toStringaVirgola(listaUno);
+        assertEquals(ottenuta, prevista);
+    }// fine tests
+
+    @Test
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param stringArray to convert
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public void testFromStringToStringaPipe() throws Exception {
+        prevista = "alfa|aB|c|0|2|1Ad|a10";
+        ottenuta = LibArray.fromStringToStringaPipe(stringArray);
+        assertEquals(ottenuta, prevista);
+    }// fine tests
+
+    @Test
+    /**
+     * Costruisce una stringa con i singoli valori divisi da una virgola
+     * <p>
+     *
+     * @param stringArray to convert
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public void testFromStringToStringaVirgola() throws Exception {
+        prevista = "alfa,aB,c,0,2,1Ad,a10";
+        ottenuta = LibArray.fromStringToStringaVirgola(stringArray);
+        assertEquals(ottenuta, prevista);
+    }// fine tests
+
+    @Test
+    /**
+     * Ordina la lista
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param listaDisordinata in ingresso
+     * @return lista ordinata, null se listaDisordinata è null
+     */
+    public void testSort() throws Exception {
+        List ottenuta;
+        ArrayList<String> disordinata ;
+        ArrayList<Integer> disordinati ;
+        List prevista;
+        disordinata = new ArrayList();
+        disordinata.add("Beta");
+        disordinata.add("Mercoledi");
+        disordinata.add("Alfa");
+        disordinati = new ArrayList();
+        disordinati.add(27);
+        disordinati.add(1235);
+        disordinati.add(4);
+        disordinati.add(15);
+
+        prevista = new ArrayList();
+        prevista.add("Alfa");
+        prevista.add("Beta");
+        prevista.add("Mercoledi");
+        ottenuta = LibArray.sort(disordinata);
+        assertEquals(ottenuta, prevista);
+
+        prevista = new ArrayList();
+        prevista.add(4);
+        prevista.add(15);
+        prevista.add(27);
+        prevista.add(1235);
+        ottenuta = LibArray.sort(disordinati);
+        assertEquals(ottenuta, prevista);
     }// fine tests
 
 //

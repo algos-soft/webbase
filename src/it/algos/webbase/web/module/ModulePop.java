@@ -42,13 +42,13 @@ public abstract class ModulePop extends Module {
     private static boolean MOSTRA_ID = false;
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
-
     // elenco dei campi da mostrare (ordinati) nel list, nel form e nel search
     protected Attribute<?, ?>[] fieldsList;
     protected Attribute<?, ?>[] fieldsForm;
     protected Attribute<?, ?>[] fieldsSearch;
     // icona del modulo (serve nei menu)
     protected Resource icon;
+    private boolean modale = false;
     // titolo del dialogo nuovo
     private String titoloNew;
     // titolo del dialogo di modifica
@@ -57,6 +57,7 @@ public abstract class ModulePop extends Module {
     private String titoloSearch;
     // indirizzo interno del modulo (serve nei menu)
     private String menuAddress;
+
     // menuitem del modulo (serve nei menu)
     private MenuBar.MenuItem menuItem;
 
@@ -332,6 +333,8 @@ public abstract class ModulePop extends Module {
         menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
 
+        this.menuItem = menuItem;
+
         return menuItem;
     }// end of method
 
@@ -426,7 +429,7 @@ public abstract class ModulePop extends Module {
      * @param item      the item
      * @param newRecord if the edited item is a new record
      */
-    private void editItem(Item item, boolean newRecord) {
+    public void editItem(Item item, boolean newRecord) {
         editItem(item, newRecord, "");
     }// end of method
 
@@ -437,7 +440,7 @@ public abstract class ModulePop extends Module {
      * @param newRecord if the edited item is a new record
      * @param caption   title for the window
      */
-    private void editItem(Item item, boolean newRecord, String caption) {
+    public void editItem(Item item, boolean newRecord, String caption) {
 
         final AForm form = createForm(item);
 
@@ -445,6 +448,9 @@ public abstract class ModulePop extends Module {
 
             final Window window = new Window(caption, form);
             window.setResizable(false);
+            if (this.isModale()) {
+                window.setModal(true);
+            }// end of if cycle
 
             form.addFormListener(new FormListener() {
 
@@ -706,6 +712,7 @@ public abstract class ModulePop extends Module {
      */
     public void deselectall() {
         getTable().setValue(null);
+        getTable().selectionChanged(null);
     }// end of method
 
 
@@ -939,5 +946,13 @@ public abstract class ModulePop extends Module {
 
     public void setMenuItem(MenuBar.MenuItem menuItem) {
         this.menuItem = menuItem;
+    }//end of setter method
+
+    public boolean isModale() {
+        return modale;
+    }// end of getter method
+
+    public void setModale(boolean modale) {
+        this.modale = modale;
     }//end of setter method
 }// end of class

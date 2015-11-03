@@ -13,6 +13,7 @@ import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.field.DateField;
+import it.algos.webbase.web.field.TextArea;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.module.ModulePop;
@@ -191,6 +192,10 @@ public class AForm extends VerticalLayout {
 
             if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
                 field = new CheckBoxField();
+            }// fine del blocco if
+
+            if (clazz.equals(String.class)) {
+                field = new TextField();
             }// fine del blocco if
 
             if (clazz.equals(String.class)) {

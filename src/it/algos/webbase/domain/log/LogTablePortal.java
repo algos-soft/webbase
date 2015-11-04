@@ -24,8 +24,9 @@ public class LogTablePortal extends TablePortal {
 
     public TableToolbar createToolbar() {
         toolbar = super.createToolbar();
+        toolbar.setCreate(false);
 
-        addSelect();
+        addSelectLivello();
 
         return toolbar;
     }// end of method
@@ -38,7 +39,7 @@ public class LogTablePortal extends TablePortal {
      * Costruisce i menuItem in funzione dei valori della enumeration Livello
      * L'ordine di presentazione è identico all'ordine in cui è stata costruita la enumeration (NON CAMBIARE ORDINE)
      */
-    private void addSelect() {
+    private void addSelectLivello() {
         MenuBar.MenuItem item = null;
 
         item = toolbar.addButton("Livello", FontAwesome.NAVICON, null);

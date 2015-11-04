@@ -18,6 +18,7 @@ public class TableToolbar extends Toolbar implements ListSelectionListener {
     protected HashMap<Bottoni, MenuItem> bottoni = new HashMap<>();
     private ArrayList<TableToolbarListener> listeners = new ArrayList<TableToolbarListener>();
     private InfoPanel infoPanel = new InfoPanel();
+    private MenuBar.MenuItem itemSeleziona;
 
     public TableToolbar() {
         super();
@@ -93,7 +94,7 @@ public class TableToolbar extends Toolbar implements ListSelectionListener {
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addSelect() {
-        MenuBar.MenuItem itemSeleziona = null;
+//        MenuBar.MenuItem itemSeleziona = null;
         MenuBar.MenuItem item;
 
         itemSeleziona = addButton("Seleziona", FontAwesome.LIST_UL, null);
@@ -221,6 +222,28 @@ public class TableToolbar extends Toolbar implements ListSelectionListener {
         }// end of if cycle
 
     }// end of method
+
+
+    public void setCreate(boolean enabled) {
+        bottoni.get(Bottoni.create).setEnabled(enabled);
+    }//end of setter method
+
+    public void setEdit(boolean enabled) {
+        bottoni.get(Bottoni.edit).setEnabled(enabled);
+    }//end of setter method
+
+    public void setDelete(boolean enabled) {
+        bottoni.get(Bottoni.delete).setEnabled(enabled);
+    }//end of setter method
+
+    public void setSearch(boolean enabled) {
+        bottoni.get(Bottoni.search).setEnabled(enabled);
+    }//end of setter method
+
+    public void setSelect(boolean enabled) {
+        itemSeleziona.setEnabled(enabled);
+    }//end of setter method
+
 
     public enum Bottoni {
         create, edit, delete, search, selectedonly, removeselected, showall, deselectall;

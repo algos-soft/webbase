@@ -13,22 +13,13 @@ import javax.persistence.metamodel.Attribute;
 @SuppressWarnings("serial")
 public class LogMod extends ModulePop {
 
-    // indirizzo interno del modulo (serve nei menu)
+    //--indirizzo interno del modulo (serve nei menu)
     public static String MENU_ADDRESS = "Logo";
 
     public LogMod() {
         super(Log.class, MENU_ADDRESS);
     }// end of constructor
 
-    /**
-     * Titolo (caption) dei dialogo nuovo record. <br>
-     * Come default usa il titolo standard <br>
-     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     */
-    @Override
-    protected String getCaptionNew() {
-        return "Nuovo log";
-    }// end of method
 
     /**
      * Titolo (caption) dei dialogo di modifica. <br>
@@ -37,7 +28,7 @@ public class LogMod extends ModulePop {
      */
     @Override
     protected String getCaptionEdit() {
-        return "Modifica log";
+        return "Visione log";
     }// end of method
 
     /**
@@ -71,9 +62,19 @@ public class LogMod extends ModulePop {
      */
     @Override
     protected Attribute<?, ?>[] creaFieldsForm() {
-        return new Attribute[]{Log_.code, Log_.descrizione};
+        return new Attribute[]{Log_.code, Log_.descrizione, Log_.timestamp};
     }// end of method
 
+    /**
+     * Crea i campi visibili nella scheda (search)
+     * <p>
+     * Come default spazzola tutti i campi della Entity <br>
+     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
+     * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
+     */
+    protected Attribute<?, ?>[] creaFieldsSearch() {
+        return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione};
+    }// end of method
 
     /**
      * Returns the form used to edit an item. <br>

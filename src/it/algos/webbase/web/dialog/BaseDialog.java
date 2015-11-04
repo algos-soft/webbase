@@ -2,11 +2,7 @@ package it.algos.webbase.web.dialog;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 
 /**
  * Abstract base class for modal dialogs. <br>
@@ -30,7 +26,7 @@ import com.vaadin.ui.Window;
  */
 @SuppressWarnings("serial")
 public abstract class BaseDialog extends Window {
-	protected VerticalLayout detail;
+	protected Component detail;
 	private DialogToolbar toolbar;
 	private VerticalLayout mainLayout;
 	private Label label;
@@ -55,16 +51,13 @@ public abstract class BaseDialog extends Window {
 
 		toolbar = createToolbarComponent();
 		detail = createDetailComponent();
-		detail.setMargin(true);
-		label = new Label();
-		label.setContentMode(ContentMode.HTML);
 		setMessage(messageText);
 
 		mainLayout = new VerticalLayout();
 		syncResizable();
 
 		mainLayout.addComponent(detail);
-		detail.addComponent(label);
+
 		detail.setHeight("100%");
 		mainLayout.setExpandRatio(detail, 1f);
 
@@ -77,11 +70,20 @@ public abstract class BaseDialog extends Window {
 
 	}
 
+
 	/**
-	 * The component shown in the detail area.
+	 * Creates the component shown in the detail area.
+	 * By default, a VerticalLayout
+	 * @return the component shown in the detail area.
 	 */
-	protected VerticalLayout createDetailComponent() {
-		return new VerticalLayout();
+	protected Component createDetailComponent() {
+		VerticalLayout layout = new VerticalLayout();
+		layout.setMargin(true);
+		// add a label hosting the text to the default VerticalLayout
+		label = new Label();
+		label.setContentMode(ContentMode.HTML);
+		layout.addComponent(label);
+		return layout;
 	}
 
 	/**
@@ -117,7 +119,10 @@ public abstract class BaseDialog extends Window {
 	 */
 	public void addComponent(Component comp) {
 		if (detail != null) {
-			detail.addComponent(comp);
+			if(detail instanceof ComponentContainer){
+				ComponentContainer container = (ComponentContainer)detail;
+				container.addComponent(comp);
+			}
 		}
 	}
 
@@ -139,6 +144,23 @@ public abstract class BaseDialog extends Window {
 	public void setDetailAreaVisible(boolean visible) {
 		if (detail != null) {
 			detail.setVisible(visible);
+		}
+	}
+
+	/**
+	 * @return the component hosting the detail area
+	 */
+	public Component getDetailComponent(){
+		return detail;
+	}
+
+	/**
+	 * Remove all components from inside the Detail component
+	 */
+	public void removeAllDetail(){
+		Component comp=getDetailComponent();
+		if(comp instanceof ComponentContainer){
+			((ComponentContainer)comp).removeAllComponents();;
 		}
 	}
 

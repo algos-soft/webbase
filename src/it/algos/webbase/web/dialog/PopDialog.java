@@ -48,7 +48,7 @@ public class PopDialog extends ConfirmDialog {
 		if (values != null) {
 			combo = new ArrayComboField(values);
 			combo.setWidth("250px");
-			detail.addComponent(combo);
+			addComponent(combo);
 			this.setCombo(combo);
 		}// end of if cycle
 	}// end of method
@@ -76,8 +76,7 @@ public class PopDialog extends ConfirmDialog {
 	}
 
 	/**
-	 * @param valueListener
-	 *            the valueListener to set
+	 * @param listener the valueListener to set
 	 */
 	public void setListener(PopDialogSelectedListener listener) {
 		this.listener = listener;

@@ -73,7 +73,7 @@ public class EditDialog extends ConfirmDialog {
         field = new TextField();
         field.setCaption(caption);
         field.setRequired(true);
-        detail.addComponent(field);
+        addComponent(field);
     }// end of method
 
     @Override

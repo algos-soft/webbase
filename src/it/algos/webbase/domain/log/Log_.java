@@ -2,6 +2,7 @@ package it.algos.webbase.domain.log;
 
 import it.algos.webbase.web.entity.BaseEntity_;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import java.sql.Timestamp;

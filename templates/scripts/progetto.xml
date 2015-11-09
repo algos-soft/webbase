@@ -119,7 +119,7 @@
             <filterset>
                 <filter token="PROGETTO" value="${progetto}"/>
                 <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
-                <filter token="SQLUNIT" value="${lowerSqlUnit}"/>
+                <filter token="SQLUNIT" value="${sqlUnit}"/>
                 <filter token="DATABASE" value="${lowerDataBase}"/>
             </filterset>
         </copy>

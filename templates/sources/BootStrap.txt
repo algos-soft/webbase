@@ -1,6 +1,5 @@
 package it.algos.@LOWERPROGETTO@.bootstrap;
 
-import it.algos.prova.ProvaApp;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.bootstrap.ABootStrap;
 import it.algos.webbase.web.toolbar.Toolbar;
@@ -40,8 +39,8 @@ public class @PROGETTO@BootStrap extends ABootStrap {
         @PROGETTO@App.setServletContext(svltCtx);
 
         // eventuali modifiche allle dimensioni dei bottoni
-//        Toolbar.ALTEZZA_BOTTONI = 40;
-//        Toolbar.LARGHEZZA_BOTTONI = 120;
+        Toolbar.ALTEZZA_BOTTONI = 40;
+        Toolbar.LARGHEZZA_BOTTONI = 140;
 
         // eventuali modifiche ai flag generali di regolazione
         AlgosApp.USE_SECURITY = true;

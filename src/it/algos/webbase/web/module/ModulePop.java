@@ -59,7 +59,7 @@ public abstract class ModulePop extends Module {
     private String menuAddress;
 
     // menuitem del modulo (serve nei menu)
-    private MenuBar.MenuItem menuItem;
+    protected MenuBar.MenuItem menuItem;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})

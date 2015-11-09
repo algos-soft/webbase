@@ -16,7 +16,11 @@ public class UtenteModulo extends ModulePop {
     public static String MENU_ADDRESS = "Utente";
 
     public UtenteModulo() {
-        super(Utente.class, MENU_ADDRESS);
+        this(MENU_ADDRESS);
+    }// end of basic constructor
+
+    public UtenteModulo(String menuAddress) {
+        super(Utente.class, menuAddress);
     }// end of basic constructor
 
 

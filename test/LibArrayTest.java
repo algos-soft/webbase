@@ -1,8 +1,10 @@
+import com.vaadin.ui.Label;
 import it.algos.webbase.web.lib.LibArray;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -16,6 +18,8 @@ public class LibArrayTest {
     private static int SIZE = 7;
     private static int NEW_SIZE = 8;
     private static int SIZE_UNICI = 3;
+    protected boolean boolPrevisto = false;
+    protected boolean boolOttenuto = false;
     private int primoInt = 8;
     private int due = 15;
     private int tre = 27;
@@ -43,11 +47,9 @@ public class LibArrayTest {
     private long[] valoriDoppiLong = {primoLungo, primoInt, due, primoInt, due, primoInt};
     @SuppressWarnings("all")
     private Object[] valoriDoppiObj = {primoTxt, primoLungo, primoTxt, primoInt, primoInt, primoTxt};
-
     private List<String> listaUno = LibArray.fromString(stringArray);
     private String prevista = "";
     private String ottenuta = "";
-
     private List ottenuto;
     private int k = 0;
 
@@ -649,8 +651,8 @@ public class LibArrayTest {
      */
     public void testSort() throws Exception {
         List ottenuta;
-        ArrayList<String> disordinata ;
-        ArrayList<Integer> disordinati ;
+        ArrayList<String> disordinata;
+        ArrayList<Integer> disordinati;
         List prevista;
         disordinata = new ArrayList();
         disordinata.add("Beta");
@@ -676,6 +678,215 @@ public class LibArrayTest {
         prevista.add(1235);
         ottenuta = LibArray.sort(disordinati);
         assertEquals(ottenuta, prevista);
+    }// fine tests
+
+    @Test
+    /**
+       * Recupera una lista delle chiavi di una mappa
+       *
+       * @param mappa in ingresso
+       * @return lista delle chiavi
+       */
+    public void getKeyFromMap() {
+        String chiave1 = "xyz";
+        String chiave2 = "pippo";
+        String chiave3 = "forse";
+        String chiave4 = "nonrilevante";
+        String chiave5 = "nessuna";
+        long value1 = 4567;
+        String value2 = "secondovalorestringa";
+        boolean value3 = false;
+        Label value4 = new Label();
+        Date value5 = new Date();
+        ArrayList listaPrevista = new ArrayList();
+        ArrayList listaOttenuta;
+        listaPrevista.add(chiave1);
+        listaPrevista.add(chiave2);
+        listaPrevista.add(chiave3);
+        listaPrevista.add(chiave4);
+        listaPrevista.add(chiave5);
+
+        HashMap<String, Object> mappa = new HashMap<String, Object>();
+        mappa.put(chiave1, value1);
+        mappa.put(chiave2, value2);
+        mappa.put(chiave3, value3);
+        mappa.put(chiave4, value4);
+        mappa.put(chiave5, value5);
+
+        listaOttenuta= LibArray.getKeyFromMap(mappa);
+        boolOttenuto = LibArray.isArrayEquals(listaOttenuta, listaPrevista);
+        assertTrue(boolOttenuto);
+
+    }// fine tests
+
+
+    @Test
+    /**
+     * Controlla l'eguaglianza di due array
+     * <p>
+     * Confronta tutti i valori, INDIPENDENTEMENTE dall'ordine in cui li trova
+     *
+     * @param expected previsto
+     * @param actual   effettivo
+     * @return vero, se gli array sono lunghi uguali ed hanno gli stessi valori (disordinati)
+     */
+    public void isArrayEquals() {
+        ArrayList expected;
+        ArrayList actual;
+        ArrayList errataLunghezza;
+        ArrayList errataChiave;
+        ArrayList erratoValore;
+        String chiave1 = "xyz";
+        String chiave2 = "pippo";
+        String chiave3 = "forse";
+        String chiave4 = "nonrilevante";
+        String chiave5 = "nessuna";
+        String chiaveErrata = "zzz";
+        long value1 = 4567;
+        String value2 = "secondovalorestringa";
+        boolean value3 = false;
+        Label value4 = new Label();
+        Date value5 = new Date();
+        String valueErrato = "xxx";
+
+        expected = new ArrayList();
+        expected.add(chiave1);
+        expected.add(chiave2);
+        expected.add(chiave3);
+        expected.add(chiave4);
+        expected.add(chiave5);
+
+        actual = new ArrayList();
+        actual.add(chiave1);
+        actual.add(chiave3);
+        actual.add(chiave2);
+        actual.add(chiave5);
+        actual.add(chiave4);
+
+        boolOttenuto = LibArray.isArrayEquals(expected, actual);
+        assertTrue(boolOttenuto);
+
+        expected = new ArrayList();
+        expected.add(value1);
+        expected.add(value2);
+        expected.add(value3);
+        expected.add(value4);
+        expected.add(value5);
+
+        actual = new ArrayList();
+        actual.add(value1);
+        actual.add(value3);
+        actual.add(value2);
+        actual.add(value5);
+        actual.add(value4);
+
+        boolOttenuto = LibArray.isArrayEquals(expected, actual);
+        assertTrue(boolOttenuto);
+
+        errataLunghezza = new ArrayList();
+        errataLunghezza.add(chiave1);
+        errataLunghezza.add(chiave2);
+        errataLunghezza.add(chiave4);
+        errataLunghezza.add(chiave5);
+        boolOttenuto = LibArray.isArrayEquals(errataLunghezza, actual);
+        assertFalse(boolOttenuto);
+
+        errataLunghezza = new ArrayList();
+        errataLunghezza.add(value1);
+        errataLunghezza.add(value3);
+        errataLunghezza.add(value5);
+        errataLunghezza.add(value4);
+        boolOttenuto = LibArray.isArrayEquals(errataLunghezza, actual);
+        assertFalse(boolOttenuto);
+
+        errataChiave = new ArrayList();
+        errataChiave.add(chiave1);
+        errataChiave.add(chiave2);
+        errataChiave.add(chiaveErrata);
+        errataChiave.add(chiave4);
+        errataChiave.add(chiave5);
+        boolOttenuto = LibArray.isArrayEquals(errataChiave, actual);
+        assertFalse(boolOttenuto);
+
+        erratoValore = new ArrayList();
+        erratoValore.add(value1);
+        erratoValore.add(value2);
+        erratoValore.add(valueErrato);
+        erratoValore.add(value4);
+        erratoValore.add(value5);
+        boolOttenuto = LibArray.isArrayEquals(erratoValore, actual);
+        assertFalse(boolOttenuto);
+
+    }// fine tests
+
+    @Test
+    /**
+     * Controlla l'eguaglianza di due mappe
+     * <p>
+     *
+     * @param expected prevista
+     * @param actual   effettiva
+     * @return vero, se le mappe sono lunghe uguali, hanno le stesse chiavi e gli stessi valori
+     */
+    public void isMapEquals() {
+        String chiave1 = "xyz";
+        String chiave2 = "pippo";
+        String chiave3 = "forse";
+        String chiave4 = "nonrilevante";
+        String chiave5 = "nessuna";
+        String chiaveErrata = "zzz";
+        long value1 = 4567;
+        String value2 = "secondovalorestringa";
+        boolean value3 = false;
+        Label value4 = new Label();
+        Date value5 = new Date();
+        String valueErrato = "xxx";
+
+        HashMap<String, Object> expected = new HashMap<String, Object>();
+        expected.put(chiave1, value1);
+        expected.put(chiave2, value2);
+        expected.put(chiave3, value3);
+        expected.put(chiave4, value4);
+        expected.put(chiave5, value5);
+
+        HashMap<String, Object> actual = new HashMap<String, Object>();
+        actual.put(chiave1, value1);
+        actual.put(chiave2, value2);
+        actual.put(chiave3, value3);
+        actual.put(chiave4, value4);
+        actual.put(chiave5, value5);
+
+        HashMap<String, Object> errataLunghezza = new HashMap<String, Object>();
+        errataLunghezza.put(chiave1, value1);
+        errataLunghezza.put(chiave2, value2);
+        errataLunghezza.put(chiave4, value4);
+        errataLunghezza.put(chiave5, value5);
+
+        HashMap<String, Object> errataChiave = new HashMap<String, Object>();
+        errataChiave.put(chiave1, value1);
+        errataChiave.put(chiave2, value2);
+        errataChiave.put(chiaveErrata, value3);
+        errataChiave.put(chiave4, value4);
+        errataChiave.put(chiave5, value5);
+
+        HashMap<String, Object> errataValore = new HashMap<String, Object>();
+        errataValore.put(chiave1, value1);
+        errataValore.put(chiave2, value2);
+        errataValore.put(chiave3, valueErrato);
+        errataValore.put(chiave4, value4);
+        errataValore.put(chiave5, value5);
+
+        boolOttenuto = LibArray.isMapEquals(expected, actual);
+        assertTrue(boolOttenuto);
+
+        boolOttenuto = LibArray.isMapEquals(errataLunghezza, actual);
+        assertFalse(boolOttenuto);
+
+        boolOttenuto = LibArray.isMapEquals(errataChiave, actual);
+        assertFalse(boolOttenuto);
+
+        boolOttenuto = LibArray.isMapEquals(errataValore, actual);
+        assertFalse(boolOttenuto);
     }// fine tests
 
 //

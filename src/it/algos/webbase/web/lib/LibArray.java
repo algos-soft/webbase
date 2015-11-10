@@ -159,7 +159,7 @@ public abstract class LibArray {
      */
     public static List valoriUnici(int[] intArray) {
         return valoriUnici(fromInt(intArray));
-        }// end of static method
+    }// end of static method
 
     /**
      * Estrae i valori unici da un matrice (objArray) con (eventuali) valori doppi
@@ -422,6 +422,115 @@ public abstract class LibArray {
     public static String fromStringToStringa(String[] stringArray, String sep) {
         List array = LibArray.fromString(stringArray);
         return toStringa(array, sep);
+    }// end of static method
+
+    /**
+     * Recupera una lista delle chiavi di una mappa
+     *
+     * @param mappa in ingresso
+     * @return lista delle chiavi
+     */
+    public static ArrayList getKeyFromMap(HashMap mappa) {
+        ArrayList listaKeys = null;
+
+        if (mappa != null) {
+            listaKeys = new ArrayList();
+            for (Object obj : mappa.keySet()) {
+                listaKeys.add(obj);
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaKeys;
+    }// end of static method
+
+    /**
+     * Recupera una lista dei valori di una mappa
+     *
+     * @param mappa in ingresso
+     * @return lista delle chiavi
+     */
+    public static ArrayList getValueFromMap(HashMap mappa) {
+        ArrayList listaKeys = null;
+
+        if (mappa != null) {
+            listaKeys = new ArrayList();
+            for (Object obj : mappa.keySet()) {
+                listaKeys.add(mappa.get(obj));
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaKeys;
+    }// end of static method
+
+    /**
+     * Controlla l'eguaglianza di due array
+     * <p>
+     * Confronta tutti i valori, INDIPENDENTEMENTE dall'ordine in cui li trova
+     *
+     * @param expected previsto
+     * @param actual   effettivo
+     * @return vero, se gli array sono lunghi uguali ed hanno gli stessi valori (disordinati)
+     */
+    public static boolean isArrayEquals(ArrayList expected, ArrayList actual) {
+        boolean uguali = true;
+
+        if (expected == null || actual == null) {
+            return false;
+        }// end of if cycle
+
+        if (expected.size() != actual.size()) {
+            return false;
+        }// end of if cycle
+
+        for (Object obj : expected) {
+            if (!actual.contains(obj)) {
+                uguali = false;
+            }// end of if cycle
+        }// end of for cycle
+
+        return uguali;
+    }// end of static method
+
+    /**
+     * Controlla l'eguaglianza di due mappe
+     * <p>
+     * Confronta la lunghezza
+     * Confronta tutte le chiavi
+     * Confronta tutti i valori
+     *
+     * @param expected prevista
+     * @param actual   effettiva
+     * @return vero, se le mappe sono lunghe uguali, hanno le stesse chiavi e gli stessi valori
+     */
+    public static boolean isMapEquals(HashMap expected, HashMap actual) {
+        boolean uguali = true;
+        boolean continua = true;
+        ArrayList keysExpected;
+        ArrayList keysActual;
+        ArrayList valueExpected;
+        ArrayList valueActual;
+
+        if (expected == null || actual == null) {
+            return false;
+        }// end of if cycle
+
+        if (expected.size() != actual.size()) {
+            return false;
+        }// end of if cycle
+
+        keysExpected = LibArray.getKeyFromMap(expected);
+        keysActual = LibArray.getKeyFromMap(actual);
+        if (!LibArray.isArrayEquals(keysExpected,keysActual)) {
+            return false;
+        }// end of if cycle
+
+        valueExpected = LibArray.getValueFromMap(expected);
+        valueActual = LibArray.getValueFromMap(actual);
+        if (!LibArray.isArrayEquals(valueExpected,valueActual)) {
+            return false;
+        }// end of if cycle
+
+        return uguali;
     }// end of static method
 
 }// end of abstract static class

@@ -47,10 +47,10 @@ public class LibArrayTest {
     private long[] valoriDoppiLong = {primoLungo, primoInt, due, primoInt, due, primoInt};
     @SuppressWarnings("all")
     private Object[] valoriDoppiObj = {primoTxt, primoLungo, primoTxt, primoInt, primoInt, primoTxt};
-    private List<String> listaUno = LibArray.fromString(stringArray);
+    private ArrayList<String> listaUno = LibArray.fromString(stringArray);
     private String prevista = "";
     private String ottenuta = "";
-    private List ottenuto;
+    private ArrayList ottenuto;
     private int k = 0;
 
     @Test
@@ -394,8 +394,8 @@ public class LibArrayTest {
      */
     public void sommaDisordinata() {
         int size = 9;
-        List<String> arrayPrimo = LibArray.fromString(stringArray);
-        List<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+        ArrayList<String> arrayPrimo = LibArray.fromString(stringArray);
+        ArrayList<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
 
         ottenuto = LibArray.sommaDisordinata(null, null);
         assertNull(ottenuto);
@@ -434,8 +434,8 @@ public class LibArrayTest {
      */
     public void somma() {
         int size = 9;
-        List<String> arrayPrimo = LibArray.fromString(stringArray);
-        List<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+        ArrayList<String> arrayPrimo = LibArray.fromString(stringArray);
+        ArrayList<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
 
         ottenuto = LibArray.somma(null, null);
         assertNull(ottenuto);
@@ -479,15 +479,15 @@ public class LibArrayTest {
         int[] richiestoNum = {87, 25, 1, 12};
         int sizeNumPrimo = 6;
         int sizeNum = 4;
-        List<Integer> primoArrayNum = LibArray.fromInt(primoNum);
-        List<Integer> richiestoArrayNum = LibArray.fromInt(richiestoNum);
+        ArrayList<Integer> primoArrayNum = LibArray.fromInt(primoNum);
+        ArrayList<Integer> richiestoArrayNum = LibArray.fromInt(richiestoNum);
         int[] arrayVuoto = {};
         String[] primoStr = {"due", "otto", "beta", "alfa", "omicron"};
         String[] secondoStr = {"otto", "gamma", "due"};
         String[] richiestoStr = {"beta", "alfa", "omicron"};
         int sizeStr = 3;
-        List<String> richiestoArrayStr = LibArray.fromString(richiestoStr);
-        List ottenuto;
+        ArrayList<String> richiestoArrayStr = LibArray.fromString(richiestoStr);
+        ArrayList ottenuto;
 
         // entrambi i parametri sono nulli, restituisce un nullo
         ottenuto = LibArray.differenzaDisordinata(null, null);
@@ -554,7 +554,7 @@ public class LibArrayTest {
         String ottenuta;
         String richiestaPipe = "alfa|aB|c|0|2|1Ad|a10";
         String richiestaVirgola = "alfa,aB,c,0,2,1Ad,a10";
-        List lista = LibArray.fromString(stringArray);
+        ArrayList lista = LibArray.fromString(stringArray);
         assertEquals(lista.size(), size);
 
         ottenuta = LibArray.toStringaPipe(lista);
@@ -653,7 +653,7 @@ public class LibArrayTest {
         List ottenuta;
         ArrayList<String> disordinata;
         ArrayList<Integer> disordinati;
-        List prevista;
+        ArrayList prevista;
         disordinata = new ArrayList();
         disordinata.add("Beta");
         disordinata.add("Mercoledi");

@@ -42,7 +42,7 @@ public abstract class LibArray {
      * @param stringArray to convert
      * @return the corresponding casted ArrayList
      */
-    public static List<String> fromString(String[] stringArray) {
+    public static ArrayList<String> fromString(String[] stringArray) {
         return new ArrayList<String>(Arrays.asList(stringArray));
     } // end of static method
 
@@ -52,7 +52,7 @@ public abstract class LibArray {
      * @param intArray to convert
      * @return the corresponding casted ArrayList
      */
-    public static List<Integer> fromInt(int[] intArray) {
+    public static ArrayList<Integer> fromInt(int[] intArray) {
         ArrayList<Integer> intList = new ArrayList<Integer>();
 
         for (Integer intero : intArray) {
@@ -68,7 +68,7 @@ public abstract class LibArray {
      * @param longArray to convert
      * @return the corresponding casted ArrayList
      */
-    public static List<Long> fromLong(long[] longArray) {
+    public static ArrayList<Long> fromLong(long[] longArray) {
         ArrayList<Long> longList = new ArrayList<Long>();
 
         for (Long lungo : longArray) {
@@ -85,7 +85,7 @@ public abstract class LibArray {
      * @param objArray to convert
      * @return the corresponding casted ArrayList
      */
-    public static List<Object> fromObj(Object[] objArray) {
+    public static ArrayList<Object> fromObj(Object[] objArray) {
         ArrayList<Object> objList = new ArrayList<Object>();
 
         for (Object lungo : objArray) {
@@ -102,7 +102,7 @@ public abstract class LibArray {
      * @param listaValoriDoppi in ingresso
      * @return valoriUnici NON ordinati, null se listaValoriDoppi è null
      */
-    public static List valoriUniciDisordinati(List listaValoriDoppi) {
+    public static ArrayList valoriUniciDisordinati(ArrayList listaValoriDoppi) {
         return valoriUniciBase(listaValoriDoppi, false);
     }// end of static method
 
@@ -113,7 +113,7 @@ public abstract class LibArray {
      * @param objArray in ingresso
      * @return valoriUnici NON ordinati, null se objArray è null
      */
-    public static List valoriUniciDisordinati(Object[] objArray) {
+    public static ArrayList valoriUniciDisordinati(Object[] objArray) {
         return valoriUniciDisordinati(fromObj(objArray));
     }// end of static method
 
@@ -128,7 +128,7 @@ public abstract class LibArray {
      * @param listaValoriDoppi in ingresso
      * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
-    public static List valoriUnici(List listaValoriDoppi) {
+    public static ArrayList valoriUnici(ArrayList listaValoriDoppi) {
         return valoriUniciBase(listaValoriDoppi, true);
     }// end of static method
 
@@ -143,7 +143,7 @@ public abstract class LibArray {
      * @param objArray in ingresso
      * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
-    public static List valoriUnici(Object[] objArray) {
+    public static ArrayList valoriUnici(Object[] objArray) {
         return valoriUnici(fromObj(objArray));
     }// end of static method
 
@@ -157,7 +157,7 @@ public abstract class LibArray {
      * @param intArray in ingresso
      * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
-    public static List valoriUnici(int[] intArray) {
+    public static ArrayList valoriUnici(int[] intArray) {
         return valoriUnici(fromInt(intArray));
     }// end of static method
 
@@ -171,7 +171,7 @@ public abstract class LibArray {
      * @param longArray in ingresso
      * @return valoriUnici ORDINATI, null se listaValoriDoppi è null
      */
-    public static List valoriUnici(long[] longArray) {
+    public static ArrayList valoriUnici(long[] longArray) {
         return valoriUnici(fromLong(longArray));
     }// end of static method
 
@@ -187,7 +187,7 @@ public abstract class LibArray {
      * @return valoriUnici disordinati oppure ordinati, null se listaValoriDoppi è null
      */
     @SuppressWarnings("all")
-    private static List valoriUniciBase(List listaValoriDoppi, boolean ordina) {
+    private static ArrayList valoriUniciBase(ArrayList listaValoriDoppi, boolean ordina) {
         ArrayList listaValoriUniciNonOrdinati = null;
         Set set;
 
@@ -211,8 +211,8 @@ public abstract class LibArray {
      * @param listaDisordinata in ingresso
      * @return lista ordinata, null se listaDisordinata è null
      */
-    public static List sort(List listaDisordinata) {
-        List<Object> objList;
+    public static ArrayList sort(ArrayList listaDisordinata) {
+        ArrayList<Object> objList;
         Object[] objArray = listaDisordinata.toArray();
 
         try { // prova ad eseguire il codice
@@ -233,7 +233,7 @@ public abstract class LibArray {
      * @return vero se l'elemento è stato aggiunto
      */
     @SuppressWarnings("all")
-    public static boolean add(List lista, Object elemento) {
+    public static boolean add(ArrayList lista, Object elemento) {
         boolean aggiunto = false;
 
         if (!lista.contains(elemento)) {
@@ -257,8 +257,8 @@ public abstract class LibArray {
      * @param arraySecondo - seconda lista
      * @return arraySomma disordinata
      */
-    public static List sommaDisordinata(List arrayPrimo, List arraySecondo) {
-        List arraySomma = null;
+    public static ArrayList sommaDisordinata(ArrayList arrayPrimo, ArrayList arraySecondo) {
+        ArrayList arraySomma = null;
 
         if (arrayPrimo != null || arraySecondo != null) {
             arraySomma = new ArrayList();
@@ -294,8 +294,8 @@ public abstract class LibArray {
      * @param arraySecondo - seconda lista
      * @return arraySomma ordinata
      */
-    public static List somma(List arrayPrimo, List arraySecondo) {
-        List arraySomma = sommaDisordinata(arrayPrimo, arraySecondo);
+    public static ArrayList somma(ArrayList arrayPrimo, ArrayList arraySecondo) {
+        ArrayList arraySomma = sommaDisordinata(arrayPrimo, arraySecondo);
 
         if (arraySomma != null) {
             arraySomma = sort(arraySomma);
@@ -352,7 +352,7 @@ public abstract class LibArray {
      * @param array lista di valori
      * @return stringa con i singoli valori divisi da un separatore
      */
-    public static String toStringaPipe(List array) {
+    public static String toStringaPipe(ArrayList array) {
         return toStringa(array, "|");
     }// end of static method
 
@@ -363,7 +363,7 @@ public abstract class LibArray {
      * @param array lista di valori
      * @return stringa con i singoli valori divisi da un separatore
      */
-    public static String toStringaVirgola(List array) {
+    public static String toStringaVirgola(ArrayList array) {
         return toStringa(array, ",");
     }// end of static method
 

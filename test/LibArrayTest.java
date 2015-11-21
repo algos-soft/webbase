@@ -444,8 +444,7 @@ public class LibArrayTest {
 
         secondStep = LibTime.difText(inizio);
         System.out.println("secondStep: " + secondStep);
-
-        int a = 87;
+        int a=87;
     } // fine del test
 
     @Test

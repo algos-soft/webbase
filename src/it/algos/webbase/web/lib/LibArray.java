@@ -260,21 +260,39 @@ public abstract class LibArray {
     public static ArrayList sommaDisordinata(ArrayList arrayPrimo, ArrayList arraySecondo) {
         ArrayList arraySomma = null;
 
-        if (arrayPrimo != null || arraySecondo != null) {
-            arraySomma = new ArrayList();
-        }// fine del blocco if
-
-        if (arrayPrimo != null) {
-            for (Object ogg : arrayPrimo) {
-                add(arraySomma, ogg);
-            } // fine del ciclo for-each
-        }// fine del blocco if
-
-        if (arraySecondo != null) {
+        if (arrayPrimo != null && arraySecondo != null) {
             for (Object ogg : arraySecondo) {
-                add(arraySomma, ogg);
+                arrayPrimo.add(ogg);
             } // fine del ciclo for-each
+            arrayPrimo= valoriUniciBase(arrayPrimo,false);
+            return arrayPrimo;
         }// fine del blocco if
+
+        if (arrayPrimo == null ) {
+            arraySecondo= valoriUniciBase(arraySecondo,false);
+            return arraySecondo;
+        }// fine del blocco if
+
+        if (arraySecondo == null ) {
+            arrayPrimo= valoriUniciBase(arrayPrimo,false);
+            return arrayPrimo;
+        }// fine del blocco if
+
+//        if (arrayPrimo != null || arraySecondo != null) {
+//            arraySomma = new ArrayList();
+//        }// fine del blocco if
+//
+//        if (arrayPrimo != null) {
+//            for (Object ogg : arrayPrimo) {
+//                add(arraySomma, ogg);
+//            } // fine del ciclo for-each
+//        }// fine del blocco if
+//
+//        if (arraySecondo != null) {
+//            for (Object ogg : arraySecondo) {
+//                add(arraySomma, ogg);
+//            } // fine del ciclo for-each
+//        }// fine del blocco if
 
         return arraySomma;
     }// end of static method
@@ -520,13 +538,13 @@ public abstract class LibArray {
 
         keysExpected = LibArray.getKeyFromMap(expected);
         keysActual = LibArray.getKeyFromMap(actual);
-        if (!LibArray.isArrayEquals(keysExpected,keysActual)) {
+        if (!LibArray.isArrayEquals(keysExpected, keysActual)) {
             return false;
         }// end of if cycle
 
         valueExpected = LibArray.getValueFromMap(expected);
         valueActual = LibArray.getValueFromMap(actual);
-        if (!LibArray.isArrayEquals(valueExpected,valueActual)) {
+        if (!LibArray.isArrayEquals(valueExpected, valueActual)) {
             return false;
         }// end of if cycle
 

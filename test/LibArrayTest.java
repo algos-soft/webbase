@@ -1,5 +1,7 @@
 import com.vaadin.ui.Label;
 import it.algos.webbase.web.lib.LibArray;
+import it.algos.webbase.web.lib.LibNum;
+import it.algos.webbase.web.lib.LibTime;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -418,6 +420,35 @@ public class LibArrayTest {
     } // fine del test
 
     @Test
+    public void sommaDisordinata2() {
+        ArrayList<String> arrayPrimo = new ArrayList<String>();
+        ArrayList<String> arraySecondo = new ArrayList<String>();
+        int cicli = 50000;
+        long inizio = System.currentTimeMillis();
+        String primoStep;
+        String secondStep;
+
+
+        for (Integer k = 0; k < cicli; k++) {
+            arrayPrimo.add(k.toString());
+        }// end of for cycle
+
+        for (Integer k = cicli; k < cicli * 2; k++) {
+            arraySecondo.add(k.toString());
+        }// end of for cycle
+
+        primoStep = LibTime.difText(inizio);
+        System.out.println("primoStep: " + primoStep);
+
+        ottenuto = LibArray.sommaDisordinata(arrayPrimo, arraySecondo);
+
+        secondStep = LibTime.difText(inizio);
+        System.out.println("secondStep: " + secondStep);
+
+        int a = 87;
+    } // fine del test
+
+    @Test
     /**
      * Somma due array (liste) e restituisce una lista ordinata
      * <p>
@@ -682,11 +713,11 @@ public class LibArrayTest {
 
     @Test
     /**
-       * Recupera una lista delle chiavi di una mappa
-       *
-       * @param mappa in ingresso
-       * @return lista delle chiavi
-       */
+     * Recupera una lista delle chiavi di una mappa
+     *
+     * @param mappa in ingresso
+     * @return lista delle chiavi
+     */
     public void getKeyFromMap() {
         String chiave1 = "xyz";
         String chiave2 = "pippo";
@@ -713,7 +744,7 @@ public class LibArrayTest {
         mappa.put(chiave4, value4);
         mappa.put(chiave5, value5);
 
-        listaOttenuta= LibArray.getKeyFromMap(mappa);
+        listaOttenuta = LibArray.getKeyFromMap(mappa);
         boolOttenuto = LibArray.isArrayEquals(listaOttenuta, listaPrevista);
         assertTrue(boolOttenuto);
 

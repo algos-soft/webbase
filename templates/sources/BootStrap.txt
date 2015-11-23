@@ -1,5 +1,6 @@
 package it.algos.@LOWERPROGETTO@.bootstrap;
 
+import it.algos.@LOWERPROGETTO@.@PROGETTO@App;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.bootstrap.ABootStrap;
 import it.algos.webbase.web.toolbar.Toolbar;

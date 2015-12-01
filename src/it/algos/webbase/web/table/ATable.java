@@ -526,6 +526,26 @@ public class ATable extends Table implements ListSelection {
         return bean;
     }// end of method
 
+    /**
+     * Return the selected beans (multiple selection)
+     */
+    public BeanItem[] getSelectedBeans() {
+        BeanItem[] selected = new BeanItem[0];
+        Object[] ids = getSelectedIds();
+        if (ids != null) {
+            ArrayList<BeanItem> objSel=new  ArrayList<BeanItem>();
+            for(Object id : ids){
+                BeanItem<?> bi = getBeanItem(id);
+                if (bi!=null){
+                    objSel.add(bi);
+                }
+            }
+            selected=objSel.toArray(new BeanItem[0]);
+        }
+        return selected;
+    }// end of method
+
+
     // /**
     // * @return the selected row ids
     // */

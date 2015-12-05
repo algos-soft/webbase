@@ -53,14 +53,24 @@ public class ComboNewItemHandler implements NewItemHandler {
 		this.field = field;
 		this.formClass = formClass;
 		this.attribute = attribute;
+
+		// add a listener, invoked when the editing is committed
+		addRecordEditedListener(new ComboNewItemHandler.RecordEditedListener() {
+
+			@Override
+			public void save_(BeanItem bi, boolean newRecord) {
+				field.fire(bi, newRecord);
+			}
+		});
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addNewItem(String newItemCaption) {
 
-		// create the new item
-		Object bean = BaseEntity.createBean(this.field.getEntityClass());
+		// create the new bean item
+		Object bean = createBean();
 		BeanItem item = new BeanItem(bean);
 
 		// write the caption to the appropriate field
@@ -76,9 +86,18 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 
 	}
+
+	/**
+	 * Creates the new empty bean to be shown in the edit form.
+	 * Override this in a subclass to provide default values.
+	 * @return the bean
+	 */
+	protected Object createBean(){
+		 return BaseEntity.createBean(this.field.getEntityClass());
+	}
 	
 	
-	private void editItem(BeanItem item, final boolean newRecord){
+	protected void editItem(BeanItem item, final boolean newRecord){
 		
 		// check that the form class exists
 		if (formClass == null) {

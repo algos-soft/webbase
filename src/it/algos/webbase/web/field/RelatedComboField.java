@@ -1,5 +1,6 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.data.Property;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
@@ -23,207 +24,239 @@ import com.vaadin.ui.HorizontalLayout;
 @SuppressWarnings("serial")
 public class RelatedComboField extends ComboBox implements FieldInterface<Object> {
 
-	private ArrayList<RecordEditedListener> listeners = new ArrayList<RecordEditedListener>();
+    // constants to identify the edit types allowed (new/edit buttons)
+    public static final int EDIT_TYPE_NEW = 1;
+    public static final int EDIT_TYPE_EDIT = 2;
+    public static final int EDIT_TYPE_BOTH = 3;
+
+    private ArrayList<RecordEditedListener> listeners = new ArrayList<RecordEditedListener>();
 
 
-	@SuppressWarnings("rawtypes")
-	private Class entityClass;
+    @SuppressWarnings("rawtypes")
+    private Class entityClass;
 
-	private Component editComponent;
+    private Component editComponent;
 
-	@SuppressWarnings("rawtypes")
-	public RelatedComboField(Class entityClass, String caption) {
-		super(caption);
-		this.entityClass = entityClass;
-		setImmediate(true);
-		init();
-	}
+    @SuppressWarnings("rawtypes")
+    public RelatedComboField(Class entityClass, String caption) {
+        super(caption);
+        this.entityClass = entityClass;
+        setImmediate(true);
+        init();
+    }
 
-	@SuppressWarnings("rawtypes")
-	public RelatedComboField(Class entityClass) {
-		this(entityClass, null);
-	}
+    @SuppressWarnings("rawtypes")
+    public RelatedComboField(Class entityClass) {
+        this(entityClass, null);
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void init() {
-		initField();
-		Container cont = createContainer();
-		setContainerDataSource(cont);
-		setItemCaptionMode(ItemCaptionMode.ITEM);
-		setConverter(new SingleSelectConverter(this));
-		setWidth("260px");
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void init() {
+        initField();
+        Container cont = createContainer();
+        setContainerDataSource(cont);
+        setItemCaptionMode(ItemCaptionMode.ITEM);
+        setConverter(new SingleSelectConverter(this));
+        setWidth("260px");
+    }
 
-	public void initField() {
-		FieldUtil.initField(this);
-	}
+    public void initField() {
+        FieldUtil.initField(this);
+    }
 
-	/**
-	 * Creates the container used as data source for the combo.
-	 * <p>
-	 * @return the container
-	 */
-	@SuppressWarnings("unchecked")
-	protected Container createContainer(){
-		return JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
-	}
+    /**
+     * Creates the container used as data source for the combo.
+     * <p>
+     *
+     * @return the container
+     */
+    @SuppressWarnings("unchecked")
+    protected Container createContainer() {
+        return JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
+    }
 
 
-	/**
-	 * Assigns a handler for new items. Switches on/off the feature of the combo if the handler is not null or null
-	 */
-	@Override
-	public void setNewItemHandler(NewItemHandler newItemHandler) {
-		setNewItemsAllowed(newItemHandler != null);
-		super.setNewItemHandler(newItemHandler);
-	}
+    /**
+     * Assigns a handler for new items. Switches on/off the feature of the combo if the handler is not null or null
+     */
+    @Override
+    public void setNewItemHandler(NewItemHandler newItemHandler) {
+        setNewItemsAllowed(newItemHandler != null);
+        super.setNewItemHandler(newItemHandler);
+    }
 
-	/**
-	 * Creates a handler to handle new items and assigns it to this combo.
-	 * 
-	 * @param formClass
-	 *            - the class for the form which will be used for editing the new item (must subclass AForm)
-	 * @param attribute
-	 *            - the attribute to fill with the text coming from the combo
-	 */
-	public void setNewItemHandler(Class<? extends AForm> formClass, Attribute attribute) {
-		ComboNewItemHandler handler = new ComboNewItemHandler(this, formClass, attribute);
-		handler.addRecordEditedListener(new ComboNewItemHandler.RecordEditedListener() {
-			
-			@Override
-			public void save_(BeanItem bi, boolean newRecord) {
-				fire(bi, newRecord);
-			}
-		});
-		setNewItemHandler(handler);
-	}
-	
-	
+    /**
+     * Creates a handler to handle new items and assigns it to this combo.
+     *
+     * @param formClass - the class for the form which will be used for editing the new item (must subclass AForm)
+     * @param attribute - the attribute to fill with the text coming from the combo
+     */
+    public void setNewItemHandler(Class<? extends AForm> formClass, Attribute attribute) {
+        ComboNewItemHandler handler = new ComboNewItemHandler(this, formClass, attribute);
+        setNewItemHandler(handler);
+    }
 
-	/**
-	 * Return a bean corresponding to the currently selected item
-	 * <p>
-	 * 
-	 * @return the bean
-	 */
-	public Object getSelectedBean() {
-		Object bean = null;
-		long id = Lib.getLong(getValue());
-		if (id > 0) {
-			bean = AQuery.queryById(getEntityClass(), id);
-		}
-		return bean;
-	}
 
-	/**
-	 * Sorts the container
-	 * 
-	 * @param sortList
-	 *            array of attribute ids on which to sort
-	 */
-	@SuppressWarnings("rawtypes")
-	public void sort(Object... sortList) {
-		ArrayList<Object> attrIds = new ArrayList<Object>();
-		for (Object obj : sortList) {
-			Object key = obj;
-			if (key instanceof Attribute) {
-				key = ((Attribute) obj).getName();
-			}
-			attrIds.add(key);
-		}
-		Object[] attrArray = attrIds.toArray(new Object[0]);
-		boolean[] attrOrders = new boolean[attrArray.length];
-		for (int i = 0; i < attrOrders.length; i++) {
-			attrOrders[i] = true;
-		}
-		getJPAContainer().sort(attrArray, attrOrders);
-	}
+    /**
+     * Return a bean corresponding to the currently selected item
+     * <p>
+     *
+     * @return the bean
+     */
+    public Object getSelectedBean() {
+        Object bean = null;
+        long id = Lib.getLong(getValue());
+        if (id > 0) {
+            bean = AQuery.queryById(getEntityClass(), id);
+        }
+        return bean;
+    }
 
-	@SuppressWarnings("rawtypes")
-	public JPAContainer getJPAContainer() {
-		JPAContainer jpaCont=null;
-		Container cont = getContainerDataSource();
-		if ((cont!=null) && (cont instanceof JPAContainer)) {
-			jpaCont=(JPAContainer)cont;
-		}
-		return jpaCont;
-	}
+    /**
+     * Sorts the container
+     *
+     * @param sortList array of attribute ids on which to sort
+     */
+    @SuppressWarnings("rawtypes")
+    public void sort(Object... sortList) {
+        ArrayList<Object> attrIds = new ArrayList<Object>();
+        for (Object obj : sortList) {
+            Object key = obj;
+            if (key instanceof Attribute) {
+                key = ((Attribute) obj).getName();
+            }
+            attrIds.add(key);
+        }
+        Object[] attrArray = attrIds.toArray(new Object[0]);
+        boolean[] attrOrders = new boolean[attrArray.length];
+        for (int i = 0; i < attrOrders.length; i++) {
+            attrOrders[i] = true;
+        }
+        getJPAContainer().sort(attrArray, attrOrders);
+    }
 
-	@SuppressWarnings("rawtypes")
-	public Class getEntityClass() {
-		return entityClass;
-	}
+    @SuppressWarnings("rawtypes")
+    public JPAContainer getJPAContainer() {
+        JPAContainer jpaCont = null;
+        Container cont = getContainerDataSource();
+        if ((cont != null) && (cont instanceof JPAContainer)) {
+            jpaCont = (JPAContainer) cont;
+        }
+        return jpaCont;
+    }
 
-	public void setAlignment(FieldAlignment alignment) {
-	}
+    @SuppressWarnings("rawtypes")
+    public Class getEntityClass() {
+        return entityClass;
+    }
 
-	
-	/**
-	 * @return a Component containing this field and a edit button wrapped in a layout.
-	 * <p>
-	 * When the edit button is pressed, the selected item is edited in the edit form.
-	 */
-	public Component getEditComponent(){
+    public void setAlignment(FieldAlignment alignment) {
+    }
 
-		// lazily creates the edit component the first time is requested
-		if (editComponent==null){
-			HorizontalLayout layout = new HorizontalLayout();
-			layout.setSpacing(true);
-			layout.setCaption(this.getCaption());
-			this.setCaption(null);
-			layout.addComponent(this);
-			Button button = new Button("Modifica");
-			button.addClickListener(new Button.ClickListener() {
 
-				@Override
-				public void buttonClick(ClickEvent event) {
-					editButtonClicked();
-				}
-			});
-			layout.addComponent(button);
-			editComponent=layout;
-		}
+    /**
+     * @return a Component containing this field and the new/edit buttons,
+     * all wrapped in a layout.
+     * <p>
+     * When the new/edit buttons are pressed, the edit form is presented.
+     */
+    public Component getEditComponent(int type) {
 
-		return editComponent;
-	}
-	
-	private void editButtonClicked(){
-		NewItemHandler handler = getNewItemHandler();
-		if ((handler!=null) && (handler instanceof ComboNewItemHandler)) {
-			ComboNewItemHandler cHandler = (ComboNewItemHandler)handler;
-			Object bean = getSelectedBean();
-			if (bean!=null) {
-				BeanItem bi = new BeanItem(bean);
-				cHandler.edit(bi);
-			}
-		}
-	}
-	
-	
-	/**
-	 * Adds a listener that gets notified when a 
-	 * record is saved after being edited in the form.
-	 */
-	public void addRecordEditedListener(RecordEditedListener listener) {
-		this.listeners.add(listener);
-	}// end of method
-	
-	protected void fire(BeanItem bi, boolean newRecord) {
-		for (RecordEditedListener l : listeners) {
-			l.save_(bi, newRecord);
-		}
+        // lazily creates the edit component the first time is requested
+        if (editComponent == null) {
+            HorizontalLayout layout = new HorizontalLayout();
+            layout.setSpacing(true);
+            layout.setCaption(this.getCaption());
+            this.setCaption(null);
+            layout.addComponent(this);
 
-	}// end of method
+            // "new" button
+            if ((type == EDIT_TYPE_NEW) | (type == EDIT_TYPE_BOTH)) {
+                Button bNew = new Button("Nuovo");
+                bNew.addClickListener(new Button.ClickListener() {
 
-	
-	public interface RecordEditedListener {
-		/**
-		 * The record has been saved after being edited in the form.
-		 * <p>
-		 * @param bi the saved bean
-		 * @param newRecord true for new record, false for editing existing record
-		 */
-		public void save_(BeanItem bi, boolean newRecord);
-	}
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        newButtonClicked();
+                    }
+                });
+                layout.addComponent(bNew);
+            }
+
+            // "edit" button
+            if ((type == EDIT_TYPE_EDIT) | (type == EDIT_TYPE_BOTH)) {
+                Button bEdit = new Button("Modifica");
+                bEdit.addClickListener(new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        editButtonClicked();
+                    }
+                });
+                layout.addComponent(bEdit);
+            }
+
+            editComponent = layout;
+        }
+
+        return editComponent;
+    }
+
+    /**
+     * @return a Component containing this field and the edit button,
+     * all wrapped in a layout.
+     */
+    public Component getEditComponent() {
+        return getEditComponent(EDIT_TYPE_EDIT);
+    }
+
+
+    protected void editButtonClicked() {
+        NewItemHandler handler = getNewItemHandler();
+        if ((handler != null) && (handler instanceof ComboNewItemHandler)) {
+            ComboNewItemHandler cHandler = (ComboNewItemHandler) handler;
+            Object bean = getSelectedBean();
+            if (bean != null) {
+                BeanItem bi = new BeanItem(bean);
+                cHandler.edit(bi);
+            }
+        }
+    }
+
+    protected void newButtonClicked() {
+        NewItemHandler handler = getNewItemHandler();
+        if ((handler != null) && (handler instanceof ComboNewItemHandler)) {
+            ComboNewItemHandler cHandler = (ComboNewItemHandler) handler;
+            cHandler.addNewItem(null);
+        }
+    }
+
+
+    /**
+     * Adds a listener that gets notified when a
+     * record is saved after being edited in the form.
+     */
+    public void addRecordEditedListener(RecordEditedListener listener) {
+        this.listeners.add(listener);
+    }// end of method
+
+    protected void fire(BeanItem bi, boolean newRecord) {
+        for (RecordEditedListener l : listeners) {
+            l.save_(bi, newRecord);
+        }
+
+    }// end of method
+
+
+    public interface RecordEditedListener {
+        /**
+         * The record has been saved after being edited in the form.
+         * <p>
+         *
+         * @param bi        the saved bean
+         * @param newRecord true for new record, false for editing existing record
+         */
+        public void save_(BeanItem bi, boolean newRecord);
+    }
 
 }

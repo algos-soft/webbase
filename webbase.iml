@@ -42,7 +42,7 @@
       <sourceFolder url="file://$MODULE_DIR$/prova" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/templates" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 8.0.15" level="application_server_libraries" />
     <orderEntry type="module-library">
@@ -220,6 +220,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.validation/validation-api/sources/validation-api-1.0.0.GA-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.servlet/javax.servlet-api/sources/javax.servlet-api-3.0.1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/joda-time/joda-time/sources/joda-time-2.3-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/mysql/mysql-connector-java/sources/mysql-connector-java-5.1.31-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

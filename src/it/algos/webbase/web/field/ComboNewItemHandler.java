@@ -133,6 +133,9 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 			@Override
 			public void commit_() {
+
+				pippo();
+
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
 				bean.save();
@@ -140,6 +143,9 @@ public class ComboNewItemHandler implements NewItemHandler {
 				field.getJPAContainer().refresh();
 				long id = bean.getId();
 				field.setValue(id);
+
+				//field.setContainerDataSource(field.getContainerDataSource());
+
 				fire(new BeanItem(bean), newRecord);
 			}
 
@@ -160,6 +166,10 @@ public class ComboNewItemHandler implements NewItemHandler {
 		window.center();
 		UI ui = UI.getCurrent();
 		ui.addWindow(window);
+	}
+
+	protected void pippo(){
+
 	}
 	
 	public void edit(BeanItem bi){

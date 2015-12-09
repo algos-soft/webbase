@@ -58,6 +58,7 @@ public class @PROGETTO@BootStrap extends ABootStrap {
      */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    }// end of method
+         super.contextDestroyed(servletContextEvent);
+   }// end of method
 
 }// end of bootstrap class

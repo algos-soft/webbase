@@ -13,7 +13,6 @@ import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.field.DateField;
-import it.algos.webbase.web.field.TextArea;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.module.ModulePop;
@@ -25,7 +24,6 @@ import javax.persistence.metamodel.Attribute;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -41,6 +39,7 @@ public class AForm extends VerticalLayout {
     private Toolbar toolbar;
     private ArrayList<FormListener> listeners = new ArrayList<FormListener>();
     private boolean newRecord; // turned on if the edited bean is a new record.
+    private Attribute attr;
     // Never turned off.
 
     /**
@@ -189,7 +188,6 @@ public class AForm extends VerticalLayout {
 
         if (attr != null) {
             clazz = attr.getJavaType();
-
             if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
                 field = new CheckBoxField();
             }// fine del blocco if
@@ -290,10 +288,11 @@ public class AForm extends VerticalLayout {
     /**
      * Create the UI component.
      * <p>
-     * Retrieve the fields from the map and place them in the UI. Implementazione di default nella superclasse. I campi
-     * vengono allineati verticalmente. Se si vuole aggiungere un campo, usare il metodo sovrascritto nella sottoclasse
-     * richiamando prima il metodo della superclasse. Se si vuole un layout completamente differente, implementare il
-     * metodo sovrascritto da solo.
+     * Retrieve the fields from the map and place them in the UI.
+     * Implementazione di default nella superclasse.
+     * I campi vengono allineati verticalmente.
+     * Se si vuole aggiungere un campo, usare il metodo sovrascritto nella sottoclasse richiamando prima il metodo della superclasse.
+     * Se si vuole un layout completamente differente, implementare il metodo sovrascritto SENZA richiamare il metodo della superclasse.
      */
     protected Component createComponent() {
 

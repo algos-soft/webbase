@@ -58,8 +58,7 @@
 // 12. In Project Settings -> Artifatcs in <output root> deve esserci webbase_war_exploded (come Project Library) per visualizzare le icone
 
 
-13. L'applicazione funziona usando il theme 'valo' (standard). Per utilizzare il theme ''algos' (già caricato):
-    - aprire la classe xxxUI e modificare le righe 14/15 per sostituire il theme valo con algos
+13. L'applicazione funziona usando il theme 'algos' (standard). L'eventuale selezione si effettua nella classe xxxUI
     - in Project Settings -> Artifatcs selezionare l'artifact web:xxx exploded
     - a destra nel tab Output Layout selezionare l'icona della directory (a sinistra) e crearne una nuova directory
         dal titolo (obbligatorio) VAADIN

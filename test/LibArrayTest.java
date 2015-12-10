@@ -940,7 +940,7 @@ public class LibArrayTest {
         intOttenuto = LibArray.numCicli(1250, 0);
         assertEquals(intOttenuto, intPrevisto);
 
-        intPrevisto = 0;
+        intPrevisto = 1;
         intOttenuto = LibArray.numCicli(375, blocco);
         assertEquals(intOttenuto, intPrevisto);
 

@@ -571,7 +571,7 @@ public abstract class LibArray {
         }// end of if cycle
 
         if (blocco > totale) {
-            return 0;
+            return 1;
         }// end of if cycle
 
         cicli = totale / blocco;

@@ -264,17 +264,17 @@ public abstract class LibArray {
             for (Object ogg : arraySecondo) {
                 arrayPrimo.add(ogg);
             } // fine del ciclo for-each
-            arrayPrimo= valoriUniciBase(arrayPrimo,false);
+            arrayPrimo = valoriUniciBase(arrayPrimo, false);
             return arrayPrimo;
         }// fine del blocco if
 
-        if (arrayPrimo == null ) {
-            arraySecondo= valoriUniciBase(arraySecondo,false);
+        if (arrayPrimo == null) {
+            arraySecondo = valoriUniciBase(arraySecondo, false);
             return arraySecondo;
         }// fine del blocco if
 
-        if (arraySecondo == null ) {
-            arrayPrimo= valoriUniciBase(arrayPrimo,false);
+        if (arraySecondo == null) {
+            arrayPrimo = valoriUniciBase(arrayPrimo, false);
             return arrayPrimo;
         }// fine del blocco if
 
@@ -549,6 +549,84 @@ public abstract class LibArray {
         }// end of if cycle
 
         return uguali;
+    }// end of static method
+
+    /**
+     * Numero di cicli
+     *
+     * @param totale da dividere
+     * @param blocco divisore
+     * @return numero di cicli
+     */
+    public static int numCicli(int totale, int blocco) {
+        int cicli = 0;
+        int resto;
+
+        if (blocco < 0) {
+            return 0;
+        }// end of if cycle
+
+        if (blocco == 0) {
+            return totale;
+        }// end of if cycle
+
+        if (blocco > totale) {
+            return 0;
+        }// end of if cycle
+
+        cicli = totale / blocco;
+        resto = totale % blocco;
+        if (resto > 0) {
+            cicli++;
+        }// end of if cycle
+
+        return cicli;
+    }// end of static method
+
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     * @return sublista corrente del ciclo
+     */
+    public static ArrayList<Integer> estraeSublistaInt(ArrayList<Integer> listatTotale, int dimBlocco, int cicloCorrente) {
+        ArrayList<Integer> sublista = null;
+        int delta;
+
+        if (listatTotale == null || listatTotale.size() < 1) {
+            return null;
+        }// end of if cycle
+
+        delta = dimBlocco * (cicloCorrente + 1);
+        delta = Math.min(listatTotale.size(), delta);
+        sublista = new ArrayList<Integer>(listatTotale.subList(dimBlocco * cicloCorrente, delta));
+
+        return sublista;
+    }// end of static method
+
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     * @return sublista corrente del ciclo
+     */
+    public static ArrayList<Long> estraeSublistaLong(ArrayList<Long> listatTotale, int dimBlocco, int cicloCorrente) {
+        ArrayList<Long> sublista = null;
+        int delta;
+
+        if (listatTotale == null || listatTotale.size() < 1) {
+            return null;
+        }// end of if cycle
+
+        delta = dimBlocco * (cicloCorrente + 1);
+        delta = Math.min(listatTotale.size(), delta);
+        sublista = new ArrayList<Long>(listatTotale.subList(dimBlocco * cicloCorrente, delta));
+
+        return sublista;
     }// end of static method
 
 }// end of abstract static class

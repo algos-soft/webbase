@@ -13,7 +13,7 @@ public abstract class LibImage {
 	 * @return the image
 	 */
 	public static Image getImage(final Resource resource){
-		Image image = new Image("", resource);
+		Image image = new Image(null, resource);
 	    return image;
 	}// end of static method
 

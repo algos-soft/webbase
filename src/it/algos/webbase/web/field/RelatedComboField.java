@@ -159,6 +159,8 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      * all wrapped in a layout.
      * <p>
      * When the new/edit buttons are pressed, the edit form is presented.
+     * @param type EDIT_TYPE_NEW to show tne NEW button, EDIT_TYPE_EDIT to
+     *             show the EDIT button, EDIT_TYPE_BOTH to show both buttons
      */
     public Component getEditComponent(int type) {
 
@@ -166,6 +168,8 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         if (editComponent == null) {
             HorizontalLayout layout = new HorizontalLayout();
             layout.setSpacing(true);
+
+            // moves the caption to the external layout
             layout.setCaption(this.getCaption());
             this.setCaption(null);
             layout.addComponent(this);

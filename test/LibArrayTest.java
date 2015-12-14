@@ -1,6 +1,5 @@
 import com.vaadin.ui.Label;
 import it.algos.webbase.web.lib.LibArray;
-import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.lib.LibTime;
 import org.junit.Test;
 
@@ -22,6 +21,8 @@ public class LibArrayTest {
     private static int SIZE_UNICI = 3;
     protected boolean boolPrevisto = false;
     protected boolean boolOttenuto = false;
+    protected int intPrevisto = 0;
+    protected int intOttenuto = 0;
     private int primoInt = 8;
     private int due = 15;
     private int tre = 27;
@@ -444,7 +445,7 @@ public class LibArrayTest {
 
         secondStep = LibTime.difText(inizio);
         System.out.println("secondStep: " + secondStep);
-        int a=87;
+        int a = 87;
     } // fine del test
 
     @Test
@@ -917,6 +918,87 @@ public class LibArrayTest {
 
         boolOttenuto = LibArray.isMapEquals(errataValore, actual);
         assertFalse(boolOttenuto);
+    }// fine tests
+
+
+    @Test
+    /**
+     * Numero di cicli
+     *
+     * @param totale da dividere
+     * @param blocco divisore
+     * @return numero di cicli
+     */
+    public void numCicli() {
+        int blocco = 500;
+
+        intPrevisto = 0;
+        intOttenuto = LibArray.numCicli(1250, -23);
+        assertEquals(intOttenuto, intPrevisto);
+
+        intPrevisto = 1250;
+        intOttenuto = LibArray.numCicli(1250, 0);
+        assertEquals(intOttenuto, intPrevisto);
+
+        intPrevisto = 1;
+        intOttenuto = LibArray.numCicli(375, blocco);
+        assertEquals(intOttenuto, intPrevisto);
+
+        intPrevisto = 2;
+        intOttenuto = LibArray.numCicli(999, blocco);
+        assertEquals(intOttenuto, intPrevisto);
+
+        intPrevisto = 2;
+        intOttenuto = LibArray.numCicli(1000, blocco);
+        assertEquals(intOttenuto, intPrevisto);
+
+        intPrevisto = 3;
+        intOttenuto = LibArray.numCicli(1001, blocco);
+        assertEquals(intOttenuto, intPrevisto);
+    }// fine tests
+
+
+    @Test
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     * @return sublista corrente del ciclo
+     */
+    public void estraeSublistaLong() {
+        ArrayList<Long> sublista;
+        ArrayList<Long> listatTotale = new ArrayList<Long>();
+        int dimListaOriginale = 1234;
+        int dimBlocco = 500;
+
+        sublista = LibArray.estraeSublistaLong(null, dimBlocco, 3);
+        assertNull(sublista);
+
+        sublista = LibArray.estraeSublistaLong(listatTotale, dimBlocco, 3);
+        assertNull(sublista);
+
+        for (long k = 0; k < dimListaOriginale; k++) {
+            listatTotale.add(k);
+        }// end of for cycle
+        assertEquals(listatTotale.size(), dimListaOriginale);
+
+        sublista = LibArray.estraeSublistaLong(listatTotale, dimBlocco, 0);
+        assertNotNull(sublista);
+        assertTrue(sublista.size() == dimBlocco);
+        assertTrue(sublista.get(0) == 0);
+
+        sublista = LibArray.estraeSublistaLong(listatTotale, dimBlocco, 1);
+        assertNotNull(sublista);
+        assertTrue(sublista.size() == dimBlocco);
+        assertTrue(sublista.get(0) == 500);
+
+        sublista = LibArray.estraeSublistaLong(listatTotale, dimBlocco, 2);
+        assertNotNull(sublista);
+        assertTrue(sublista.size() == 234);
+        assertTrue(sublista.get(0) == 1000);
+
     }// fine tests
 
 //

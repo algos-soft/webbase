@@ -66,6 +66,11 @@ public abstract class BaseDialog extends Window {
 
 		setContent(mainLayout);
 
+		// debug
+		mainLayout.addStyleName("redBg");
+		detail.addStyleName("blueBg");
+
+
 		center();
 
 	}
@@ -83,6 +88,10 @@ public abstract class BaseDialog extends Window {
 		label = new Label();
 		label.setContentMode(ContentMode.HTML);
 		layout.addComponent(label);
+
+		label.addStyleName("redBg");
+		label.setValue("ciao");
+
 		return layout;
 	}
 

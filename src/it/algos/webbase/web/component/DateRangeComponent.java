@@ -1,5 +1,6 @@
 package it.algos.webbase.web.component;
 
+import com.vaadin.ui.FormLayout;
 import it.algos.webbase.web.field.DateField;
 
 import java.util.Date;
@@ -44,20 +45,23 @@ public class DateRangeComponent extends HorizontalLayout {
 	 * Constructs a component showing 2 dates
 	 */
 	public DateRangeComponent(boolean usaGennaioOggi) {
-		this((String) null, usaGennaioOggi);
+		this((String) null, usaGennaioOggi, false);
 	}// end of constructor
 
 	/**
 	 * Constructs a component showing 2 dates
 	 */
 	public DateRangeComponent(String caption) {
-		this(caption, false);
+		this(caption, false, false);
 	}// end of constructor
 
 	/**
 	 * Constructs a component showing 2 dates
+	 * @param caption for the component
+	 * @param usaGennaioOggi to show dates 1st Jan - today
+	 *  @param labelsLeft true for the labels on the left instead of top
 	 */
-	public DateRangeComponent(String caption, boolean usaGennaioOggi) {
+	public DateRangeComponent(String caption, boolean usaGennaioOggi, boolean labelsLeft) {
 		super();
 		setSpacing(true);
 		setCaption(caption);
@@ -68,13 +72,12 @@ public class DateRangeComponent extends HorizontalLayout {
 		}// end of if cycle
 
 		// Spesso non è desiderabile avere le date preimpostate.
-		// Per esempio, impedisce di trovare tutti i record sempricemente premendo
+		// Per esempio, impedisce di trovare tutti i record semplicemente premendo
 		// ricerca - ok, inoltre se la gestione non va ad anno solare
 		// non porta beneficio.
 		// Questo comportamento eventualmente lo metterei opzionale e non di default.
 		// alex 12/09/2014
 		// fData1 = DateField.primoGennaio("Dal");
-
 		if (usaGennaioOggi) {
 			fData1 = DateField.primoGennaio("Dal");
 			fData2 = DateField.oggi("Al");
@@ -94,8 +97,22 @@ public class DateRangeComponent extends HorizontalLayout {
 			}// end of inner method
 		});// end of anonymous inner class
 
-		addComponent(fData1);
-		addComponent(fData2);
+		// labels left or labels above
+		if(labelsLeft){
+			FormLayout l1 = new FormLayout();
+			l1.setMargin(false);
+			l1.addComponent(fData1);
+			FormLayout l2 = new FormLayout();
+			l2.setMargin(false);
+			l2.addComponent(fData2);
+			addComponent(l1);
+			addComponent(l2);
+		}else{
+			addComponent(fData1);
+			addComponent(fData2);
+		}
+
+
 	}// end of constructor
 
 	/**

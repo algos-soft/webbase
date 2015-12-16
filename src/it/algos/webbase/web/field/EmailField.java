@@ -14,7 +14,7 @@ public class EmailField extends TextField implements FieldInterface<String> {
 	}
 
 	private void init() {
-		setWidth("260px");
+		setWidth("20em");
 		Validator validator = new com.vaadin.data.validator.EmailValidator("indirizzo email non valido");
 		this.addValidator(validator);
 	}

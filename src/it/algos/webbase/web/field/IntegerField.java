@@ -16,7 +16,7 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 		super();
 		textField = new TextField();
 		setCaption(caption);
-		setWidth("60px");
+		setWidth("5em");
 
 		textField.addValueChangeListener(new ValueChangeListener() {
 

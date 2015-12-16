@@ -43,7 +43,7 @@ public class DateField extends com.vaadin.ui.DateField implements FieldInterface
 
     private void init() {
         initField();
-        setWidth("100px");
+        setWidth("8em");
     }// end of method
 
     public void initField() {

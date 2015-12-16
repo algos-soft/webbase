@@ -21,7 +21,7 @@ public class DecimalField extends CustomField<BigDecimal> implements FieldInterf
 		setAlignment(FieldAlignment.left);
 
 		setCaption(caption);
-		setWidth("80px");
+		setWidth("6em");
 
 		textField.addValueChangeListener(new ValueChangeListener() {
 

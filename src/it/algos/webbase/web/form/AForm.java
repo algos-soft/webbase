@@ -670,6 +670,9 @@ public class AForm extends VerticalLayout {
 
     // incapsula tutto in un layout con margine perché setMargin
     // sembra non funzionare con Valo in FormLayout
+    // @deprecated
+    // questo metodo non serve, basta dichiarare il layout come FormLayout
+    // ed usare il metodo setMargin() che funziona. - alex dic-2015
     protected Component incapsulaPerMargine(Component comp) {
         VerticalLayout vLayout = new VerticalLayout();
         vLayout.setMargin(true);

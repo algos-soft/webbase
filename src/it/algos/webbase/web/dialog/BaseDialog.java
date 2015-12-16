@@ -66,11 +66,6 @@ public abstract class BaseDialog extends Window {
 
 		setContent(mainLayout);
 
-		// debug
-		mainLayout.addStyleName("redBg");
-		detail.addStyleName("blueBg");
-
-
 		center();
 
 	}
@@ -86,11 +81,9 @@ public abstract class BaseDialog extends Window {
 		layout.setMargin(true);
 		// add a label hosting the text to the default VerticalLayout
 		label = new Label();
+		label.setWidth("100%");
 		label.setContentMode(ContentMode.HTML);
 		layout.addComponent(label);
-
-		label.addStyleName("redBg");
-		label.setValue("ciao");
 
 		return layout;
 	}
@@ -140,7 +133,13 @@ public abstract class BaseDialog extends Window {
 	 */
 	public void setMessage(String message) {
 		if (label != null) {
-			label.setValue(message);
+			if(message!=null && !message.equals("")){
+				label.setValue(message);
+				label.setVisible(true);
+			}else{
+				label.setValue(null);
+				label.setVisible(false);
+			}
 		}
 	}
 

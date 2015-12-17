@@ -1,6 +1,7 @@
 package it.algos.webbase.web.field;
 
 import com.vaadin.data.Property;
+import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
@@ -72,7 +73,13 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      */
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
-        return JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
+        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
+
+
+
+        //get
+        //getEntityClass();
+        return cont;
     }
 
 
@@ -149,6 +156,15 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     public Class getEntityClass() {
         return entityClass;
     }
+
+//    public BaseEntity getBaseEntityClass() {
+//        if(entityClass instanceof BaseEntity){
+//
+//        }
+//        return null;
+//    }
+
+
 
     public void setAlignment(FieldAlignment alignment) {
     }

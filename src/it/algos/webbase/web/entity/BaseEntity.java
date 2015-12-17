@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.metamodel.SingularAttribute;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -176,6 +177,8 @@ public abstract class BaseEntity implements Serializable {
 	public interface PostUpdateListener {
 		public void postUpdate(Class<?> entityClass, long id);
 	}// end of interface
-	
-	
+
+
+
+
 }// end of class

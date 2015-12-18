@@ -159,43 +159,6 @@ public abstract class ModulePop extends Module {
     }// end of constructor
 
 
-    /**
-     * Crea una sola istanza di un modulo per sessione.
-     * Tutte le finestre e i tab di un browser sono nella stessa sessione.
-     */
-    public static ModulePop getInstance(Class clazz){
-        ModulePop istanza=null;
-
-        String key = clazz.getName();
-
-        Object obj = LibSession.getAttribute(key);
-        if (obj==null) {
-
-            try {
-                istanza = (ModulePop)clazz.newInstance();
-                LibSession.setAttribute(key, istanza);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-        }else{
-            istanza = (ModulePop)obj;
-        }
-
-        // rimuove il componente dal suo parente se presente
-        // (un componente può avere un solo parente)
-        Component comp = istanza.getParent();
-        if(comp!=null){
-            if(comp instanceof AlgosNavigator.NavigatorView){
-                AlgosNavigator.NavigatorView aLayout=(AlgosNavigator.NavigatorView)comp;
-                aLayout.removeComponent();
-            }
-        }
-
-        return istanza;
-    }
 
 
     /**

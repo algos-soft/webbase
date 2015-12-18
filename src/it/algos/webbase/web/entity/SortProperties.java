@@ -27,4 +27,9 @@ public class SortProperties{
         }
         return bools;
     };
+
+    public boolean isEmpty(){
+        return properties.size()==0;
+    }
+
 }

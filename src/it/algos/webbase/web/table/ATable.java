@@ -15,8 +15,10 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
+import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
@@ -191,15 +193,41 @@ public class ATable extends Table implements ListSelection {
         }
     }// end of method
 
+
     /**
-     * Initial sort order for the JPA container
+     * Sorts the container.
+     * By default the container is sorted based on the default sort order declared
+     * in the entity class via the @DefaultSort annotation.
+     * If the annotation is not present the container is not sorted.
+     *
+     * For a custom sort of the container in a RelatedCombo field you have 2 options:
+     * 1) call the sort() method after the creation of the object passing the properties on which to sort
+     * 2) override this method (needs subclassing).
+     * @param cont the container to be sorted.
+     */
+
+    /**
+     * Initial sorting of the container
      * <p>
+     * By default the container is sorted based on the default sort order declared
+     * in the entity class via the @DefaultSort annotation.
+     * If the annotation is not present the container is sorted by id.
      *
      * @param cont the container to be sorted
      */
     protected void sortJPAContainer(JPAContainer cont) {
-        String sortField = BaseEntity_.id.getName();
-        cont.sort(new String[]{sortField}, new boolean[]{true});
+
+        // retrieve the default sort properties from the class by annotation
+        SortProperties props = BaseEntity.getSortProperties(getEntityClass());
+
+        // sort the container on the sort properties
+        if(!props.isEmpty()){
+            cont.sort(props.getProperties(), props.getDirections());
+        }else{
+            String sortField = BaseEntity_.id.getName();
+            cont.sort(new String[]{sortField}, new boolean[]{true});
+        }
+
     }// end of method
 
 

@@ -45,10 +45,11 @@ public enum Secolo {
     XVI("XVI", 1501, 1600, false),
     XVII("XVII", 1601, 1700, false),
     XVIII("XVIII", 1701, 1800, false),
-    XIX("XIX", 1801, 1900, false);
+    XIX("XIX", 1801, 1900, false),
+    XX("XX", 1901, 2000, false),
+    XXI("XXI", 2001, 2100, false);
 
-
-    private final static String TAG_AC = " a.C.";
+    public final static String TAG_AC = " a.C.";
     private final static String SECOLO_DC = " secolo";
     private final static String SECOLO_AC = SECOLO_DC + TAG_AC;
 

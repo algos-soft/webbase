@@ -9,6 +9,7 @@ import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
@@ -18,8 +19,10 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 import it.algos.webbase.web.lib.LibNum;
+import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.menu.ModuleCommand;
+import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
@@ -29,6 +32,8 @@ import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -152,6 +157,46 @@ public abstract class ModulePop extends Module {
         }
 
     }// end of constructor
+
+
+    /**
+     * Crea una sola istanza di un modulo per sessione.
+     * Tutte le finestre e i tab di un browser sono nella stessa sessione.
+     */
+    public static ModulePop getInstance(Class clazz){
+        ModulePop istanza=null;
+
+        String key = clazz.getName();
+
+        Object obj = LibSession.getAttribute(key);
+        if (obj==null) {
+
+            try {
+                istanza = (ModulePop)clazz.newInstance();
+                LibSession.setAttribute(key, istanza);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            istanza = (ModulePop)obj;
+        }
+
+        // rimuove il componente dal suo parente se presente
+        // (un componente può avere un solo parente)
+        Component comp = istanza.getParent();
+        if(comp!=null){
+            if(comp instanceof AlgosNavigator.NavigatorView){
+                AlgosNavigator.NavigatorView aLayout=(AlgosNavigator.NavigatorView)comp;
+                aLayout.removeComponent();
+            }
+        }
+
+        return istanza;
+    }
+
 
     /**
      * Crea i campi visibili nella lista (table)

@@ -212,11 +212,13 @@ public class AMenuBar extends HorizontalLayout {
         this.loginBar = loginBar;
     }//end of setter method
 
-    public MenuBar getAlgosBar() {
+    public MenuBar getMenuBar() {
         return algosBar;
     }// end of getter method
 
-    public void setAlgosBar(MenuBar algosBar) {
+    public void setMenuBar(MenuBar algosBar) {
         this.algosBar = algosBar;
     }//end of setter method
+
+
 }// end of class

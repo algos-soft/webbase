@@ -24,11 +24,8 @@ import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.NavPlaceholder;
-import it.algos.webbase.web.table.ATable;
 
 import javax.servlet.http.Cookie;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -414,7 +411,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     private void creaMenu() {
         if (moduli != null && moduli.size() > 0) {
             for (ModulePop modulo : moduli) {
-                modulo.createMenuItem(topLayout.getAlgosBar(), bodyLayout);
+                modulo.createMenuItem(topLayout.getMenuBar(), bodyLayout);
             }// end of for cycle
         }// end of if cycle
     }// end of method
@@ -456,7 +453,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      */
     private void creaPartenza() {
         AlgosNavigator nav = new AlgosNavigator(getUI(), bodyLayout);
-        nav.configureFromMenubar(topLayout);
+        nav.configureFromMenubar(topLayout.getMenuBar());
 //        nav.navigateTo(menuAddressModuloPartenza);
     }// end of method
 
@@ -501,4 +498,6 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     public void setModuli(ArrayList<ModulePop> moduli) {
         this.moduli = moduli;
     }//end of setter method
+
+
 }// end of class

@@ -22,6 +22,10 @@ public class MenuCommand implements MenuBar.Command {
     private UI ui;
 
 
+    public MenuCommand(MenuBar mb, String address, Component comp) {
+        this(UI.getCurrent(), mb, address, comp);
+    }// end of constructor
+
     public MenuCommand(UI ui, MenuBar mb, String address, Component comp) {
         super();
         this.ui = ui;
@@ -29,6 +33,9 @@ public class MenuCommand implements MenuBar.Command {
         this.address = address;
         this.comp = comp;
     }// end of constructor
+
+
+
 
 
     public void menuSelected(MenuBar.MenuItem selectedItem) {

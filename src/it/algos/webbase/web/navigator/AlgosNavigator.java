@@ -23,7 +23,7 @@ public class AlgosNavigator extends Navigator {
      * <p/>
      * Recupera i Component dalla Menubar e crea le View per il Navigator
      */
-    public void configureFromMenubar(AMenuBar mb) {
+    public void configureFromMenubar(MenuBar mb) {
         List<MenuBar.MenuItem> items = mb.getItems();
         for (MenuBar.MenuItem item : items) {
             scanItem(item);
@@ -58,7 +58,7 @@ public class AlgosNavigator extends Navigator {
     /**
      * A class encapsulating a Component in a View for the Navigator
      */
-    class NavigatorView extends CustomComponent implements View {
+    public class NavigatorView extends CustomComponent implements View {
 
         public NavigatorView(Component content) {
             super();
@@ -68,6 +68,10 @@ public class AlgosNavigator extends Navigator {
             setCompositionRoot(content);
         }// end of constructor
 
+
+        public void removeComponent(){
+            setCompositionRoot(null);
+        }
 
         @Override
         public void enter(ViewChangeListener.ViewChangeEvent event) {
@@ -85,15 +89,8 @@ public class AlgosNavigator extends Navigator {
         public ErrorView() {
             super();
             setSizeFull();
-
-            try { // prova ad eseguire il codice
-                errScreen = new ErrorScreen();
-                setCompositionRoot(errScreen);
-
-            } catch (Exception unErrore) { // intercetta l'errore
-                String a = "";
-                int b = 8;
-            }// fine del blocco try-catch        }
+            errScreen = new ErrorScreen();
+            setCompositionRoot(errScreen);
         }// end of constructor
 
         @Override

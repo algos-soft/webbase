@@ -60,7 +60,7 @@ public class @NAME@ extends BaseEntity {
      * @param nome valore della property Nome
      * @return istanza di Bolla, null se non trovata
      */
-	public static @NAME@ findNome(String nome) {
+	public static @NAME@ findByNome(String nome) {
 		@NAME@ instance = null;
 		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.nome, nome);
 

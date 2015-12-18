@@ -1,7 +1,10 @@
 package it.algos.webbase.web.lib;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by gac on 06 set 2015.
@@ -83,7 +86,6 @@ public abstract class LibTime {
      * Restituisce come stringa (intelligente) la differenza tra una data e il momento attuale
      *
      * @param inizio del controllo
-     *
      * @return tempo in forma leggibile
      */
     public static String difText(long inizio) {
@@ -203,5 +205,170 @@ public abstract class LibTime {
     private static long getBaseLong() {
         return System.currentTimeMillis();
     }// end of static method
+
+    /**
+     * Crea la data da un long.
+     * La data parte dalla mezzanotte
+     *
+     * @param time di riferimento
+     * @return la data creata
+     */
+    public static Date creaData(long time) {
+        return creaData(new Timestamp(time), false);
+    }// fine del metodo
+
+    /**
+     * Crea la data da un timestamp.
+     * La data parte dalla mezzanotte
+     *
+     * @param timestamp di riferimento
+     * @return la data creata
+     */
+    public static Date creaData(Timestamp timestamp) {
+        return creaData(timestamp, false);
+    }// fine del metodo
+
+    /**
+     * Crea la data da un timestamp.
+     * Azzera eventuali valori di ore, minuti, secondi e millisecondi
+     * La data parte dalla mezzanotte
+     *
+     * @param timestamp di riferimento
+     * @return la data creata
+     */
+    public static Date creaDataMezzanotte(Timestamp timestamp) {
+        return creaData(timestamp, true);
+    }// fine del metodo
+
+    /**
+     * Crea la data da un timestamp.
+     * Azzera eventuali valori di ore, minuti, secondi e millisecondi
+     * La data parte dalla mezzanotte
+     *
+     * @param timestamp         di riferimento
+     * @param parteDaMezzanotte flag di controllo
+     * @return la data creata
+     */
+    private static Date creaData(Timestamp timestamp, boolean parteDaMezzanotte) {
+        Date giorno = null;
+        Calendar cal;
+
+        try { // prova ad eseguire il codice
+            cal = Calendar.getInstance();
+            cal.setTime(timestamp);
+            if (parteDaMezzanotte) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+            }// end of if cycle
+            giorno = new Date(cal.getTime().getTime());
+
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return giorno;
+    }// fine del metodo
+
+
+    /**
+     * Presentazione della data.
+     */
+    public static String getGioMeseAnno(Date data) {
+        return getGioMeseAnnoBase(data, true);
+    }// fine del metodo
+
+    /**
+     * Presentazione della data.
+     */
+    public static String getGioMeseAnnoLungo(Date data) {
+        return getGioMeseAnnoBase(data, false);
+    }// fine del metodo
+
+    /**
+     * Presentazione della data.
+     */
+    private static String getGioMeseAnnoBase(Date data, boolean corta) {
+        String dataFormattata = "";
+        GregorianCalendar cal = new GregorianCalendar();
+        int giorno;
+        int numMese;
+        int numAnno;
+        int numOre;
+        int numMinuti;
+        String sep;
+        String mese;
+        String anno;
+        String ore;
+        String minuti;
+
+        if (corta) {
+            sep = "-";
+        } else {
+            sep = " ";
+        }// fine del blocco if-else
+
+        try { // prova ad eseguire il codice
+            if (data != null) {
+                cal.setTime(data);
+                giorno = cal.get(Calendar.DAY_OF_MONTH);
+                numMese = cal.get(Calendar.MONTH);
+                numMese++;
+                mese = Mese.getShort(numMese);
+                numAnno = cal.get(Calendar.YEAR);
+                numOre = cal.get(Calendar.HOUR);
+                numMinuti = cal.get(Calendar.MINUTE);
+                anno = numAnno + "";
+                if (corta) {
+                    anno = anno.substring(2);
+                }// fine del blocco if
+                dataFormattata += giorno;
+                dataFormattata += sep;
+                dataFormattata += mese;
+                dataFormattata += sep;
+                dataFormattata += anno;
+                if (corta) {
+                    if (numOre < 10) {
+                        ore = "0" + numOre;
+                    } else {
+                        ore = "" + numOre;
+                    }// end of if/else cycle
+                    if (numMinuti < 10) {
+                        minuti = "0" + numMinuti;
+                    } else {
+                        minuti = "" + numMinuti;
+                    }// end of if/else cycle
+
+                    dataFormattata += " ";
+                    dataFormattata += ore;
+                    dataFormattata += ":";
+                    dataFormattata += minuti;
+                }// fine del blocco if
+            }// fine del blocco if
+
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return dataFormattata;
+    }// fine del metodo
+
+    /**
+     * Recupera la prima data della lista, in formato testo
+     *
+     * @return la prima data, in formato testo
+     */
+    public static String getData(ArrayList listaTimestamp) {
+        String oldDataTxt = "";
+        Timestamp oldTime;
+        Date oldData = null;
+
+        if (listaTimestamp != null && listaTimestamp.size() > 0) {
+            oldTime = (Timestamp) listaTimestamp.get(0);
+            oldData = LibTime.creaData(oldTime);
+            oldDataTxt = LibTime.getGioMeseAnno(oldData);
+        }// fine del blocco if
+
+        return oldDataTxt;
+    }// fine del metodo
 
 }// end of abstract static class

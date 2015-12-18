@@ -87,7 +87,10 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      * By default the container is sorted based on the default sort order declared
      * in the entity class via the @DefaultSort annotation.
      * If the annotation is not present the container is not sorted.
-     * Override this method in subclasses for custom sort order.
+     *
+     * For a custom sort of the container in a RelatedCombo field you have 2 options:
+     * 1) call the sort() method after the creation of the object passing the properties on which to sort
+     * 2) override this method (needs subclassing).
      * @param cont the container to be sorted.
      */
     protected void sortContainer(Container cont){

@@ -1,12 +1,16 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.addon.jpacontainer.metadata.PropertyKind;
 import com.vaadin.data.Property;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.query.AQuery;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 import javax.persistence.metamodel.Attribute;
@@ -56,6 +60,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         initField();
         Container cont = createContainer();
         setContainerDataSource(cont);
+        sortContainer(cont);
         setItemCaptionMode(ItemCaptionMode.ITEM);
         setConverter(new SingleSelectConverter(this));
         setWidth("260px");
@@ -74,12 +79,28 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
         JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
-
-
-
-        //get
-        //getEntityClass();
         return cont;
+    }
+
+    /**
+     * Sorts the container.
+     * By default the container is sorted based on the default sort order declared
+     * in the entity class via the @DefaultSort annotation.
+     * If the annotation is not present the container is not sorted.
+     * Override this method in subclasses for custom sort order.
+     * @param cont the container to be sorted.
+     */
+    protected void sortContainer(Container cont){
+
+        // retrieve the default sort properties from the class by annotation
+        SortProperties props = BaseEntity.getSortProperties(getEntityClass());
+
+        // sort the container on the sort properties
+        if(cont instanceof JPAContainer){
+            JPAContainer jpaCont=(JPAContainer)cont;
+            jpaCont.sort(props.getProperties(), props.getDirections());
+        }
+
     }
 
 

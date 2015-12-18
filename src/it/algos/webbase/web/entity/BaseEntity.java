@@ -1,7 +1,11 @@
 package it.algos.webbase.web.entity;
 
 
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Container;
+
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -179,6 +183,73 @@ public abstract class BaseEntity implements Serializable {
 	}// end of interface
 
 
+	/**
+	 * @returns the default sort properties of a given
+	 * class based on the DefaultSort annotation.
+	 * The sort properties are returned as a SortProperties object
+	 * which has methods to retrieve the arrays of properties and directions
+	 */
+	public static SortProperties getSortProperties(Class clazz){
+		SortProperties sProp=new SortProperties();
+
+		Annotation a = clazz.getAnnotation(DefaultSort.class);
+
+		if(a!=null){
+
+			DefaultSort aSort=(DefaultSort)a;
+
+			String[] names = aSort.value();
+
+			for(int i=0;i<names.length;i++){
+				String name=names[i];
+				String[] parts = name.split(",");
+				String fname="";
+				String sDirection="";
+				boolean ascending=true;
+				if(parts.length>0){
+					fname=parts[0].trim();
+				}
+				if(parts.length>1){
+					sDirection=parts[1].trim();
+					if(sDirection.equalsIgnoreCase("true")) {
+						ascending=true;
+					}else{
+						ascending=false;
+					}
+				}
+
+				//@todo check if property exists in the class before adding!
+				sProp.addProperty(fname, ascending);
+
+			}
+
+
+//			// sort the container on the specified properties
+//			if(cont instanceof JPAContainer){
+//				JPAContainer jpaCont=(JPAContainer)cont;
+//
+//				ArrayList<String> lNames = new ArrayList();
+//				ArrayList<Boolean> lAscending = new ArrayList();
+//
+//				// remove invalid properties
+//				for(int i=0;i<aFnames.length;i++){
+//					String pName = aFnames[i];
+//					try{
+//						jpaCont.getPropertyKind(pName);//if no exception then the propery exists
+//						lNames.add(aFnames[i]);
+//						lAscending.add(aAscending[i]);
+//					}catch(IllegalArgumentException e){
+//						System.err.println("property "+pName+" non trovata nel container");
+//					}
+//				}
+//
+//
+//			}
+
+		}
+
+		return  sProp;
+	}
 
 
 }// end of class

@@ -316,7 +316,7 @@ public abstract class LibTime {
                 numMese++;
                 mese = Mese.getShort(numMese);
                 numAnno = cal.get(Calendar.YEAR);
-                numOre = cal.get(Calendar.HOUR);
+                numOre = cal.get(Calendar.HOUR_OF_DAY);
                 numMinuti = cal.get(Calendar.MINUTE);
                 anno = numAnno + "";
                 if (corta) {
@@ -353,19 +353,36 @@ public abstract class LibTime {
     }// fine del metodo
 
     /**
+     * Recupera la data in formato testo
+     *
+     * @param oldTime la data in formato Timestamp
+     * @return la data, in formato testo
+     */
+    public static String getData(Timestamp oldTime) {
+        String oldDataTxt = "";
+        Date oldData = null;
+
+        if (oldTime != null) {
+            oldData = LibTime.creaData(oldTime);
+            oldDataTxt = LibTime.getGioMeseAnno(oldData);
+        }// fine del blocco if
+
+        return oldDataTxt;
+    }// fine del metodo
+
+    /**
      * Recupera la prima data della lista, in formato testo
      *
+     * @param listaTimestamp una lista di date di cui utilizzare la prima
      * @return la prima data, in formato testo
      */
     public static String getData(ArrayList listaTimestamp) {
         String oldDataTxt = "";
         Timestamp oldTime;
-        Date oldData = null;
 
         if (listaTimestamp != null && listaTimestamp.size() > 0) {
             oldTime = (Timestamp) listaTimestamp.get(0);
-            oldData = LibTime.creaData(oldTime);
-            oldDataTxt = LibTime.getGioMeseAnno(oldData);
+            oldDataTxt = getData(oldTime);
         }// fine del blocco if
 
         return oldDataTxt;

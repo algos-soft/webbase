@@ -105,10 +105,10 @@ public class LogTablePortal extends TablePortal {
             subItem = livelli.get(livelloSelezionato);
             if (subItem != null) {
                 for (Livello livello : livelli.keySet()) {
-                    livelli.get(livello).setIcon(FontAwesome.CIRCLE_O);
+                    livelli.get(livello).setIcon(FontAwesome.MINUS);
                 }// end of for cycle
 
-                subItem.setIcon(FontAwesome.CIRCLE);
+                subItem.setIcon(FontAwesome.CHECK);
             }// fine del blocco if
         }// fine del blocco if
 

@@ -8,45 +8,47 @@ import it.algos.webbase.web.navigator.AlgosNavigator;
 @SuppressWarnings("serial")
 public abstract class Module extends CustomComponent {
 
-	public Module() {
-	}// end of constructor
+    public Module() {
+    }// end of constructor
 
-	/**
-	 * Crea una sola istanza di un modulo per sessione.
-	 * Tutte le finestre e i tab di un browser sono nella stessa sessione.
-	 */
-	public static Module getInstance(Class clazz){
-		Module istanza=null;
+    /**
+     * Crea una sola istanza di un modulo per sessione.
+     * Tutte le finestre e i tab di un browser sono nella stessa sessione.
+     * Usare la Reflection per costruire un'istanza di xxxModulo
+     * La classe xxxModulo ha un costruttore pubblico (deprecato) SOLO per questo uso
+     */
+    public static Module getInstance(Class clazz) {
+        Module istanza = null;
 
-		String key = clazz.getName();
+        String key = clazz.getName();
 
-		Object obj = LibSession.getAttribute(key);
-		if (obj==null) {
+        Object obj = LibSession.getAttribute(key);
+        if (obj == null) {
 
-			try {
-				istanza = (Module)clazz.newInstance();
-				LibSession.setAttribute(key, istanza);
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+            try {
+                istanza = (Module) clazz.newInstance();
+                LibSession.setAttribute(key, istanza);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
-		}else{
-			istanza = (Module)obj;
-		}
+        } else {
+            istanza = (Module) obj;
+        }
 
-		// rimuove il componente dal suo parente se presente
-		// (un componente può avere un solo parente)
-		Component comp = istanza.getParent();
-		if(comp!=null){
-			if(comp instanceof AlgosNavigator.NavigatorView){
-				AlgosNavigator.NavigatorView aLayout=(AlgosNavigator.NavigatorView)comp;
-				aLayout.removeComponent();
-			}
-		}
+        // rimuove il componente dal suo parente se presente
+        // (un componente può avere un solo parente)
+        Component comp = istanza.getParent();
+        if (comp != null) {
+            if (comp instanceof AlgosNavigator.NavigatorView) {
+                AlgosNavigator.NavigatorView aLayout = (AlgosNavigator.NavigatorView) comp;
+                aLayout.removeComponent();
+            }
+        }
 
-		return istanza;
-	}
+        return istanza;
+    }
 
 }// end of class

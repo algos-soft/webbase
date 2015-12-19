@@ -17,7 +17,7 @@ public abstract class Module extends CustomComponent {
      * Usare la Reflection per costruire un'istanza di xxxModulo
      * La classe xxxModulo ha un costruttore pubblico (deprecato) SOLO per questo uso
      */
-    public static Module getInstance(Class clazz) {
+    public static Module getInstanceOld(Class clazz) {
         Module istanza = null;
 
         String key = clazz.getName();
@@ -50,5 +50,27 @@ public abstract class Module extends CustomComponent {
 
         return istanza;
     }
+
+
+
+	/**
+	 * Crea una nuova istanza (test alex)
+	 */
+	public static Module getInstance(Class clazz) {
+		Module istanza = null;
+
+		try {
+			istanza = (Module) clazz.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		return istanza;
+	}
+
+
+
 
 }// end of class

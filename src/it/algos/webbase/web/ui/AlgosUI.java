@@ -325,35 +325,9 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     }// end of method
 
 
-//    /**
-//     * Crea la menubar di Login
-//     */
-//    private MenuBar createLoginMenuBar() {
-//        MenuBar menubar = new MenuBar();
-//        MenuBar.MenuItem loginItem; // il menuItem di login
-//
-//
-//        ThemeResource icon = new ThemeResource("img/action_user.png");
-////        MenuBar.Command command = new MenuBar.Command() {
-////
-////            @Override
-////            public void menuSelected(MenuItem selectedItem) {
-////                loginCommandSelected();
-////            }
-////        };
-//
-//        loginItem = menubar.addItem("Login", null, null);
-////        updateLoginUI();
-//
-////        loginItem.addItem("Logout", new MenuBar.Command() {
-////            @Override
-////            public void menuSelected(MenuItem selectedItem) {
-////                logout();
-////            }
-////        });
-//
-//        return menubar;
-//    }
+
+
+
 
     /**
      * Aggiunge i moduli (standard e specifici)

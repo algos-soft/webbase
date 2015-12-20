@@ -217,7 +217,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.validation/validation-api/sources/validation-api-1.0.0.GA-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.servlet/javax.servlet-api/sources/javax.servlet-api-3.0.1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/joda-time/joda-time/sources/joda-time-2.3-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/mysql/mysql-connector-java/sources/mysql-connector-java-5.1.31-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.5.10-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.5.10-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.5.10-sources.jar!/" />

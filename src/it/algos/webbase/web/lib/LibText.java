@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class LibText {
 
-    public static final String REF = "<ref>";
+    public static final String REF = "<ref";
     public static final String NOTE = "<!--";
     public static final String GRAFFE = "{{";
     public static final String VUOTA = "";

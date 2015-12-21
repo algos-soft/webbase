@@ -35,7 +35,7 @@ public class AlgosNavigator extends Navigator {
      * componenti referenziati dal MenuItem
      * (esegue ricorsivamente per i sottomenu).
      */
-    private void scanItem(MenuBar.MenuItem item) {
+    protected void scanItem(MenuBar.MenuItem item) {
         MenuBar.Command cmd = item.getCommand();
         if (cmd instanceof MenuCommand) {
             MenuCommand mcmd = (MenuCommand) cmd;

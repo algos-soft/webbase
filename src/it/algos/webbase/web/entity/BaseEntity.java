@@ -47,13 +47,34 @@ public abstract class BaseEntity implements Serializable {
 		}// end of for cycle
 	}// end of method
 
-	public static void addPostPersistListener(PostPersistListener l) {
+	/**
+	 * Adds a listener invoked when the entity is persisted.
+	 * WARNING: ALWAYS REMOVE THE LISTENER WHEN FINISHED
+	 * this collection is static and holds the references forever!
+	 */
+	public static PostPersistListener addPostPersistListener(PostPersistListener l) {
 		postPersistListeners.add(l);
+		return l;
 	}// end of method
 
-	public static void addPostUpdateListener(PostUpdateListener l) {
-		postUpdateListeners.add(l);
+	public static void removePostPersistListener(PostPersistListener l) {
+		postPersistListeners.remove(l);
 	}// end of method
+
+	/**
+	 * Adds a listener invoked when the entity is updated.
+	 * WARNING: ALWAYS REMOVE THE LISTENER WHEN FINISHED
+	 * this collection is static and holds the references forever!
+	 */
+	public static PostUpdateListener addPostUpdateListener(PostUpdateListener l) {
+		postUpdateListeners.add(l);
+		return l;
+	}// end of method
+
+	public static void removePostUpdateListener(PostUpdateListener l) {
+		postUpdateListeners.remove(l);
+	}// end of method
+
 
 	protected void preRemove(Class<?> entityClass, long id) {
 	}// end of method

@@ -64,28 +64,6 @@ public class AlgosNavigator extends Navigator {
     }
 
 
-    /**
-     * A class encapsulating a Component in a View for the Navigator
-     */
-    public class NavigatorView extends CustomComponent implements View {
-
-        public NavigatorView(Component content) {
-            super();
-            setSizeFull();
-
-            content.setSizeFull();
-            setCompositionRoot(content);
-        }// end of constructor
-
-
-        public void removeComponent(){
-            setCompositionRoot(null);
-        }
-
-        @Override
-        public void enter(ViewChangeListener.ViewChangeEvent event) {
-        }// end of method
-    }// end of inner class
 
 
     /**

@@ -40,6 +40,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/it/algos/webbase/templates" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/prova" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/templates" />
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />

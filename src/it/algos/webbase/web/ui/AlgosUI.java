@@ -388,6 +388,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
                 modulo.createMenuItem(topLayout.getMenuBar(), bodyLayout);
             }// end of for cycle
         }// end of if cycle
+
     }// end of method
 
     /**

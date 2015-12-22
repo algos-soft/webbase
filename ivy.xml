@@ -1,103 +1,103 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.5.10">
-]>
+        <!ENTITY vaadin.version "7.5.10">
+        ]>
 <ivy-module version="2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="com.example" module="v7proj" />
-	
-	<configurations>
-		<!-- The default configuration, which should be deployed to the server -->
-		<conf name="default" />
-		<!-- A configuration only needed when compiling the widget set. Should 
-			not be deployed to the server -->
-		<conf name="widgetset-compile" />
-		<!-- A configuration used in compilation of server side classes only.
-			Should be deployed to the server -->
-		<conf name="nodeploy" />
-	</configurations>
-	
-	<dependencies defaultconf="default" defaultconfmapping="default->default">
-	
-		<!-- The core server part of Vaadin -->
-		<dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;" />
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info organisation="com.example" module="v7proj"/>
 
-		<!-- Vaadin themes -->
-		<dependency org="com.vaadin" name="vaadin-themes" rev="&vaadin.version;" />
+    <configurations>
+        <!-- The default configuration, which should be deployed to the server -->
+        <conf name="default"/>
+        <!-- A configuration only needed when compiling the widget set. Should
+            not be deployed to the server -->
+        <conf name="widgetset-compile"/>
+        <!-- A configuration used in compilation of server side classes only.
+            Should be deployed to the server -->
+        <conf name="nodeploy"/>
+    </configurations>
 
-		<!-- Push support -->
-		<dependency org="com.vaadin" name="vaadin-push" rev="&vaadin.version;" />
+    <dependencies defaultconf="default" defaultconfmapping="default->default">
 
-		<!-- Servlet 3.0 API -->
-		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="nodeploy->default" />
+        <!-- The core server part of Vaadin -->
+        <dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;"/>
 
-		<!-- Precompiled DefaultWidgetSet -->
-		<dependency org="com.vaadin" name="vaadin-client-compiled" rev="&vaadin.version;" />
+        <!-- Vaadin themes -->
+        <dependency org="com.vaadin" name="vaadin-themes" rev="&vaadin.version;"/>
 
-		<!-- Vaadin client side, needed for widget set compilation -->
-		<dependency org="com.vaadin" name="vaadin-client" rev="&vaadin.version;" conf="widgetset-compile->default" />
+        <!-- Push support -->
+        <dependency org="com.vaadin" name="vaadin-push" rev="&vaadin.version;"/>
 
-		<!-- Compiler for custom widget sets. Should not be deployed -->
-		<!-- <dependency org="com.vaadin" name="vaadin-client-compiler"
-			rev="&vaadin.version;" conf="widgetset-compile->default" />  -->
-			
-		<!-- Vaadin JPAContainer -->
-		<dependency org="com.vaadin.addon" name="jpacontainer" rev="3.2.0" />
-		
-		<!-- Eclipselink -->
-		<dependency org="org.eclipse.persistence" name="eclipselink" rev="2.6.0" />
-		
-		<!-- MySQL Connector -->
-		<dependency org="mysql" name="mysql-connector-java" rev="5.1.31"/>
-		
-		<!-- hibernate validator -->
-		<dependency org="org.hibernate" name="hibernate-validator" rev="5.1.1.Final"/>
+        <!-- Servlet 3.0 API -->
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="nodeploy->default"/>
 
-		<!-- Google Guava (Primitives) -->
-		<dependency org="com.google.guava" name="guava" rev="12.0"/>
+        <!-- Precompiled DefaultWidgetSet -->
+        <dependency org="com.vaadin" name="vaadin-client-compiled" rev="&vaadin.version;"/>
 
-		<!-- Apache POI - read&write Microsoft file formats  -->
-		<dependency org="org.apache.poi" name="poi-ooxml" rev="3.5-beta5"/>
+        <!-- Vaadin client side, needed for widget set compilation -->
+        <dependency org="com.vaadin" name="vaadin-client" rev="&vaadin.version;" conf="widgetset-compile->default"/>
 
-		<!-- Apache Commons - Lang  -->
-		<dependency org="commons-lang" name="commons-lang" rev="2.3"/>
+        <!-- Compiler for custom widget sets. Should not be deployed -->
+        <!-- <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="&vaadin.version;" conf="widgetset-compile->default" />  -->
 
-		<!-- Dynamic Reports core  -->
-		<dependency org="net.sourceforge.dynamicreports" name="dynamicreports-core" rev="3.2.1"/> 
+        <!-- Vaadin JPAContainer -->
+        <dependency org="com.vaadin.addon" name="jpacontainer" rev="3.2.0"/>
 
-		<!-- Dynamic Reports ad-hoc -->
-		<dependency org="net.sourceforge.dynamicreports" name="dynamicreports-adhoc" rev="3.2.1"/> 
+        <!-- Eclipselink -->
+        <dependency org="org.eclipse.persistence" name="eclipselink" rev="2.6.0"/>
 
-		<!-- Dynamic Reports Googlecharts  -->
-		<dependency org="net.sourceforge.dynamicreports" name="dynamicreports-googlecharts" rev="3.2.1"/> 
-		
-		<!-- Joda Time  -->
-		<dependency org="joda-time" name="joda-time" rev="2.3"/>
-		
-		<!-- Antlr parser - parser generator for reading, processing, executing, or translating structured text or binary files
-		<dependency org="org.antlr" name="ST4" rev="4.0.7"/>  -->
-		
-		<!-- Apache Commoms Email  -->
-		<dependency org="org.apache.commons" name="commons-email" rev="1.3.3"/>		
+        <!-- MySQL Connector -->
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.31"/>
 
-		<!-- JUnit 4  -->
-		<dependency org="junit" name="junit" rev="4.6"/>
+        <!-- hibernate validator -->
+        <dependency org="org.hibernate" name="hibernate-validator" rev="5.1.1.Final"/>
 
-		<!-- theme  -->
-		<dependency org="org.peimari" name="dawn" rev="2" />
-		
-		<!-- Table export in Excel  -->		
-		<dependency org="org.vaadin.addon" name="tableexport-for-vaadin" rev="1.5.1.5" />
+        <!-- Google Guava (Primitives) -->
+        <dependency org="com.google.guava" name="guava" rev="12.0"/>
 
-		<!-- To check MIME type of files  -->		
-		<dependency org="eu.medsea.mimeutil" name="mime-util" rev="2.1.3"/>
+        <!-- Apache POI - read&write Microsoft file formats  -->
+        <dependency org="org.apache.poi" name="poi-ooxml" rev="3.5-beta5"/>
 
-		<dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1"/>
+        <!-- Apache Commons - Lang  -->
+        <dependency org="commons-lang" name="commons-lang" rev="2.3"/>
 
-		<!-- Replacement for Vaadin scrollable table - uses paging, should be faster  -->
-		<!--<dependency org="org.vaadin.addons" name="pagedtable" rev="0.6.5" />-->
+        <!-- Dynamic Reports core  -->
+        <dependency org="net.sourceforge.dynamicreports" name="dynamicreports-core" rev="3.2.1"/>
+
+        <!-- Dynamic Reports ad-hoc -->
+        <dependency org="net.sourceforge.dynamicreports" name="dynamicreports-adhoc" rev="3.2.1"/>
+
+        <!-- Dynamic Reports Googlecharts  -->
+        <dependency org="net.sourceforge.dynamicreports" name="dynamicreports-googlecharts" rev="3.2.1"/>
+
+        <!-- Joda Time  -->
+        <dependency org="joda-time" name="joda-time" rev="2.3"/>
+
+        <!-- Antlr parser - parser generator for reading, processing, executing, or translating structured text or binary files
+        <dependency org="org.antlr" name="ST4" rev="4.0.7"/>  -->
+
+        <!-- Apache Commoms Email  -->
+        <dependency org="org.apache.commons" name="commons-email" rev="1.3.3"/>
+
+        <!-- JUnit 4  -->
+        <dependency org="junit" name="junit" rev="4.6"/>
+
+        <!-- theme  -->
+        <dependency org="org.peimari" name="dawn" rev="2"/>
+
+        <!-- Table export in Excel  -->
+        <dependency org="org.vaadin.addon" name="tableexport-for-vaadin" rev="1.5.1.5"/>
+
+        <!-- To check MIME type of files  -->
+        <dependency org="eu.medsea.mimeutil" name="mime-util" rev="2.1.3"/>
+
+        <dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1"/>
+
+        <!-- Replacement for Vaadin scrollable table - uses paging, should be faster  -->
+        <!--<dependency org="org.vaadin.addons" name="pagedtable" rev="0.6.5" />-->
 
 
-	</dependencies>
+    </dependencies>
 </ivy-module>

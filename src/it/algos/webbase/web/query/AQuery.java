@@ -153,6 +153,23 @@ public class AQuery {
         return entities;
     }// end of method
 
+    /**
+     * Search for the all entities
+     *
+     * @param clazz the entity class
+     * @return a list of entities
+     */
+    public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> clazz) {
+        ArrayList<? extends BaseEntity> lista = null;
+        List<? extends BaseEntity> entities = getList(clazz);
+
+        if (entities != null) {
+            lista = new ArrayList<BaseEntity>(entities);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
 
     /**
      * Return a list of entities for a given domain class and filters.

@@ -98,13 +98,18 @@ public class LibResource {
     public static StreamResource getStreamResource(final byte[] bytes){
         StreamResource resource = null;
 
+//        // Create a stream source returning the data from the byte array
+//        StreamSource streamSource = new StreamSource(){
+//            @Override
+//            public InputStream getStream() {
+//                return new ByteArrayInputStream(bytes);
+//            }
+//        };
+
+
         // Create a stream source returning the data from the byte array
-        StreamSource streamSource = new StreamSource(){
-            @Override
-            public InputStream getStream() {
-                return new ByteArrayInputStream(bytes);
-            }
-        };
+        StreamSource streamSource = new ByteStreamResource(bytes);
+
 
         // create a StreamResource as data source for the image
         // the name of the stream must be changed or the browser cache will not update the image

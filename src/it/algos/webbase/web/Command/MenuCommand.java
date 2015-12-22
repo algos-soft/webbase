@@ -11,15 +11,28 @@ import com.vaadin.ui.UI;
 import java.util.List;
 
 /**
- * Custom menu command to show a component in the placeholder
+ * Custom menu command to navigate to a specific state
  */
 public class MenuCommand implements MenuBar.Command {
-
 
     private MenuBar mb;
     private String address;
     private Component comp;
     private UI ui;
+    private Class clazz;
+    private boolean viewCached;
+
+    public MenuCommand(MenuBar mb, String address, Class clazz, boolean viewCached) {
+        this.ui = UI.getCurrent();
+        this.mb = mb;
+        this.address = address;
+        this.clazz = clazz;
+        this.viewCached=viewCached;
+    }
+
+    public MenuCommand(MenuBar mb, String address, Class clazz) {
+        this(mb, address, clazz, true);
+    }// end of constructor
 
 
     public MenuCommand(MenuBar mb, String address, Component comp) {
@@ -35,9 +48,6 @@ public class MenuCommand implements MenuBar.Command {
     }// end of constructor
 
 
-
-
-
     public void menuSelected(MenuBar.MenuItem selectedItem) {
         // Navigate to a specific state
         ui.getNavigator().navigateTo(address);
@@ -50,8 +60,8 @@ public class MenuCommand implements MenuBar.Command {
             } // fine del ciclo for
         }// fine del blocco if
 
-			/* highlights the selected item
-             * the style name will be prepended automatically with "v-menubar-menuitem-" */
+        // highlights the selected item
+        // the style name will be prepended automatically with "v-menubar-menuitem-"
         selectedItem.setStyleName("highlight");
 
         // it this item is inside another item, highlight also the parents in the chain
@@ -89,5 +99,13 @@ public class MenuCommand implements MenuBar.Command {
     public Component getComponent() {
         return comp;
     }// end of method
+
+    public Class getClazz() {
+        return clazz;
+    }
+
+    public boolean isViewCached() {
+        return viewCached;
+    }
 
 }// end of class

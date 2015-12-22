@@ -67,7 +67,7 @@ public class ATable extends Table implements ListSelection {
      */
     public ATable(ModulePop module) {
         super();
-        modulo = module;
+        this.modulo = module;
         this.entityClass = module.getEntityClass();
         init();
     }// end of constructor
@@ -167,6 +167,11 @@ public class ATable extends Table implements ListSelection {
         fire(TableEvent.datachange);
 
     }// end of method
+
+
+    public ModulePop getModule() {
+        return modulo;
+    }
 
     /**
      * Creates the container

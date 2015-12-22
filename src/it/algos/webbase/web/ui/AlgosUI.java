@@ -416,13 +416,19 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      */
     protected void addModulo(ModulePop modulo) {
         String menuAddress;
-        Resource menuIcon=null;
+        Resource menuIcon = null;
+        MenuBar.MenuItem menuItem = null;
 
         if (modulo != null) {
             menuAddress = modulo.getMenuAddress();
 //            menuIcon = modulo.getMenuIcon();
-            addModulo(modulo, menuAddress, menuIcon);
+            menuItem = addModulo(modulo, menuAddress, menuIcon);
+
+            if (menuItem != null) {
+                modulo.addSottoMenu(menuItem);
+            }// end of if cycle
         }// end of if cycle
+
 
     }// end of method
 
@@ -438,13 +444,14 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * @param menuAddress da utilizzare come chiave per la HashMap dei MenuBar.MenuItem
      * @param menuIcon    del menu
      */
-    protected void addModulo(View vista, String menuAddress, Resource menuIcon) {
-        MenuBar.MenuItem menuItem = createMenuItem(vista, menuAddress,menuIcon);
+    protected MenuBar.MenuItem addModulo(View vista, String menuAddress, Resource menuIcon) {
+        MenuBar.MenuItem menuItem = createMenuItem(vista, menuAddress, menuIcon);
 
         if (menuItem != null) {
             mappaItem.put(menuAddress, menuItem);
         }// end of if cycle
 
+        return menuItem;
     }// end of method
 
 
@@ -471,7 +478,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * @param menuIcon del menu
      * @return menuItem appena creato
      */
-    private MenuBar.MenuItem createMenuItem(View vista, String menuAddress,Resource menuIcon) {
+    private MenuBar.MenuItem createMenuItem(View vista, String menuAddress, Resource menuIcon) {
         MenuBar.MenuItem menuItem;
         MenuBar menuBar = topLayout.getMenuBar();
 

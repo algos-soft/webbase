@@ -9,7 +9,6 @@ import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
@@ -19,10 +18,7 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 import it.algos.webbase.web.lib.LibNum;
-import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
-import it.algos.webbase.web.menu.ModuleCommand;
-import it.algos.webbase.web.navigator.AlgosNavigator;
 import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
@@ -33,8 +29,6 @@ import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +48,8 @@ public abstract class ModulePop extends Module {
     protected Attribute<?, ?>[] fieldsSearch;
     // icona del modulo (serve nei menu)
     protected Resource icon;
+    // menuitem del modulo (serve nei menu)
+    protected MenuBar.MenuItem menuItem;
     private boolean modale = false;
     // titolo del dialogo nuovo
     private String titoloNew;
@@ -63,9 +59,6 @@ public abstract class ModulePop extends Module {
     private String titoloSearch;
     // indirizzo interno del modulo (serve nei menu)
     private String menuAddress;
-
-    // menuitem del modulo (serve nei menu)
-    protected MenuBar.MenuItem menuItem;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -158,8 +151,6 @@ public abstract class ModulePop extends Module {
         }
 
     }// end of constructor
-
-
 
 
     /**
@@ -320,6 +311,7 @@ public abstract class ModulePop extends Module {
      * @param menuBar     a cui agganciare il menuitem
      * @param placeholder in cui visualizzare il modulo
      * @return menuItem appena creato
+     * @deprecated
      */
     public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
         return createMenuItem(menuBar, placeholder, icon);
@@ -335,17 +327,29 @@ public abstract class ModulePop extends Module {
      * @param placeholder in cui visualizzare il modulo
      * @param icon        del menuitem
      * @return menuItem appena creato
+     * @deprecated
      */
     protected MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
         MenuBar.MenuItem menuItem;
 //        MenuBar.Command comando2 = new ModuleCommand(this, placeholder, menuBar);
-        MenuCommand comando= new MenuCommand(menuBar,this);
+        MenuCommand comando = new MenuCommand(menuBar, this);
         menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
 
         this.menuItem = menuItem;
 
         return menuItem;
+    }// end of method
+
+    /**
+     * Crea i sottomenu specifici del modulo
+     * <p>
+     * Invocato dal metodo AlgosUI.addModulo()
+     * Sovrascritto dalla sottoclasse
+     *
+     * @param menuItem principale del modulo
+     */
+    public void addSottoMenu(MenuBar.MenuItem menuItem) {
     }// end of method
 
 

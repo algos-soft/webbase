@@ -38,7 +38,7 @@ public class AlgosNavigator extends Navigator {
             MenuCommand mcmd = (MenuCommand) cmd;
             String key = mcmd.getNavigatorAddress();
             Class clazz = mcmd.getClazz();
-            boolean caching = mcmd.isViewCached();
+            boolean caching = mcmd.isCached();
             View view = mcmd.getView();
 
             // if the view class is specified, create a lazy (class-based) view provider

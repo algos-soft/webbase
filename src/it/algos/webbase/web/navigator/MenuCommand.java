@@ -12,10 +12,9 @@ import java.util.List;
 public class MenuCommand implements MenuBar.Command {
 
     private MenuBar mb;
-    //    private String address;
     private View view;
     private Class clazz;
-    private boolean viewCached;
+    private boolean cached;
 
     /**
      * Constructor - lazy
@@ -26,13 +25,12 @@ public class MenuCommand implements MenuBar.Command {
      *
      * @param mb         the MenuBar
      * @param clazz      the class to instantiate (must implement View)
-     * @param viewCached true to instantiated only once, false to instantiate each time
+     * @param cached true to instantiated only once, false to instantiate each time
      */
-    public MenuCommand(MenuBar mb, Class clazz, boolean viewCached) {
+    public MenuCommand(MenuBar mb, Class clazz, boolean cached) {
         this.mb = mb;
-//        this.address = address;
         this.clazz = clazz;
-        this.viewCached = viewCached;
+        this.cached = cached;
     }
 
     /**
@@ -53,7 +51,6 @@ public class MenuCommand implements MenuBar.Command {
      */
     public MenuCommand(MenuBar mb, View view) {
         this.mb = mb;
-//        this.address = address;
         this.view = view;
     }
 
@@ -117,19 +114,12 @@ public class MenuCommand implements MenuBar.Command {
         }// fine del blocco if
     }// end of method
 
-//    /**
-//     * @return the address
-//     */
-//    public String getAddress() {
-//        return address;
-//    }// end of method
-
     public Class getClazz() {
         return clazz;
     }
 
-    public boolean isViewCached() {
-        return viewCached;
+    public boolean isCached() {
+        return cached;
     }
 
     public View getView() {

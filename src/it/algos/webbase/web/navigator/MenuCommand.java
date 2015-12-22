@@ -1,4 +1,4 @@
-package it.algos.webbase.web.Command;
+package it.algos.webbase.web.navigator;
 
 import com.vaadin.navigator.View;
 import com.vaadin.ui.MenuBar;
@@ -12,7 +12,7 @@ import java.util.List;
 public class MenuCommand implements MenuBar.Command {
 
     private MenuBar mb;
-    private String address;
+    //    private String address;
     private View view;
     private Class clazz;
     private boolean viewCached;
@@ -25,13 +25,12 @@ public class MenuCommand implements MenuBar.Command {
      * or each time is requested bu yhe Navigator.
      *
      * @param mb         the MenuBar
-     * @param address    the address for the Navigator
      * @param clazz      the class to instantiate (must implement View)
      * @param viewCached true to instantiated only once, false to instantiate each time
      */
-    public MenuCommand(MenuBar mb, String address, Class clazz, boolean viewCached) {
+    public MenuCommand(MenuBar mb, Class clazz, boolean viewCached) {
         this.mb = mb;
-        this.address = address;
+//        this.address = address;
         this.clazz = clazz;
         this.viewCached = viewCached;
     }
@@ -39,8 +38,8 @@ public class MenuCommand implements MenuBar.Command {
     /**
      * Constructor - lazy, cached
      */
-    public MenuCommand(MenuBar mb, String address, Class clazz) {
-        this(mb, address, clazz, true);
+    public MenuCommand(MenuBar mb, Class clazz) {
+        this(mb, clazz, true);
     }// end of constructor
 
     /**
@@ -52,9 +51,9 @@ public class MenuCommand implements MenuBar.Command {
      * @param address the address for the Navigator
      * @param view    the view to diplay
      */
-    public MenuCommand(MenuBar mb, String address, View view) {
+    public MenuCommand(MenuBar mb, View view) {
         this.mb = mb;
-        this.address = address;
+//        this.address = address;
         this.view = view;
     }
 
@@ -66,6 +65,8 @@ public class MenuCommand implements MenuBar.Command {
     public void menuSelected(MenuBar.MenuItem selectedItem) {
         // Navigate to a specific state
         // ui.getNavigator().navigateTo(address);
+
+        String address = getNavigatorAddress();
         UI.getCurrent().getNavigator().navigateTo(address);
 
         // de-selects all the items in the menubar
@@ -89,6 +90,20 @@ public class MenuCommand implements MenuBar.Command {
 
     }// end of method
 
+
+    /**
+     * @return the string used as address by the Navigator
+     */
+    public String getNavigatorAddress() {
+        String addr;
+        if (view!=null) {
+            addr=view.getClass().getName();
+        } else {
+            addr=clazz.getName();
+        }
+        return addr;
+    }
+
     /**
      * Recursively de-selects one item and all its children
      */
@@ -102,12 +117,12 @@ public class MenuCommand implements MenuBar.Command {
         }// fine del blocco if
     }// end of method
 
-    /**
-     * @return the address
-     */
-    public String getAddress() {
-        return address;
-    }// end of method
+//    /**
+//     * @return the address
+//     */
+//    public String getAddress() {
+//        return address;
+//    }// end of method
 
     public Class getClazz() {
         return clazz;

@@ -5,7 +5,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.ui.*;
-import it.algos.webbase.web.Command.MenuCommand;
 import it.algos.webbase.web.screen.ErrorScreen;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class AlgosNavigator extends Navigator {
         if (cmd instanceof MenuCommand) {
 
             MenuCommand mcmd = (MenuCommand) cmd;
-            String key = mcmd.getAddress();
+            String key = mcmd.getNavigatorAddress();
             Class clazz = mcmd.getClazz();
             boolean caching = mcmd.isViewCached();
             View view = mcmd.getView();

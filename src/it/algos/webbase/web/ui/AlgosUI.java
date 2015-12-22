@@ -1,11 +1,9 @@
 package it.algos.webbase.web.ui;
 
+import com.vaadin.navigator.View;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import it.algos.webbase.domain.log.LogMod;
 import it.algos.webbase.domain.pref.PrefMod;
 import it.algos.webbase.domain.ruolo.RuoloModulo;
@@ -23,10 +21,12 @@ import it.algos.webbase.web.login.LogoutListener;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
+import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,6 +65,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     protected String menuAddressModuloPartenza;
     protected ArrayList<ModulePop> moduli;
+    protected HashMap<String, MenuBar.MenuItem> mappaItem;
+
 
     /**
      * Initializes this UI. This method is intended to be overridden by subclasses to build the view and configure
@@ -280,7 +282,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Sincronizzazione dei listener per il funzionamento del Login
-     *
+     * <p>
      * Dopo aver creato questa classe, registra nella Login (singleton nel servlet/sessione) l'istanza di questa classe per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella Login (singleton nel servlet/sessione) l'istanza di LoginBar per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di login (singleton nel servlet/sessione) per l'evento LogformListener
@@ -325,10 +327,6 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     }// end of method
 
 
-
-
-
-
     /**
      * Aggiunge i moduli (standard e specifici)
      * <p>
@@ -340,6 +338,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      */
     private void addAllModuli() {
         moduli = new ArrayList<ModulePop>();
+        mappaItem = new HashMap<String, MenuBar.MenuItem>();
+
         this.addModuliStandard();
         this.addModuli();
         this.creaMenu();
@@ -369,6 +369,120 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
         }// fine del blocco if
     }// end of method
 
+
+    /**
+     * Aggiunge un modulo alla UI
+     * <p>
+     * Will create a lazy (class-based) view provider
+     * The view will be instantiated by the view provider from the provided class
+     * The viewCached parameter controls if the view will be instantiated only once
+     * or each time is requested bu yhe Navigator.
+     * <p>
+     * Invocato dalla sottoclasse
+     *
+     * @param clazz the class to instantiate (must implement View)
+     */
+    protected void addModulo(Class clazz) {
+        addModulo(clazz, true);
+    }// end of method
+
+
+    /**
+     * Aggiunge un modulo alla UI
+     * <p>
+     * Will create a lazy (class-based) view provider
+     * The view will be instantiated by the view provider from the provided class
+     * The viewCached parameter controls if the view will be instantiated only once
+     * or each time is requested bu yhe Navigator.
+     * <p>
+     * Invocato dalla sottoclasse
+     *
+     * @param clazz      the class to instantiate (must implement View)
+     * @param viewCached true to instantiated only once, false to instantiate each time
+     */
+    protected void addModulo(Class clazz, boolean viewCached) {
+//        moduli.add(modulo);
+    }// end of method
+
+    /**
+     * Aggiunge un modulo alla UI
+     * <p>
+     * Il modulo può essere aggiunto come istanza già creata
+     * Tipicamente un ModulePop
+     * <p>
+     * Invocato dalla sottoclasse
+     *
+     * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
+     */
+    protected void addModulo(ModulePop modulo) {
+        String menuAddress;
+        Resource menuIcon=null;
+
+        if (modulo != null) {
+            menuAddress = modulo.getMenuAddress();
+//            menuIcon = modulo.getMenuIcon();
+            addModulo(modulo, menuAddress, menuIcon);
+        }// end of if cycle
+
+    }// end of method
+
+    /**
+     * Aggiunge un modulo alla UI
+     * <p>
+     * Il modulo può essere aggiunto come istanza già creata
+     * Qualunque oggetto grafico che implementi l'interfaccia View
+     * <p>
+     * Invocato dalla sottoclasse
+     *
+     * @param vista       da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param menuAddress da utilizzare come chiave per la HashMap dei MenuBar.MenuItem
+     * @param menuIcon    del menu
+     */
+    protected void addModulo(View vista, String menuAddress, Resource menuIcon) {
+        MenuBar.MenuItem menuItem = createMenuItem(vista, menuAddress,menuIcon);
+
+        if (menuItem != null) {
+            mappaItem.put(menuAddress, menuItem);
+        }// end of if cycle
+
+    }// end of method
+
+
+//    /**
+//     * Create the MenuBar Item for this module
+//     * <p>
+//     * Invocato dal metodo AlgosUI.creaMenu()
+//     * PUO essere sovrascritto dalla sottoclasse
+//     *
+//     * @param vista da visualizzare nel placeholder alla pressione del bottone di menu
+//     * @return menuItem appena creato
+//     */
+//    private MenuBar.MenuItem createMenuItem(View vista) {
+//        return createMenuItem(vista, null);
+//    }// end of method
+
+    /**
+     * Create the MenuBar Item for this module
+     * <p>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param vista    da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param menuIcon del menu
+     * @return menuItem appena creato
+     */
+    private MenuBar.MenuItem createMenuItem(View vista, String menuAddress,Resource menuIcon) {
+        MenuBar.MenuItem menuItem;
+        MenuBar menuBar = topLayout.getMenuBar();
+
+        MenuCommand comando = new MenuCommand(menuBar, vista);
+        menuItem = menuBar.addItem(menuAddress, menuIcon, comando);
+        menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
+
+        return menuItem;
+    }// end of method
+
+
     /**
      * Aggiunge i moduli specifici
      * <p>
@@ -378,9 +492,14 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
     protected void addModuli() {
     }// end of method
 
+
     /**
      * Crea i menu per la gestione dei moduli (standard e specifici)
+     * <p>
      * Spazzola l'array dei moduli per creare/recuperare il menuItem ed aggiungerlo alla UI
+     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
+     * Aggiunge il singolo menu (item) alla barra principale di menu
+     * Rimanda al metodo omonimo della classe AMenuBar (dedicata per il menu algosMenuBar e loginMenuBar)
      */
     private void creaMenu() {
         if (moduli != null && moduli.size() > 0) {
@@ -388,24 +507,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
                 modulo.createMenuItem(topLayout.getMenuBar(), bodyLayout);
             }// end of for cycle
         }// end of if cycle
-
     }// end of method
 
-    /**
-     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
-     * Aggiunge il modulo alla lista interna
-     * Aggiunge il singolo menu (item) alla barra principale di menu
-     * Rimanda al metodo omonimo della classe AMenuBar (dedicata per il menu algosMenuBar e loginMenuBar)
-     * Invocato dalla sottoclasse
-     *
-     * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
-     */
-    protected void addModulo(ModulePop modulo) {
-        moduli.add(modulo);
-//        if (topLayout != null) {
-//            topLayout.addModulo(modulo, bodyLayout);
-//        }// fine del blocco if
-    }// end of method
 
     /**
      * Crea e aggiunge uno spaziatore verticale di altezza fissa

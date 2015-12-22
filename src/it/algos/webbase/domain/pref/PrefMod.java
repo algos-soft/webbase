@@ -9,6 +9,7 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
@@ -20,8 +21,9 @@ import javax.persistence.metamodel.Attribute;
 public class PrefMod extends ModulePop {
 
     // indirizzo interno del modulo (serve nei menu)
-    public static String MENU_ADDRESS = "Pref";
+    public final static String MENU_ADDRESS = "Pref";
 
+    public final static Resource MENU_ICON = FontAwesome.BARS;
 
     /**
      * Costruttore senza parametri
@@ -30,6 +32,14 @@ public class PrefMod extends ModulePop {
         super(Pref.class, MENU_ADDRESS);
     }// end of constructor
 
+    /**
+     * Sovrascritto nella sottoclasse
+     *
+     * @return icona del menu
+     */
+    public static Resource getMenuIcon() {
+        return MENU_ICON;
+    }// end of getter method
 
     /**
      * Titolo (caption) dei dialogo nuovo record. <br>

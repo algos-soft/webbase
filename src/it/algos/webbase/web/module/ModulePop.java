@@ -23,6 +23,7 @@ import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.menu.ModuleCommand;
 import it.algos.webbase.web.navigator.AlgosNavigator;
+import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
@@ -337,7 +338,8 @@ public abstract class ModulePop extends Module {
      */
     protected MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
         MenuBar.MenuItem menuItem;
-        MenuBar.Command comando = new ModuleCommand(this, placeholder, menuBar);
+//        MenuBar.Command comando2 = new ModuleCommand(this, placeholder, menuBar);
+        MenuCommand comando= new MenuCommand(menuBar,this);
         menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
 

@@ -2,10 +2,8 @@
   <artifact name="webbase:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/webbase_jar</output-path>
     <root id="root">
-      <element id="archive" name="webbase.jar">
-        <element id="module-output" name="webbase" />
-      </element>
       <element id="library" level="module" name="IvyIDEA" module-name="webbase" />
+      <element id="module-output" name="webbase" />
     </root>
   </artifact>
 </component>

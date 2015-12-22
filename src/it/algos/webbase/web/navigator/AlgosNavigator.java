@@ -3,9 +3,9 @@ package it.algos.webbase.web.navigator;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewProvider;
 import com.vaadin.ui.*;
 import it.algos.webbase.web.Command.MenuCommand;
-import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.screen.ErrorScreen;
 
 import java.util.List;
@@ -30,19 +30,28 @@ public class AlgosNavigator extends Navigator {
         } // fine del ciclo for
     }// end of method
 
-    /**
-     * Crea le View per il Navigator e vi aggiunge i
-     * componenti referenziati dal MenuItem
-     * (esegue ricorsivamente per i sottomenu).
-     */
+
+
     protected void scanItem(MenuBar.MenuItem item) {
         MenuBar.Command cmd = item.getCommand();
         if (cmd instanceof MenuCommand) {
+
             MenuCommand mcmd = (MenuCommand) cmd;
             String key = mcmd.getAddress();
-            Component comp = mcmd.getComponent();
-            View view = new NavigatorView(comp);
-            addView(key, view);
+            Class clazz = mcmd.getClazz();
+            boolean caching = mcmd.isViewCached();
+            View view = mcmd.getView();
+
+            // if the view class is specified, create a lazy (class-based) view provider
+            // if the view is specified, create a heavyweight view provider
+            ViewProvider provider;
+            if(view==null){
+                provider=new CachingViewProvider(key, clazz, caching);
+            }else{
+                provider = new StaticViewProvider(key, view);
+            }
+            addProvider(provider);
+
         }// fine del blocco if
 
         // esamina i children dell'item
@@ -52,7 +61,7 @@ public class AlgosNavigator extends Navigator {
                 scanItem(childItem);
             } // fine del ciclo for
         }// fine del blocco if
-    }// end of method
+    }
 
 
     /**

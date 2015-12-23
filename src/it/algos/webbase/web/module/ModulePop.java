@@ -476,46 +476,12 @@ public abstract class ModulePop extends Module {
 
                     window.close();
 
-//					// If the item is a BeanItem let's assume it is a new record and save it.
-//					// the save operation is delegated to the table's JPAContainer
-//					Item item = form.getItem();
-//					if (item instanceof BeanItem) {
-//						BeanItem<?> bi = (BeanItem<?>) item;
-//						BaseEntity entity = (BaseEntity) bi.getBean();
-//						if (entity.getId() == null) { // double checking just to be sure it's new
-//							JPAContainer container = getTable().getJPAContainer();
-//							container.addEntity(entity);
-//						}
-//					}
 
                     // This is needed to update generated columns in the table.
                     // (standard columns bound to properties are updated
                     // automatically when the item changes)
                     getTable().refreshRowCache();
 
-                    // Item item = form.getItem();
-                    // BaseEntity bean = itemToBean(item);
-                    // bean.save();
-                    // getTable().refreshRowCache();
-
-                    // Collection<?> pids = item.getItemPropertyIds();
-                    // for (Object pid : pids) {
-                    // Property prop = item.getItemProperty(pid);
-                    // if (prop instanceof MethodProperty) {
-                    // MethodProperty mprop = (MethodProperty)prop;
-                    // mprop.fireValueChange();
-                    // }
-                    // int a = 87;
-                    // int b = a;
-                    //
-                    // }
-
-                    // JPAContainer cont = (JPAContainer)getTable().getContainerDataSource();
-                    // cont.f
-                    // Property prop = item.getItemProperty(BaseEntity_.id);
-                    // prop.setValue(prop.getValue());
-                    // int a = 87;
-                    // int b = a;
 
                 }// end of inner method
 

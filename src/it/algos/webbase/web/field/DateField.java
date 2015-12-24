@@ -6,7 +6,7 @@ import java.util.Date;
 public class DateField extends com.vaadin.ui.DateField implements FieldInterface<Date> {
 
     public DateField() {
-        this("");
+        this(null);
     }// end of constructor
 
     public DateField(String caption) {

@@ -10,6 +10,7 @@ import com.vaadin.ui.themes.Reindeer;
 public class ConfirmDialog extends BaseDialog {
 
 	private Listener listener;
+	private ConfirmListener confirmListener;
 	private Button confirmButton;
 	private Button cancelButton;
 
@@ -74,6 +75,11 @@ public class ConfirmDialog extends BaseDialog {
 		if (listener != null) {
 			listener.onClose(this, true);
 		}
+
+		if (confirmListener != null) {
+			confirmListener.confirmed(this);
+		}
+
 		close();
 	}// end of method
 
@@ -83,6 +89,14 @@ public class ConfirmDialog extends BaseDialog {
 
 	public interface Listener {
 		public void onClose(ConfirmDialog dialog, boolean confirmed);
+	}// end of method
+
+	public void setConfirmListener(ConfirmListener l) {
+		this.confirmListener = l;
+	}// end of method
+
+	public interface ConfirmListener {
+		public void confirmed(ConfirmDialog dialog);
 	}// end of method
 
 }// end of class

@@ -79,6 +79,7 @@ public abstract class BaseDialog extends Window {
 	protected Component createDetailComponent() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(true);
+		layout.setSpacing(true);
 		// add a label hosting the text to the default VerticalLayout
 		label = new Label();
 		label.setWidth("100%");

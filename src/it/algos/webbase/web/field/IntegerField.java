@@ -23,6 +23,12 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 			@Override
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				String text = textField.getValue();
+				try{	// if the value is invalid then set it to 0
+					Integer.parseInt(text);
+				}catch (Exception e){
+					text="0";
+					textField.setValue(text);
+				}
 				Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
 				writeValue(integer);
 			}

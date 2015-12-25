@@ -3,6 +3,7 @@ package it.algos.webbase.web.lib;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class Lib {
 
@@ -85,6 +86,8 @@ public abstract class Lib {
 
         return obj.toString();
     }// end of static method
+
+
 
     /**
      * Tries to convert an Object in BigDecimal.

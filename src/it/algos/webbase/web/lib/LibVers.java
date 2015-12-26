@@ -7,6 +7,7 @@ import java.util.List;
 
 public abstract class LibVers {
 
+
     private static int getVersione() {
         int numero = 0;
         List<Versione> lista;

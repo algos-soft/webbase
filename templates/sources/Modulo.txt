@@ -7,11 +7,16 @@ import javax.persistence.metamodel.Attribute;
 @SuppressWarnings("serial")
 public class @NAME@Mod extends AlgosModulePop {
 
-    // indirizzo interno del modulo (serve nei menu)
-    public static String MENU_ADDRESS="@NAME@";
-
+    /**
+     * Costruttore senza parametri
+     * <p>
+     * Invoca la superclasse passando i parametri:
+     * (obbligatorio) questa classe
+     * (facoltativo) etichetta del menu (se manca usa il nome della Entity)
+     * (facoltativo) icona del menu (se manca usa un'icona standard)
+     */
     public @NAME@Mod() {
-        super(@NAME@.class, MENU_ADDRESS);
+        super(@NAME@.class, "@NAME@", FontAwesome.BARS);
     }// end of constructor
 
     /**

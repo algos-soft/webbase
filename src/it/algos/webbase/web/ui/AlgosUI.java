@@ -27,6 +27,7 @@ import it.algos.webbase.web.navigator.NavPlaceholder;
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -65,7 +66,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     protected String menuAddressModuloPartenza;
     protected ArrayList<ModulePop> moduli;
-    protected HashMap<String, MenuBar.MenuItem> mappaItem;
+    protected LinkedHashMap<String, MenuBar.MenuItem> mappaItem;
 
 
     /**
@@ -338,11 +339,11 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      */
     private void addAllModuli() {
         moduli = new ArrayList<ModulePop>();
-        mappaItem = new HashMap<String, MenuBar.MenuItem>();
+        mappaItem = new LinkedHashMap<String, MenuBar.MenuItem>();
 
         this.addModuliStandard();
         this.addModuli();
-        this.creaMenu();
+//        this.creaMenu();
     }// end of method
 
 
@@ -415,20 +416,19 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
      */
     protected void addModulo(ModulePop modulo) {
-        String menuAddress;
+        String menuLabel;
         Resource menuIcon = null;
         MenuBar.MenuItem menuItem = null;
 
         if (modulo != null) {
-            menuAddress = modulo.getMenuAddress();
-//            menuIcon = modulo.getMenuIcon();
-            menuItem = addModulo(modulo, menuAddress, menuIcon);
+            menuLabel = modulo.getMenuLabel();
+            menuIcon = modulo.getMenuIcon();
+            menuItem = addModulo(modulo, menuLabel, menuIcon);
 
             if (menuItem != null) {
                 modulo.addSottoMenu(menuItem);
             }// end of if cycle
         }// end of if cycle
-
 
     }// end of method
 
@@ -440,15 +440,17 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * <p>
      * Invocato dalla sottoclasse
      *
-     * @param vista       da visualizzare nel placeholder alla pressione del bottone di menu
-     * @param menuAddress da utilizzare come chiave per la HashMap dei MenuBar.MenuItem
-     * @param menuIcon    del menu
+     * @param vista     da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param menuLabel etichetta visibile nella menu bar
+     * @param menuIcon  icona del menu
      */
-    protected MenuBar.MenuItem addModulo(View vista, String menuAddress, Resource menuIcon) {
-        MenuBar.MenuItem menuItem = createMenuItem(vista, menuAddress, menuIcon);
+    protected MenuBar.MenuItem addModulo(View vista, String menuLabel, Resource menuIcon) {
+        String keyModulo = "";
+        MenuBar.MenuItem menuItem = createMenuItem(vista, menuLabel, menuIcon);
 
         if (menuItem != null) {
-            mappaItem.put(menuAddress, menuItem);
+            keyModulo = vista.getClass().getSimpleName();
+            mappaItem.put(keyModulo, menuItem);
         }// end of if cycle
 
         return menuItem;
@@ -509,11 +511,26 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * Rimanda al metodo omonimo della classe AMenuBar (dedicata per il menu algosMenuBar e loginMenuBar)
      */
     private void creaMenu() {
-        if (moduli != null && moduli.size() > 0) {
-            for (ModulePop modulo : moduli) {
+        MenuBar.MenuItem item;
+        MenuCommand comando;
+        View vista;
+        ModulePop modulo;
+
+        if (mappaItem != null && mappaItem.size() > 0) {
+            for (Map.Entry<String, MenuBar.MenuItem> mappa : mappaItem.entrySet()) {
+                item = mappa.getValue();
+                comando = (MenuCommand) item.getCommand();
+                vista = comando.getView();
+                modulo = (ModulePop) vista;
                 modulo.createMenuItem(topLayout.getMenuBar(), bodyLayout);
             }// end of for cycle
         }// end of if cycle
+
+//        if (moduli != null && moduli.size() > 0) {
+//            for (ModulePop modulo : moduli) {
+//                modulo.createMenuItem(topLayout.getMenuBar(), bodyLayout);
+//            }// end of for cycle
+//        }// end of if cycle
     }// end of method
 
 

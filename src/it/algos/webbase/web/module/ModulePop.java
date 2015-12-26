@@ -8,6 +8,7 @@ import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
@@ -39,6 +40,7 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public abstract class ModulePop extends Module {
 
+    private final static Resource ICONA_STANDARD = FontAwesome.BARS;
     private static boolean MOSTRA_ID = false;
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
@@ -46,8 +48,6 @@ public abstract class ModulePop extends Module {
     protected Attribute<?, ?>[] fieldsList;
     protected Attribute<?, ?>[] fieldsForm;
     protected Attribute<?, ?>[] fieldsSearch;
-    // icona del modulo (serve nei menu)
-    protected Resource icon;
     // menuitem del modulo (serve nei menu)
     protected MenuBar.MenuItem menuItem;
     private boolean modale = false;
@@ -55,21 +55,65 @@ public abstract class ModulePop extends Module {
     private String titoloNew;
     // titolo del dialogo di modifica
     private String titoloEdit;
+    // indirizzo interno del modulo (serve nei menu)
+//    private String menuAddress;
     // titolo del dialogo di ricerca
     private String titoloSearch;
-    // indirizzo interno del modulo (serve nei menu)
-    private String menuAddress;
+    //--etichetta del menu
+    private String menuLabel = "";
+    // icona del modulo (serve nei menu)
+    private Resource menuIcon = null;
 
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    /**
+     * Costruttore minimo
+     *
+     * @param entity di riferimento del modulo
+     */
     public ModulePop(Class entity) {
-        this(entity, "");
+        this(entity, "", null);
     }// end of constructor
 
+    /**
+     * Costruttore
+     *
+     * @param entity   di riferimento del modulo
+     * @param menuIcon etichetta visibile nella menu bar
+     */
+    public ModulePop(Class entity, String menuIcon) {
+        this(entity, menuIcon, null);
+    }// end of constructor
+
+    /**
+     * Costruttore
+     *
+     * @param entity   di riferimento del modulo
+     * @param menuIcon icona del menu
+     */
+    public ModulePop(Class entity, Resource menuIcon) {
+        this(entity, "", menuIcon);
+    }// end of constructor
+
+
+    /**
+     * Costruttore standard
+     *
+     * @param entity    di riferimento del modulo
+     * @param menuLabel etichetta visibile nella menu bar
+     * @param menuIcon  icona del menu
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public ModulePop(Class entity, String menuAddress) {
+    public ModulePop(Class entity, String menuLabel, Resource menuIcon) {
         super();
-        this.setMenuAddress(menuAddress);
+        if (menuLabel.equals("")) {
+            this.menuLabel = entity.getSimpleName();
+        } else {
+            this.menuLabel = menuLabel;
+        }// end of if/else cycle
+        if (menuIcon == null) {
+            this.menuIcon = ICONA_STANDARD;
+        } else {
+            this.menuIcon = menuIcon;
+        }// end of if/else cycle
 
         if (entity != null) {
             this.entityClass = (Class<BaseEntity>) entity;
@@ -302,6 +346,21 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
+//    /**
+//     * Create the MenuBar Item for this module
+//     * <p>
+//     * Invocato dal metodo AlgosUI.creaMenu()
+//     * PUO essere sovrascritto dalla sottoclasse
+//     *
+//     * @param menuBar     a cui agganciare il menuitem
+//     * @param placeholder in cui visualizzare il modulo
+//     * @return menuItem appena creato
+//     * @deprecated
+//     */
+//    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+//        return createMenuItem(menuBar, placeholder);
+//    }// end of method
+
     /**
      * Create the MenuBar Item for this module
      * <p>
@@ -314,26 +373,9 @@ public abstract class ModulePop extends Module {
      * @deprecated
      */
     public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-        return createMenuItem(menuBar, placeholder, icon);
-    }// end of method
-
-    /**
-     * Create the MenuBar Item for this module
-     * <p>
-     * Invocato dal metodo AlgosUI.creaMenu()
-     * PUO essere sovrascritto dalla sottoclasse
-     *
-     * @param menuBar     a cui agganciare il menuitem
-     * @param placeholder in cui visualizzare il modulo
-     * @param icon        del menuitem
-     * @return menuItem appena creato
-     * @deprecated
-     */
-    protected MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder, Resource icon) {
         MenuBar.MenuItem menuItem;
-//        MenuBar.Command comando2 = new ModuleCommand(this, placeholder, menuBar);
         MenuCommand comando = new MenuCommand(menuBar, this);
-        menuItem = menuBar.addItem(getMenuAddress(), icon, comando);
+        menuItem = menuBar.addItem(getMenuLabel(), getMenuIcon(), comando);
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
 
         this.menuItem = menuItem;
@@ -901,23 +943,14 @@ public abstract class ModulePop extends Module {
         return name;
     }// end of method
 
-    public String getMenuAddress() {
-        return menuAddress;
-    }// end of method
+    public String getMenuLabel() {
+        return menuLabel;
+    }// end of getter method
 
-    private void setMenuAddress(String menuAddress) {
-        this.menuAddress = menuAddress;
-    }// end of method
 
-//    @Override
-//    public Resource getIcon() {
-//        return icon;
-//    }// end of getter method
-//
-//    @Override
-//    public void setIcon(Resource icon) {
-//        this.icon = icon;
-//    }//end of setter method
+    public Resource getMenuIcon() {
+        return menuIcon;
+    }// end of getter method
 
 
     public MenuBar.MenuItem getMenuItem() {

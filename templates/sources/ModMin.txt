@@ -5,17 +5,21 @@ import it.algos.webbase.web.module.ModulePop;
 import javax.persistence.metamodel.Attribute;
 
 /**
- * Gestione (minimale) del modulo
- * Passa alla superclasse il nome e la classe specifica
+ * Gestione (minimale) del modulo specifico
  */
 @SuppressWarnings("serial")
 public class @NAME@Mod extends ModulePop {
 
-    // indirizzo interno del modulo (serve nei menu)
-    public static String MENU_ADDRESS = "@NAME@";
-
+    /**
+     * Costruttore senza parametri
+     * <p/>
+     * Invoca la superclasse passando i parametri:
+     * (obbligatorio) la Entity specifica
+     * (facoltativo) etichetta del menu (se manca usa il nome della Entity)
+     * (facoltativo) icona del menu (se manca usa un'icona standard)
+     */
     public @NAME@Mod() {
-        super(@NAME@.class, MENU_ADDRESS);
+        super(@NAME@.class, "@NAME@", FontAwesome.GEAR);
     }// end of constructor
 
 }// end of class

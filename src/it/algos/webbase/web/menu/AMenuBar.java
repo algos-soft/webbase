@@ -170,16 +170,17 @@ public class AMenuBar extends HorizontalLayout {
      * @param placeholder di riferimento
      */
     public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
-        String address = "";
-        MenuItem menuItem = modulo.getMenuItem();
-        Resource icon = modulo.getIcon();
-        address = modulo.getMenuAddress();
-
-        if (address.equals("")) {
-            address = LibPath.getClassName(modulo.getEntityClass());
-        }// fine del blocco if
-
-        this.addMenu(address, icon, modulo, placeholder);
+        //@todo assolutamente
+//        String address = "";
+//        MenuItem menuItem = modulo.getMenuItem();
+//        Resource icon = modulo.getIcon();
+//        address = modulo.getMenuAddress();
+//
+//        if (address.equals("")) {
+//            address = LibPath.getClassName(modulo.getEntityClass());
+//        }// fine del blocco if
+//
+//        this.addMenu(address, icon, modulo, placeholder);
     }// end of method
 
 

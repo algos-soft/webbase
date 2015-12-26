@@ -10,36 +10,27 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.module.ModulePop;
-import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
 public class PrefMod extends ModulePop {
 
-    // indirizzo interno del modulo (serve nei menu)
-    public final static String MENU_ADDRESS = "Pref";
-
-    public final static Resource MENU_ICON = FontAwesome.BARS;
 
     /**
      * Costruttore senza parametri
+     * <p>
+     * Invoca la superclasse passando i parametri:
+     * (obbligatorio) la Entity specifica
+     * (facoltativo) etichetta del menu (se manca usa il nome della Entity)
+     * (facoltativo) icona del menu (se manca usa un'icona standard)
      */
     public PrefMod() {
-        super(Pref.class, MENU_ADDRESS);
+        super(Pref.class, FontAwesome.BARS);
     }// end of constructor
 
-    /**
-     * Sovrascritto nella sottoclasse
-     *
-     * @return icona del menu
-     */
-    public static Resource getMenuIcon() {
-        return MENU_ICON;
-    }// end of getter method
 
     /**
      * Titolo (caption) dei dialogo nuovo record. <br>
@@ -141,19 +132,19 @@ public class PrefMod extends ModulePop {
 
     }// end of method
 
-    /**
-     * Create the MenuBar Item for this module
-     * <p>
-     * Invocato dal metodo AlgosUI.creaMenu()
-     * PUO essere sovrascritto dalla sottoclasse
-     *
-     * @param menuBar     a cui agganciare il menuitem
-     * @param placeholder in cui visualizzare il modulo
-     * @return menuItem appena creato
-     */
-    @Override
-    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
-    }// end of method
+//    /**
+//     * Create the MenuBar Item for this module
+//     * <p>
+//     * Invocato dal metodo AlgosUI.creaMenu()
+//     * PUO essere sovrascritto dalla sottoclasse
+//     *
+//     * @param menuBar     a cui agganciare il menuitem
+//     * @param placeholder in cui visualizzare il modulo
+//     * @return menuItem appena creato
+//     */
+//    @Override
+//    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
+//        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
+//    }// end of method
 
 }// end of class

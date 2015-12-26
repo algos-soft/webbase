@@ -44,7 +44,7 @@ public class @PROGETTO@BootStrap extends ABootStrap {
         Toolbar.LARGHEZZA_BOTTONI = 140;
 
         // eventuali modifiche ai flag generali di regolazione
-        AlgosApp.USE_SECURITY = true;
+//        AlgosApp.USE_SECURITY = true;
 //        AlgosApp.USE_LOG = true;
 //        AlgosApp.USE_VERS = false;
 //        AlgosApp.USE_PREF = false;

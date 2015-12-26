@@ -9,9 +9,7 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.module.ModulePop;
-import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.persistence.metamodel.Attribute;
 
@@ -19,16 +17,17 @@ import javax.persistence.metamodel.Attribute;
 public class VersMod extends ModulePop {
 
 
-    // indirizzo interno del modulo (serve nei menu)
-    public static String MENU_ADDRESS = "Vers";
-
 
     /**
      * Costruttore senza parametri
+     * <p>
+     * Invoca la superclasse passando i parametri:
+     * (obbligatorio) la Entity specifica
+     * (facoltativo) etichetta del menu (se manca usa il nome della Entity)
+     * (facoltativo) icona del menu (se manca usa un'icona standard)
      */
     public VersMod() {
-        super(Versione.class, MENU_ADDRESS);
-        this.setIcon(FontAwesome.BARS);
+        super(Versione.class, "Vers", FontAwesome.BARS);
     }// end of constructor
 
 
@@ -124,21 +123,6 @@ public class VersMod extends ModulePop {
             cont.sort(new String[]{sortField}, new boolean[]{true});
         }// fine del blocco if
 
-    }// end of method
-
-    /**
-     * Create the MenuBar Item for this module
-     * <p>
-     * Invocato dal metodo AlgosUI.creaMenu()
-     * PUO essere sovrascritto dalla sottoclasse
-     *
-     * @param menuBar     a cui agganciare il menuitem
-     * @param placeholder in cui visualizzare il modulo
-     * @return menuItem appena creato
-     */
-    @Override
-    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-        return super.createMenuItem(menuBar, placeholder, FontAwesome.BARS);
     }// end of method
 
 

@@ -1,6 +1,8 @@
 package it.algos.webbase.web.field;
 
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.ui.Component;
@@ -11,6 +13,7 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 
 	private TextField textField;
 	private StringToIntegerConverter converter = new StringToIntegerConverter();
+	private static final Logger logger = Logger.getLogger(IntegerField.class.getName());
 
 	public IntegerField(String caption) {
 		super();
@@ -23,17 +26,26 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 			@Override
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				String text = textField.getValue();
-				try{	// if the value is invalid then set it to 0
+				try{
+
+					// convert UI to model (may throw exception)
 					Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
+
+					// if no exception, but null is returned, force exception
+					if(integer==null){
+						throw new Exception();
+					}
+
+					// whites the number
 					writeValue(integer);
-//					Integer.parseInt(text); //@todo Gac 28.12.15 - NON funziona MAI per i numeri sopra 1.000 (trova il punto)
-				}catch (Exception e){
-//					text="0";
-//					textField.setValue(text);
-					writeValue(0);
+
+				}catch(Exception e){
+					// if the conversion fails force the UI to zero
+					// setValue() triggers a new valueChange event and this method
+					// gets called again, this time with "0" in the UI
+					logger.log(Level.INFO, "Conversion error: '"+text+"' to integer - forced to zero");
+					textField.setValue("0");
 				}
-//				Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
-//				writeValue(integer);
 			}
 		});
 	}

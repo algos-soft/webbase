@@ -24,13 +24,16 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				String text = textField.getValue();
 				try{	// if the value is invalid then set it to 0
-					Integer.parseInt(text);
+					Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
+					writeValue(integer);
+//					Integer.parseInt(text); //@todo Gac 28.12.15 - NON funziona MAI per i numeri sopra 1.000 (trova il punto)
 				}catch (Exception e){
-					text="0";
-					textField.setValue(text);
+//					text="0";
+//					textField.setValue(text);
+					writeValue(0);
 				}
-				Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
-				writeValue(integer);
+//				Integer integer = converter.convertToModel(text, Integer.class, Locale.getDefault());
+//				writeValue(integer);
 			}
 		});
 	}

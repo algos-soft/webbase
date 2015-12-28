@@ -169,7 +169,7 @@ public abstract class LibPref {
             if (type == TypePref.booleano) {
                 try { // prova ad eseguire il codice
                     pref.setBool((Boolean) value);
-                    strValue = value.toString();
+                    strValue = (boolean) value ? "true" : "false";
                 } catch (Exception unErrore) { // intercetta l'errore
                     Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
@@ -191,15 +191,20 @@ public abstract class LibPref {
                 }// fine del blocco try-catch
             }// fine del blocco if
             pref.save();
-        }// fine del blocco if
 
-        if (logVersione) {
-            commento = code + ", di default " + strValue + ".";
-            if (!descVers.equals("")) {
-                commento += " " + descVers;
+            if (logVersione) {
+                commento = code + ", di default " + strValue + ".";
+                if (!descVers.equals("")) {
+                    commento += " " + descVers;
+                }// fine del blocco if
+                LibVers.nuova("Preferenze", commento);
             }// fine del blocco if
-            LibVers.nuova("Preferenze", commento);
-        }// fine del blocco if
+        } else {
+            if (logVersione) {
+                LibVers.nuova("Preferenze", "La preferenza " + code + " esisteva già e non è stata modificata");
+            }// fine del blocco if
+        }// end of if/else cycle
+
     }// end of static method
 
 }// end of abstract static class

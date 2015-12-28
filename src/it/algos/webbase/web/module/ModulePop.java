@@ -77,10 +77,10 @@ public abstract class ModulePop extends Module {
      * Costruttore
      *
      * @param entity   di riferimento del modulo
-     * @param menuIcon etichetta visibile nella menu bar
+     * @param menuLabel etichetta visibile nella menu bar
      */
-    public ModulePop(Class entity, String menuIcon) {
-        this(entity, menuIcon, null);
+    public ModulePop(Class entity, String menuLabel) {
+        this(entity, menuLabel, null);
     }// end of constructor
 
     /**

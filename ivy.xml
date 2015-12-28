@@ -95,6 +95,8 @@
 
         <dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1"/>
 
+        <!--<dependency org="org.vaadin.addons.lazyquerycontainer" name="vaadin-lazyquerycontainer" rev="7.4.0.1" />-->
+
         <!-- Replacement for Vaadin scrollable table - uses paging, should be faster  -->
         <!--<dependency org="org.vaadin.addons" name="pagedtable" rev="0.6.5" />-->
 

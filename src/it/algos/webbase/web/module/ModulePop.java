@@ -1,8 +1,10 @@
 package it.algos.webbase.web.module;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
@@ -28,6 +30,7 @@ import it.algos.webbase.web.table.ATable.TableListener;
 import it.algos.webbase.web.table.TablePortal;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
@@ -692,24 +695,27 @@ public abstract class ModulePop extends Module {
      * Shows in the table only the selected rows
      */
     public void selectedonly() {
-        JPAContainer<?> cont = getTable().getJPAContainer();
-        if (cont != null) {
+        Container cont = getTable().getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable=(Container.Filterable)cont;
             Filter filter = createFilterForSelectedRows();
-            cont.removeAllContainerFilters();
-            cont.addContainerFilter(filter);
-            cont.refresh();
+            cFilterable.removeAllContainerFilters();
+            cFilterable.addContainerFilter(filter);
+            getTable().refresh();
         }// end of if cycle
+
     }// end of method
 
     /**
      * Removes the selected rows from the table
      */
     public void removeselected() {
-        JPAContainer<?> cont = getTable().getJPAContainer();
-        if (cont != null) {
+        Container cont = getTable().getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable=(Container.Filterable)cont;
             Filter filter = new Not(createFilterForSelectedRows());
-            cont.addContainerFilter(filter);
-            cont.refresh();
+            cFilterable.addContainerFilter(filter);
+            getTable().refresh();
         }// end of if cycle
     }// end of method
 
@@ -717,10 +723,11 @@ public abstract class ModulePop extends Module {
      * Shows all the records in the table
      */
     public void showall() {
-        JPAContainer<?> cont = getTable().getJPAContainer();
-        if (cont != null) {
-            cont.removeAllContainerFilters();
-            cont.refresh();
+        Container cont = getTable().getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable=(Container.Filterable)cont;
+            cFilterable.removeAllContainerFilters();
+            getTable().refresh();
         }// end of if cycle
     }// end of method
 
@@ -738,14 +745,22 @@ public abstract class ModulePop extends Module {
      * <p>
      */
     private Filter createFilterForSelectedRows() {
+        Filter filter=null;
         Object[] ids = getTable().getSelectedIds();
-        Filter[] filters = new Filter[ids.length];
-        int idx = 0;
-        for (Object id : ids) {
-            filters[idx] = new Compare.Equal("id", id);
-            idx++;
-        }// end of for cycle
-        Filter filter = new Or(filters);
+        if(ids.length>0){
+            Filter[] filters = new Filter[ids.length];
+            int idx = 0;
+            for (Object id : ids) {
+                filters[idx] = new Compare.Equal("id", id);
+                idx++;
+            }// end of for cycle
+
+            if(filters.length>1){
+                filter = new Or(filters);
+            }else{
+                filter=filters[0];
+            }
+        }
         return filter;
     }// end of method
 

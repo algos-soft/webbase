@@ -6,6 +6,8 @@ import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.query.AQuery;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.lang.reflect.Method;
@@ -13,6 +15,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,8 +112,11 @@ public class SingletonBootStrap {
         public void run() {
 
             while (!stop) {
-                // simple query here
-                AQuery.getCount(Ruolo.class);
+
+                // simple generic SQL query here
+                EntityManager em = EM.createEntityManager();
+                Query q = em.createNativeQuery("SELECT 1");
+                Object obj = q.getResultList();
 
                 // sleep time
                 try {

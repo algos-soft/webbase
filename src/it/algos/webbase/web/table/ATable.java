@@ -22,6 +22,7 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.metamodel.Attribute;
@@ -698,11 +699,24 @@ public class ATable extends Table implements ListSelection {
         return bi;
     }// end of method
 
+
+    /**
+     * Refreshes the underlying container from the database
+     */
     public void refresh() {
-        JPAContainer<?> cont = getJPAContainer();
-        if (cont != null) {
-            cont.refresh();
-        }// end of if cycle
+        Container cont = getContainerDataSource();
+        if(cont!=null){
+            // refresh() is not in any interface, so we have
+            // to cast to any specific classes
+            if(cont instanceof JPAContainer){
+                JPAContainer jpac=(JPAContainer)cont;
+                jpac.refresh();
+            }
+            if(cont instanceof LazyEntityContainer){
+                LazyEntityContainer lec=(LazyEntityContainer)cont;
+                lec.refresh();
+            }
+        }
     }// end of method
 
     public Class<?> getEntityClass() {
@@ -933,19 +947,17 @@ public class ATable extends Table implements ListSelection {
         }// end of for cycle
     }// end of method
 
+
     /**
      * Total number of rows in the table's domain database
      */
     public long getTotalRows() {
-        long rows = -1;
-        JPAContainer<?> cont = getJPAContainer();
-        if (cont != null) {
-            Class<?> clazz = cont.getEntityClass();
-            rows = (long) AQuery.getCount(clazz);
-        }// end of if cycle
-
+        Class<?> clazz = getEntityClass();
+        long rows = AQuery.getCount(clazz);
         return rows;
     }// end of method
+
+
 
     /**
      * Number of rows currently available in the table's container

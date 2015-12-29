@@ -17,6 +17,8 @@ public class EM {
      */
     public static final String DEFAULT_PERSISTENCE_UNIT = "MySqlUnit";
     public static String PERSISTENCE_UNIT=DEFAULT_PERSISTENCE_UNIT;
+    private static final EntityManagerFactory EMFACTORY = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+
 
 
     public static Set<Attribute<?, ?>> getAttrs(Class<?> clazz) {
@@ -57,8 +59,7 @@ public class EM {
      * @return the EntityManager
      */
     public static EntityManager createEntityManager() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
-        return factory.createEntityManager();
+        return EMFACTORY.createEntityManager();
     }
 
 }// end of class

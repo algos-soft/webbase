@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.File;
+
 
 
 /**
@@ -32,7 +34,10 @@ public class LibResource {
         try {
             ServletContext sc = AlgosApp.getServletContext();
             String realpath = sc.getRealPath("/" + fullpath.toString());
-            bytes = Files.readAllBytes(Paths.get(realpath));
+            File f = new File(realpath);
+            if(f.exists() && !f.isDirectory()) {
+                bytes = Files.readAllBytes(Paths.get(realpath));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

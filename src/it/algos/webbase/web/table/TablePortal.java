@@ -93,7 +93,10 @@ public class TablePortal extends VerticalLayout {
 
 
     public void addToolbarListener(TableToolbarListener listener) {
-        getToolbar().addToolbarListener(listener);
+        TableToolbar tb = getToolbar();
+        if(tb!=null){
+            tb.addToolbarListener(listener);
+        }
     }// end of method
 
     public ATable getTable() {

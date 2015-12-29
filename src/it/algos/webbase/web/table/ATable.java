@@ -13,6 +13,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
@@ -21,16 +22,15 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
 import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 @SuppressWarnings("serial")
 public class ATable extends Table implements ListSelection {
@@ -38,8 +38,8 @@ public class ATable extends Table implements ListSelection {
     protected ModulePop modulo;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
-    private Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
-    private Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
+    protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
+    protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
     private ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
     private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
 
@@ -72,21 +72,26 @@ public class ATable extends Table implements ListSelection {
         init();
     }// end of constructor
 
-    private void init() {
+    protected void init() {
 
         // create and set the container - read-only and cached
         // all the columns are added automatically to the table
         Container container = createContainer();
-        sortContainer(container);
         setContainerDataSource(container);
+        addPropertiesToContainer();
+        sortContainer();
 
-        // adds a listener for data change to the container (JPAContainer only)
-        JPAContainer<?> jpacont = getJPAContainer();
-        if (jpacont != null) {
-            jpacont.addItemSetChangeListener(new ItemSetChangeListener() {
+
+        // adds a listener for data change to the container
+        // (if supported by the container)
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof ItemSetChangeNotifier) {
+            ItemSetChangeNotifier cNotifier = (ItemSetChangeNotifier) cont;
+
+            cNotifier.addItemSetChangeListener(new ItemSetChangeListener() {
 
                 @Override
-                public void containerItemSetChange(ItemSetChangeEvent event) {
+                public void containerItemSetChange(Container.ItemSetChangeEvent event) {
                     updateTotals();
 
                     // fire table data changed
@@ -94,13 +99,15 @@ public class ATable extends Table implements ListSelection {
 
                 }// end of inner method
             });// end of anonymous inner class
+
         }
+
 
         // adds a listener for mouse click to the table
         this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
-                ATable.this.itemClick(itemClickEvent);
+                getTable().itemClick(itemClickEvent);
                 selectionChanged(itemClickEvent);
             }// end of inner method
         });// end of anonymous inner class
@@ -113,11 +120,12 @@ public class ATable extends Table implements ListSelection {
 
         setAlignments();
         setSelectable(true);
+        setMultiSelect(true);
+        setMultiSelectMode(MultiSelectMode.DEFAULT);
         setEditable(false);
         setImmediate(true);
         setColumnCollapsingAllowed(true);
         setColumnReorderingAllowed(true);
-        setMultiSelect(true);
 
         // setFooterVisible(true);
         addActionHandler(new Action.Handler() {
@@ -175,28 +183,56 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Creates the container
-     * <p>
-     *
+     * <p/>
+     * JPAContainerFactory creates a container with all the properties
      * @return the container Override in the subclass to use a different container
      */
     protected Container createContainer() {
         JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
-//		JPAContainer cont = JPAContainerFactory.make(getEntityClass(),EM.createEntityManager());
-
         return cont;
     }// end of method
 
+
     /**
-     * Initial sort order for the container
-     * <p>
-     *
-     * @param cont the container to be sorted
+     * Add the properties to the container.
+     * By default, all the properties from the Entity class are added.
+     * If a property whith the same name is already present it is not added again.
      */
-    protected void sortContainer(Container cont) {
-        if (cont instanceof JPAContainer) {
-            sortJPAContainer((JPAContainer) cont);
+    protected void addPropertiesToContainer(){
+        Container cont = getContainerDataSource();
+        EntityType<?> type = EM.getEntityType(getEntityClass());
+        Set<?> attributes = type.getAttributes();
+        Attribute<?, ?> attribute;
+
+        Collection coll=cont.getContainerPropertyIds();
+
+        for (Object ogg : attributes) {
+            if (ogg instanceof Attribute<?, ?>) {
+                attribute = (Attribute<?, ?>) ogg;
+                String name = attribute.getName();
+
+                if(!coll.contains(name)){
+                    Class clazz = attribute.getJavaType();
+                    Object defaultValue=null;
+                    try {
+                        defaultValue = clazz.newInstance();
+                    } catch (Exception e) {
+                    }
+
+                    // specific handling for LazyQueryContainer
+                    if(cont instanceof LazyQueryContainer){
+                        LazyQueryContainer lqCont=(LazyQueryContainer)cont;
+                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
+                    }else{
+                        cont.addContainerProperty(name, clazz, defaultValue);
+                    }
+
+                }
+
+            }
         }
-    }// end of method
+
+    }
 
 
     /**
@@ -204,42 +240,75 @@ public class ATable extends Table implements ListSelection {
      * By default the container is sorted based on the default sort order declared
      * in the entity class via the @DefaultSort annotation.
      * If the annotation is not present the container is not sorted.
-     *
+     * <p/>
      * For a custom sort of the container in a RelatedCombo field you have 2 options:
      * 1) call the sort() method after the creation of the object passing the properties on which to sort
      * 2) override this method (needs subclassing).
+     *
      * @param cont the container to be sorted.
      */
+    protected void sortContainer() {
+        Container cont = getContainerDataSource();
+        if (cont instanceof com.vaadin.data.Container.Sortable) {
+            com.vaadin.data.Container.Sortable csortable = (com.vaadin.data.Container.Sortable) cont;
 
-    /**
-     * Initial sorting of the container
-     * <p>
-     * By default the container is sorted based on the default sort order declared
-     * in the entity class via the @DefaultSort annotation.
-     * If the annotation is not present the container is sorted by id.
-     *
-     * @param cont the container to be sorted
-     */
-    protected void sortJPAContainer(JPAContainer cont) {
+            // retrieve the default sort properties from the class by annotation
+            SortProperties props = BaseEntity.getSortProperties(getEntityClass());
 
-        // retrieve the default sort properties from the class by annotation
-        SortProperties props = BaseEntity.getSortProperties(getEntityClass());
+            // sort the container on the sort properties
+            if (!props.isEmpty()) {
+                csortable.sort(props.getProperties(), props.getDirections());
+            } else {
+                String sortField = BaseEntity_.id.getName();
+                csortable.sort(new String[]{sortField}, new boolean[]{true});
+            }
 
-        // sort the container on the sort properties
-        if(!props.isEmpty()){
-            cont.sort(props.getProperties(), props.getDirections());
-        }else{
-            String sortField = BaseEntity_.id.getName();
-            cont.sort(new String[]{sortField}, new boolean[]{true});
         }
-
     }// end of method
+
+
+//
+//    /**
+//     * Sorts the container.
+//     * By default the container is sorted based on the default sort order declared
+//     * in the entity class via the @DefaultSort annotation.
+//     * If the annotation is not present the container is not sorted.
+//     *
+//     * For a custom sort of the container in a RelatedCombo field you have 2 options:
+//     * 1) call the sort() method after the creation of the object passing the properties on which to sort
+//     * 2) override this method (needs subclassing).
+//     * @param cont the container to be sorted.
+//     */
+//
+//    /**
+//     * Initial sorting of the container
+//     * <p>
+//     * By default the container is sorted based on the default sort order declared
+//     * in the entity class via the @DefaultSort annotation.
+//     * If the annotation is not present the container is sorted by id.
+//     *
+//     * @param cont the container to be sorted
+//     */
+//    protected void sortJPAContainer(JPAContainer cont) {
+//
+//        // retrieve the default sort properties from the class by annotation
+//        SortProperties props = BaseEntity.getSortProperties(getEntityClass());
+//
+//        // sort the container on the sort properties
+//        if(!props.isEmpty()){
+//            cont.sort(props.getProperties(), props.getDirections());
+//        }else{
+//            String sortField = BaseEntity_.id.getName();
+//            cont.sort(new String[]{sortField}, new boolean[]{true});
+//        }
+//
+//    }// end of method
 
 
     /**
      * Create additional columns
      * (add generated columns, nested properties...)
-     * <p>
+     * <p/>
      * Override in the subclass
      */
     protected void createAdditionalColumns() {
@@ -248,7 +317,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Sets the visibility of the columns
      */
-    private void setColumnVisibility() {
+    protected void setColumnVisibility() {
 
         // define the visible columns
         Object[] columns = getDisplayColumns();
@@ -275,7 +344,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Set the default alignments based on item class
      */
-    private void setAlignments() {
+    protected void setAlignments() {
         Object[] columns = getVisibleColumns();
         for (Object id : columns) {
             if (id instanceof String) {
@@ -319,7 +388,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Adds/removes a column to the list of totalizable columns
-     * <p>
+     * <p/>
      *
      * @param propertyId    - the id of the column
      * @param useTotals     - to add or remove the column from the list
@@ -349,7 +418,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Adds/removes a column to the list of totalizable columns<br>
      * with automatic number of decimal places
-     * <p>
+     * <p/>
      *
      * @param propertyId - the id of the column
      * @param useTotals  - to add or remove the column from the list
@@ -412,7 +481,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the single selected row
-     * <p>
+     * <p/>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row id (if a single row is selected, otherwise null)
@@ -443,7 +512,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the single selected row
-     * <p>
+     * <p/>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row id (if a single row is selected, otherwise 0)
@@ -473,7 +542,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the selected rows
-     * <p>
+     * <p/>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row ids
@@ -566,14 +635,14 @@ public class ATable extends Table implements ListSelection {
         BeanItem[] selected = new BeanItem[0];
         Object[] ids = getSelectedIds();
         if (ids != null) {
-            ArrayList<BeanItem> objSel=new  ArrayList<BeanItem>();
-            for(Object id : ids){
+            ArrayList<BeanItem> objSel = new ArrayList<BeanItem>();
+            for (Object id : ids) {
                 BeanItem<?> bi = getBeanItem(id);
-                if (bi!=null){
+                if (bi != null) {
                     objSel.add(bi);
                 }
             }
-            selected=objSel.toArray(new BeanItem[0]);
+            selected = objSel.toArray(new BeanItem[0]);
         }
         return selected;
     }// end of method
@@ -688,43 +757,48 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Updates the totals in the footer
-     * <p>
+     * <p/>
      * Called when the container data changes
      */
     @SuppressWarnings("rawtypes")
     protected void updateTotals() {
         // Collection ids = getJPAContainer().getItemIds();
 
-        // maps the totals to the property ids
-        HashMap<Object, BigDecimal> totalsMap = new HashMap<Object, BigDecimal>();
+        if (totalizableColumns.size() > 0) {
 
-        Collection<?> ids = getContainerDataSource().getItemIds();
+            // maps the totals to the property ids
+            HashMap<Object, BigDecimal> totalsMap = new HashMap<Object, BigDecimal>();
 
-        // cycle all the rows
-        for (Object itemId : ids) {
+            Collection<?> ids = getContainerDataSource().getItemIds();
 
-            // cycle the totalizable columns
-            for (TotalizableColumn column : totalizableColumns) {
-                Object propertyId = column.getPropertyId();
-                Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
-                if (prop != null) {
-                    addToTotals(totalsMap, propertyId, prop);
-                }// end of if cycle
+            // cycle all the rows
+            for (Object itemId : ids) {
+
+                // cycle the totalizable columns
+                for (TotalizableColumn column : totalizableColumns) {
+                    Object propertyId = column.getPropertyId();
+                    Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
+                    if (prop != null) {
+                        addToTotals(totalsMap, propertyId, prop);
+                    }// end of if cycle
+                }// end of for cycle
             }// end of for cycle
-        }// end of for cycle
 
-        // places the totals in the target columns
-        StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
-        for (Object propertyId : totalsMap.keySet()) {
-            BigDecimal total = totalsMap.get(propertyId);
-            int places = genNumDecimalPlacesForTotalColumn(propertyId);
-            if (places == -1) { // auto
-                places = getDefaultDecimalPlacesForColumn(propertyId);
-            }// end of if cycle
-            converter.setDecimalPlaces(places);
-            String sTotal = converter.convertToPresentation(total);
-            setColumnFooter(propertyId, sTotal);
-        }// end of for cycle
+            // places the totals in the target columns
+            StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
+            for (Object propertyId : totalsMap.keySet()) {
+                BigDecimal total = totalsMap.get(propertyId);
+                int places = genNumDecimalPlacesForTotalColumn(propertyId);
+                if (places == -1) { // auto
+                    places = getDefaultDecimalPlacesForColumn(propertyId);
+                }// end of if cycle
+                converter.setDecimalPlaces(places);
+                String sTotal = converter.convertToPresentation(total);
+                setColumnFooter(propertyId, sTotal);
+            }// end of for cycle
+
+        }
+
 
     }// end of method
 
@@ -765,7 +839,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Returns the number of decimal places in totalizable columns for a given
      * totalizable column
-     * <p>
+     * <p/>
      *
      * @param propertyId the property id
      * @return the number of decimal places
@@ -784,7 +858,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Returns a default number of decimal places for a given property.<br>
      * 0 for integers (int, long), 2 for decimals (double, float, BigDecimal)
-     * <p>
+     * <p/>
      *
      * @param propertyId the property id
      * @return the number of decimal places
@@ -830,7 +904,7 @@ public class ATable extends Table implements ListSelection {
      *
      * @param itemClickEvent the event
      */
-    protected void itemClick(ItemClickEvent itemClickEvent) {
+    public void itemClick(ItemClickEvent itemClickEvent) {
 
     }// end of method
 
@@ -900,7 +974,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Evento generato quando si modifica la selezione delle righe
-     * <p>
+     * <p/>
      * Informa (tramite listener) chi è interessato <br>
      */
     public void selectionChanged(ItemClickEvent itemClickEvent) {
@@ -978,7 +1052,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Evento generato quando si modifica la selezione delle righe
-     * <p>
+     * <p/>
      * Informa (tramite listener) chi è interessato <br>
      */
     public void fireSelectionListener(ListSelectionEvent evento) {
@@ -1032,5 +1106,9 @@ public class ATable extends Table implements ListSelection {
             return propertyId.equals(other.getPropertyId());
         }// end of inner method
     }// end of inner class
+
+    protected ATable getTable(){
+        return this;
+    }
 
 }// end of class

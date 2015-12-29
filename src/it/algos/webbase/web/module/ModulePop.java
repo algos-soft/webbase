@@ -26,6 +26,7 @@ import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ATable.TableListener;
 import it.algos.webbase.web.table.TablePortal;
+import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 
 import javax.persistence.metamodel.Attribute;
@@ -241,19 +242,13 @@ public abstract class ModulePop extends Module {
      * sovrascrivere creaFieldsList, creaFieldsForm e creaFieldsSearch <br>
      */
     protected Attribute<?, ?>[] creaFieldsAll() {
-        return getListaAttributi().toArray(new Attribute[0]);
+        return getAttributesList().toArray(new Attribute[0]);
     }// end of method
 
     /**
-     * Crea i campi visibili
-     * <p>
-     * Come default spazzola tutti i campi della Entity <br>
-     * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
-     * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
-     * Può mostrare anche il campo ID, oppure no <br>
-     * In ogni caso il campo ID viene posizionato a sinistra/per primo nel Form e nella Lista
+     * @return a list containing all the attributes for the module
      */
-    public ArrayList<Attribute<?, ?>> getListaAttributi() {
+    public ArrayList<Attribute<?, ?>> getAttributesList() {
         ArrayList<Attribute<?, ?>> lista = new ArrayList<Attribute<?, ?>>();
         EntityType<?> type = EM.getEntityType(getEntityClass());
         Set<?> attributes = type.getAttributes();
@@ -776,7 +771,14 @@ public abstract class ModulePop extends Module {
         totalTxt = LibNum.format(total);
 
         String text = visibleTxt + "/" + totalTxt + " records";
-        getTablePortal().getToolbar().setInfoText(text);
+
+        TablePortal tp = getTablePortal();
+        if(tp!=null){
+            TableToolbar tb = tp.getToolbar();
+            if(tb!=null){
+                tb.setInfoText(text);
+            }
+        }
     }// end of method
 
     /**

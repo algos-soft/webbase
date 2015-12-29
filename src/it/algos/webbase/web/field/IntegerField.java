@@ -36,7 +36,7 @@ public class IntegerField extends CustomField<Integer> implements FieldInterface
 						throw new Exception();
 					}
 
-					// whites the number
+					// writes the number
 					writeValue(integer);
 
 				}catch(Exception e){

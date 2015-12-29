@@ -112,6 +112,7 @@ public class SearchManager extends ConfirmDialog {
 
 		// create composite filter
 		ArrayList<Filter> filters = createFilters();
+
 		if (filters != null) {
 
 			// removes null filters
@@ -125,7 +126,11 @@ public class SearchManager extends ConfirmDialog {
 			// concatenates the filters with the And clause
 			if (validFilters.size() > 0) {
 				Filter[] aFilters = validFilters.toArray(new Filter[0]);
-				outFilter = new And(aFilters);
+				if(validFilters.size() > 1){
+					outFilter = new And(aFilters);
+				}else{
+					outFilter=aFilters[0];
+				}
 			}
 		}
 

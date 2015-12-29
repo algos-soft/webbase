@@ -1,6 +1,7 @@
 package it.algos.webbase.web.module;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -35,6 +36,7 @@ import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -263,7 +265,9 @@ public abstract class ModulePop extends Module {
         for (Object ogg : attributes) {
             if (ogg instanceof Attribute<?, ?>) {
                 attribute = (Attribute<?, ?>) ogg;
-                if (!attribute.getName().equals(BaseEntity_.id.getName())) {
+                String attrName=attribute.getName();
+                String idName=BaseEntity_.id.getName();
+                if (!attrName.equals(idName)) {
                     lista.add(attribute);
                 }// fine del blocco if
             }// fine del blocco if
@@ -598,8 +602,13 @@ public abstract class ModulePop extends Module {
     }
 
     public void delete(Object id) {
-        // delegate to the table's JPAContainer
-        getTable().getJPAContainer().removeItem(id);
+        // delegate to the table's Container
+        Container cont = getTable().getContainerDataSource();
+        cont.removeItem(id);
+        if(cont instanceof Buffered){
+            Buffered bf = (Buffered)cont;
+            bf.commit();
+        }
     }
 
     /**
@@ -616,72 +625,92 @@ public abstract class ModulePop extends Module {
                 public void onClose(ConfirmDialog dialog, boolean confirmed) {
                     if (confirmed) {
 
-                        JPAContainer<?> cont = getTable().getJPAContainer();
+                        Container cont = getTable().getContainerDataSource();
+                        if(cont instanceof Container.Filterable){
+                            Container.Filterable filtCont=(Container.Filterable)cont;
+                            Filter filter = sm.getFilter();
+                            if (filter != null) {
 
-                        Filter filter = sm.getFilter();
-                        if (filter != null) {
+                                SearchManager.CombineSearchOptions option = sm.getCombineOption();
+                                if (option != null) {
 
-                            SearchManager.CombineSearchOptions option = sm.getCombineOption();
-                            if (option != null) {
+                                    // retriever the current filter from the container
+                                    Collection<Filter> currentFilters=null;
+                                    // method getFilters() is not in interface so we have to cast
+                                    if(filtCont instanceof LazyEntityContainer){
+                                        LazyEntityContainer lec = (LazyEntityContainer)filtCont;
+                                        currentFilters = lec.getContainerFilters();
+                                    }
+                                    if(filtCont instanceof JPAContainer){
+                                        JPAContainer jpac = (JPAContainer)filtCont;
+                                        currentFilters = jpac.getFilters();
+                                    }
+                                    // create a filter from the existing filters
+                                    Filter[] aFilters = currentFilters.toArray(new Filter[0]);
+                                    Filter currentFilter=null;
+                                    if(aFilters.length>0){
+                                        if(aFilters.length>1){
+                                            currentFilter = new And(aFilters);
+                                        }else{
+                                            currentFilter = aFilters[0];
+                                        }
+                                    }
 
-                                // concatenates the current filters with the And
-                                // clause
-                                List<Filter> currentFilters = cont.getFilters();
-                                Filter[] aFilters = currentFilters.toArray(new Filter[0]);
-                                Filter currentFilter = new And(aFilters);
-                                Filter newFilter;
-                                switch (option) {
-                                    case addToList: // add to current records (or)
+                                    Filter newFilter;
+                                    switch (option) {
 
-                                        // creates a new filter
-                                        newFilter = new Or(currentFilter, filter);
+                                        case addToList: // add to current records (or)
 
-                                        // sets the new filter in the container
-                                        cont.removeAllContainerFilters();
-                                        cont.refresh(); // refresh before applying
-                                        // new filters
-                                        if (filter != null) {
-                                            cont.addContainerFilter(newFilter);
-                                        }// end of if cycle
-                                        break;
+                                            // creates a new filter
+                                            newFilter = new Or(currentFilter, filter);
 
-                                    case removeFromList: // subtract from current
-                                        // (and not)
+                                            // sets the new filter in the container
+                                            filtCont.removeAllContainerFilters();
+                                            getTable().refresh(); // refresh before applying
 
-                                        // creates a new filter
-                                        Filter notFilter = new Not(filter);
-                                        newFilter = new And(currentFilter, notFilter);
+                                            // new filters
+                                            if (filter != null) {
+                                                filtCont.addContainerFilter(newFilter);
+                                            }// end of if cycle
+                                            break;
 
-                                        // sets the new filter in the container
-                                        cont.removeAllContainerFilters();
-                                        cont.refresh(); // refresh before applying
-                                        // new filters
-                                        if (filter != null) {
-                                            cont.addContainerFilter(newFilter);
-                                        }// end of if cycle
-                                        break;
+                                        case removeFromList: // subtract from current (and not)
 
-                                    case searchInList: // search in current (and)
-                                        // add a new filter to the container
-                                        cont.addContainerFilter(filter);
-                                        break;
-                                }// end of switch cycle
+                                            // creates a new filter
+                                            Filter notFilter = new Not(filter);
+                                            newFilter = new And(currentFilter, notFilter);
 
-                            } else { // no combine option
+                                            // sets the new filter in the container
+                                            filtCont.removeAllContainerFilters();
+                                            getTable().refresh(); // refresh before applying new filters
+                                            if (filter != null) {
+                                                filtCont.addContainerFilter(newFilter);
+                                            }// end of if cycle
+                                            break;
 
-                                cont.removeAllContainerFilters();
-                                // cont.refresh(); // refresh before applying
-                                // new filters -- disabled alex 24-09-2014
-                                // too slow
-                                if (filter != null) {
-                                    cont.addContainerFilter(filter);
-                                }// end of if cycle
+                                        case searchInList: // search in current (and)
+                                            // add a new filter to the container
+                                            filtCont.addContainerFilter(filter);
+                                            break;
 
+                                    }// end of switch cycle
+
+                                } else { // no combine option
+
+                                    filtCont.removeAllContainerFilters();
+                                    // cont.refresh(); // refresh before applying
+                                    // new filters -- disabled alex 24-09-2014
+                                    // too slow
+                                    if (filter != null) {
+                                        filtCont.addContainerFilter(filter);
+                                    }// end of if cycle
+
+                                }// end of if/else cycle
+
+                            } else { // null filter
+                                filtCont.removeAllContainerFilters();
                             }// end of if/else cycle
-
-                        } else { // null filter
-                            cont.removeAllContainerFilters();
-                        }// end of if/else cycle
+                        }
 
                     }// end of if cycle
                 }// end of inner method

@@ -245,8 +245,6 @@ public class ATable extends Table implements ListSelection {
      * For a custom sort of the container in a RelatedCombo field you have 2 options:
      * 1) call the sort() method after the creation of the object passing the properties on which to sort
      * 2) override this method (needs subclassing).
-     *
-     * @param cont the container to be sorted.
      */
     protected void sortContainer() {
         Container cont = getContainerDataSource();

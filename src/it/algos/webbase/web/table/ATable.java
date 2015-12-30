@@ -771,6 +771,10 @@ public class ATable extends Table implements ListSelection {
      * Updates the totals in the footer
      * <p/>
      * Called when the container data changes
+     * todo - se si usa un database questa implementazione è micidiale, spazzola tutte le righe!!!
+     * todo - va riscritta usando delle JPQ CriteriaQuery
+     * todo - attualmente il problema è che i filtri sono oggetti Container.Filter e non
+     * todo - sono compatibili con CriteriaQuery
      */
     @SuppressWarnings("rawtypes")
     protected void updateTotals() {

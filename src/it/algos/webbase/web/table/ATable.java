@@ -10,6 +10,7 @@ import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.filter.And;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
@@ -20,13 +21,18 @@ import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
+import it.algos.webbase.web.lib.LibFilter;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
 import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,11 +43,12 @@ import java.util.*;
 public class ATable extends Table implements ListSelection {
 
     protected ModulePop modulo;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    protected EntityManager entityManager;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
     protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
-    private ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
+    protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
     private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
 
     /**
@@ -74,6 +81,9 @@ public class ATable extends Table implements ListSelection {
     }// end of constructor
 
     protected void init() {
+
+        //create and register the EntityManager
+        entityManager = EM.createEntityManager();
 
         // create and set the container - read-only and cached
         // all the columns are added automatically to the table
@@ -186,6 +196,7 @@ public class ATable extends Table implements ListSelection {
      * Creates the container
      * <p/>
      * JPAContainerFactory creates a container with all the properties
+     *
      * @return the container Override in the subclass to use a different container
      */
     protected Container createContainer() {
@@ -199,32 +210,32 @@ public class ATable extends Table implements ListSelection {
      * By default, all the properties from the Entity class are added.
      * If a property whith the same name is already present it is not added again.
      */
-    protected void addPropertiesToContainer(){
+    protected void addPropertiesToContainer() {
         Container cont = getContainerDataSource();
         EntityType<?> type = EM.getEntityType(getEntityClass());
         Set<?> attributes = type.getAttributes();
         Attribute<?, ?> attribute;
 
-        Collection coll=cont.getContainerPropertyIds();
+        Collection coll = cont.getContainerPropertyIds();
 
         for (Object ogg : attributes) {
             if (ogg instanceof Attribute<?, ?>) {
                 attribute = (Attribute<?, ?>) ogg;
                 String name = attribute.getName();
 
-                if(!coll.contains(name)){
+                if (!coll.contains(name)) {
                     Class clazz = attribute.getJavaType();
-                    Object defaultValue=null;
+                    Object defaultValue = null;
                     try {
                         defaultValue = clazz.newInstance();
                     } catch (Exception e) {
                     }
 
                     // specific handling for LazyQueryContainer
-                    if(cont instanceof LazyQueryContainer){
-                        LazyQueryContainer lqCont=(LazyQueryContainer)cont;
+                    if (cont instanceof LazyQueryContainer) {
+                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
                         lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
-                    }else{
+                    } else {
                         cont.addContainerProperty(name, clazz, defaultValue);
                     }
 
@@ -385,6 +396,34 @@ public class ATable extends Table implements ListSelection {
         super.setColumnWidth(propertyId, width);
     }// end of method
 
+
+//    /**
+//     * Adds/removes a column to the list of totalizable columns
+//     * <p/>
+//     *
+//     * @param propertyId    - the id of the column
+//     * @param useTotals     - to add or remove the column from the list
+//     * @param decimalPlaces - the number of decimal places, -1 for autodetect
+//     */
+//    public void setColumnUseTotals(SingularAttribute attr, boolean useTotals, int decimalPlaces) {
+//
+//        TotalizableColumn tcol = new TotalizableColumn(attr, decimalPlaces);
+//
+//        if (useTotals) {
+//            if (!totalizableColumns.contains(tcol)) {
+//                totalizableColumns.add(tcol);
+//            }// end of if cycle
+//        } else {
+//            totalizableColumns.remove(tcol);
+//        }// end of if/else cycle
+//
+//        // the first call with useTotals=true activates automatically the footer
+//        if (useTotals) {
+//            setFooterVisible(true);
+//        }// end of if cycle
+//    }// end of method
+
+
     /**
      * Adds/removes a column to the list of totalizable columns
      * <p/>
@@ -394,9 +433,6 @@ public class ATable extends Table implements ListSelection {
      * @param decimalPlaces - the number of decimal places, -1 for autodetect
      */
     public void setColumnUseTotals(Object propertyId, boolean useTotals, int decimalPlaces) {
-        if (propertyId instanceof Attribute) {
-            propertyId = ((Attribute<?, ?>) propertyId).getName();
-        }// end of if cycle
 
         TotalizableColumn tcol = new TotalizableColumn(propertyId, decimalPlaces);
 
@@ -425,6 +461,7 @@ public class ATable extends Table implements ListSelection {
     public void setColumnUseTotals(Object propertyId, boolean useTotals) {
         setColumnUseTotals(propertyId, useTotals, -1);
     }// end of method
+
 
     /**
      * Returns an array of the visible columns ids. Ids might be of type String
@@ -703,15 +740,15 @@ public class ATable extends Table implements ListSelection {
      */
     public void refresh() {
         Container cont = getContainerDataSource();
-        if(cont!=null){
+        if (cont != null) {
             // refresh() is not in any interface, so we have
             // to cast to any specific classes
-            if(cont instanceof JPAContainer){
-                JPAContainer jpac=(JPAContainer)cont;
+            if (cont instanceof JPAContainer) {
+                JPAContainer jpac = (JPAContainer) cont;
                 jpac.refresh();
             }
-            if(cont instanceof LazyEntityContainer){
-                LazyEntityContainer lec=(LazyEntityContainer)cont;
+            if (cont instanceof LazyEntityContainer) {
+                LazyEntityContainer lec = (LazyEntityContainer) cont;
                 lec.refresh();
             }
         }
@@ -805,9 +842,6 @@ public class ATable extends Table implements ListSelection {
             for (Object propertyId : totalsMap.keySet()) {
                 BigDecimal total = totalsMap.get(propertyId);
                 int places = genNumDecimalPlacesForTotalColumn(propertyId);
-                if (places == -1) { // auto
-                    places = getDefaultDecimalPlacesForColumn(propertyId);
-                }// end of if cycle
                 converter.setDecimalPlaces(places);
                 String sTotal = converter.convertToPresentation(total);
                 setColumnFooter(propertyId, sTotal);
@@ -818,7 +852,15 @@ public class ATable extends Table implements ListSelection {
 
     }// end of method
 
-    private void addToTotals(HashMap<Object, BigDecimal> map, Object propertyId, Property<?> prop) {
+
+    /**
+     * Adds a total to the Totals map
+     *
+     * @param map        the totals map
+     * @param propertyId the id of the Property
+     * @param prop       ???
+     */
+    protected void addToTotals(HashMap<Object, BigDecimal> map, Object propertyId, Property<?> prop) {
 
         // add the key if absent
         if (!map.containsKey(propertyId)) {
@@ -860,7 +902,7 @@ public class ATable extends Table implements ListSelection {
      * @param propertyId the property id
      * @return the number of decimal places
      */
-    private int genNumDecimalPlacesForTotalColumn(Object propertyId) {
+    protected int genNumDecimalPlacesForTotalColumn(Object propertyId) {
         int places = 0;
         for (TotalizableColumn t : totalizableColumns) {
             if (t.getPropertyId().equals(propertyId)) {
@@ -871,48 +913,139 @@ public class ATable extends Table implements ListSelection {
         return places;
     }// end of method
 
+
+
+
     /**
-     * Returns a default number of decimal places for a given property.<br>
-     * 0 for integers (int, long), 2 for decimals (double, float, BigDecimal)
-     * <p/>
+     * Calculates the total for a particular (numeric) column in the Container.
+     * In this default implementation, totalizes the attribute corresponding to the propertyId
+     * using the current filter.
      *
      * @param propertyId the property id
-     * @return the number of decimal places
+     * @return the total for the column
      */
-    private int getDefaultDecimalPlacesForColumn(Object propertyId) {
-        Class<?> clazz = getContainerDataSource().getType(propertyId);
-        if (clazz.equals(Integer.class)) {
-            return 0;
-        }// end of if cycle
-        if (clazz.equals(int.class)) {
-            return 0;
-        }// end of if cycle
-        if (clazz.equals(Long.class)) {
-            return 0;
-        }// end of if cycle
-        if (clazz.equals(long.class)) {
-            return 0;
-        }// end of if cycle
-        if (clazz.equals(BigInteger.class)) {
-            return 0;
-        }// end of if cycle
-        if (clazz.equals(Double.class)) {
-            return 2;
-        }// end of if cycle
-        if (clazz.equals(double.class)) {
-            return 2;
-        }// end of if cycle
-        if (clazz.equals(Float.class)) {
-            return 2;
-        }// end of if cycle
-        if (clazz.equals(float.class)) {
-            return 2;
-        }// end of if cycle
-        if (clazz.equals(BigDecimal.class)) {
-            return 2;
-        }// end of if cycle
-        return 0;
-    }// end of method
+    protected BigDecimal getTotalForColumn(Object propertyId) {
+        BigDecimal bd = new BigDecimal(0);
+        String sId = propertyId.toString();
+        Attribute attr = getAttributeByName(sId);
+        if (attr instanceof SingularAttribute) {
+            SingularAttribute sAttr = (SingularAttribute) attr;
+            bd = calcTotal(sAttr);
+        }
+        return bd;
+    }
+
+
+    /**
+     * @param name the name of the attribute
+     * @return the Attribute from the metamodel
+     */
+    private Attribute getAttributeByName(String name) {
+        Metamodel metamodel = entityManager.getMetamodel();
+        Set<EntityType<?>> entities = metamodel.getEntities();
+        EntityType<?> entityType = null;
+        for (EntityType<?> eType : entities) {
+            Class<?> type = eType.getJavaType();
+            if (type.equals(getEntityClass())) {
+                entityType = eType;
+                break;
+            }// end of if cycle
+        }// end of for cycle
+
+        Attribute attr = null;
+        if (entityType != null) {
+            attr = entityType.getAttribute(name);
+        }
+
+        return attr;
+    }
+
+
+    /**
+     * Calculate the total for a single column.
+     *
+     * @param attr the attribute
+     * @return the total for the currently displayed rows
+     */
+    private BigDecimal calcTotal(SingularAttribute attr) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
+        Root root = cq.from(getEntityClass());
+
+        Predicate pred = getFiltersPredicate(cb, cq, root);
+        if (pred != null) {
+            cq.where(pred);
+        }
+
+        Expression<Number> e1 = cb.sum(root.get(attr));
+        cq.select(e1);
+
+        Number num = entityManager.createQuery(cq).getSingleResult();
+        BigDecimal bd = new BigDecimal(0);
+        if (num != null) {
+            if (num instanceof BigDecimal) {
+                bd = (BigDecimal) num;
+            }
+            if (num instanceof Integer) {
+                Integer i = (Integer) num;
+                bd = new BigDecimal(i);
+            }
+            if (num instanceof Long) {
+                Long l = (Long) num;
+                bd = new BigDecimal(l);
+            }
+        }
+
+        return bd;
+
+    }
+
+    /**
+     * Returns a CriteriaQuery Predicate equivalent
+     * to the condition expressed by the current Container Filters.
+     *
+     * @param cb   the CriteriaBuilder
+     * @param cq   the CriteriaQuery
+     * @param root the Root
+     * @return the Predicate, or null if no filters are present
+     */
+    protected Predicate getFiltersPredicate(final CriteriaBuilder cb, final CriteriaQuery<?> cq, final Root<?> root) {
+        Predicate pred = null;
+        Collection<Filter> filters = null;
+
+        // retrieve an array of the current Container.Filter(s)
+        Container cont = getContainerDataSource();
+        if (cont instanceof LazyEntityContainer) {
+            LazyEntityContainer lec = (LazyEntityContainer) cont;
+            filters = lec.getContainerFilters();
+        }
+        if (cont instanceof JPAContainer) {
+            JPAContainer jpac = (JPAContainer) cont;
+            filters = jpac.getFilters();
+        }
+
+        // do only if there are filters
+        if (filters != null && filters.size() > 0) {
+
+            // create a single Filter
+            Filter singleFilter;
+            if (filters.size() == 1) {
+                singleFilter = Iterables.get(filters, 0);
+            } else {
+                Filter[] aFilters = filters.toArray(new Filter[filters.size()]);
+                singleFilter = new And(aFilters);
+            }
+
+            // create the Predicate
+            pred = LibFilter.getPredicate(singleFilter, cb, cq, root);
+
+        }
+
+        return pred;
+
+    }
+
 
     /**
      * Action when a user click the table
@@ -958,7 +1091,6 @@ public class ATable extends Table implements ListSelection {
         long rows = AQuery.getCount(clazz);
         return rows;
     }// end of method
-
 
 
     /**
@@ -1096,22 +1228,49 @@ public class ATable extends Table implements ListSelection {
     /**
      * Wrapper for a totalizable column info
      */
-    private class TotalizableColumn {
+    public class TotalizableColumn {
+        private SingularAttribute attribute;
         private Object propertyId;
         private int decimalPlaces;
 
+        /**
+         * Constructor with container property id.
+         *
+         * @param propertyId    the property id
+         * @param decimalPlaces the number of decimal digits to display (-1 for auto)
+         */
         public TotalizableColumn(Object propertyId, int decimalPlaces) {
             super();
+
+            // if is an Attribute register it and after this, resolve to the name
+            if (propertyId instanceof SingularAttribute) {
+                this.attribute = (SingularAttribute) propertyId;
+                propertyId = attribute.getName();
+            }
+
             this.propertyId = propertyId;
             this.decimalPlaces = decimalPlaces;
         }// end of inner method
+
+        public SingularAttribute getAttribute() {
+            return attribute;
+        }
 
         public Object getPropertyId() {
             return propertyId;
         }// end of inner method
 
+        /**
+         * Returns the number of decimal digits to display for this column.
+         * If set to auto, the cholice is based on the column class.
+         * @return the number of decimal digits
+         */
         public int getDecimalPlaces() {
-            return decimalPlaces;
+            int places =decimalPlaces;
+            if (decimalPlaces == -1) { // auto
+                places = getDefaultDecimalPlacesForColumn(propertyId);
+            }
+            return places;
         }// end of inner method
 
         @Override
@@ -1119,9 +1278,54 @@ public class ATable extends Table implements ListSelection {
             TotalizableColumn other = (TotalizableColumn) obj;
             return propertyId.equals(other.getPropertyId());
         }// end of inner method
+
+        /**
+         * Returns a default number of decimal places for a given property.<br>
+         * 0 for integers (int, long), 2 for decimals (double, float, BigDecimal)
+         * <p/>
+         *
+         * @param propertyId the property id
+         * @return the number of decimal places
+         */
+        protected int getDefaultDecimalPlacesForColumn(Object propertyId) {
+            Class<?> clazz = getContainerDataSource().getType(propertyId);
+            if (clazz.equals(Integer.class)) {
+                return 0;
+            }// end of if cycle
+            if (clazz.equals(int.class)) {
+                return 0;
+            }// end of if cycle
+            if (clazz.equals(Long.class)) {
+                return 0;
+            }// end of if cycle
+            if (clazz.equals(long.class)) {
+                return 0;
+            }// end of if cycle
+            if (clazz.equals(BigInteger.class)) {
+                return 0;
+            }// end of if cycle
+            if (clazz.equals(Double.class)) {
+                return 2;
+            }// end of if cycle
+            if (clazz.equals(double.class)) {
+                return 2;
+            }// end of if cycle
+            if (clazz.equals(Float.class)) {
+                return 2;
+            }// end of if cycle
+            if (clazz.equals(float.class)) {
+                return 2;
+            }// end of if cycle
+            if (clazz.equals(BigDecimal.class)) {
+                return 2;
+            }// end of if cycle
+            return 0;
+        }// end of method
+
     }// end of inner class
 
-    protected ATable getTable(){
+
+    protected ATable getTable() {
         return this;
     }
 

@@ -192,16 +192,28 @@ public class ATable extends Table implements ListSelection {
         return modulo;
     }
 
+//    /**
+//     * Creates the container
+//     * <p/>
+//     * JPAContainerFactory creates a container with all the properties
+//     *
+//     * @return the container Override in the subclass to use a different container
+//     */
+//    protected Container createContainer() {
+//        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
+//        return cont;
+//    }// end of method
+
+
     /**
      * Creates the container
      * <p/>
-     * JPAContainerFactory creates a container with all the properties
      *
-     * @return the container Override in the subclass to use a different container
+     * @return the container
      */
     protected Container createContainer() {
-        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
-        return cont;
+        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
+        return entityContainer;
     }// end of method
 
 
@@ -760,16 +772,6 @@ public class ATable extends Table implements ListSelection {
         return entityClass;
     }
 
-//    public JPAContainer<?> getJPAContainer() {
-//        JPAContainer<?> jpaCont = null;
-//        Container cont = getContainerDataSource();
-//        if (cont instanceof JPAContainer) {
-//            jpaCont = (JPAContainer<?>) cont;
-//        }// end of if cycle
-//
-//        return jpaCont;
-//    }// end of method
-
 
     /**
      * Returns the container as a Filterable container.
@@ -834,114 +836,138 @@ public class ATable extends Table implements ListSelection {
         return string;
     }// end of method
 
+//    /**
+//     * Updates the totals in the footer
+//     * <p/>
+//     * Called when the container data changes
+//     * todo - se si usa un database questa implementazione è micidiale, spazzola tutte le righe!!!
+//     * todo - va riscritta usando delle JPQ CriteriaQuery
+//     * todo - attualmente il problema è che i filtri sono oggetti Container.Filter e non
+//     * todo - sono compatibili con CriteriaQuery
+//     */
+//    @SuppressWarnings("rawtypes")
+//    protected void updateTotals() {
+//        // Collection ids = getJPAContainer().getItemIds();
+//
+//        if (totalizableColumns.size() > 0) {
+//
+//            // maps the totals to the property ids
+//            HashMap<Object, BigDecimal> totalsMap = new HashMap<Object, BigDecimal>();
+//
+//            Collection<?> ids = getContainerDataSource().getItemIds();
+//
+//            // cycle all the rows
+//            for (Object itemId : ids) {
+//
+//                // cycle the totalizable columns
+//                for (TotalizableColumn column : totalizableColumns) {
+//                    Object propertyId = column.getPropertyId();
+//                    Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
+//                    if (prop != null) {
+//                        addToTotals(totalsMap, propertyId, prop);
+//                    }// end of if cycle
+//                }// end of for cycle
+//            }// end of for cycle
+//
+//            // places the totals in the target columns
+//            StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
+//            for (Object propertyId : totalsMap.keySet()) {
+//                BigDecimal total = totalsMap.get(propertyId);
+//                int places = genNumDecimalPlacesForTotalColumn(propertyId);
+//                converter.setDecimalPlaces(places);
+//                String sTotal = converter.convertToPresentation(total);
+//                setColumnFooter(propertyId, sTotal);
+//            }// end of for cycle
+//
+//        }
+//
+//
+//    }// end of method
+
+
     /**
      * Updates the totals in the footer
      * <p/>
      * Called when the container data changes
-     * todo - se si usa un database questa implementazione è micidiale, spazzola tutte le righe!!!
-     * todo - va riscritta usando delle JPQ CriteriaQuery
-     * todo - attualmente il problema è che i filtri sono oggetti Container.Filter e non
-     * todo - sono compatibili con CriteriaQuery
      */
     @SuppressWarnings("rawtypes")
     protected void updateTotals() {
-        // Collection ids = getJPAContainer().getItemIds();
 
-        if (totalizableColumns.size() > 0) {
-
-            // maps the totals to the property ids
-            HashMap<Object, BigDecimal> totalsMap = new HashMap<Object, BigDecimal>();
-
-            Collection<?> ids = getContainerDataSource().getItemIds();
-
-            // cycle all the rows
-            for (Object itemId : ids) {
-
-                // cycle the totalizable columns
-                for (TotalizableColumn column : totalizableColumns) {
-                    Object propertyId = column.getPropertyId();
-                    Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
-                    if (prop != null) {
-                        addToTotals(totalsMap, propertyId, prop);
-                    }// end of if cycle
-                }// end of for cycle
-            }// end of for cycle
-
-            // places the totals in the target columns
-            StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
-            for (Object propertyId : totalsMap.keySet()) {
-                BigDecimal total = totalsMap.get(propertyId);
-                int places = genNumDecimalPlacesForTotalColumn(propertyId);
-                converter.setDecimalPlaces(places);
-                String sTotal = converter.convertToPresentation(total);
-                setColumnFooter(propertyId, sTotal);
-            }// end of for cycle
-
+        // cycle the totalizable columns
+        StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
+        for (TotalizableColumn column : totalizableColumns) {
+            Object propertyId = column.getPropertyId();
+            BigDecimal bd = getTotalForColumn(propertyId);
+            int places = column.getDecimalPlaces();
+            converter.setDecimalPlaces(places);
+            String sTotal = converter.convertToPresentation(bd);
+            setColumnFooter(propertyId, sTotal);
         }
 
 
-    }// end of method
+    }
 
 
-    /**
-     * Adds a total to the Totals map
-     *
-     * @param map        the totals map
-     * @param propertyId the id of the Property
-     * @param prop       ???
-     */
-    protected void addToTotals(HashMap<Object, BigDecimal> map, Object propertyId, Property<?> prop) {
 
-        // add the key if absent
-        if (!map.containsKey(propertyId)) {
-            map.put(propertyId, new BigDecimal(0));
-        }
+//    /**
+//     * Adds a total to the Totals map
+//     *
+//     * @param map        the totals map
+//     * @param propertyId the id of the Property
+//     * @param prop       ???
+//     */
+//    protected void addToTotals(HashMap<Object, BigDecimal> map, Object propertyId, Property<?> prop) {
+//
+//        // add the key if absent
+//        if (!map.containsKey(propertyId)) {
+//            map.put(propertyId, new BigDecimal(0));
+//        }
+//
+//        BigDecimal currentValue = map.get(propertyId);
+//
+//        // retrieve the value as BigDecimal
+//        Object value = prop.getValue();
+//        BigDecimal valueToAdd = new BigDecimal(0);
+//        if (value != null) {
+//            Class<?> type = prop.getType();
+//            if (type.equals(Integer.class)) {
+//                valueToAdd = new BigDecimal((Integer) value);
+//            }// end of if cycle
+//            if (type.equals(Long.class)) {
+//                valueToAdd = new BigDecimal((Long) value);
+//            }// end of if cycle
+//            if (type.equals(Double.class)) {
+//                valueToAdd = new BigDecimal((Double) value);
+//            }// end of if cycle
+//            if (type.equals(BigDecimal.class)) {
+//                valueToAdd = (BigDecimal) value;
+//            }// end of if cycle
+//        }// end of if cycle
+//
+//        // add the new value and re-put the value in the map
+//        currentValue = currentValue.add(valueToAdd);
+//        map.put(propertyId, currentValue);
+//
+//    }// end of method
 
-        BigDecimal currentValue = map.get(propertyId);
-
-        // retrieve the value as BigDecimal
-        Object value = prop.getValue();
-        BigDecimal valueToAdd = new BigDecimal(0);
-        if (value != null) {
-            Class<?> type = prop.getType();
-            if (type.equals(Integer.class)) {
-                valueToAdd = new BigDecimal((Integer) value);
-            }// end of if cycle
-            if (type.equals(Long.class)) {
-                valueToAdd = new BigDecimal((Long) value);
-            }// end of if cycle
-            if (type.equals(Double.class)) {
-                valueToAdd = new BigDecimal((Double) value);
-            }// end of if cycle
-            if (type.equals(BigDecimal.class)) {
-                valueToAdd = (BigDecimal) value;
-            }// end of if cycle
-        }// end of if cycle
-
-        // add the new value and re-put the value in the map
-        currentValue = currentValue.add(valueToAdd);
-        map.put(propertyId, currentValue);
-
-    }// end of method
-
-    /**
-     * Returns the number of decimal places in totalizable columns for a given
-     * totalizable column
-     * <p/>
-     *
-     * @param propertyId the property id
-     * @return the number of decimal places
-     */
-    protected int genNumDecimalPlacesForTotalColumn(Object propertyId) {
-        int places = 0;
-        for (TotalizableColumn t : totalizableColumns) {
-            if (t.getPropertyId().equals(propertyId)) {
-                places = t.getDecimalPlaces();
-                break;
-            }// end of if cycle
-        }// end of for cycle
-        return places;
-    }// end of method
+//    /**
+//     * Returns the number of decimal places in totalizable columns for a given
+//     * totalizable column
+//     * <p/>
+//     *
+//     * @param propertyId the property id
+//     * @return the number of decimal places
+//     */
+//    protected int genNumDecimalPlacesForTotalColumn(Object propertyId) {
+//        int places = 0;
+//        for (TotalizableColumn t : totalizableColumns) {
+//            if (t.getPropertyId().equals(propertyId)) {
+//                places = t.getDecimalPlaces();
+//                break;
+//            }// end of if cycle
+//        }// end of for cycle
+//        return places;
+//    }// end of method
 
 
 

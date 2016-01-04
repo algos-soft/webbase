@@ -6,6 +6,7 @@ package it.algos.webbase.domain.pref;
 
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
@@ -104,7 +105,7 @@ public class PrefMod extends ModulePop {
     protected void postCreate(Item item) {
         String sortField;
         Property property;
-        JPAContainer cont;
+        Container.Sortable cont;
         Object idKey;
         int progressivo;
 
@@ -112,13 +113,17 @@ public class PrefMod extends ModulePop {
             return;
         }// fine del blocco if
 
-        cont = getTable().getJPAContainer();
+        cont = getTable().getSortableContainer();
         sortField = Pref_.ordine.getName();
         property = item.getItemProperty(sortField);
 
         if (property != null) {
             cont.sort(new String[]{sortField}, new boolean[]{false});
-            idKey = cont.getIdByIndex(0);
+            Container container = getTable().getContainerDataSource();
+            idKey=container.getItem(0);
+
+//            idKey = cont.getIdByIndex(0);
+
             if (idKey != null && idKey instanceof Long) {
                 Pref pref = Pref.find((long) idKey);
                 if (pref != null) {

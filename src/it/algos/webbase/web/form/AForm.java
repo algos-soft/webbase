@@ -19,6 +19,8 @@ import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.toolbar.FormToolbar;
 import it.algos.webbase.web.toolbar.FormToolbar.FormToolbarListener;
 import it.algos.webbase.web.toolbar.Toolbar;
+import org.vaadin.addons.lazyquerycontainer.CompositeItem;
+import org.vaadin.addons.lazyquerycontainer.NestingBeanItem;
 
 import javax.persistence.metamodel.Attribute;
 import java.math.BigDecimal;
@@ -146,6 +148,11 @@ public class AForm extends VerticalLayout {
         if (item instanceof JPAContainerItem) {
             JPAContainerItem jpaItem = (JPAContainerItem) getItem();
             entity = (BaseEntity) jpaItem.getEntity();
+        }
+        if (item instanceof CompositeItem) {
+            CompositeItem compItem = (CompositeItem) getItem();
+            BeanItem beanItem = (BeanItem)compItem.getItem("bean");
+            entity = (BaseEntity) beanItem.getBean();
         }
 
         return entity;

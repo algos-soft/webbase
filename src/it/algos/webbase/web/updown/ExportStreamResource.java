@@ -4,6 +4,8 @@ import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.EntityItemProperty;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 import com.vaadin.server.StreamResource.StreamSource;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.importexport.ExportProvider;
@@ -65,7 +67,7 @@ public class ExportStreamResource implements OnDemandStreamResource, StreamSourc
 
 		// create container
 		EntityManager manager = EM.createEntityManager();
-		JPAContainer<?> container;
+		Container container;
 		if (config.isExportAll()) {
 			container = JPAContainerFactory.makeNonCachedReadOnly(config.getDomainClass(), manager);
 		} else {
@@ -160,25 +162,43 @@ public class ExportStreamResource implements OnDemandStreamResource, StreamSourc
 //
 //	}
 
+//	/**
+//	 * Create the cells for a given row and index
+//	 */
+//	private void createCells(JPAContainer<?> cont, Row row, int idx) {
+//		Object id = cont.getIdByIndex(idx);
+//		if (id != null) {
+//			EntityItem<?> item = cont.getItem(id);	// the row
+//			if (item != null) {
+//				int columnIdx = 0;
+//				ExportProvider provider = config.getExportProvider();
+//				Object[] values = provider.getExportValues(item);
+//				for(Object obj : values){
+//					Cell cell = row.createCell(columnIdx);
+//					setCellValue(cell, obj);
+//					columnIdx++;
+//				}
+//			}
+//		}
+//
+//	}
+
+
 	/**
 	 * Create the cells for a given row and index
 	 */
-	private void createCells(JPAContainer<?> cont, Row row, int idx) {
-		Object id = cont.getIdByIndex(idx);
-		if (id != null) {
-			EntityItem<?> item = cont.getItem(id);	// the row
-			if (item != null) {
-				int columnIdx = 0;
-				ExportProvider provider = config.getExportProvider();
-				Object[] values = provider.getExportValues(item);
-				for(Object obj : values){
-					Cell cell = row.createCell(columnIdx);
-					setCellValue(cell, obj);
-					columnIdx++;
-				}
+	private void createCells(Container cont, Row row, long idx) {
+		Item item = cont.getItem(idx);
+		if(item!=null){
+			int columnIdx = 0;
+			ExportProvider provider = config.getExportProvider();
+			Object[] values = provider.getExportValues(item);
+			for(Object obj : values){
+				Cell cell = row.createCell(columnIdx);
+				setCellValue(cell, obj);
+				columnIdx++;
 			}
 		}
-
 	}
 
 

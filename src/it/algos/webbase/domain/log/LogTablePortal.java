@@ -71,14 +71,14 @@ public class LogTablePortal extends TablePortal {
     private void setFiltro(Livello livello) {
         Container.Filter filter = null;
         ATable table = null;
-        JPAContainer<?> cont = null;
+        Container.Filterable cont=null;
 
         if (livello != null) {
             table = this.getTable();
         }// fine del blocco if
 
         if (table != null) {
-            cont = table.getJPAContainer();
+            cont = table.getFilterableContainer();
         }// fine del blocco if
 
         if (cont != null) {
@@ -88,7 +88,7 @@ public class LogTablePortal extends TablePortal {
         if (filter != null) {
             cont.removeAllContainerFilters();
             cont.addContainerFilter(filter);
-            cont.refresh();
+            table.refresh();
         }// fine del blocco if
 
         this.spuntaMenu(livello);

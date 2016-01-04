@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import javax.persistence.metamodel.Attribute;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.Container;
 
 public class ExportConfiguration {
 	private Class<?> domainClass;
-	private JPAContainer container;
+	private Container container;
 	private boolean exportAll;
 	private ExportProvider provider;
 	private String filename;
@@ -21,9 +22,9 @@ public class ExportConfiguration {
 	 * @param filename
 	 *            the filename for export
 	 * @param container
-	 *            a JPAContainer to read the data from (used only if exportAll=false)
+	 *            a Container to read the data from (used only if exportAll=false)
 	 */
-	public ExportConfiguration(Class<?> domainClass, String filename, JPAContainer container, ExportProvider provider) {
+	public ExportConfiguration(Class<?> domainClass, String filename, Container container, ExportProvider provider) {
 		super();
 		this.domainClass = domainClass;
 		this.filename = filename;
@@ -61,11 +62,11 @@ public class ExportConfiguration {
 		return provider;
 	}
 
-	public JPAContainer getContainer() {
+	public Container getContainer() {
 		return container;
 	}
 
-	public void setContainer(JPAContainer container) {
+	public void setContainer(Container container) {
 		this.container = container;
 	}
 

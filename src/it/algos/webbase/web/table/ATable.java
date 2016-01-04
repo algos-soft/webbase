@@ -277,44 +277,6 @@ public class ATable extends Table implements ListSelection {
     }// end of method
 
 
-//
-//    /**
-//     * Sorts the container.
-//     * By default the container is sorted based on the default sort order declared
-//     * in the entity class via the @DefaultSort annotation.
-//     * If the annotation is not present the container is not sorted.
-//     *
-//     * For a custom sort of the container in a RelatedCombo field you have 2 options:
-//     * 1) call the sort() method after the creation of the object passing the properties on which to sort
-//     * 2) override this method (needs subclassing).
-//     * @param cont the container to be sorted.
-//     */
-//
-//    /**
-//     * Initial sorting of the container
-//     * <p>
-//     * By default the container is sorted based on the default sort order declared
-//     * in the entity class via the @DefaultSort annotation.
-//     * If the annotation is not present the container is sorted by id.
-//     *
-//     * @param cont the container to be sorted
-//     */
-//    protected void sortJPAContainer(JPAContainer cont) {
-//
-//        // retrieve the default sort properties from the class by annotation
-//        SortProperties props = BaseEntity.getSortProperties(getEntityClass());
-//
-//        // sort the container on the sort properties
-//        if(!props.isEmpty()){
-//            cont.sort(props.getProperties(), props.getDirections());
-//        }else{
-//            String sortField = BaseEntity_.id.getName();
-//            cont.sort(new String[]{sortField}, new boolean[]{true});
-//        }
-//
-//    }// end of method
-
-
     /**
      * Create additional columns
      * (add generated columns, nested properties...)
@@ -649,90 +611,130 @@ public class ATable extends Table implements ListSelection {
     // return rowId;
     // }// end of method
 
-    /**
-     * Return the selected bean
-     */
-    public Object getSelectedBean() {
-        Object bean = null;
-        Object id = getSelectedId();
-        if (id != null) {
-            BeanItem<?> bi = getBeanItem(id);
-            if (bi != null) {
-                bean = bi.getBean();
-            }// end of if cycle
-        }
-        return bean;
-    }// end of method
+//    /**
+//     * Return the selected bean
+//     */
+//    public Object getSelectedBean() {
+//        Object bean = null;
+//        Object id = getSelectedId();
+//        if (id != null) {
+//            BeanItem<?> bi = getBeanItem(id);
+//            if (bi != null) {
+//                bean = bi.getBean();
+//            }// end of if cycle
+//        }
+//        return bean;
+//    }// end of method
 
     /**
-     * Return the selected beans (multiple selection)
+     * Return the selected entity
      */
-    public BeanItem[] getSelectedBeans() {
-        BeanItem[] selected = new BeanItem[0];
+    public BaseEntity getSelectedEntity() {
+        BaseEntity entity=null;
+        Long id = (Long)getSelectedId();
+        if (id != null) {
+            entity=getEntity(id);
+        }
+        return entity;
+    }// end of method
+
+
+//    /**
+//     * Return the selected beans (multiple selection)
+//     */
+//    public BeanItem[] getSelectedBeans() {
+//        BeanItem[] selected = new BeanItem[0];
+//        Object[] ids = getSelectedIds();
+//        if (ids != null) {
+//            ArrayList<BeanItem> objSel = new ArrayList<BeanItem>();
+//            for (Object id : ids) {
+//                BeanItem<?> bi = getBeanItem(id);
+//                if (bi != null) {
+//                    objSel.add(bi);
+//                }
+//            }
+//            selected = objSel.toArray(new BeanItem[0]);
+//        }
+//        return selected;
+//    }// end of method
+
+
+    /**
+     * Return the selected entities (multiple selection)
+     */
+    public BaseEntity[] getSelectedEntities() {
+        BaseEntity[] entities = new BaseEntity[0];
         Object[] ids = getSelectedIds();
         if (ids != null) {
-            ArrayList<BeanItem> objSel = new ArrayList<BeanItem>();
+            ArrayList<BaseEntity> objSel = new ArrayList();
             for (Object id : ids) {
-                BeanItem<?> bi = getBeanItem(id);
-                if (bi != null) {
-                    objSel.add(bi);
+                BaseEntity entity=getEntity((Long)id);
+                if (entity != null) {
+                    objSel.add(entity);
                 }
             }
-            selected = objSel.toArray(new BeanItem[0]);
+            entities = objSel.toArray(new BaseEntity[0]);
         }
-        return selected;
-    }// end of method
+
+        return  entities;
+
+    }
 
 
-    // /**
-    // * @return the selected row ids
-    // */
-    // public long[] getSelectedIdsOld() {
-    // long[] selected = new long[0];
-    //
-    // Object ids = getValue();
-    // if (ids != null) {
-    //
-    // // if multi select is enabled
-    // if (ids instanceof Collection) {
-    // Collection<Long> cIds = (Collection<Long>) ids;
-    // selected = new long[cIds.size()];
-    // int idx = 0;
-    // for (Iterator<Long> iterator = cIds.iterator(); iterator.hasNext();) {
-    // long id = (long) iterator.next();
-    // selected[idx] = id;
-    // idx++;
-    // }// end of for cycle
-    // }// end of if cycle
-    //
-    // // if multi select is disabled
-    // if (ids instanceof Long) {
-    // selected = new long[1];
-    // selected[0] = (long) ids;
-    // }// end of if cycle
-    //
-    // }// end of if cycle
-    //
-    // return selected;
-    // }// end of method
+
+//    /**
+//     * @param rowId the row id
+//     * @return the new BeanItem
+//     */
+//    public BeanItem<Object> getBeanItem(Object rowId) {
+//        BeanItem<Object> bi = null;
+//        Item item = getItem(rowId);
+//        if (item != null) {
+//
+//            Container cont = getContainerDataSource();
+//            if(cont instanceof LazyEntityContainer){
+//                LazyEntityContainer lec = (LazyEntityContainer)cont;
+//                lec.getEntity(rowId);
+//            }
+//
+//            if (item instanceof JPAContainerItem) {
+//                JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
+//                Object entity = jpaItem.getEntity();
+//                bi = new BeanItem<Object>(entity);
+//            }// end of if cycle
+//        }// end of if cycle
+//
+//        return bi;
+//    }// end of method
+//
 
     /**
+     * Returns the entity given a row id.
      * @param rowId the row id
-     * @return the new BeanItem
+     * @return the entity
      */
-    public BeanItem<Object> getBeanItem(Object rowId) {
-        BeanItem<Object> bi = null;
-        Item item = getItem(rowId);
-        if (item != null) {
-            if (item instanceof JPAContainerItem) {
-                JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
-                Object entity = jpaItem.getEntity();
-                bi = new BeanItem<Object>(entity);
-            }// end of if cycle
-        }// end of if cycle
+    public BaseEntity getEntity(Long rowId){
+        BaseEntity entity=null;
+        Container cont = getContainerDataSource();
 
-        return bi;
-    }// end of method
+        if(cont instanceof LazyEntityContainer){
+            LazyEntityContainer lec = (LazyEntityContainer)cont;
+            entity=(BaseEntity)lec.getEntity(rowId);
+        }
+
+        if(cont instanceof JPAContainer){
+            Item item = getItem(rowId);
+            if(item!=null){
+                if (item instanceof JPAContainerItem) {
+                    JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
+                    entity = (BaseEntity) jpaItem.getEntity();
+                }// end of if cycle
+            }
+        }
+
+        return entity;
+    }
+
 
 
     /**
@@ -758,15 +760,43 @@ public class ATable extends Table implements ListSelection {
         return entityClass;
     }
 
-    public JPAContainer<?> getJPAContainer() {
-        JPAContainer<?> jpaCont = null;
-        Container cont = getContainerDataSource();
-        if (cont instanceof JPAContainer) {
-            jpaCont = (JPAContainer<?>) cont;
-        }// end of if cycle
+//    public JPAContainer<?> getJPAContainer() {
+//        JPAContainer<?> jpaCont = null;
+//        Container cont = getContainerDataSource();
+//        if (cont instanceof JPAContainer) {
+//            jpaCont = (JPAContainer<?>) cont;
+//        }// end of if cycle
+//
+//        return jpaCont;
+//    }// end of method
 
-        return jpaCont;
-    }// end of method
+
+    /**
+     * Returns the container as a Filterable container.
+     * @return the container as a Filterable, or null if it is not filterable
+     */
+    public Filterable getFilterableContainer() {
+        Filterable filterable = null;
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof Filterable) {
+            filterable = (Filterable) cont;
+        }
+        return filterable;
+    }
+
+    /**
+     * Returns the container as a Sortable container.
+     * @return the container as a Sortable, or null if it is not sortable
+     */
+    public Sortable getSortableContainer() {
+        Sortable sortable = null;
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof Sortable) {
+            sortable = (Sortable) cont;
+        }
+        return sortable;
+    }
+
 
     @Override
     protected String formatPropertyValue(Object rowId, Object colId, Property<?> property) {

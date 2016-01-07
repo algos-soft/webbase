@@ -12,6 +12,7 @@ import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -91,9 +92,9 @@ public class PrefMod extends ModulePop {
      *
      * @return the Form
      */
-    public AForm createForm(Item item) {
-        return (new PrefForm(this, item));
-    }// end of method
+    public ModuleForm createForm(Item item) {
+        return new PrefForm(item, this);
+    }
 
     /**
      * Post create / pre edit item.

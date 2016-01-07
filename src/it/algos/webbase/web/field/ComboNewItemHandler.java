@@ -1,5 +1,6 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.data.Container;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
@@ -18,6 +19,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
 /**
  * Handler for new creating new items from a RelatedComboField. <br>
@@ -98,7 +100,7 @@ public class ComboNewItemHandler implements NewItemHandler {
 	
 	
 	protected void editItem(BeanItem item, final boolean newRecord){
-		
+
 		// check that the form class exists
 		if (formClass == null) {
 			logger.log(Level.WARNING, "The class for the form is null.");
@@ -134,12 +136,17 @@ public class ComboNewItemHandler implements NewItemHandler {
 			@Override
 			public void commit_() {
 
-
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
 				bean.save();
 				window.close();
-				field.getJPAContainer().refresh();
+
+				Container cont = field.getContainerDataSource();
+				if (cont instanceof LazyEntityContainer) {
+					LazyEntityContainer lec = (LazyEntityContainer) cont;
+					lec.refresh();
+				}
+
 				long id = bean.getId();
 				field.setValue(id);
 

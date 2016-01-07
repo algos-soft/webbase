@@ -208,11 +208,12 @@ public class ATable extends Table implements ListSelection {
     /**
      * Creates the container
      * <p/>
-     *
+     * The id property is added here by default.
      * @return the container
      */
     protected Container createContainer() {
         LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
+        entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return entityContainer;
     }// end of method
 

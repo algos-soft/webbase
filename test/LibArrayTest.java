@@ -720,7 +720,7 @@ public class LibArrayTest {
      */
     public void getKeyFromMap() {
         String chiave1 = "xyz";
-        String chiave2 = "pippo";
+        String chiave2 = "postCommit";
         String chiave3 = "forse";
         String chiave4 = "nonrilevante";
         String chiave5 = "nessuna";
@@ -768,7 +768,7 @@ public class LibArrayTest {
         ArrayList errataChiave;
         ArrayList erratoValore;
         String chiave1 = "xyz";
-        String chiave2 = "pippo";
+        String chiave2 = "postCommit";
         String chiave3 = "forse";
         String chiave4 = "nonrilevante";
         String chiave5 = "nessuna";
@@ -861,7 +861,7 @@ public class LibArrayTest {
      */
     public void isMapEquals() {
         String chiave1 = "xyz";
-        String chiave2 = "pippo";
+        String chiave2 = "postCommit";
         String chiave3 = "forse";
         String chiave4 = "nonrilevante";
         String chiave5 = "nessuna";

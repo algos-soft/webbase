@@ -143,7 +143,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 //        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
 //        VaadinService.getCurrentResponse().addCookie(myCookie);
 
-//        Cookies.setCookie("pippo", "Some-other-value");
+//        Cookies.setCookie("postCommit", "Some-other-value");
 
     }// end of method
 

@@ -1,26 +1,35 @@
 package it.algos.webbase.domain.pref;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
+import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.field.ArrayComboField;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AFormLayout;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
+
+import javax.persistence.metamodel.Attribute;
 
 /**
  * Created by gac on 13 set 2015.
  * .
  */
-public class PrefForm extends AForm {
+public class PrefForm extends ModuleForm {
 
-    public PrefForm(ModulePop modulo) {
-        super(modulo);
-    }// end of constructor
+    protected FormLayout body; //usato per i fields aggiuntivi che vengono visualizzati a comando sotto gli altri
 
-    public PrefForm(ModulePop modulo, Item item) {
-        super(modulo, item);
+//    public PrefForm(ModulePop modulo, Container cont) {
+//        super(modulo, null, cont);
+//    }// end of constructor
+
+    public PrefForm(Item item, ModulePop modulo) {
+        super(item, modulo);
     }// end of constructor
 
 
@@ -35,16 +44,20 @@ public class PrefForm extends AForm {
     protected Component createComponent() {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSpacing(false);
-        verticalLayout.setMargin(false);
+        verticalLayout.setMargin(true);
 
         FormLayout formLayoutTop = new AFormLayout();
         formLayoutTop.setMargin(false);
 
-        if (bindMap != null) {
-            for (Object key : bindMap.keySet()) {
-                formLayoutTop.addComponent(this.getField(key));
-            }// end of for cycle
-        }// end of if cycle
+//        if (bindMap != null) {
+//            for (Object key : bindMap.keySet()) {
+//                formLayoutTop.addComponent(this.getField(key));
+//            }// end of for cycle
+//        }// end of if cycle
+
+        for(Field field : getFields()){
+            formLayoutTop.addComponent(field);
+        }
         verticalLayout.addComponent(formLayoutTop);
 
         FormLayout formLayoutBottom = new AFormLayout();
@@ -54,16 +67,38 @@ public class PrefForm extends AForm {
         formLayoutBottom.addComponent(body);
         verticalLayout.addComponent(formLayoutBottom);
 
-        return incapsulaPerMargine(verticalLayout);
+        return verticalLayout;
     }// end of method
 
+
+    @Override
+    protected Field createField(Attribute attr) {
+        Field field = super.createField(attr);
+
+        // se è un ArrayComboField aggiunge un listener
+        if(field instanceof ArrayComboField){
+            ArrayComboField acf = (ArrayComboField)field;
+            acf.setNullSelectionAllowed(false);
+//            if (AlgosApp.COMBO_BOX_NULL_SELECTION_ALLOWED) {
+//                ((ArrayComboField) field).setNullSelectionAllowed(true);
+//            } else {
+//                ((ArrayComboField) field).setNullSelectionAllowed(false);
+//            }// fine del blocco if-else
+            field.addValueChangeListener(new Property.ValueChangeListener() {
+                @Override
+                public void valueChange(Property.ValueChangeEvent event) {
+                    arrayComboBoxValueChanged(event);
+                }// end of method
+            });// end of anonymous class
+        }
+        return field;
+    }
 
     /**
      * Intercetta i cambiamenti nel combobox.
      * <p>
      * Sovrascritto nella classe specifica
      */
-    @Override
     protected void arrayComboBoxValueChanged(Property.ValueChangeEvent event) {
         String value = "";
         Property property = event.getProperty();
@@ -93,6 +128,35 @@ public class PrefForm extends AForm {
         }// fine del blocco if
 
     }// end of method
+
+
+    /**
+     * Aggiunge al volo un fields
+     * <p>
+     * Il fields viene aggiunto in un body di tipo FormLayout posizionato SOTTO gli altri campi
+     * Viene usato un FormLayout per avere la caption a sinistra
+     * Il body viene viene (eventualmente) costruito nella sottoclasse (sovrascrivendo il metodo createComponent), solo se serve.
+     * La sottoclasse decide se inserire più di un field nel body, oppure di svuotarlo ogni volta che cambia il field
+     * <p>
+     * Metodo invocato dalla sottoclasse
+     */
+    protected void addBodyField(Attribute attr) {
+        String fieldName = attr.getName();
+//        Field field = bindMap.get(fieldName);
+        Field field = getField(fieldName);
+
+        if (field == null) {
+            field = createField(attr);
+            if (field != null) {
+                addField(attr, field);
+            }// end of if cycle
+        }// fine del blocco if
+
+        if (body != null) {
+            body.addComponent(field);
+        }// fine del blocco if
+    }// end of method
+
 
 }// end of class
 

@@ -1,9 +1,11 @@
 package it.algos.webbase.domain.log;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.MenuBar;
 import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.table.TablePortal;
@@ -90,8 +92,8 @@ public class LogMod extends ModulePop {
      * @return the Form
      */
     @Override
-    public AForm createForm(Item item) {
-        return (new LogForm(this, item));
+    public ModuleForm createForm(Item item) {
+        return (new LogForm(item, this));
     }// end of method
 
     /**

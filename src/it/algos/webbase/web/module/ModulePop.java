@@ -21,6 +21,7 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.navigator.MenuCommand;
@@ -82,7 +83,7 @@ public abstract class ModulePop extends Module {
     /**
      * Costruttore
      *
-     * @param entity   di riferimento del modulo
+     * @param entity    di riferimento del modulo
      * @param menuLabel etichetta visibile nella menu bar
      */
     public ModulePop(Class entity, String menuLabel) {
@@ -205,7 +206,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella lista (table)
-     * <p>
+     * <p/>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
@@ -216,7 +217,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella scheda (form)
-     * <p>
+     * <p/>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -227,7 +228,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella scheda (search)
-     * <p>
+     * <p/>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -238,7 +239,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili
-     * <p>
+     * <p/>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -265,8 +266,8 @@ public abstract class ModulePop extends Module {
         for (Object ogg : attributes) {
             if (ogg instanceof Attribute<?, ?>) {
                 attribute = (Attribute<?, ?>) ogg;
-                String attrName=attribute.getName();
-                String idName=BaseEntity_.id.getName();
+                String attrName = attribute.getName();
+                String idName = BaseEntity_.id.getName();
                 if (!attrName.equals(idName)) {
                     lista.add(attribute);
                 }// fine del blocco if
@@ -278,7 +279,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Regola i titoli (caption) dei dialoghi specifici.
-     * <p>
+     * <p/>
      * Regola il titolo (caption) dei dialogo nuovo record. <br>
      * Regola il titolo (caption) dei dialogo di modifica. <br>
      * Regola il titolo (caption) dei dialogo di ricerca. <br>
@@ -326,16 +327,18 @@ public abstract class ModulePop extends Module {
         return (new ATable(this));
     }// end of method
 
+
     /**
-     * Returns the form used to edit an item. <br>
-     * The concrete subclass must override for a specific Form.
+     * Returns the form used to edit an item.
+     * <p>
      *
-     * @param item singola istanza della classe
+     * @param item item to edit
      * @return the Form
      */
-    public AForm createForm(Item item) {
-        return (new AForm(this, item));
-    }// end of method
+    public ModuleForm createForm(Item item) {
+        return (new ModuleForm(item, this));
+    }
+
 
     /**
      * Create the Search Manager
@@ -365,7 +368,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Create the MenuBar Item for this module
-     * <p>
+     * <p/>
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
@@ -387,7 +390,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i sottomenu specifici del modulo
-     * <p>
+     * <p/>
      * Invocato dal metodo AlgosUI.addModulo()
      * Sovrascritto dalla sottoclasse
      *
@@ -428,16 +431,16 @@ public abstract class ModulePop extends Module {
 
     /**
      * Create button pressed in table
-     * <p>
+     * <p/>
      * Create a new item and edit it in a form
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void create() {
-        Object bean = BaseEntity.createBean(getEntityClass());
-        BeanItem item = new BeanItem(bean);
-        postCreate(item);
-        editItem(item, true, getTitoloNew());
-
+        editItem(null, true, getTitoloNew());
+//        Object bean = BaseEntity.createBean(getEntityClass());
+//        BeanItem item = new BeanItem(bean);
+//        postCreate(item);
+//        editItem(item, true, getTitoloNew());
     }// end of method
 
     /**
@@ -462,7 +465,7 @@ public abstract class ModulePop extends Module {
      */
     @SuppressWarnings("rawtypes")
     public void edit() {
-        Object itemId = getTable().getSelectedId();
+        Long itemId = getTable().getSelectedEntity().getId();
         if (itemId != null) {
             Item item = getTable().getItem(itemId);
             editItem(item, false, getTitoloEdit());
@@ -548,7 +551,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Invoked before any single deletion.
-     * <p>
+     * <p/>
      *
      * @return true to proceed, false to abort
      */
@@ -605,15 +608,15 @@ public abstract class ModulePop extends Module {
         // delegate to the table's Container
         Container cont = getTable().getContainerDataSource();
         cont.removeItem(id);
-        if(cont instanceof Buffered){
-            Buffered bf = (Buffered)cont;
+        if (cont instanceof Buffered) {
+            Buffered bf = (Buffered) cont;
             bf.commit();
         }
     }
 
     /**
      * Search button pressed in table
-     * <p>
+     * <p/>
      * Displays the Search dialog
      */
     public void search() {
@@ -626,8 +629,8 @@ public abstract class ModulePop extends Module {
                     if (confirmed) {
 
                         Container cont = getTable().getContainerDataSource();
-                        if(cont instanceof Container.Filterable){
-                            Container.Filterable filtCont=(Container.Filterable)cont;
+                        if (cont instanceof Container.Filterable) {
+                            Container.Filterable filtCont = (Container.Filterable) cont;
                             Filter filter = sm.getFilter();
                             if (filter != null) {
 
@@ -635,23 +638,23 @@ public abstract class ModulePop extends Module {
                                 if (option != null) {
 
                                     // retriever the current filter from the container
-                                    Collection<Filter> currentFilters=null;
+                                    Collection<Filter> currentFilters = null;
                                     // method getFilters() is not in interface so we have to cast
-                                    if(filtCont instanceof LazyEntityContainer){
-                                        LazyEntityContainer lec = (LazyEntityContainer)filtCont;
+                                    if (filtCont instanceof LazyEntityContainer) {
+                                        LazyEntityContainer lec = (LazyEntityContainer) filtCont;
                                         currentFilters = lec.getContainerFilters();
                                     }
-                                    if(filtCont instanceof JPAContainer){
-                                        JPAContainer jpac = (JPAContainer)filtCont;
+                                    if (filtCont instanceof JPAContainer) {
+                                        JPAContainer jpac = (JPAContainer) filtCont;
                                         currentFilters = jpac.getFilters();
                                     }
                                     // create a filter from the existing filters
                                     Filter[] aFilters = currentFilters.toArray(new Filter[0]);
-                                    Filter currentFilter=null;
-                                    if(aFilters.length>0){
-                                        if(aFilters.length>1){
+                                    Filter currentFilter = null;
+                                    if (aFilters.length > 0) {
+                                        if (aFilters.length > 1) {
                                             currentFilter = new And(aFilters);
-                                        }else{
+                                        } else {
                                             currentFilter = aFilters[0];
                                         }
                                     }
@@ -726,7 +729,7 @@ public abstract class ModulePop extends Module {
     public void selectedonly() {
         Container cont = getTable().getContainerDataSource();
         if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable=(Container.Filterable)cont;
+            Container.Filterable cFilterable = (Container.Filterable) cont;
             Filter filter = createFilterForSelectedRows();
             cFilterable.removeAllContainerFilters();
             cFilterable.addContainerFilter(filter);
@@ -741,7 +744,7 @@ public abstract class ModulePop extends Module {
     public void removeselected() {
         Container cont = getTable().getContainerDataSource();
         if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable=(Container.Filterable)cont;
+            Container.Filterable cFilterable = (Container.Filterable) cont;
             Filter filter = new Not(createFilterForSelectedRows());
             cFilterable.addContainerFilter(filter);
             getTable().refresh();
@@ -754,7 +757,7 @@ public abstract class ModulePop extends Module {
     public void showall() {
         Container cont = getTable().getContainerDataSource();
         if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable=(Container.Filterable)cont;
+            Container.Filterable cFilterable = (Container.Filterable) cont;
             cFilterable.removeAllContainerFilters();
             getTable().refresh();
         }// end of if cycle
@@ -771,12 +774,12 @@ public abstract class ModulePop extends Module {
 
     /**
      * Creates a filter corresponding to the currently selected rows in the table
-     * <p>
+     * <p/>
      */
     private Filter createFilterForSelectedRows() {
-        Filter filter=null;
+        Filter filter = null;
         Object[] ids = getTable().getSelectedIds();
-        if(ids.length>0){
+        if (ids.length > 0) {
             Filter[] filters = new Filter[ids.length];
             int idx = 0;
             for (Object id : ids) {
@@ -784,10 +787,10 @@ public abstract class ModulePop extends Module {
                 idx++;
             }// end of for cycle
 
-            if(filters.length>1){
+            if (filters.length > 1) {
                 filter = new Or(filters);
-            }else{
-                filter=filters[0];
+            } else {
+                filter = filters[0];
             }
         }
         return filter;
@@ -817,9 +820,9 @@ public abstract class ModulePop extends Module {
         String text = visibleTxt + "/" + totalTxt + " records";
 
         TablePortal tp = getTablePortal();
-        if(tp!=null){
+        if (tp != null) {
             TableToolbar tb = tp.getToolbar();
-            if(tb!=null){
+            if (tb != null) {
                 tb.setInfoText(text);
             }
         }

@@ -1,12 +1,15 @@
 package it.algos.webbase.domain.utente;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.PasswordField;
 import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.module.ModulePop;
@@ -17,7 +20,7 @@ import java.util.LinkedHashMap;
  * Created by alex on 29-09-2015.
  * .
  */
-public class UtenteForm extends AForm {
+public class UtenteForm extends ModuleForm {
 
 
     private static final String FIELD_NOME_LABEL = "Nome";
@@ -25,8 +28,8 @@ public class UtenteForm extends AForm {
     private static final String FIELD_ABILITATO_LABEL = "Abilitato";
 
 
-    public UtenteForm(ModulePop modulo, Item item) {
-        super(modulo, item);
+    public UtenteForm(Item item, ModulePop modulo) {
+        super(item, modulo);
         doInit();
     }// end of constructor
 
@@ -56,7 +59,7 @@ public class UtenteForm extends AForm {
      * senza invocare il metodo della superclasse
      */
     @Override
-    protected void createFields() {
+    public void createFields() {
         Field field;
 
         field = new TextField(FIELD_NOME_LABEL);
@@ -74,11 +77,12 @@ public class UtenteForm extends AForm {
 
 
     @Override
-    protected boolean onPreSave(LinkedHashMap<Object, Field> fieldMap, boolean newRecord) {
-        Field pField = fieldMap.get(Utente_.password.getName());
+    protected boolean onPreSave(FieldGroup fields) {
+        Field pField = fields.getField(Utente_.password.getName());
         String pass = Lib.getString(pField.getValue());
         pass= LibCrypto.encrypt(pass);
         pField.setValue(pass);
-        return super.onPreSave(fieldMap, newRecord);
+        return super.onPreSave(fields);
     }
+
 }// end of class

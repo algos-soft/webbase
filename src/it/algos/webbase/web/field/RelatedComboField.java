@@ -1,20 +1,5 @@
 package it.algos.webbase.web.field;
 
-import com.vaadin.addon.jpacontainer.metadata.PropertyKind;
-import com.vaadin.data.Property;
-import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.DefaultSort;
-import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.entity.SortProperties;
-import it.algos.webbase.web.form.AForm;
-import it.algos.webbase.web.lib.Lib;
-import it.algos.webbase.web.query.AQuery;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-
-import javax.persistence.metamodel.Attribute;
-
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
@@ -25,6 +10,22 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.BaseEntity_;
+import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.entity.SortProperties;
+import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.lib.Lib;
+import it.algos.webbase.web.query.AQuery;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
+
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 public class RelatedComboField extends ComboBox implements FieldInterface<Object> {
@@ -34,12 +35,12 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     public static final int EDIT_TYPE_EDIT = 2;
     public static final int EDIT_TYPE_BOTH = 3;
 
-    private ArrayList<RecordEditedListener> listeners = new ArrayList<RecordEditedListener>();
+    private ArrayList<RecordEditedListener> listeners = new ArrayList();
 
 
     @SuppressWarnings("rawtypes")
     private Class entityClass;
-
+    protected EntityManager entityManager;
     private Component editComponent;
 
     @SuppressWarnings("rawtypes")
@@ -57,12 +58,16 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void init() {
+        //create and register the EntityManager
+        entityManager = EM.createEntityManager();
+
         initField();
         Container cont = createContainer();
         setContainerDataSource(cont);
         sortContainer(cont);
         setItemCaptionMode(ItemCaptionMode.ITEM);
         setConverter(new SingleSelectConverter(this));
+//        setConverter(new ComboConverter<Object>(this, getEntityClass()));
         setWidth("260px");
     }
 
@@ -78,9 +83,54 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      */
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
-        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), EM.createEntityManager());
+        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), entityManager);
+//        LazyEntityContainer cont = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
+//        cont.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return cont;
     }
+
+
+
+//    /**
+//     * Add the properties to the container.
+//     * By default, all the properties from the Entity class are added.
+//     * If a property whith the same name is already present it is not added again.
+//     */
+//    private void addPropertiesToContainer() {
+//        Container cont = getContainerDataSource();
+//        EntityType<?> type = EM.getEntityType(getEntityClass());
+//        Set<?> attributes = type.getAttributes();
+//        Attribute<?, ?> attribute;
+//
+//        Collection coll = cont.getContainerPropertyIds();
+//
+//        for (Object ogg : attributes) {
+//            if (ogg instanceof Attribute<?, ?>) {
+//                attribute = (Attribute<?, ?>) ogg;
+//                String name = attribute.getName();
+//
+//                if (!coll.contains(name)) {
+//                    Class clazz = attribute.getJavaType();
+//                    Object defaultValue = null;
+//                    try {
+//                        defaultValue = clazz.newInstance();
+//                    } catch (Exception e) {
+//                    }
+//
+//                    // specific handling for LazyQueryContainer
+//                    if (cont instanceof LazyQueryContainer) {
+//                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
+//                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
+//                    } else {
+//                        cont.addContainerProperty(name, clazz, defaultValue);
+//                    }
+//
+//                }
+//
+//            }
+//        }
+//
+//    }
 
     /**
      * Sorts the container.
@@ -99,9 +149,9 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         SortProperties props = BaseEntity.getSortProperties(getEntityClass());
 
         // sort the container on the sort properties
-        if(cont instanceof JPAContainer){
-            JPAContainer jpaCont=(JPAContainer)cont;
-            jpaCont.sort(props.getProperties(), props.getDirections());
+        if(cont instanceof Sortable){
+            Sortable sortable=(Sortable)cont;
+            sortable.sort(props.getProperties(), props.getDirections());
         }
 
     }
@@ -119,7 +169,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     /**
      * Creates a handler to handle new items and assigns it to this combo.
      *
-     * @param formClass - the class for the form which will be used for editing the new item (must subclass AForm)
+     * @param formClass - the class of the form which will be used for editing the new item (must subclass AForm)
      * @param attribute - the attribute to fill with the text coming from the combo
      */
     public void setNewItemHandler(Class<? extends AForm> formClass, Attribute attribute) {
@@ -163,18 +213,26 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         for (int i = 0; i < attrOrders.length; i++) {
             attrOrders[i] = true;
         }
-        getJPAContainer().sort(attrArray, attrOrders);
+
+        Container cont = getContainerDataSource();
+        if(cont instanceof Sortable){
+            Sortable sCont=(Sortable)cont;
+            sCont.sort(attrArray, attrOrders);
+        }
+
     }
 
-    @SuppressWarnings("rawtypes")
-    public JPAContainer getJPAContainer() {
-        JPAContainer jpaCont = null;
-        Container cont = getContainerDataSource();
-        if ((cont != null) && (cont instanceof JPAContainer)) {
-            jpaCont = (JPAContainer) cont;
-        }
-        return jpaCont;
-    }
+//    @SuppressWarnings("rawtypes")
+//    public JPAContainer getJPAContainer() {
+//        JPAContainer jpaCont = null;
+//        Container cont = getContainerDataSource();
+//        if ((cont != null) && (cont instanceof JPAContainer)) {
+//            jpaCont = (JPAContainer) cont;
+//        }
+//        return jpaCont;
+//    }
+
+
 
     @SuppressWarnings("rawtypes")
     public Class getEntityClass() {

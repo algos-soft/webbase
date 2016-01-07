@@ -1,8 +1,10 @@
 package it.algos.webbase.domain.utente;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.server.FontAwesome;
 import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -82,8 +84,8 @@ public class UtenteModulo extends ModulePop {
      * @return the Form
      */
     @Override
-    public AForm createForm(Item item) {
-        return new UtenteForm(this, item);
+    public ModuleForm createForm(Item item) {
+        return new UtenteForm(item, this);
     }// end of method
 
 

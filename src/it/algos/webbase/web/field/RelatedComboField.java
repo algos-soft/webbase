@@ -83,7 +83,11 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      */
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
-        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), entityManager);
+//        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), entityManager);
+        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), entityManager);
+//        JPAContainer cont = JPAContainerFactory.makeBatchable(getEntityClass(), entityManager);
+//        cont.setAutoCommit(false);
+
 //        LazyEntityContainer cont = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
 //        cont.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return cont;

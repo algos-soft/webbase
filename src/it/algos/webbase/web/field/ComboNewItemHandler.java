@@ -1,7 +1,9 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 
@@ -75,14 +77,16 @@ public class ComboNewItemHandler implements NewItemHandler {
 		Object bean = createBean();
 		BeanItem item = new BeanItem(bean);
 
-		// write the caption to the appropriate field
-		if (attribute != null) {
-			Property prop = item.getItemProperty(attribute.getName());
-			if (prop != null) {
-				prop.setValue(newItemCaption);
+		// write the caption to the appropriate property
+		if(newItemCaption!=null){
+			if (attribute != null) {
+				Property prop = item.getItemProperty(attribute.getName());
+				if (prop != null) {
+					prop.setValue(newItemCaption);
+				}
 			}
 		}
-		
+
 		// edit the item in the form
 		editItem(item, true);
 
@@ -138,16 +142,34 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
-				bean.save();
+				//bean.save();
 				window.close();
 
 				Container cont = field.getContainerDataSource();
-				if (cont instanceof LazyEntityContainer) {
-					LazyEntityContainer lec = (LazyEntityContainer) cont;
-					lec.refresh();
+				Object itemId=cont.addItem();
+				Item newItem=cont.getItem(itemId);
+				for(Object id : item.getItemPropertyIds()){
+					if(!id.equals(BaseEntity_.id.getName())){
+						Object value=item.getItemProperty(id).getValue();
+						newItem.getItemProperty(id).setValue(value);
+					}
 				}
 
-				long id = bean.getId();
+
+				if (cont instanceof JPAContainer) {
+					JPAContainer jpac=(JPAContainer)cont;
+//					jpac.addEntity();
+//					cont.addItem(item);
+//					((JPAContainer) cont).refresh();
+//					((JPAContainer) cont).commit();
+				}
+				if (cont instanceof LazyEntityContainer) {
+					((LazyEntityContainer) cont).refresh();
+//					((LazyEntityContainer) cont).commit();
+				}
+
+//				long id = bean.getId();
+				Object id = newItem.getItemProperty(BaseEntity_.id.getName()).getValue();
 				field.setValue(id);
 
 				fire(new BeanItem(bean), newRecord);

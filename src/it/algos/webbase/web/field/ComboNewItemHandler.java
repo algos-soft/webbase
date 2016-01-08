@@ -145,11 +145,12 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
+				BaseEntity merged=bean.save();
 
-				EntityManager em = field.getEntityManager();
-				em.getTransaction().begin();
-				BaseEntity merged = em.merge(bean);
-				em.getTransaction().commit();
+//				EntityManager em = field.getEntityManager();
+//				em.getTransaction().begin();
+//				BaseEntity merged = em.merge(bean);
+//				em.getTransaction().commit();
 				window.close();
 
 				Container cont = field.getContainerDataSource();

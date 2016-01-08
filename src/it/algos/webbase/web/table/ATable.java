@@ -119,7 +119,7 @@ public class ATable extends Table implements ListSelection {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
                 getTable().itemClick(itemClickEvent);
-//                selectionChanged(itemClickEvent);
+                selectionChanged(itemClickEvent);
             }// end of inner method
         });// end of anonymous inner class
 

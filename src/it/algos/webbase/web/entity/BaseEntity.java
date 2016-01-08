@@ -147,37 +147,26 @@ public abstract class BaseEntity implements Serializable {
     /**
      * Saves this entity to the database using a local EntityManager
      * <p>
-     * the operation is wrapped in a transaction
      *
      * @return the merged Entity (new entity, unmanaged, has the id)
      */
     public BaseEntity save() {
-        return save(null, true);
-    }
-
-    /**
-     * Saves this entity to the database using a given EntityManager
-     * <p>
-     * the operation is wrapped in a transaction
-     *
-     * @param manager     the entity manager to use (if null, a new one is created on the fly)
-     * @return the merged Entity (new entity, unmanaged, has the id)
-     */
-    public BaseEntity save(EntityManager manager) {
-        return save(manager, true);
+        return save(null);
     }
 
 
     /**
      * Saves this entity to the database.
      * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
      *
      * @param manager     the entity manager to use (if null, a new one is created on the fly)
-     * @param transaction true to use a transaction
      * @return the merged Entity (new entity, unmanaged, has the id)
      */
     @SuppressWarnings("rawtypes")
-    public BaseEntity save(EntityManager manager, boolean transaction) {
+    public BaseEntity save(EntityManager manager) {
         BaseEntity mergedEntity = null;
         boolean localEm = false;
 
@@ -186,20 +175,29 @@ public abstract class BaseEntity implements Serializable {
             localEm = true;
         }
 
+        boolean createTransaction = !manager.isJoinedToTransaction();
+
         try {
 
-            if (transaction) {
+            if (createTransaction) {
                 manager.getTransaction().begin();
             }
+
             mergedEntity = manager.merge(this);
-            if (transaction) {
+
+            if (createTransaction) {
                 manager.getTransaction().commit();
+            }
+
+            // assign the new id to this entity
+            if(this.id==null){
+                this.setId(mergedEntity.getId());
             }
 
         } catch (ConstraintViolationException e) {
 
             // rollback transaction
-            if (transaction) {
+            if (createTransaction) {
                 manager.getTransaction().rollback();
             }
 

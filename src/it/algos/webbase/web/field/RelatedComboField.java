@@ -22,6 +22,7 @@ import it.algos.webbase.web.query.AQuery;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import java.util.ArrayList;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class RelatedComboField extends ComboBox implements FieldInterface<Object> {
@@ -37,6 +38,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     private Class entityClass;
     protected EntityManager entityManager;
     private Component editComponent;
+    private String filterString;
 
     @SuppressWarnings("rawtypes")
     public RelatedComboField(Class entityClass, String caption) {
@@ -63,7 +65,6 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         sortContainer(cont);
         setItemCaptionMode(ItemCaptionMode.ITEM);
         setConverter(new SingleSelectConverter(this));
-//        setConverter(new ComboConverter<Object>(this, getEntityClass()));
         setWidth("260px");
     }
 
@@ -79,58 +80,9 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      */
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
-//        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), entityManager);
         JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), getEntityManager());
-//        JPAContainer cont = JPAContainerFactory.makeBatchable(getEntityClass(), entityManager);
-//        cont.setAutoCommit(false);
-
-//        LazyEntityContainer cont = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
-//        cont.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return cont;
     }
-
-
-
-//    /**
-//     * Add the properties to the container.
-//     * By default, all the properties from the Entity class are added.
-//     * If a property whith the same name is already present it is not added again.
-//     */
-//    private void addPropertiesToContainer() {
-//        Container cont = getContainerDataSource();
-//        EntityType<?> type = EM.getEntityType(getEntityClass());
-//        Set<?> attributes = type.getAttributes();
-//        Attribute<?, ?> attribute;
-//
-//        Collection coll = cont.getContainerPropertyIds();
-//
-//        for (Object ogg : attributes) {
-//            if (ogg instanceof Attribute<?, ?>) {
-//                attribute = (Attribute<?, ?>) ogg;
-//                String name = attribute.getName();
-//
-//                if (!coll.contains(name)) {
-//                    Class clazz = attribute.getJavaType();
-//                    Object defaultValue = null;
-//                    try {
-//                        defaultValue = clazz.newInstance();
-//                    } catch (Exception e) {
-//                    }
-//
-//                    // specific handling for LazyQueryContainer
-//                    if (cont instanceof LazyQueryContainer) {
-//                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
-//                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
-//                    } else {
-//                        cont.addContainerProperty(name, clazz, defaultValue);
-//                    }
-//
-//                }
-//
-//            }
-//        }
-//
-//    }
 
     /**
      * Sorts the container.
@@ -221,17 +173,6 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         }
 
     }
-
-//    @SuppressWarnings("rawtypes")
-//    public JPAContainer getJPAContainer() {
-//        JPAContainer jpaCont = null;
-//        Container cont = getContainerDataSource();
-//        if ((cont != null) && (cont instanceof JPAContainer)) {
-//            jpaCont = (JPAContainer) cont;
-//        }
-//        return jpaCont;
-//    }
-
 
 
     @SuppressWarnings("rawtypes")
@@ -325,9 +266,21 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         NewItemHandler handler = getNewItemHandler();
         if ((handler != null) && (handler instanceof ComboNewItemHandler)) {
             ComboNewItemHandler cHandler = (ComboNewItemHandler) handler;
-            cHandler.addNewItem(null);
+            cHandler.addNewItem(filterString);
+            filterString=null;
         }
     }
+
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+
+        // save the filter string for later use
+        filterString= (String) variables.get("filter");
+    }
+
+
 
 
     /**

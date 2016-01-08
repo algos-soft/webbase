@@ -11,6 +11,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
+import com.vaadin.data.util.filter.Compare;
+import com.vaadin.data.util.filter.Not;
+import com.vaadin.data.util.filter.Or;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
@@ -113,7 +116,6 @@ public class ATable extends Table implements ListSelection {
 
         }
 
-
         // adds a listener for mouse click to the table
         this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
             @Override
@@ -170,12 +172,15 @@ public class ATable extends Table implements ListSelection {
     }// end of method
 
 
-        /**
-         * Called when the component gets attached to the UI
-         */
+    /**
+     * Called when the component gets attached to the UI
+     */
     @Override
     public void attach() {
         super.attach();
+
+        // refresh the table (underlying data might have changed)
+        refresh();
 
         // the first time is called when the table gets attached,
         // subsequently is called by the data change listener
@@ -184,7 +189,7 @@ public class ATable extends Table implements ListSelection {
         // fire table attached to UI
         fire(TableEvent.attached);
 
-        // fire table dta changed
+        // fire table data changed
         fire(TableEvent.datachange);
 
     }// end of method
@@ -209,15 +214,27 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Creates the container
-     * <p/>
+     * <p>
      * The id property is added here by default.
+     *
      * @return the container
      */
     protected Container createContainer() {
-        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
+        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), getContainerPageSize(), BaseEntity_.id.getName(), true, true, true);
         entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return entityContainer;
     }// end of method
+
+    /**
+     * Returns the paging size for the container.
+     * Warning: above the size of 1.000 you start to get errors!!
+     *
+     * @return the container's paging size
+     * @see https://vaadin.com/forum/#!/thread/186858/186857
+     */
+    protected int getContainerPageSize() {
+        return 1000;
+    }
 
 
     /**
@@ -267,7 +284,7 @@ public class ATable extends Table implements ListSelection {
      * By default the container is sorted based on the default sort order declared
      * in the entity class via the @DefaultSort annotation.
      * If the annotation is not present the container is not sorted.
-     * <p/>
+     * <p>
      * For a custom sort of the container in a RelatedCombo field you have 2 options:
      * 1) call the sort() method after the creation of the object passing the properties on which to sort
      * 2) override this method (needs subclassing).
@@ -295,7 +312,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Create additional columns
      * (add generated columns, nested properties...)
-     * <p/>
+     * <p>
      * Override in the subclass
      */
     protected void createAdditionalColumns() {
@@ -403,7 +420,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Adds/removes a column to the list of totalizable columns
-     * <p/>
+     * <p>
      *
      * @param propertyId    - the id of the column
      * @param useTotals     - to add or remove the column from the list
@@ -430,7 +447,7 @@ public class ATable extends Table implements ListSelection {
     /**
      * Adds/removes a column to the list of totalizable columns<br>
      * with automatic number of decimal places
-     * <p/>
+     * <p>
      *
      * @param propertyId - the id of the column
      * @param useTotals  - to add or remove the column from the list
@@ -494,7 +511,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the single selected row
-     * <p/>
+     * <p>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row id (if a single row is selected, otherwise null)
@@ -525,7 +542,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the single selected row
-     * <p/>
+     * <p>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row id (if a single row is selected, otherwise 0)
@@ -555,7 +572,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the ids of the selected rows
-     * <p/>
+     * <p>
      * Usable for single-select or multi-select tables
      *
      * @return the selected row ids
@@ -645,10 +662,10 @@ public class ATable extends Table implements ListSelection {
      * Return the selected entity
      */
     public BaseEntity getSelectedEntity() {
-        BaseEntity entity=null;
-        Long id = (Long)getSelectedId();
+        BaseEntity entity = null;
+        Long id = (Long) getSelectedId();
         if (id != null) {
-            entity=getEntity(id);
+            entity = getEntity(id);
         }
         return entity;
     }// end of method
@@ -683,7 +700,7 @@ public class ATable extends Table implements ListSelection {
         if (ids != null) {
             ArrayList<BaseEntity> objSel = new ArrayList();
             for (Object id : ids) {
-                BaseEntity entity=getEntity((Long)id);
+                BaseEntity entity = getEntity((Long) id);
                 if (entity != null) {
                     objSel.add(entity);
                 }
@@ -691,10 +708,9 @@ public class ATable extends Table implements ListSelection {
             entities = objSel.toArray(new BaseEntity[0]);
         }
 
-        return  entities;
+        return entities;
 
     }
-
 
 
 //    /**
@@ -725,21 +741,22 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the entity given a row id.
+     *
      * @param rowId the row id
      * @return the entity
      */
-    public BaseEntity getEntity(Long rowId){
-        BaseEntity entity=null;
+    public BaseEntity getEntity(Long rowId) {
+        BaseEntity entity = null;
         Container cont = getContainerDataSource();
 
-        if(cont instanceof LazyEntityContainer){
-            LazyEntityContainer lec = (LazyEntityContainer)cont;
-            entity=(BaseEntity)lec.getEntity(rowId);
+        if (cont instanceof LazyEntityContainer) {
+            LazyEntityContainer lec = (LazyEntityContainer) cont;
+            entity = (BaseEntity) lec.getEntity(rowId);
         }
 
-        if(cont instanceof JPAContainer){
+        if (cont instanceof JPAContainer) {
             Item item = getItem(rowId);
-            if(item!=null){
+            if (item != null) {
                 if (item instanceof JPAContainerItem) {
                     JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
                     entity = (BaseEntity) jpaItem.getEntity();
@@ -749,7 +766,6 @@ public class ATable extends Table implements ListSelection {
 
         return entity;
     }
-
 
 
     /**
@@ -778,6 +794,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the container as a Filterable container.
+     *
      * @return the container as a Filterable, or null if it is not filterable
      */
     public Filterable getFilterableContainer() {
@@ -791,6 +808,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Returns the container as a Sortable container.
+     *
      * @return the container as a Sortable, or null if it is not sortable
      */
     public Sortable getSortableContainer() {
@@ -890,7 +908,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Updates the totals in the footer
-     * <p/>
+     * <p>
      * Called when the container data changes
      */
     @SuppressWarnings("rawtypes")
@@ -909,7 +927,6 @@ public class ATable extends Table implements ListSelection {
 
 
     }
-
 
 
 //    /**
@@ -971,8 +988,6 @@ public class ATable extends Table implements ListSelection {
 //        }// end of for cycle
 //        return places;
 //    }// end of method
-
-
 
 
     /**
@@ -1177,8 +1192,82 @@ public class ATable extends Table implements ListSelection {
 
 
     /**
-     * Evento generato quando si modifica la selezione delle righe
+     * Deselects all the rows in the table
+     */
+    public void deselectAll() {
+        setValue(null);
+        selectionChanged(null);
+    }// end of method
+
+    /**
+     * Removes the selected rows from the table
+     */
+    public void removeSelected() {
+        Container cont = getTable().getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable = (Container.Filterable) cont;
+            Filter filter = new Not(createFilterForSelectedRows());
+            cFilterable.addContainerFilter(filter);
+            refresh();
+        }// end of if cycle
+    }// end of method
+
+    /**
+     * Shows in the table only the selected rows
+     */
+    public void selectedOnly() {
+        Container cont = getTable().getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable = (Container.Filterable) cont;
+            Filter filter = createFilterForSelectedRows();
+            cFilterable.removeAllContainerFilters();
+            cFilterable.addContainerFilter(filter);
+            refresh();
+        }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Displays all the records in the table
+     */
+    public void showAll() {
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof Container.Filterable) {
+            Container.Filterable cFilterable = (Container.Filterable) cont;
+            cFilterable.removeAllContainerFilters();
+            refresh();
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Creates a filter corresponding to the currently selected rows in the table
      * <p/>
+     */
+    private Filter createFilterForSelectedRows() {
+        Filter filter = null;
+        Object[] ids = getSelectedIds();
+        if (ids.length > 0) {
+            Filter[] filters = new Filter[ids.length];
+            int idx = 0;
+            for (Object id : ids) {
+                filters[idx] = new Compare.Equal("id", id);
+                idx++;
+            }// end of for cycle
+
+            if (filters.length > 1) {
+                filter = new Or(filters);
+            } else {
+                filter = filters[0];
+            }
+        }
+        return filter;
+    }// end of method
+
+    /**
+     * Evento generato quando si modifica la selezione delle righe
+     * <p>
      * Informa (tramite listener) chi è interessato <br>
      */
     public void selectionChanged(ItemClickEvent itemClickEvent) {
@@ -1256,7 +1345,7 @@ public class ATable extends Table implements ListSelection {
 
     /**
      * Evento generato quando si modifica la selezione delle righe
-     * <p/>
+     * <p>
      * Informa (tramite listener) chi è interessato <br>
      */
     public void fireSelectionListener(ListSelectionEvent evento) {
@@ -1321,10 +1410,11 @@ public class ATable extends Table implements ListSelection {
         /**
          * Returns the number of decimal digits to display for this column.
          * If set to auto, the cholice is based on the column class.
+         *
          * @return the number of decimal digits
          */
         public int getDecimalPlaces() {
-            int places =decimalPlaces;
+            int places = decimalPlaces;
             if (decimalPlaces == -1) { // auto
                 places = getDefaultDecimalPlacesForColumn(propertyId);
             }
@@ -1340,7 +1430,7 @@ public class ATable extends Table implements ListSelection {
         /**
          * Returns a default number of decimal places for a given property.<br>
          * 0 for integers (int, long), 2 for decimals (double, float, BigDecimal)
-         * <p/>
+         * <p>
          *
          * @param propertyId the property id
          * @return the number of decimal places

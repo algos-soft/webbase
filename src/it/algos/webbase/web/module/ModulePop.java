@@ -63,8 +63,6 @@ public abstract class ModulePop extends Module {
     private String titoloNew;
     // titolo del dialogo di modifica
     private String titoloEdit;
-    // indirizzo interno del modulo (serve nei menu)
-//    private String menuAddress;
     // titolo del dialogo di ricerca
     private String titoloSearch;
     //--etichetta del menu
@@ -168,22 +166,22 @@ public abstract class ModulePop extends Module {
 
                 @Override
                 public void selectedonly_() {
-                    selectedonly();
+                    getTable().selectedOnly();
                 }// end of inner method
 
                 @Override
                 public void removeselected_() {
-                    removeselected();
+                    getTable().removeSelected();
                 }// end of inner method
 
                 @Override
                 public void showall_() {
-                    showall();
+                    getTable().showAll();
                 }// end of inner method
 
                 @Override
                 public void deselectall_() {
-                    deselectall();
+                    getTable().deselectAll();
                 }// end of inner method
 
 
@@ -359,20 +357,6 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
-//    /**
-//     * Create the MenuBar Item for this module
-//     * <p>
-//     * Invocato dal metodo AlgosUI.creaMenu()
-//     * PUO essere sovrascritto dalla sottoclasse
-//     *
-//     * @param menuBar     a cui agganciare il menuitem
-//     * @param placeholder in cui visualizzare il modulo
-//     * @return menuItem appena creato
-//     * @deprecated
-//     */
-//    public MenuBar.MenuItem createMenuItem(MenuBar menuBar, NavPlaceholder placeholder) {
-//        return createMenuItem(menuBar, placeholder);
-//    }// end of method
 
     /**
      * Create the MenuBar Item for this module
@@ -408,34 +392,6 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
-//    /**
-//     * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
-//     * Aggiunge il singolo menu (item) alla barra principale di menu
-//     *
-//     * @param modulo      da visualizzare nel placeholder alla pressione del bottone di menu
-//     * @param placeholder di riferimento
-//     */
-//    public void addModulo(ModulePop modulo, NavPlaceholder placeholder) {
-//        String address = "";
-//        MenuBar.MenuItem menuItem = modulo.getMenuItem();
-//        Resource icon = modulo.getIcon();
-//        address = modulo.getMenuAddress();
-//
-//        if (address.equals("")) {
-//            address = LibPath.getClassName(modulo.getEntityClass());
-//        }// fine del blocco if
-//
-//        this.addMenu(address, icon, modulo, placeholder);
-//    }// end of method
-//
-//
-//    public void addMenu(String titolo, Resource icon, CustomComponent modulo, NavPlaceholder placeholder) {
-//        MenuBar.MenuItem menuItem;
-//        MenuBar.Command comando = new ModuleCommand(modulo, placeholder, algosBar);
-//        menuItem = algosBar.addItem(titolo, icon, comando);
-//        menuItem.setStyleName(MENU_DISABILITATO);
-//    }// end of method
-
 
     /**
      * Create button pressed in table
@@ -445,10 +401,6 @@ public abstract class ModulePop extends Module {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void create() {
         editItem(null, true, getTitoloNew());
-//        Object bean = BaseEntity.createBean(getEntityClass());
-//        BeanItem item = new BeanItem(bean);
-//        postCreate(item);
-//        editItem(item, true, getTitoloNew());
     }// end of method
 
     /**
@@ -480,17 +432,6 @@ public abstract class ModulePop extends Module {
         }
     }// end of method
 
-    // /**
-    // * Edit button pressed in table Display the item in a form
-    // */
-    // @SuppressWarnings("rawtypes")
-    // public void editOld() {
-    // long rowId = getTable().getSelectedIdOld();
-    // if (rowId >= 0) {
-    // BeanItem item = getTable().getBeanItem(rowId);
-    // editItem(item, getTitoloEdit());
-    // }// end of if cycle
-    // }// end of method
 
     /**
      * Edits an Item in a Form
@@ -533,7 +474,7 @@ public abstract class ModulePop extends Module {
 
 
                     // after successful editing, if was a new record display only
-                    // the new record in the table, if was a edit refresh the row cache
+                    // the new record in the table, if was an edit refresh the row cache
                     if(newRecord){
                         Item item = form.getItem();
                         if(item instanceof BeanItem){
@@ -546,6 +487,7 @@ public abstract class ModulePop extends Module {
                                 filterable.removeAllContainerFilters();
                                 Filter filter = new Compare.Equal(BaseEntity_.id.getName(), id);
                                 filterable.addContainerFilter(filter);
+                                getTable().deselectAll();
                                 getTable().select(id);
                             }
                         }
@@ -750,78 +692,7 @@ public abstract class ModulePop extends Module {
 
     }// end of method
 
-    /**
-     * Shows in the table only the selected rows
-     */
-    public void selectedonly() {
-        Container cont = getTable().getContainerDataSource();
-        if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable = (Container.Filterable) cont;
-            Filter filter = createFilterForSelectedRows();
-            cFilterable.removeAllContainerFilters();
-            cFilterable.addContainerFilter(filter);
-            getTable().refresh();
-        }// end of if cycle
 
-    }// end of method
-
-    /**
-     * Removes the selected rows from the table
-     */
-    public void removeselected() {
-        Container cont = getTable().getContainerDataSource();
-        if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable = (Container.Filterable) cont;
-            Filter filter = new Not(createFilterForSelectedRows());
-            cFilterable.addContainerFilter(filter);
-            getTable().refresh();
-        }// end of if cycle
-    }// end of method
-
-    /**
-     * Shows all the records in the table
-     */
-    public void showall() {
-        Container cont = getTable().getContainerDataSource();
-        if (cont != null && cont instanceof Container.Filterable) {
-            Container.Filterable cFilterable = (Container.Filterable) cont;
-            cFilterable.removeAllContainerFilters();
-            getTable().refresh();
-        }// end of if cycle
-    }// end of method
-
-    /**
-     * Deselects all the rows in the table
-     */
-    public void deselectall() {
-        getTable().setValue(null);
-        getTable().selectionChanged(null);
-    }// end of method
-
-
-    /**
-     * Creates a filter corresponding to the currently selected rows in the table
-     * <p/>
-     */
-    private Filter createFilterForSelectedRows() {
-        Filter filter = null;
-        Object[] ids = getTable().getSelectedIds();
-        if (ids.length > 0) {
-            Filter[] filters = new Filter[ids.length];
-            int idx = 0;
-            for (Object id : ids) {
-                filters[idx] = new Compare.Equal("id", id);
-                idx++;
-            }// end of for cycle
-
-            if (filters.length > 1) {
-                filter = new Or(filters);
-            } else {
-                filter = filters[0];
-            }
-        }
-        return filter;
-    }// end of method
 
     /**
      * Create the Table Portal

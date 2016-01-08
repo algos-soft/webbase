@@ -118,7 +118,7 @@ public class ATable extends Table implements ListSelection {
         this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
-                itemClick(itemClickEvent);
+                getTable().itemClick(itemClickEvent);
 //                selectionChanged(itemClickEvent);
             }// end of inner method
         });// end of anonymous inner class
@@ -1113,7 +1113,6 @@ public class ATable extends Table implements ListSelection {
      * @param itemClickEvent the event
      */
     public void itemClick(ItemClickEvent itemClickEvent) {
-
     }// end of method
 
     /**

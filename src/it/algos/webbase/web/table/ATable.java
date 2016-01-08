@@ -912,7 +912,7 @@ public class ATable extends Table implements ListSelection {
      * Called when the container data changes
      */
     @SuppressWarnings("rawtypes")
-    protected void updateTotals() {
+    public void updateTotals() {
 
         // cycle the totalizable columns
         StringToBigDecimalConverter converter = new StringToBigDecimalConverter();

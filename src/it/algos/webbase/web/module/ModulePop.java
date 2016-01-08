@@ -498,6 +498,8 @@ public abstract class ModulePop extends Module {
                         getTable().refreshRowCache();
                     }
 
+                    getTable().updateTotals();
+
 
                 }// end of inner method
 

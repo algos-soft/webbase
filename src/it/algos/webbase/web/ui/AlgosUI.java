@@ -25,6 +25,7 @@ import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.servlet.http.Cookie;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -102,7 +103,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Legge eventuali parametri passati nella request
-     * <p>
+     * <p/>
      */
     public void checkParams(VaadinRequest request) {
         // legge il parametro "developer" (se esiste) e regola la variabile nella sessione
@@ -115,7 +116,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Legge i cookies dalla request
-     * <p>
+     * <p/>
      */
     protected void checkCookies(VaadinRequest request) {
         // Fetch all cookies
@@ -149,7 +150,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Controlla il login della security
-     * <p>
+     * <p/>
      * Creazione del wrapper di informazioni mantenuto nella sessione <br>
      */
     protected void checkSecurity(VaadinRequest request) {
@@ -164,7 +165,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * Top      - una barra composita di menu e login
      * Body     - un placeholder per il portale della tavola/modulo
      * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
-     * <p>
+     * <p/>
      * Può essere sovrascritto per gestire la UI in maniera completamente diversa
      */
     protected void startUI() {
@@ -283,7 +284,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Sincronizzazione dei listener per il funzionamento del Login
-     * <p>
+     * <p/>
      * Dopo aver creato questa classe, registra nella Login (singleton nel servlet/sessione) l'istanza di questa classe per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella Login (singleton nel servlet/sessione) l'istanza di LoginBar per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di login (singleton nel servlet/sessione) per l'evento LogformListener
@@ -330,7 +331,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Aggiunge i moduli (standard e specifici)
-     * <p>
+     * <p/>
      * Mantiene un array di tutti i moduli
      * Alcuni moduli sono specifici di un collegamento come programmatore
      * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
@@ -372,45 +373,63 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
 
     /**
-     * Aggiunge un modulo alla UI
-     * <p>
-     * Will create a lazy (class-based) view provider
-     * The view will be instantiated by the view provider from the provided class
-     * The viewCached parameter controls if the view will be instantiated only once
-     * or each time is requested bu yhe Navigator.
-     * <p>
-     * Invocato dalla sottoclasse
+     * Adds a cached View to the UI
+     * <p/>
+     * the view will be instantiated only once
      *
      * @param clazz the class to instantiate (must implement View)
      */
-    protected void addModulo(Class clazz) {
-        addModulo(clazz, true);
+    protected void addModulo(Class<? extends View> viewClass) {
+        addView(viewClass, true, null, null);
     }// end of method
 
 
     /**
-     * Aggiunge un modulo alla UI
-     * <p>
+     * Adds a View to the UI
+     * <p/>
+     * the view will be instantiated only once and then cached.
+     *
+     * @param viewClass  the view class to instantiate
+     * @param viewCached true to instantiated only once, false to instantiate each time
+     */
+    protected void addView(Class<? extends View> viewClass, String label, Resource icon) {
+        addView(viewClass, true, label, icon);
+    }
+
+    /**
+     * Adds a View to the UI
+     * <p/>
      * Will create a lazy (class-based) view provider
      * The view will be instantiated by the view provider from the provided class
      * The viewCached parameter controls if the view will be instantiated only once
-     * or each time is requested bu yhe Navigator.
-     * <p>
+     * or each time is requested by the Navigator.
+     * <p/>
      * Invocato dalla sottoclasse
      *
-     * @param clazz      the class to instantiate (must implement View)
+     * @param viewClass  the view class to instantiate
      * @param viewCached true to instantiated only once, false to instantiate each time
+     * @param label  the text for the menu item
+     * @param icon  the icon for the menu item
      */
-    protected void addModulo(Class clazz, boolean viewCached) {
-//        moduli.add(modulo);
+    protected void addView(Class<? extends View> viewClass, boolean viewCached, String label, Resource icon) {
+
+        String keyModulo = "";
+        MenuBar.MenuItem menuItem = createMenuItem(viewClass, label, viewCached, icon);
+
+        if (menuItem != null) {
+            keyModulo = viewClass.getSimpleName();
+            mappaItem.put(keyModulo, menuItem);
+        }// end of if cycle
+
     }// end of method
+
 
     /**
      * Aggiunge un modulo alla UI
-     * <p>
+     * <p/>
      * Il modulo può essere aggiunto come istanza già creata
      * Tipicamente un ModulePop
-     * <p>
+     * <p/>
      * Invocato dalla sottoclasse
      *
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
@@ -434,10 +453,10 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Aggiunge un modulo alla UI
-     * <p>
+     * <p/>
      * Il modulo può essere aggiunto come istanza già creata
      * Qualunque oggetto grafico che implementi l'interfaccia View
-     * <p>
+     * <p/>
      * Invocato dalla sottoclasse
      *
      * @param vista     da visualizzare nel placeholder alla pressione del bottone di menu
@@ -472,7 +491,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Create the MenuBar Item for this module
-     * <p>
+     * <p/>
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
@@ -493,8 +512,31 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
 
     /**
+     * Create the MenuBar Item for this module
+     * <p/>
+     * Invocato dal metodo AlgosUI.creaMenu()
+     * PUO essere sovrascritto dalla sottoclasse
+     *
+     * @param vista    da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param icon del menu
+     * @return menuItem appena creato
+     */
+    private MenuBar.MenuItem createMenuItem(Class<? extends View> viewClass, String label, boolean cached, Resource icon) {
+        MenuBar.MenuItem menuItem;
+        MenuBar menuBar = topLayout.getMenuBar();
+
+        MenuCommand comando = new MenuCommand(menuBar, viewClass, cached);
+        menuItem = menuBar.addItem(label, icon, comando);
+        menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
+
+        return menuItem;
+    }// end of method
+
+
+
+    /**
      * Aggiunge i moduli specifici
-     * <p>
+     * <p/>
      * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
      * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
      */
@@ -504,7 +546,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Crea i menu per la gestione dei moduli (standard e specifici)
-     * <p>
+     * <p/>
      * Spazzola l'array dei moduli per creare/recuperare il menuItem ed aggiungerlo alla UI
      * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
      * Aggiunge il singolo menu (item) alla barra principale di menu
@@ -573,7 +615,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     /**
      * Invoked after a successful login happened using the Login form.
-     * <p>
+     * <p/>
      * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
      * Lancia il fire di questo evento, se l'utente è valido.
      */

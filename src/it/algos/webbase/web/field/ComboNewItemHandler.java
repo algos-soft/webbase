@@ -145,38 +145,19 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
-				BaseEntity merged=bean.save();
-
-//				EntityManager em = field.getEntityManager();
-//				em.getTransaction().begin();
-//				BaseEntity merged = em.merge(bean);
-//				em.getTransaction().commit();
+				bean.save();
 				window.close();
 
 				Container cont = field.getContainerDataSource();
-//				Object itemId=cont.addItem();
-//				Item newItem=cont.getItem(itemId);
-//				for(Object id : item.getItemPropertyIds()){
-//					if(!id.equals(BaseEntity_.id.getName())){
-//						Object value=item.getItemProperty(id).getValue();
-//						newItem.getItemProperty(id).setValue(value);
-//					}
-//				}
-
 
 				if (cont instanceof JPAContainer) {
 					JPAContainer jpac=(JPAContainer)cont;
 					jpac.refresh();
 				}
 
-//				if (cont instanceof LazyEntityContainer) {
-//					((LazyEntityContainer) cont).refresh();
-////					((LazyEntityContainer) cont).commit();
-//				}
-
 				// select the newly created entity in the combo
-				long id = merged.getId();
-				field.setValue(id);
+//				long id = merged.getId();
+				field.setValue(bean.getId());
 
 				fire(item, newRecord);
 			}

@@ -83,21 +83,22 @@ public class ModuleForm extends AForm {
 //        }
 
         // retrieve the bean
-        Object bean;
+        BaseEntity bean;
         if (isNewRecord()) {
             BeanItem item = (BeanItem)getItem();
-            bean = item.getBean();
+            bean = (BaseEntity)item.getBean();
         }else{
             CompositeItem compItem = (CompositeItem) getItem();
             BeanItem beanItem = (BeanItem) compItem.getItem("bean");
-            bean = beanItem.getBean();
+            bean = (BaseEntity)beanItem.getBean();
         }
 
         // merge the bean (creates or updates the record(s) in the db)
-        EntityManager em = getModule().getEntityManager();
-        em.getTransaction().begin();
-        em.merge(bean);
-        em.getTransaction().commit();
+        bean.save(getModule().getEntityManager());
+//        EntityManager em = getModule().getEntityManager();
+//        em.getTransaction().begin();
+//        em.merge(bean);
+//        em.getTransaction().commit();
 
     }
 

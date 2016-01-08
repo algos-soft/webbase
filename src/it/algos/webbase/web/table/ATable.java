@@ -1035,6 +1035,47 @@ public class ATable extends Table implements ListSelection {
     }
 
 
+//    /**
+//     * Calculate the total for a single column.
+//     *
+//     * @param attr the attribute
+//     * @return the total for the currently displayed rows
+//     */
+//    private BigDecimal calcTotal(SingularAttribute attr) {
+//
+//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+//        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
+//        Root root = cq.from(getEntityClass());
+//
+//        Predicate pred = getFiltersPredicate(cb, cq, root);
+//        if (pred != null) {
+//            cq.where(pred);
+//        }
+//
+//        Expression<Number> e1 = cb.sum(root.get(attr));
+//        cq.select(e1);
+//
+//        Number num = getEntityManager().createQuery(cq).getSingleResult();
+//        BigDecimal bd = new BigDecimal(0);
+//        if (num != null) {
+//            if (num instanceof BigDecimal) {
+//                bd = (BigDecimal) num;
+//            }
+//            if (num instanceof Integer) {
+//                Integer i = (Integer) num;
+//                bd = new BigDecimal(i);
+//            }
+//            if (num instanceof Long) {
+//                Long l = (Long) num;
+//                bd = new BigDecimal(l);
+//            }
+//        }
+//
+//        return bd;
+//
+//    }
+
+
     /**
      * Calculate the total for a single column.
      *
@@ -1044,7 +1085,7 @@ public class ATable extends Table implements ListSelection {
     private BigDecimal calcTotal(SingularAttribute attr) {
 
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
+        CriteriaQuery<Double> cq = cb.createQuery(Double.class);
         Root root = cq.from(getEntityClass());
 
         Predicate pred = getFiltersPredicate(cb, cq, root);
@@ -1052,26 +1093,12 @@ public class ATable extends Table implements ListSelection {
             cq.where(pred);
         }
 
-        Expression<Number> e1 = cb.sum(root.get(attr));
+        Expression<java.lang.Float> expr = root.get(attr);
+        Expression<java.lang.Double> e1 = cb.sumAsDouble(expr);
         cq.select(e1);
 
-        Number num = getEntityManager().createQuery(cq).getSingleResult();
-        BigDecimal bd = new BigDecimal(0);
-        if (num != null) {
-            if (num instanceof BigDecimal) {
-                bd = (BigDecimal) num;
-            }
-            if (num instanceof Integer) {
-                Integer i = (Integer) num;
-                bd = new BigDecimal(i);
-            }
-            if (num instanceof Long) {
-                Long l = (Long) num;
-                bd = new BigDecimal(l);
-            }
-        }
-
-        return bd;
+        Double num = getEntityManager().createQuery(cq).getSingleResult();
+        return new BigDecimal(num);
 
     }
 

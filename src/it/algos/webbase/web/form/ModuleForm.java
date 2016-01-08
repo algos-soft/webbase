@@ -60,28 +60,6 @@ public class ModuleForm extends AForm {
     @Override
     public void postCommit() {
 
-//        // only for new records, let the container create a new item
-//        // and copy the data from the temporary BeanItem to the container's item
-//        if (isNewRecord()) {
-//            Object itemId = getContainer().addItem();
-//            Item newItem = getContainer().getItem(itemId);
-//            Collection ids = newItem.getItemPropertyIds();
-//            for (Object id : ids) {
-//                if (!id.equals(BaseEntity_.id.getName())) {   // don't copy the id property!
-//                    Property pTemp = getItem().getItemProperty(id);
-//                    Property pNew = newItem.getItemProperty(id);
-//                    pNew.setValue(pTemp.getValue());
-//                }
-//            }
-//        }
-//
-//        // make the container persist the changes
-//        Container cont = getContainer();
-//        if (cont instanceof Buffered) {
-//            Buffered buff = (Buffered) cont;
-//            buff.commit();
-//        }
-
         // retrieve the bean
         BaseEntity bean;
         if (isNewRecord()) {

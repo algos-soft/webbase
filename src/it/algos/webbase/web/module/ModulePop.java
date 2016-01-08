@@ -532,10 +532,29 @@ public abstract class ModulePop extends Module {
                     window.close();
 
 
-                    // This is needed to update generated columns in the table.
-                    // (standard columns bound to properties are updated
-                    // automatically when the item changes)
-                    getTable().refreshRowCache();
+                    // after successful editing, if was a new record display only
+                    // the new record in the table, if was a edit refresh the row cache
+                    if(newRecord){
+                        Item item = form.getItem();
+                        if(item instanceof BeanItem){
+                            BeanItem bi = (BeanItem)item;
+                            BaseEntity entity = (BaseEntity)bi.getBean();
+                            long id = entity.getId();
+                            Container cont = getTable().getContainerDataSource();
+                            if(cont instanceof Container.Filterable){
+                                Container.Filterable filterable=(Container.Filterable)cont;
+                                filterable.removeAllContainerFilters();
+                                Filter filter = new Compare.Equal(BaseEntity_.id.getName(), id);
+                                filterable.addContainerFilter(filter);
+                                getTable().select(id);
+                            }
+                        }
+                    }else{
+                        // This is needed to update generated columns in the table.
+                        // (standard columns which are bound to properties are updated
+                        // automatically when the item changes)
+                        getTable().refreshRowCache();
+                    }
 
 
                 }// end of inner method

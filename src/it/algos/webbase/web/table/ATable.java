@@ -15,6 +15,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
@@ -117,10 +118,11 @@ public class ATable extends Table implements ListSelection {
         this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
-                getTable().itemClick(itemClickEvent);
-                selectionChanged(itemClickEvent);
+                itemClick(itemClickEvent);
+//                selectionChanged(itemClickEvent);
             }// end of inner method
         });// end of anonymous inner class
+
 
         // create additional columns
         createAdditionalColumns();
@@ -167,9 +169,10 @@ public class ATable extends Table implements ListSelection {
         fire(TableEvent.created);
     }// end of method
 
-    /**
-     * Called when the component gets attached to the UI
-     */
+
+        /**
+         * Called when the component gets attached to the UI
+         */
     @Override
     public void attach() {
         super.attach();

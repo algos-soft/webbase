@@ -34,6 +34,7 @@ import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
+import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
@@ -70,6 +71,9 @@ public abstract class ModulePop extends Module {
     private String menuLabel = "";
     // icona del modulo (serve nei menu)
     private Resource menuIcon = null;
+    // entity manager del modulo
+    public EntityManager entityManager;
+
 
     /**
      * Costruttore minimo
@@ -111,6 +115,10 @@ public abstract class ModulePop extends Module {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ModulePop(Class entity, String menuLabel, Resource menuIcon) {
         super();
+
+        //create and register the EntityManager
+        entityManager = EM.createEntityManager();
+
         if (menuLabel.equals("")) {
             this.menuLabel = entity.getSimpleName();
         } else {
@@ -1017,4 +1025,8 @@ public abstract class ModulePop extends Module {
     public void setModale(boolean modale) {
         this.modale = modale;
     }//end of setter method
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }// end of class

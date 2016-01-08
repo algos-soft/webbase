@@ -9,7 +9,9 @@ import com.vaadin.ui.Field;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.module.ModulePop;
+import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
+import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import java.util.Collection;
 
@@ -58,27 +60,44 @@ public class ModuleForm extends AForm {
     @Override
     public void postCommit() {
 
-        // only for new records, let the container create a new item
-        // and copy the data from the temporary BeanItem to the container's item
+//        // only for new records, let the container create a new item
+//        // and copy the data from the temporary BeanItem to the container's item
+//        if (isNewRecord()) {
+//            Object itemId = getContainer().addItem();
+//            Item newItem = getContainer().getItem(itemId);
+//            Collection ids = newItem.getItemPropertyIds();
+//            for (Object id : ids) {
+//                if (!id.equals(BaseEntity_.id.getName())) {   // don't copy the id property!
+//                    Property pTemp = getItem().getItemProperty(id);
+//                    Property pNew = newItem.getItemProperty(id);
+//                    pNew.setValue(pTemp.getValue());
+//                }
+//            }
+//        }
+//
+//        // make the container persist the changes
+//        Container cont = getContainer();
+//        if (cont instanceof Buffered) {
+//            Buffered buff = (Buffered) cont;
+//            buff.commit();
+//        }
+
+        // retrieve the bean
+        Object bean;
         if (isNewRecord()) {
-            Object itemId = getContainer().addItem();
-            Item newItem = getContainer().getItem(itemId);
-            Collection ids = newItem.getItemPropertyIds();
-            for (Object id : ids) {
-                if (!id.equals(BaseEntity_.id.getName())) {   // don't copy the id property!
-                    Property pTemp = getItem().getItemProperty(id);
-                    Property pNew = newItem.getItemProperty(id);
-                    pNew.setValue(pTemp.getValue());
-                }
-            }
+            BeanItem item = (BeanItem)getItem();
+            bean = item.getBean();
+        }else{
+            CompositeItem compItem = (CompositeItem) getItem();
+            BeanItem beanItem = (BeanItem) compItem.getItem("bean");
+            bean = beanItem.getBean();
         }
 
-        // make the container persist the changes
-        Container cont = getContainer();
-        if (cont instanceof Buffered) {
-            Buffered buff = (Buffered) cont;
-            buff.commit();
-        }
+        // merge the bean (creates or updates the record(s) in the db)
+        EntityManager em = getModule().getEntityManager();
+        em.getTransaction().begin();
+        em.merge(bean);
+        em.getTransaction().commit();
 
     }
 

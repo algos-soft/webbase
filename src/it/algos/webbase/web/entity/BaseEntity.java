@@ -3,6 +3,8 @@ package it.algos.webbase.web.entity;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -271,6 +273,8 @@ public abstract class BaseEntity implements Serializable {
 
 		return  sProp;
 	}
+
+
 
 
 }// end of class

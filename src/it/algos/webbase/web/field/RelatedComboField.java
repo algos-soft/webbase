@@ -4,6 +4,7 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -11,21 +12,16 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
+import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
-import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
-import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
 
 @SuppressWarnings("serial")
 public class RelatedComboField extends ComboBox implements FieldInterface<Object> {
@@ -36,7 +32,6 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     public static final int EDIT_TYPE_BOTH = 3;
 
     private ArrayList<RecordEditedListener> listeners = new ArrayList();
-
 
     @SuppressWarnings("rawtypes")
     private Class entityClass;
@@ -58,10 +53,11 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void init() {
+        initField();
+
         //create and register the EntityManager
         entityManager = EM.createEntityManager();
 
-        initField();
         Container cont = createContainer();
         setContainerDataSource(cont);
         sortContainer(cont);
@@ -84,7 +80,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     @SuppressWarnings("unchecked")
     protected Container createContainer() {
 //        JPAContainer cont = JPAContainerFactory.makeReadOnly(getEntityClass(), entityManager);
-        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), entityManager);
+        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), getEntityManager());
 //        JPAContainer cont = JPAContainerFactory.makeBatchable(getEntityClass(), entityManager);
 //        cont.setAutoCommit(false);
 
@@ -243,14 +239,10 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         return entityClass;
     }
 
-//    public BaseEntity getBaseEntityClass() {
-//        if(entityClass instanceof BaseEntity){
-//
-//        }
-//        return null;
-//    }
 
-
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 
     public void setAlignment(FieldAlignment alignment) {
     }
@@ -346,9 +338,9 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         this.listeners.add(listener);
     }// end of method
 
-    protected void fire(BeanItem bi, boolean newRecord) {
+    protected void fire(Item item, boolean newRecord) {
         for (RecordEditedListener l : listeners) {
-            l.save_(bi, newRecord);
+            l.save_(item, newRecord);
         }
 
     }// end of method
@@ -359,10 +351,10 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
          * The record has been saved after being edited in the form.
          * <p>
          *
-         * @param bi        the saved bean
+         * @param item        the saved item
          * @param newRecord true for new record, false for editing existing record
          */
-        public void save_(BeanItem bi, boolean newRecord);
+        public void save_(Item item, boolean newRecord);
     }
 
 }

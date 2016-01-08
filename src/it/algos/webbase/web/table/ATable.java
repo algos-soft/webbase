@@ -43,7 +43,6 @@ import java.util.*;
 public class ATable extends Table implements ListSelection {
 
     protected ModulePop modulo;
-    protected EntityManager entityManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
@@ -82,8 +81,8 @@ public class ATable extends Table implements ListSelection {
 
     protected void init() {
 
-        //create and register the EntityManager
-        entityManager = EM.createEntityManager();
+//        //create and register the EntityManager
+//        entityManager = EM.createEntityManager();
 
         // create and set the container - read-only and cached
         // all the columns are added automatically to the table
@@ -212,7 +211,7 @@ public class ATable extends Table implements ListSelection {
      * @return the container
      */
     protected Container createContainer() {
-        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(entityManager, getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
+        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), 100, BaseEntity_.id.getName(), true, true, true);
         entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return entityContainer;
     }// end of method
@@ -998,7 +997,7 @@ public class ATable extends Table implements ListSelection {
      * @return the Attribute from the metamodel
      */
     private Attribute getAttributeByName(String name) {
-        Metamodel metamodel = entityManager.getMetamodel();
+        Metamodel metamodel = getEntityManager().getMetamodel();
         Set<EntityType<?>> entities = metamodel.getEntities();
         EntityType<?> entityType = null;
         for (EntityType<?> eType : entities) {
@@ -1026,7 +1025,7 @@ public class ATable extends Table implements ListSelection {
      */
     private BigDecimal calcTotal(SingularAttribute attr) {
 
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Number> cq = cb.createQuery(Number.class);
         Root root = cq.from(getEntityClass());
 
@@ -1038,7 +1037,7 @@ public class ATable extends Table implements ListSelection {
         Expression<Number> e1 = cb.sum(root.get(attr));
         cq.select(e1);
 
-        Number num = entityManager.createQuery(cq).getSingleResult();
+        Number num = getEntityManager().createQuery(cq).getSingleResult();
         BigDecimal bd = new BigDecimal(0);
         if (num != null) {
             if (num instanceof BigDecimal) {
@@ -1384,6 +1383,10 @@ public class ATable extends Table implements ListSelection {
 
     protected ATable getTable() {
         return this;
+    }
+
+    public EntityManager getEntityManager() {
+        return getModule().getEntityManager();
     }
 
 }// end of class

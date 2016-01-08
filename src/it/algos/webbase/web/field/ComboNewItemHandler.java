@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 
 import com.vaadin.data.Item;
@@ -62,8 +63,8 @@ public class ComboNewItemHandler implements NewItemHandler {
 		addRecordEditedListener(new ComboNewItemHandler.RecordEditedListener() {
 
 			@Override
-			public void save_(BeanItem bi, boolean newRecord) {
-				field.fire(bi, newRecord);
+			public void save_(Item item, boolean newRecord) {
+				field.fire(item, newRecord);
 			}
 		});
 
@@ -73,9 +74,11 @@ public class ComboNewItemHandler implements NewItemHandler {
 	@Override
 	public void addNewItem(String newItemCaption) {
 
-		// create the new bean item
+		// create the new item
 		Object bean = createBean();
 		BeanItem item = new BeanItem(bean);
+//		Object itemId=field.getContainerDataSource().addItem();
+//		Item item=field.getContainerDataSource().getItem(itemId);
 
 		// write the caption to the appropriate property
 		if(newItemCaption!=null){
@@ -103,7 +106,7 @@ public class ComboNewItemHandler implements NewItemHandler {
 	}
 	
 	
-	protected void editItem(BeanItem item, final boolean newRecord){
+	protected void editItem(Item item, final boolean newRecord){
 
 		// check that the form class exists
 		if (formClass == null) {
@@ -142,37 +145,39 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
-				//bean.save();
+
+				EntityManager em = field.getEntityManager();
+				em.getTransaction().begin();
+				BaseEntity merged = em.merge(bean);
+				em.getTransaction().commit();
 				window.close();
 
 				Container cont = field.getContainerDataSource();
-				Object itemId=cont.addItem();
-				Item newItem=cont.getItem(itemId);
-				for(Object id : item.getItemPropertyIds()){
-					if(!id.equals(BaseEntity_.id.getName())){
-						Object value=item.getItemProperty(id).getValue();
-						newItem.getItemProperty(id).setValue(value);
-					}
-				}
+//				Object itemId=cont.addItem();
+//				Item newItem=cont.getItem(itemId);
+//				for(Object id : item.getItemPropertyIds()){
+//					if(!id.equals(BaseEntity_.id.getName())){
+//						Object value=item.getItemProperty(id).getValue();
+//						newItem.getItemProperty(id).setValue(value);
+//					}
+//				}
 
 
 				if (cont instanceof JPAContainer) {
 					JPAContainer jpac=(JPAContainer)cont;
-//					jpac.addEntity();
-//					cont.addItem(item);
-//					((JPAContainer) cont).refresh();
-//					((JPAContainer) cont).commit();
-				}
-				if (cont instanceof LazyEntityContainer) {
-					((LazyEntityContainer) cont).refresh();
-//					((LazyEntityContainer) cont).commit();
+					jpac.refresh();
 				}
 
-//				long id = bean.getId();
-				Object id = newItem.getItemProperty(BaseEntity_.id.getName()).getValue();
+//				if (cont instanceof LazyEntityContainer) {
+//					((LazyEntityContainer) cont).refresh();
+////					((LazyEntityContainer) cont).commit();
+//				}
+
+				// select the newly created entity in the combo
+				long id = merged.getId();
 				field.setValue(id);
 
-				fire(new BeanItem(bean), newRecord);
+				fire(item, newRecord);
 			}
 
 			@Override
@@ -198,8 +203,11 @@ public class ComboNewItemHandler implements NewItemHandler {
 		editItem(bi, false);
 	}
 
+	/**
+	 * Extract the Bean from a BeanItem
+	 */
 	@SuppressWarnings("rawtypes")
-	private BaseEntity itemToBean(Item item) {
+	public BaseEntity itemToBean(Item item) {
 		BaseEntity entity = null;
 		if (item instanceof BeanItem) {
 			Object bean = ((BeanItem) item).getBean();
@@ -215,15 +223,15 @@ public class ComboNewItemHandler implements NewItemHandler {
 		this.listeners.add(listener);
 	}// end of method
 	
-	protected void fire(BeanItem bi, boolean newRecord) {
+	protected void fire(Item item, boolean newRecord) {
 		for (RecordEditedListener l : listeners) {
-			l.save_(bi, newRecord);
+			l.save_(item, newRecord);
 		}
 	}// end of method
 
 	
 	public interface RecordEditedListener {
-		public void save_(BeanItem bi, boolean newRecord);
+		public void save_(Item item, boolean newRecord);
 	}
 
 }

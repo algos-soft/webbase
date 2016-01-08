@@ -3,13 +3,10 @@ package it.algos.webbase.web.table;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Primitives;
 import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.JPAContainerItem;
 import com.vaadin.data.Container;
-import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
@@ -18,13 +15,13 @@ import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
+import it.algos.webbase.web.lib.LibEvent;
 import it.algos.webbase.web.lib.LibFilter;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
@@ -41,35 +38,35 @@ import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 @SuppressWarnings("serial")
-public class ATable extends Table implements ListSelection {
+//public class ATable extends Table implements ListSelection {
+public class ATable extends Table {
 
     protected ModulePop modulo;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
     protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
-    protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList<TotalizableColumn>();
-    private ArrayList<TableListener> listeners = new ArrayList<TableListener>();
-
-    /**
-     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
-     */
-    private ArrayList<ListSelectionListener> selectionListeners = new ArrayList<>();
+    protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList();
+    private ArrayList<TableListener> listeners = new ArrayList();
+    private ArrayList<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
 
 
-    /**
-     * Creates a new table for a given Entity class.
-     *
-     * @param entityClass the Entity class
-     */
-    public ATable(Class<?> entityClass) {
-        super();
-        this.entityClass = entityClass;
-        init();
-    }// end of constructor
+//    /**
+//     * Creates a new table for a given Entity class.
+//     *
+//     * @param entityClass the Entity class
+//     */
+//    public ATable(Class<?> entityClass) {
+//        super();
+//        this.entityClass = entityClass;
+//        init();
+//    }// end of constructor
 
     /**
      * Creates a new table for a given module.
@@ -81,15 +78,11 @@ public class ATable extends Table implements ListSelection {
         this.modulo = module;
         this.entityClass = module.getEntityClass();
         init();
-    }// end of constructor
+    }
 
     protected void init() {
 
-//        //create and register the EntityManager
-//        entityManager = EM.createEntityManager();
-
-        // create and set the container - read-only and cached
-        // all the columns are added automatically to the table
+        // setup the container
         Container container = createContainer();
         setContainerDataSource(container);
         addPropertiesToContainer();
@@ -106,25 +99,32 @@ public class ATable extends Table implements ListSelection {
 
                 @Override
                 public void containerItemSetChange(Container.ItemSetChangeEvent event) {
+
                     updateTotals();
 
                     // fire table data changed
                     fire(TableEvent.datachange);
 
-                }// end of inner method
-            });// end of anonymous inner class
+                }
+            });
 
         }
 
         // adds a listener for mouse click to the table
-        this.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+        addItemClickListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
                 getTable().itemClick(itemClickEvent);
-                selectionChanged(itemClickEvent);
-            }// end of inner method
-        });// end of anonymous inner class
+            }
+        });
 
+        // adds a listener for user selection changes
+        addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                getTable().valueChange(event);
+            }
+        });
 
         // create additional columns
         createAdditionalColumns();
@@ -149,28 +149,51 @@ public class ATable extends Table implements ListSelection {
                     actions = new Action[2];
                     actions[0] = actionEdit;
                     actions[1] = actionDelete;
-                }// end of if cycle
+                }
                 return actions;
-            }// end of inner method
+            }
 
             public void handleAction(Action action, Object sender, Object target) {
                 if (action.equals(actionEdit)) {
                     if (modulo != null) {
                         modulo.edit();
-                    }// end of if cycle
-                }// end of if cycle
+                    }
+                }
+                
                 if (action.equals(actionDelete)) {
                     if (modulo != null) {
                         modulo.delete();
-                    }// end of if cycle
-                }// end of if cycle
-            }// end of inner method
-        });// end of anonymous inner class
+                    }
+                }
+            }
+        });
 
         // fire table created
         fire(TableEvent.created);
-    }// end of method
+        
+    }
 
+
+
+    /**
+     * Action when a user click the table
+     * Must be overridden on the subclass
+     *
+     * @param itemClickEvent the event
+     */
+    public void itemClick(ItemClickEvent itemClickEvent) {
+    }
+
+    /**
+     * Invoked when the user selection changes
+     */
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property prop=event.getProperty();
+        Set<Long> rows = (Set<Long>)prop.getValue();
+        ListSelectionChangeEvent e = new ListSelectionChangeEvent(rows);
+        fireSelectionChanged(e);
+    }
 
     /**
      * Called when the component gets attached to the UI
@@ -192,7 +215,7 @@ public class ATable extends Table implements ListSelection {
         // fire table data changed
         fire(TableEvent.datachange);
 
-    }// end of method
+    }
 
 
     public ModulePop getModule() {
@@ -209,7 +232,7 @@ public class ATable extends Table implements ListSelection {
 //    protected Container createContainer() {
 //        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
 //        return cont;
-//    }// end of method
+//    }
 
 
     /**
@@ -223,14 +246,14 @@ public class ATable extends Table implements ListSelection {
         LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), getContainerPageSize(), BaseEntity_.id.getName(), true, true, true);
         entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return entityContainer;
-    }// end of method
+    }
 
     /**
      * Returns the paging size for the container.
      * Warning: above the size of 1.000 you start to get errors!!
      *
      * @return the container's paging size
-     * @see https://vaadin.com/forum/#!/thread/186858/186857
+     * vaadin.com/forum/#!/thread/186858/186857
      */
     protected int getContainerPageSize() {
         return 1000;
@@ -306,7 +329,7 @@ public class ATable extends Table implements ListSelection {
             }
 
         }
-    }// end of method
+    }
 
 
     /**
@@ -331,19 +354,19 @@ public class ATable extends Table implements ListSelection {
             String cName = "";
             if (obj instanceof Attribute) {
                 cNames.add(((Attribute<?, ?>) obj).getName());
-            }// end of if cycle
+            }
             if (obj instanceof String) {
                 cNames.add((String) obj);
-            }// end of if cycle
+            }
             if (!cName.equals("")) {
                 cNames.add(cName);
-            }// end of if cycle
-        }// end of for cycle
+            }
+        }
 
         Object[] outNames = cNames.toArray(new String[0]);
         this.setVisibleColumns(outNames);
 
-    }// end of method
+    }
 
     /**
      * Set the default alignments based on item class
@@ -356,10 +379,10 @@ public class ATable extends Table implements ListSelection {
                 Table.Align align = getAlignment(sid);
                 if (align != null) {
                     setColumnAlignment(id, align);
-                }// end of if cycle
-            }// end of if cycle
-        }// end of for cycle
-    }// end of method
+                }
+            }
+        }
+    }
 
     /**
      * Sets the column header for the specified column;
@@ -370,25 +393,25 @@ public class ATable extends Table implements ListSelection {
     public void setColumnHeader(Object propertyId, String header) {
         if (propertyId instanceof Attribute) {
             propertyId = ((Attribute<?, ?>) propertyId).getName();
-        }// end of if cycle
+        }
         super.setColumnHeader(propertyId, header);
-    }// end of method
+    }
 
     @Override
     public void setColumnAlignment(Object propertyId, Align alignment) {
         if (propertyId instanceof Attribute) {
             propertyId = ((Attribute<?, ?>) propertyId).getName();
-        }// end of if cycle
+        }
         super.setColumnAlignment(propertyId, alignment);
-    }// end of method
+    }
 
     @Override
     public void setColumnWidth(Object propertyId, int width) {
         if (propertyId instanceof Attribute) {
             propertyId = ((Attribute<?, ?>) propertyId).getName();
-        }// end of if cycle
+        }
         super.setColumnWidth(propertyId, width);
-    }// end of method
+    }
 
 
 //    /**
@@ -406,16 +429,16 @@ public class ATable extends Table implements ListSelection {
 //        if (useTotals) {
 //            if (!totalizableColumns.contains(tcol)) {
 //                totalizableColumns.add(tcol);
-//            }// end of if cycle
+//            }
 //        } else {
 //            totalizableColumns.remove(tcol);
-//        }// end of if/else cycle
+//        }
 //
 //        // the first call with useTotals=true activates automatically the footer
 //        if (useTotals) {
 //            setFooterVisible(true);
-//        }// end of if cycle
-//    }// end of method
+//        }
+//    }
 
 
     /**
@@ -433,16 +456,16 @@ public class ATable extends Table implements ListSelection {
         if (useTotals) {
             if (!totalizableColumns.contains(tcol)) {
                 totalizableColumns.add(tcol);
-            }// end of if cycle
+            }
         } else {
             totalizableColumns.remove(tcol);
-        }// end of if/else cycle
+        }
 
         // the first call with useTotals=true activates automatically the footer
         if (useTotals) {
             setFooterVisible(true);
-        }// end of if cycle
-    }// end of method
+        }
+    }
 
     /**
      * Adds/removes a column to the list of totalizable columns<br>
@@ -454,7 +477,7 @@ public class ATable extends Table implements ListSelection {
      */
     public void setColumnUseTotals(Object propertyId, boolean useTotals) {
         setColumnUseTotals(propertyId, useTotals, -1);
-    }// end of method
+    }
 
 
     /**
@@ -469,9 +492,9 @@ public class ATable extends Table implements ListSelection {
         Attribute[] fieldList = new Attribute[0];
         if (modulo != null) {
             fieldList = modulo.getFieldsList();
-        }// end of if cycle
+        }
         return fieldList;
-    }// end of method
+    }
 
     /**
      * Returns the alignment for a given column.
@@ -493,21 +516,21 @@ public class ATable extends Table implements ListSelection {
 
                     if ((Boolean.class).isAssignableFrom(clazz)) {
                         align = Table.Align.CENTER;
-                    }// end of if cycle
+                    }
 
                     if ((Number.class).isAssignableFrom(clazz)) {
                         align = Table.Align.RIGHT;
-                    }// end of if cycle
+                    }
 
-                }// end of if cycle
+                }
 
             } catch (NoSuchFieldException | SecurityException e) {
             }
-        }// end of if cycle
+        }
 
         return align;
 
-    }// end of method
+    }
 
     /**
      * Returns the ids of the single selected row
@@ -527,18 +550,18 @@ public class ATable extends Table implements ListSelection {
                 Collection<Long> cIds = (Collection<Long>) ids;
                 if (cIds.size() == 1) {
                     selectedId = Iterables.get(cIds, 0);
-                }// end of if cycle
-            }// end of if cycle
+                }
+            }
 
             // if multi select is disabled
             if (ids instanceof Long) {
                 selectedId = ids;
-            }// end of if cycle
+            }
 
-        }// end of if cycle
+        }
 
         return selectedId;
-    }// end of method
+    }
 
     /**
      * Returns the ids of the single selected row
@@ -557,18 +580,18 @@ public class ATable extends Table implements ListSelection {
                 Collection<Long> cIds = (Collection<Long>) ids;
                 if (cIds.size() == 1) {
                     selectedId = Iterables.get(cIds, 0);
-                }// end of if cycle
-            }// end of if cycle
+                }
+            }
 
             // if multi select is disabled
             if (ids instanceof Long) {
                 selectedId = (Long) ids;
-            }// end of if cycle
+            }
 
-        }// end of if cycle
+        }
 
         return selectedId;
-    }// end of method
+    }
 
     /**
      * Returns the ids of the selected rows
@@ -597,10 +620,10 @@ public class ATable extends Table implements ListSelection {
                 selected[0] = ids;
             }
 
-        }// end of if cycle
+        }
 
         return selected;
-    }// end of method
+    }
 
     /**
      * Controlla se è selezionata una ed una sola riga
@@ -612,51 +635,9 @@ public class ATable extends Table implements ListSelection {
     public boolean isSingleRowSelected() {
         Long idKey = this.getSelectedKey();
         return (idKey != null && idKey > 0);
-    }// end of method
+    }
 
-    // /**
-    // * Returns the ids of the selected row
-    // * <p>
-    // * Use for single-select tables
-    // * @return the selected row id (if a single row is selected, otherwise -1)
-    // */
-    // public long getSelectedIdOld() {
-    // long rowId = -1;
-    // Object ids = getValue();
-    // if (ids != null) {
-    //
-    // // if multi select is enabled
-    // if (ids instanceof Collection) {
-    // Collection<Long> cIds = (Collection<Long>) ids;
-    // if (cIds.size() == 1) {
-    // rowId = (long) Iterables.get(cIds, 0);
-    // }// end of if cycle
-    // }// end of if cycle
-    //
-    // // if multi select is disabled
-    // if (ids instanceof Long) {
-    // rowId = (long) ids;
-    // }// end of if cycle
-    //
-    // }// end of if cycle
-    //
-    // return rowId;
-    // }// end of method
 
-//    /**
-//     * Return the selected bean
-//     */
-//    public Object getSelectedBean() {
-//        Object bean = null;
-//        Object id = getSelectedId();
-//        if (id != null) {
-//            BeanItem<?> bi = getBeanItem(id);
-//            if (bi != null) {
-//                bean = bi.getBean();
-//            }// end of if cycle
-//        }
-//        return bean;
-//    }// end of method
 
     /**
      * Return the selected entity
@@ -668,27 +649,9 @@ public class ATable extends Table implements ListSelection {
             entity = getEntity(id);
         }
         return entity;
-    }// end of method
+    }
 
 
-//    /**
-//     * Return the selected beans (multiple selection)
-//     */
-//    public BeanItem[] getSelectedBeans() {
-//        BeanItem[] selected = new BeanItem[0];
-//        Object[] ids = getSelectedIds();
-//        if (ids != null) {
-//            ArrayList<BeanItem> objSel = new ArrayList<BeanItem>();
-//            for (Object id : ids) {
-//                BeanItem<?> bi = getBeanItem(id);
-//                if (bi != null) {
-//                    objSel.add(bi);
-//                }
-//            }
-//            selected = objSel.toArray(new BeanItem[0]);
-//        }
-//        return selected;
-//    }// end of method
 
 
     /**
@@ -713,31 +676,6 @@ public class ATable extends Table implements ListSelection {
     }
 
 
-//    /**
-//     * @param rowId the row id
-//     * @return the new BeanItem
-//     */
-//    public BeanItem<Object> getBeanItem(Object rowId) {
-//        BeanItem<Object> bi = null;
-//        Item item = getItem(rowId);
-//        if (item != null) {
-//
-//            Container cont = getContainerDataSource();
-//            if(cont instanceof LazyEntityContainer){
-//                LazyEntityContainer lec = (LazyEntityContainer)cont;
-//                lec.getEntity(rowId);
-//            }
-//
-//            if (item instanceof JPAContainerItem) {
-//                JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
-//                Object entity = jpaItem.getEntity();
-//                bi = new BeanItem<Object>(entity);
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        return bi;
-//    }// end of method
-//
 
     /**
      * Returns the entity given a row id.
@@ -760,7 +698,7 @@ public class ATable extends Table implements ListSelection {
                 if (item instanceof JPAContainerItem) {
                     JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
                     entity = (BaseEntity) jpaItem.getEntity();
-                }// end of if cycle
+                }
             }
         }
 
@@ -785,7 +723,7 @@ public class ATable extends Table implements ListSelection {
                 lec.refresh();
             }
         }
-    }// end of method
+    }
 
     public Class<?> getEntityClass() {
         return entityClass;
@@ -824,7 +762,7 @@ public class ATable extends Table implements ListSelection {
     @Override
     protected String formatPropertyValue(Object rowId, Object colId, Property<?> property) {
         String string = null;
-        Object value = null;
+        Object value;
 
         // Format for Dates
         if (property.getType() == Date.class) {
@@ -834,7 +772,7 @@ public class ATable extends Table implements ListSelection {
             } catch (Exception e) {
                 // TODO: handle exception
             }
-        }// end of if cycle
+        }
 
         // Format for Booleans
         if (property.getType() == Boolean.class) {
@@ -844,66 +782,19 @@ public class ATable extends Table implements ListSelection {
             if (value != null && value instanceof Boolean) {
                 if ((boolean) value) {
                     string = "\u2714";
-                }// end of if cycle
+                }
             }
 
-        }// end of if cycle
+        }
 
         // none of the above
         if (string == null) {
             string = super.formatPropertyValue(rowId, colId, property);
-        }// end of if cycle
+        }
 
         return string;
-    }// end of method
+    }
 
-//    /**
-//     * Updates the totals in the footer
-//     * <p/>
-//     * Called when the container data changes
-//     * todo - se si usa un database questa implementazione è micidiale, spazzola tutte le righe!!!
-//     * todo - va riscritta usando delle JPQ CriteriaQuery
-//     * todo - attualmente il problema è che i filtri sono oggetti Container.Filter e non
-//     * todo - sono compatibili con CriteriaQuery
-//     */
-//    @SuppressWarnings("rawtypes")
-//    protected void updateTotals() {
-//        // Collection ids = getJPAContainer().getItemIds();
-//
-//        if (totalizableColumns.size() > 0) {
-//
-//            // maps the totals to the property ids
-//            HashMap<Object, BigDecimal> totalsMap = new HashMap<Object, BigDecimal>();
-//
-//            Collection<?> ids = getContainerDataSource().getItemIds();
-//
-//            // cycle all the rows
-//            for (Object itemId : ids) {
-//
-//                // cycle the totalizable columns
-//                for (TotalizableColumn column : totalizableColumns) {
-//                    Object propertyId = column.getPropertyId();
-//                    Property<?> prop = getContainerDataSource().getContainerProperty(itemId, propertyId);
-//                    if (prop != null) {
-//                        addToTotals(totalsMap, propertyId, prop);
-//                    }// end of if cycle
-//                }// end of for cycle
-//            }// end of for cycle
-//
-//            // places the totals in the target columns
-//            StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
-//            for (Object propertyId : totalsMap.keySet()) {
-//                BigDecimal total = totalsMap.get(propertyId);
-//                int places = genNumDecimalPlacesForTotalColumn(propertyId);
-//                converter.setDecimalPlaces(places);
-//                String sTotal = converter.convertToPresentation(total);
-//                setColumnFooter(propertyId, sTotal);
-//            }// end of for cycle
-//
-//        }
-//
-//
-//    }// end of method
 
 
     /**
@@ -928,66 +819,6 @@ public class ATable extends Table implements ListSelection {
 
     }
 
-
-//    /**
-//     * Adds a total to the Totals map
-//     *
-//     * @param map        the totals map
-//     * @param propertyId the id of the Property
-//     * @param prop       ???
-//     */
-//    protected void addToTotals(HashMap<Object, BigDecimal> map, Object propertyId, Property<?> prop) {
-//
-//        // add the key if absent
-//        if (!map.containsKey(propertyId)) {
-//            map.put(propertyId, new BigDecimal(0));
-//        }
-//
-//        BigDecimal currentValue = map.get(propertyId);
-//
-//        // retrieve the value as BigDecimal
-//        Object value = prop.getValue();
-//        BigDecimal valueToAdd = new BigDecimal(0);
-//        if (value != null) {
-//            Class<?> type = prop.getType();
-//            if (type.equals(Integer.class)) {
-//                valueToAdd = new BigDecimal((Integer) value);
-//            }// end of if cycle
-//            if (type.equals(Long.class)) {
-//                valueToAdd = new BigDecimal((Long) value);
-//            }// end of if cycle
-//            if (type.equals(Double.class)) {
-//                valueToAdd = new BigDecimal((Double) value);
-//            }// end of if cycle
-//            if (type.equals(BigDecimal.class)) {
-//                valueToAdd = (BigDecimal) value;
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        // add the new value and re-put the value in the map
-//        currentValue = currentValue.add(valueToAdd);
-//        map.put(propertyId, currentValue);
-//
-//    }// end of method
-
-//    /**
-//     * Returns the number of decimal places in totalizable columns for a given
-//     * totalizable column
-//     * <p/>
-//     *
-//     * @param propertyId the property id
-//     * @return the number of decimal places
-//     */
-//    protected int genNumDecimalPlacesForTotalColumn(Object propertyId) {
-//        int places = 0;
-//        for (TotalizableColumn t : totalizableColumns) {
-//            if (t.getPropertyId().equals(propertyId)) {
-//                places = t.getDecimalPlaces();
-//                break;
-//            }// end of if cycle
-//        }// end of for cycle
-//        return places;
-//    }// end of method
 
 
     /**
@@ -1023,8 +854,8 @@ public class ATable extends Table implements ListSelection {
             if (type.equals(getEntityClass())) {
                 entityType = eType;
                 break;
-            }// end of if cycle
-        }// end of for cycle
+            }
+        }
 
         Attribute attr = null;
         if (entityType != null) {
@@ -1033,47 +864,6 @@ public class ATable extends Table implements ListSelection {
 
         return attr;
     }
-
-
-//    /**
-//     * Calculate the total for a single column.
-//     *
-//     * @param attr the attribute
-//     * @return the total for the currently displayed rows
-//     */
-//    private BigDecimal calcTotal(SingularAttribute attr) {
-//
-//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-//        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
-//        Root root = cq.from(getEntityClass());
-//
-//        Predicate pred = getFiltersPredicate(cb, cq, root);
-//        if (pred != null) {
-//            cq.where(pred);
-//        }
-//
-//        Expression<Number> e1 = cb.sum(root.get(attr));
-//        cq.select(e1);
-//
-//        Number num = getEntityManager().createQuery(cq).getSingleResult();
-//        BigDecimal bd = new BigDecimal(0);
-//        if (num != null) {
-//            if (num instanceof BigDecimal) {
-//                bd = (BigDecimal) num;
-//            }
-//            if (num instanceof Integer) {
-//                Integer i = (Integer) num;
-//                bd = new BigDecimal(i);
-//            }
-//            if (num instanceof Long) {
-//                Long l = (Long) num;
-//                bd = new BigDecimal(l);
-//            }
-//        }
-//
-//        return bd;
-//
-//    }
 
 
     /**
@@ -1148,21 +938,13 @@ public class ATable extends Table implements ListSelection {
     }
 
 
-    /**
-     * Action when a user click the table
-     * Must be overridden on the subclass
-     *
-     * @param itemClickEvent the event
-     */
-    public void itemClick(ItemClickEvent itemClickEvent) {
-    }// end of method
 
     /**
      * Add a form listener to the form
      */
     public void addTableListener(TableListener listener) {
         listeners.add(listener);
-    }// end of method
+    }
 
     protected void fire(TableEvent event) {
         for (TableListener l : listeners) {
@@ -1179,8 +961,8 @@ public class ATable extends Table implements ListSelection {
                 default:
                     break;
             }// end of switch cycle
-        }// end of for cycle
-    }// end of method
+        }
+    }
 
 
     /**
@@ -1188,9 +970,8 @@ public class ATable extends Table implements ListSelection {
      */
     public long getTotalRows() {
         Class<?> clazz = getEntityClass();
-        long rows = AQuery.getCount(clazz);
-        return rows;
-    }// end of method
+        return  AQuery.getCount(clazz);
+    }
 
 
     /**
@@ -1198,24 +979,24 @@ public class ATable extends Table implements ListSelection {
      */
     public int getVisibleRows() {
         return getContainerDataSource().size();
-    }// end of method
+    }
 
-    @Override
-    public void addListListener(ListSelectionListener list) {
-        selectionListeners.add(list);
-    }// end of method
+//    @Override
+//    public void addListListener(ListSelectionListener list) {
+//        selectionListeners.add(list);
+//    }
 
-    @Override
-    public void removeAllListListeners() {
-        selectionListeners.clear();
-    }// end of method
+//    @Override
+//    public void removeAllListListeners() {
+//        selectionListeners.clear();
+//    }
 
 
-    @Override
-    public void setListListener(ListSelectionListener list) {
-        removeAllListListeners();
-        addListListener(list);
-    }// end of method
+//    @Override
+//    public void setListListener(ListSelectionListener list) {
+//        removeAllListListeners();
+//        addListListener(list);
+//    }
 
 
     /**
@@ -1224,7 +1005,7 @@ public class ATable extends Table implements ListSelection {
     public void deselectAll() {
         setValue(null);
         selectionChanged(null);
-    }// end of method
+    }
 
     /**
      * Removes the selected rows from the table
@@ -1236,8 +1017,8 @@ public class ATable extends Table implements ListSelection {
             Filter filter = new Not(createFilterForSelectedRows());
             cFilterable.addContainerFilter(filter);
             refresh();
-        }// end of if cycle
-    }// end of method
+        }
+    }
 
     /**
      * Shows in the table only the selected rows
@@ -1250,9 +1031,9 @@ public class ATable extends Table implements ListSelection {
             cFilterable.removeAllContainerFilters();
             cFilterable.addContainerFilter(filter);
             refresh();
-        }// end of if cycle
+        }
 
-    }// end of method
+    }
 
 
     /**
@@ -1264,8 +1045,8 @@ public class ATable extends Table implements ListSelection {
             Container.Filterable cFilterable = (Container.Filterable) cont;
             cFilterable.removeAllContainerFilters();
             refresh();
-        }// end of if cycle
-    }// end of method
+        }
+    }
 
 
     /**
@@ -1281,7 +1062,7 @@ public class ATable extends Table implements ListSelection {
             for (Object id : ids) {
                 filters[idx] = new Compare.Equal("id", id);
                 idx++;
-            }// end of for cycle
+            }
 
             if (filters.length > 1) {
                 filter = new Or(filters);
@@ -1290,114 +1071,209 @@ public class ATable extends Table implements ListSelection {
             }
         }
         return filter;
-    }// end of method
+    }
+
+//    /**
+//     * Evento generato quando si modifica la selezione delle righe
+//     * <p>
+//     * Informa (tramite listener) chi è interessato <br>
+//     */
+//    public void selectionChanged(ItemClickEvent itemClickEvent) {
+//        ListSelectionEvent evento;
+//        Object id;
+//        Long longKey;
+//        int intKeyOld;
+//        int intKeyNew = 0;
+//        int firstIndex = 0;
+//        int lastIndex = 0;
+//
+//        if (itemClickEvent == null) {
+//            evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+//            fireListSelectionEvent(evento);
+//            return;
+//        }
+//
+//        id = itemClickEvent.getItemId();
+//        if (id instanceof Long) {
+//            intKeyNew = ((Long) id).intValue();
+//        }
+//
+//        if (itemClickEvent.isDoubleClick()) {
+//            return;
+//        }
+//
+//        if (itemClickEvent.isCtrlKey()) {
+//            return;
+//        }
+//
+//        // selezione discontinua
+//        if (itemClickEvent.isMetaKey()) {
+//            return;
+//        }
+//
+//        // selezione continua
+//        if (itemClickEvent.isShiftKey()) {
+//            // c'era una sola riga selezionata precedentemente
+//            if (isSingleRowSelected()) {
+//                longKey = getSelectedKey();
+//                intKeyOld = longKey.intValue();
+//
+//                if (intKeyNew > intKeyOld) {
+//                    firstIndex = intKeyOld;
+//                    lastIndex = intKeyNew;
+//                } else {
+//                    firstIndex = intKeyNew;
+//                    lastIndex = intKeyOld;
+//                }
+//            }
+//        }
+//
+//        // selezione singola
+//        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
+//            id = itemClickEvent.getItemId();
+//            if (id instanceof Long) {
+//                firstIndex = ((Long) id).intValue();
+//                lastIndex = ((Long) id).intValue();
+//            }
+//        }
+//
+//        // crea l'evento
+//        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+//
+//        // notify all the listeners
+//        fireListSelectionEvent(evento);
+//    }
+
+
 
     /**
      * Evento generato quando si modifica la selezione delle righe
      * <p>
      * Informa (tramite listener) chi è interessato <br>
      */
-    public void selectionChanged(ItemClickEvent itemClickEvent) {
+    public void selectionChanged(Property.ValueChangeEvent event) {
         ListSelectionEvent evento;
         Object id;
         Long longKey;
         int intKeyOld;
         int intKeyNew = 0;
-        Object[] selez;
         int firstIndex = 0;
         int lastIndex = 0;
 
-        if (itemClickEvent == null) {
-            evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
-            fireSelectionListener(evento);
-            return;
-        }// end of if cycle
+//        id = itemClickEvent.getItemId();
+//        if (id instanceof Long) {
+//            intKeyNew = ((Long) id).intValue();
+//        }
+//
+//        if (itemClickEvent.isDoubleClick()) {
+//            return;
+//        }
+//
+//        if (itemClickEvent.isCtrlKey()) {
+//            return;
+//        }
+//
+//        // selezione discontinua
+//        if (itemClickEvent.isMetaKey()) {
+//            return;
+//        }
+//
+//        // selezione continua
+//        if (itemClickEvent.isShiftKey()) {
+//            // c'era una sola riga selezionata precedentemente
+//            if (isSingleRowSelected()) {
+//                longKey = getSelectedKey();
+//                intKeyOld = longKey.intValue();
+//
+//                if (intKeyNew > intKeyOld) {
+//                    firstIndex = intKeyOld;
+//                    lastIndex = intKeyNew;
+//                } else {
+//                    firstIndex = intKeyNew;
+//                    lastIndex = intKeyOld;
+//                }
+//            }
+//        }
+//
+//        // selezione singola
+//        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
+//            id = itemClickEvent.getItemId();
+//            if (id instanceof Long) {
+//                firstIndex = ((Long) id).intValue();
+//                lastIndex = ((Long) id).intValue();
+//            }
+//        }
+//
+//        // crea l'evento
+//        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+//
+//        // notify all the listeners
+//        fireListSelectionEvent(evento);
+    }
 
-        id = itemClickEvent.getItemId();
-        if (id instanceof Long) {
-            intKeyNew = ((Long) id).intValue();
-        }// end of if cycle
 
-        if (itemClickEvent.isDoubleClick()) {
-            return;
-        }// end of if cycle
+//    /**
+//     * Lancia un evento di modifica della selezione delle righe.
+//     */
+//    private void fireListSelectionEvent(ListSelectionEvent evento) {
+//        for (ListSelectionListener listener : selectionListeners) {
+//            listener.valueChanged(evento);
+//        }
+//    }
 
-        if (itemClickEvent.isCtrlKey()) {
-            return;
-        }// end of if cycle
 
-        // selezione discontinua
-        if (itemClickEvent.isMetaKey()) {
-            return;
-        }// end of if cycle
+    public void addSelectionChangeListener(SelectionChangeListener l){
+        selectionChangeListeners.add(l);
+    }
 
-        // selezione continua
-        if (itemClickEvent.isShiftKey()) {
-            // c'era una sola riga selezionata precedentemente
-            if (isSingleRowSelected()) {
-                longKey = getSelectedKey();
-                intKeyOld = longKey.intValue();
+    private void fireSelectionChanged(ListSelectionChangeEvent e){
+        for(SelectionChangeListener l : selectionChangeListeners){
+            l.selectionChanged(e);
+        }
+    }
 
-                if (intKeyNew > intKeyOld) {
-                    firstIndex = intKeyOld;
-                    lastIndex = intKeyNew;
-                } else {
-                    firstIndex = intKeyNew;
-                    lastIndex = intKeyOld;
-                }// end of if/else cycle
-            } else {
-//                selez = getSelectedIds();
-//                if (selez != null && selez.length > 0) {
-//                    firstIndex = (Integer) selez[0];
-//                    lastIndex = (Integer) selez[selez.length - 1];
-//                }// end of if cycle
-            }// end of if/else cycle
-        }// end of if cycle
+    public interface SelectionChangeListener{
+        void selectionChanged(ListSelectionChangeEvent e);
+    }
 
-        // selezione singola
-        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
-            id = itemClickEvent.getItemId();
-            if (id instanceof Long) {
-                firstIndex = ((Long) id).intValue();
-                lastIndex = ((Long) id).intValue();
-            }// end of if cycle
-        }// end of if cycle
+    public class ListSelectionChangeEvent{
+        private Set<Long> rows;
 
-        // crea l'evento
-        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
+        public ListSelectionChangeEvent(Set<Long> rows) {
+            this.rows = rows;
+        }
 
-        // notify all the listeners
-        fireSelectionListener(evento);
-    }// end of method
+        public boolean isSingleRowSelected(){
+            return rows.size()==1;
+        }
+        public boolean isMultipleRowsSelected(){
+            return rows.size()>=1;
+        }
+
+        public Set<Long> getRows() {
+            return rows;
+        }
+    }
+
+
 
     /**
-     * Evento generato quando si modifica la selezione delle righe
-     * <p>
-     * Informa (tramite listener) chi è interessato <br>
+     * Enum di eventi previsti.
      */
-    public void fireSelectionListener(ListSelectionEvent evento) {
-        // notify all the listeners
-        if (selectionListeners != null) {
-            for (ListSelectionListener listener : selectionListeners) {
-                listener.valueChanged(evento);
-            }// end of for cycle
-        }// end of if cycle
-    }// end of method
-
     public enum TableEvent {
-        created, attached, datachange;
-    }// end of enumeration
+        created, attached, datachange
+    }
 
     /**
      * Table high-level events
      */
     public interface TableListener {
-        public void created_(); // table created
+        void created_(); // table created
 
-        public void attached_(); // table attached to UI
+        void attached_(); // table attached to UI
 
-        public void datachange_(); // table data changed
-    }// end of interface
+        void datachange_(); // table data changed
+    }
 
     /**
      * Wrapper for a totalizable column info
@@ -1424,7 +1300,7 @@ public class ATable extends Table implements ListSelection {
 
             this.propertyId = propertyId;
             this.decimalPlaces = decimalPlaces;
-        }// end of inner method
+        }
 
         public SingularAttribute getAttribute() {
             return attribute;
@@ -1446,13 +1322,25 @@ public class ATable extends Table implements ListSelection {
                 places = getDefaultDecimalPlacesForColumn(propertyId);
             }
             return places;
-        }// end of inner method
+        }
+
+//        @Override
+//        public boolean equals(Object obj) {
+//            TotalizableColumn other = (TotalizableColumn) obj;
+//            return propertyId.equals(other.getPropertyId());
+//        }
 
         @Override
-        public boolean equals(Object obj) {
-            TotalizableColumn other = (TotalizableColumn) obj;
-            return propertyId.equals(other.getPropertyId());
-        }// end of inner method
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TotalizableColumn that = (TotalizableColumn) o;
+
+            return !(propertyId != null ? !propertyId.equals(that.propertyId) : that.propertyId != null);
+
+        }
+
 
         /**
          * Returns a default number of decimal places for a given property.<br>
@@ -1466,38 +1354,38 @@ public class ATable extends Table implements ListSelection {
             Class<?> clazz = getContainerDataSource().getType(propertyId);
             if (clazz.equals(Integer.class)) {
                 return 0;
-            }// end of if cycle
+            }
             if (clazz.equals(int.class)) {
                 return 0;
-            }// end of if cycle
+            }
             if (clazz.equals(Long.class)) {
                 return 0;
-            }// end of if cycle
+            }
             if (clazz.equals(long.class)) {
                 return 0;
-            }// end of if cycle
+            }
             if (clazz.equals(BigInteger.class)) {
                 return 0;
-            }// end of if cycle
+            }
             if (clazz.equals(Double.class)) {
                 return 2;
-            }// end of if cycle
+            }
             if (clazz.equals(double.class)) {
                 return 2;
-            }// end of if cycle
+            }
             if (clazz.equals(Float.class)) {
                 return 2;
-            }// end of if cycle
+            }
             if (clazz.equals(float.class)) {
                 return 2;
-            }// end of if cycle
+            }
             if (clazz.equals(BigDecimal.class)) {
                 return 2;
-            }// end of if cycle
+            }
             return 0;
-        }// end of method
+        }
 
-    }// end of inner class
+    }
 
 
     protected ATable getTable() {
@@ -1508,4 +1396,4 @@ public class ATable extends Table implements ListSelection {
         return getModule().getEntityManager();
     }
 
-}// end of class
+}

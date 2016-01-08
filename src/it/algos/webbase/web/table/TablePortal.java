@@ -10,7 +10,6 @@ import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 /**
  * Portal hosting a table and a toolbar
  */
-
 @SuppressWarnings("serial")
 public class TablePortal extends VerticalLayout {
 
@@ -23,14 +22,14 @@ public class TablePortal extends VerticalLayout {
         super();
         this.table = table;
         init();
-    }// end of constructor
+    }
 
     public TablePortal(ModulePop modulo) {
         super();
         this.module = modulo;
         this.table = modulo.createTable();
         init();
-    }// end of constructor
+    }
 
     protected void init() {
 
@@ -61,35 +60,34 @@ public class TablePortal extends VerticalLayout {
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
                     getToolbar().fireEdit();
-                }// end of if cycle
-            }// end of method
-        });// end of anonymous class
+                }
+            }
+        });
 
-        // Sincronizzazione dei listener per il funzionamento della ATable
-        regolaListenerTable();
-    }// end of method
+        // The toolbar listens to table selection changes
+        getTable().addSelectionChangeListener(this.getToolbar());
+
+    }
 
     public TableToolbar createToolbar() {
         TableToolbar toolbar = new TableToolbar();
         return toolbar;
-    }// end of method
+    }
 
     public TableFooter createFooter() {
         return new TableFooter();
-    }// end of method
+    }
 
-    /**
-     * Sincronizzazione dei listener per il funzionamento della ATable
-     * <p>
-     * Registra la TableToolBar nei selectionListeners della ATable per gli eventi di tipo ListSelectionEvent
-     */
-    protected void regolaListenerTable() {
-        ATable table = this.getTable();
-        TableToolbar tableToolBar = this.getToolbar();
-
-        table.addListListener(tableToolBar);
-        table.selectionChanged(null); // regolazione iniziale con nessuna riga selezionata
-    }// end of method
+//    /**
+//     * Sincronizzazione dei listener per il funzionamento della ATable
+//     * <p>
+//     * Registra la TableToolBar nei selectionListeners della ATable per gli eventi di tipo ListSelectionEvent
+//     */
+//    protected void regolaListenerTable() {
+//        ATable table = this.getTable();
+//        TableToolbar tableToolBar = this.getToolbar();
+//        table.addSelectionChangeListener(tableToolBar);
+//    }
 
 
     public void addToolbarListener(TableToolbarListener listener) {
@@ -97,15 +95,15 @@ public class TablePortal extends VerticalLayout {
         if(tb!=null){
             tb.addToolbarListener(listener);
         }
-    }// end of method
+    }
 
     public ATable getTable() {
         return table;
-    }// end of method
+    }
 
     public TableToolbar getToolbar() {
         return toolbar;
-    }// end of method
+    }
 
     public ModulePop getModule() {
         return module;

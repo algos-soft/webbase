@@ -108,6 +108,34 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
 
     }
 
+    /**
+     * Returns the container as a JPAContainer.
+     *
+     * @return the container as a Filterable, or null if it is not filterable
+     */
+    public JPAContainer getJPAContainer() {
+        JPAContainer jpac = null;
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof JPAContainer) {
+            jpac = (JPAContainer) cont;
+        }
+        return jpac;
+    }
+
+
+    /**
+     * Returns the container as a Filterable container.
+     *
+     * @return the container as a Filterable, or null if it is not filterable
+     */
+    public Filterable getFilterableContainer() {
+        Filterable filterable = null;
+        Container cont = getContainerDataSource();
+        if (cont != null && cont instanceof Filterable) {
+            filterable = (Filterable) cont;
+        }
+        return filterable;
+    }
 
     /**
      * Assigns a handler for new items. Switches on/off the feature of the combo if the handler is not null or null

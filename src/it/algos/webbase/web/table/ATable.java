@@ -33,17 +33,20 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
-import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@SuppressWarnings("serial")
-//public class ATable extends Table implements ListSelection {
-public class ATable extends Table {
+/**
+ * Base Table to list BaseEntity(es)
+ */
+public abstract class ATable extends Table {
 
-    protected ModulePop modulo;
+    private final static Logger logger = Logger.getLogger(ATable.class.getName());
+
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
@@ -67,15 +70,19 @@ public class ATable extends Table {
     /**
      * Creates a new table for a given module.
      *
-     * @param module the Module
+     * @param entityClass the Entity class
      */
-    public ATable(ModulePop module) {
+    public ATable(Class<? extends BaseEntity> entityClass) {
         super();
-        this.modulo = module;
-        this.entityClass = module.getEntityClass();
-        init();
+        this.entityClass = entityClass;
+//        init();
     }
 
+
+    /**
+     * Initializes the table.
+     * Must be called from the costructor in each subclass
+     */
     protected void init() {
 
         // setup the container
@@ -142,29 +149,16 @@ public class ATable extends Table {
         setColumnReorderingAllowed(true);
 
         // setFooterVisible(true);
+
+        // contextual click handlers
         addActionHandler(new Action.Handler() {
+
             public Action[] getActions(Object target, Object sender) {
-                Action[] actions = null;
-                if (modulo != null) {
-                    actions = new Action[2];
-                    actions[0] = actionEdit;
-                    actions[1] = actionDelete;
-                }
-                return actions;
+                return getTable().getActions(target, sender);
             }
 
             public void handleAction(Action action, Object sender, Object target) {
-                if (action.equals(actionEdit)) {
-                    if (modulo != null) {
-                        modulo.edit();
-                    }
-                }
-                
-                if (action.equals(actionDelete)) {
-                    if (modulo != null) {
-                        modulo.delete();
-                    }
-                }
+                getTable().handleAction(action, sender, target);
             }
         });
 
@@ -173,6 +167,22 @@ public class ATable extends Table {
         
     }
 
+    /**
+     * Return the Actions to display in contextual menu
+     */
+    protected Action[] getActions(Object target, Object sender){
+        Action[] actions = null;
+        actions = new Action[2];
+        actions[0] = actionEdit;
+        actions[1] = actionDelete;
+        return actions;
+    }
+
+    /**
+     * Handle the Action
+     */
+    protected void handleAction(Action action, Object sender, Object target){
+    }
 
 
     /**
@@ -213,9 +223,6 @@ public class ATable extends Table {
     }
 
 
-    public ModulePop getModule() {
-        return modulo;
-    }
 
 //    /**
 //     * Creates the container
@@ -233,15 +240,10 @@ public class ATable extends Table {
     /**
      * Creates the container
      * <p>
-     * The id property is added here by default.
      *
      * @return the container
      */
-    protected Container createContainer() {
-        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), getContainerPageSize(), BaseEntity_.id.getName(), true, true, true);
-        entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
-        return entityContainer;
-    }
+    public abstract Container createContainer();
 
     /**
      * Returns the paging size for the container.
@@ -484,11 +486,12 @@ public class ATable extends Table {
      */
     @SuppressWarnings("rawtypes")
     protected Object[] getDisplayColumns() {
-        Attribute[] fieldList = new Attribute[0];
-        if (modulo != null) {
-            fieldList = modulo.getFieldsList();
-        }
-        return fieldList;
+//        Attribute[] fieldList = new Attribute[0];
+//        if (modulo != null) {
+//            fieldList = modulo.getFieldsList();
+//        }
+//        return fieldList;
+        return null;
     }
 
     /**
@@ -761,12 +764,16 @@ public class ATable extends Table {
 
         // Format for Dates
         if (property.getType() == Date.class) {
-
-            try {
-                string = this.dateFormat.format((Date) property.getValue());
-            } catch (Exception e) {
-                // TODO: handle exception
+            value=property.getValue();
+            if(value!=null && value instanceof Date){
+                Date date = (Date) value;
+                try{
+                    string = this.dateFormat.format(date);
+                }catch (Exception e){
+                    logger.log(Level.WARNING, "unable to format date: "+date);
+                }
             }
+
         }
 
         // Format for Booleans
@@ -975,24 +982,6 @@ public class ATable extends Table {
     public int getVisibleRows() {
         return getContainerDataSource().size();
     }
-
-//    @Override
-//    public void addListListener(ListSelectionListener list) {
-//        selectionListeners.add(list);
-//    }
-
-//    @Override
-//    public void removeAllListListeners() {
-//        selectionListeners.clear();
-//    }
-
-
-//    @Override
-//    public void setListListener(ListSelectionListener list) {
-//        removeAllListListeners();
-//        addListListener(list);
-//    }
-
 
     /**
      * Deselects all the rows in the table
@@ -1241,7 +1230,7 @@ public class ATable extends Table {
     }
 
     public EntityManager getEntityManager() {
-        return getModule().getEntityManager();
+        return null;
     }
 
 }

@@ -29,6 +29,7 @@ import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ATable.TableListener;
+import it.algos.webbase.web.table.ModuleTable;
 import it.algos.webbase.web.table.TablePortal;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
@@ -330,7 +331,7 @@ public abstract class ModulePop extends Module {
      * @return the Table
      */
     public ATable createTable() {
-        return (new ATable(this));
+        return (new ModuleTable(this));
     }// end of method
 
 

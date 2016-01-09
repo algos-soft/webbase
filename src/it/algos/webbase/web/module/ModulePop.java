@@ -425,10 +425,13 @@ public abstract class ModulePop extends Module {
      */
     @SuppressWarnings("rawtypes")
     public void edit() {
-        Long itemId = getTable().getSelectedEntity().getId();
-        if (itemId != null) {
-            Item item = getTable().getItem(itemId);
-            editItem(item, false, getTitoloEdit());
+        BaseEntity entity= getTable().getSelectedEntity();
+        if(entity!=null){
+            Long itemId = entity.getId();
+            if (itemId != null) {
+                Item item = getTable().getItem(itemId);
+                editItem(item, false, getTitoloEdit());
+            }
         }
     }// end of method
 

@@ -21,7 +21,6 @@ import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
-import it.algos.webbase.web.lib.LibEvent;
 import it.algos.webbase.web.lib.LibFilter;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
@@ -38,10 +37,7 @@ import javax.swing.event.ListSelectionEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("serial")
 //public class ATable extends Table implements ListSelection {
@@ -122,7 +118,11 @@ public class ATable extends Table {
         addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
-                getTable().valueChange(event);
+                Property prop=event.getProperty();
+                Set<Long> rows = (Set<Long>)prop.getValue();
+                SelectionChangeEvent e = new SelectionChangeEvent(rows);
+                fireSelectionChanged(e);
+                selectionChanged(e);
             }
         });
 
@@ -187,12 +187,7 @@ public class ATable extends Table {
     /**
      * Invoked when the user selection changes
      */
-    @Override
-    public void valueChange(Property.ValueChangeEvent event) {
-        Property prop=event.getProperty();
-        Set<Long> rows = (Set<Long>)prop.getValue();
-        ListSelectionChangeEvent e = new ListSelectionChangeEvent(rows);
-        fireSelectionChanged(e);
+    protected void selectionChanged(SelectionChangeEvent e) {
     }
 
     /**
@@ -1004,7 +999,6 @@ public class ATable extends Table {
      */
     public void deselectAll() {
         setValue(null);
-        selectionChanged(null);
     }
 
     /**
@@ -1073,173 +1067,27 @@ public class ATable extends Table {
         return filter;
     }
 
-//    /**
-//     * Evento generato quando si modifica la selezione delle righe
-//     * <p>
-//     * Informa (tramite listener) chi è interessato <br>
-//     */
-//    public void selectionChanged(ItemClickEvent itemClickEvent) {
-//        ListSelectionEvent evento;
-//        Object id;
-//        Long longKey;
-//        int intKeyOld;
-//        int intKeyNew = 0;
-//        int firstIndex = 0;
-//        int lastIndex = 0;
-//
-//        if (itemClickEvent == null) {
-//            evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
-//            fireListSelectionEvent(evento);
-//            return;
-//        }
-//
-//        id = itemClickEvent.getItemId();
-//        if (id instanceof Long) {
-//            intKeyNew = ((Long) id).intValue();
-//        }
-//
-//        if (itemClickEvent.isDoubleClick()) {
-//            return;
-//        }
-//
-//        if (itemClickEvent.isCtrlKey()) {
-//            return;
-//        }
-//
-//        // selezione discontinua
-//        if (itemClickEvent.isMetaKey()) {
-//            return;
-//        }
-//
-//        // selezione continua
-//        if (itemClickEvent.isShiftKey()) {
-//            // c'era una sola riga selezionata precedentemente
-//            if (isSingleRowSelected()) {
-//                longKey = getSelectedKey();
-//                intKeyOld = longKey.intValue();
-//
-//                if (intKeyNew > intKeyOld) {
-//                    firstIndex = intKeyOld;
-//                    lastIndex = intKeyNew;
-//                } else {
-//                    firstIndex = intKeyNew;
-//                    lastIndex = intKeyOld;
-//                }
-//            }
-//        }
-//
-//        // selezione singola
-//        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
-//            id = itemClickEvent.getItemId();
-//            if (id instanceof Long) {
-//                firstIndex = ((Long) id).intValue();
-//                lastIndex = ((Long) id).intValue();
-//            }
-//        }
-//
-//        // crea l'evento
-//        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
-//
-//        // notify all the listeners
-//        fireListSelectionEvent(evento);
-//    }
-
-
-
-    /**
-     * Evento generato quando si modifica la selezione delle righe
-     * <p>
-     * Informa (tramite listener) chi è interessato <br>
-     */
-    public void selectionChanged(Property.ValueChangeEvent event) {
-        ListSelectionEvent evento;
-        Object id;
-        Long longKey;
-        int intKeyOld;
-        int intKeyNew = 0;
-        int firstIndex = 0;
-        int lastIndex = 0;
-
-//        id = itemClickEvent.getItemId();
-//        if (id instanceof Long) {
-//            intKeyNew = ((Long) id).intValue();
-//        }
-//
-//        if (itemClickEvent.isDoubleClick()) {
-//            return;
-//        }
-//
-//        if (itemClickEvent.isCtrlKey()) {
-//            return;
-//        }
-//
-//        // selezione discontinua
-//        if (itemClickEvent.isMetaKey()) {
-//            return;
-//        }
-//
-//        // selezione continua
-//        if (itemClickEvent.isShiftKey()) {
-//            // c'era una sola riga selezionata precedentemente
-//            if (isSingleRowSelected()) {
-//                longKey = getSelectedKey();
-//                intKeyOld = longKey.intValue();
-//
-//                if (intKeyNew > intKeyOld) {
-//                    firstIndex = intKeyOld;
-//                    lastIndex = intKeyNew;
-//                } else {
-//                    firstIndex = intKeyNew;
-//                    lastIndex = intKeyOld;
-//                }
-//            }
-//        }
-//
-//        // selezione singola
-//        if (!itemClickEvent.isDoubleClick() && !itemClickEvent.isCtrlKey() && !itemClickEvent.isMetaKey() && !itemClickEvent.isShiftKey()) {
-//            id = itemClickEvent.getItemId();
-//            if (id instanceof Long) {
-//                firstIndex = ((Long) id).intValue();
-//                lastIndex = ((Long) id).intValue();
-//            }
-//        }
-//
-//        // crea l'evento
-//        evento = new ListSelectionEvent(this, firstIndex, lastIndex, false);
-//
-//        // notify all the listeners
-//        fireListSelectionEvent(evento);
-    }
-
-
-//    /**
-//     * Lancia un evento di modifica della selezione delle righe.
-//     */
-//    private void fireListSelectionEvent(ListSelectionEvent evento) {
-//        for (ListSelectionListener listener : selectionListeners) {
-//            listener.valueChanged(evento);
-//        }
-//    }
 
 
     public void addSelectionChangeListener(SelectionChangeListener l){
         selectionChangeListeners.add(l);
     }
 
-    private void fireSelectionChanged(ListSelectionChangeEvent e){
+    private void fireSelectionChanged(SelectionChangeEvent e){
         for(SelectionChangeListener l : selectionChangeListeners){
             l.selectionChanged(e);
         }
     }
 
     public interface SelectionChangeListener{
-        void selectionChanged(ListSelectionChangeEvent e);
+        void selectionChanged(SelectionChangeEvent e);
     }
 
-    public class ListSelectionChangeEvent{
+    public class SelectionChangeEvent extends EventObject {
         private Set<Long> rows;
 
-        public ListSelectionChangeEvent(Set<Long> rows) {
+        public SelectionChangeEvent(Set<Long> rows) {
+            super(getTable());
             this.rows = rows;
         }
 
@@ -1250,7 +1098,7 @@ public class ATable extends Table {
             return rows.size()>=1;
         }
 
-        public Set<Long> getRows() {
+        public Set<Long> getSelectedRowIds() {
             return rows;
         }
     }

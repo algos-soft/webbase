@@ -156,7 +156,6 @@ public class ComboNewItemHandler implements NewItemHandler {
 				}
 
 				// select the newly created entity in the combo
-//				long id = merged.getId();
 				field.setValue(bean.getId());
 
 				fire(item, newRecord);

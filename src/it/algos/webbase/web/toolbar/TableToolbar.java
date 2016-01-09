@@ -5,11 +5,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.lib.LibEvent;
 import it.algos.webbase.web.table.ATable;
-import it.algos.webbase.web.table.ListSelectionListener;
 
-import javax.swing.event.ListSelectionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -200,7 +197,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      * Deseleziona tutti: acceso se è selezionata una riga o più di una riga
      */
     @Override
-    public void selectionChanged(ATable.ListSelectionChangeEvent e) {
+    public void selectionChanged(ATable.SelectionChangeEvent e) {
         syncButtons(e.isSingleRowSelected(), e.isMultipleRowsSelected());
     }
 

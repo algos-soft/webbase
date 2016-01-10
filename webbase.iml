@@ -119,7 +119,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-push/jars/vaadin-push-7.5.10.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client-compiled/jars/vaadin-client-compiled-7.5.10.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/jars/vaadin-client-7.5.10.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.vaadin.addons.lazyquerycontainer/vaadin-lazyquerycontainer/jars/vaadin-lazyquerycontainer-7.4.0.1.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-sass-compiler/javadocs/vaadin-sass-compiler-0.9.12-javadoc.jar!/" />
@@ -220,7 +219,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.5.10-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.5.10-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.5.10-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/mysql/mysql-connector-java/sources/mysql-connector-java-5.1.31-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

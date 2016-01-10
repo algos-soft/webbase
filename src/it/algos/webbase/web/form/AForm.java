@@ -32,7 +32,7 @@ public abstract class AForm extends VerticalLayout {
 
     private Item item;
     private FieldGroup binder;
-    private Toolbar toolbar;
+    private FormToolbar toolbar;
     private ArrayList<FormListener> listeners = new ArrayList();
 
     /**
@@ -86,6 +86,31 @@ public abstract class AForm extends VerticalLayout {
 
         // create and add the form toolbar
         this.toolbar = createToolBar();
+
+        // add the standard toolbar listener
+        toolbar.addToolbarListener(new FormToolbar.FormToolbarListener() {
+
+            @Override
+            public void save_() {
+                if (onPreSave(binder)) {
+                    if (save()) {
+                        fire(FormEvent.commit);
+                        onPostSave(binder);
+                    }
+                }
+            }// end of method
+
+            @Override
+            public void reset_() {
+            }// end of method
+
+            @Override
+            public void cancel_() {
+                fire(FormEvent.cancel);
+            }// end of method
+
+        });// end of anonymous class
+
         this.addComponent(this.toolbar);
         toolbar.setWidth("100%");
     }
@@ -304,34 +329,8 @@ public abstract class AForm extends VerticalLayout {
      *
      * @return the toolbar
      */
-    protected Toolbar createToolBar() {
-        // create the toolbar
-        FormToolbar toolbar = new FormToolbar();
-        toolbar.addToolbarListener(new FormToolbar.FormToolbarListener() {
-
-            @Override
-            public void save_() {
-                if (onPreSave(binder)) {
-                    if (save()) {
-                        fire(FormEvent.commit);
-                        onPostSave(binder);
-                    }
-                }
-            }// end of method
-
-            @Override
-            public void reset_() {
-            }// end of method
-
-            @Override
-            public void cancel_() {
-                fire(FormEvent.cancel);
-            }// end of method
-
-        });// end of anonymous class
-
-        return toolbar;
-
+    protected FormToolbar createToolBar() {
+        return new FormToolbar();
     }// end of method
 
 

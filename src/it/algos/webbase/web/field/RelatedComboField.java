@@ -2,6 +2,7 @@ package it.algos.webbase.web.field;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.addon.jpacontainer.JPAContainerItem;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -18,6 +19,7 @@ import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
@@ -136,6 +138,36 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         }
         return filterable;
     }
+
+
+    /**
+     * Returns the entity given a row id.
+     *
+     * @param rowId the row id
+     * @return the entity
+     */
+    public BaseEntity getEntity(Object rowId) {
+        BaseEntity entity = null;
+        Container cont = getContainerDataSource();
+
+        if (cont instanceof LazyEntityContainer) {
+            LazyEntityContainer lec = (LazyEntityContainer) cont;
+            entity = (BaseEntity) lec.getEntity(rowId);
+        }
+
+        if (cont instanceof JPAContainer) {
+            Item item = getItem(rowId);
+            if (item != null) {
+                if (item instanceof JPAContainerItem) {
+                    JPAContainerItem<?> jpaItem = (JPAContainerItem<?>) item;
+                    entity = (BaseEntity) jpaItem.getEntity();
+                }
+            }
+        }
+
+        return entity;
+    }
+
 
     /**
      * Assigns a handler for new items. Switches on/off the feature of the combo if the handler is not null or null

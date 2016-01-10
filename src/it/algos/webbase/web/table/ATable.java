@@ -681,7 +681,7 @@ public abstract class ATable extends Table {
      * @param rowId the row id
      * @return the entity
      */
-    public BaseEntity getEntity(Long rowId) {
+    public BaseEntity getEntity(Object rowId) {
         BaseEntity entity = null;
         Container cont = getContainerDataSource();
 
@@ -890,7 +890,12 @@ public abstract class ATable extends Table {
         cq.select(e1);
 
         Double num = getEntityManager().createQuery(cq).getSingleResult();
-        return new BigDecimal(num);
+
+        BigDecimal retBd=new BigDecimal(0);
+        if(num!=null){
+            retBd=new BigDecimal(num);
+        }
+        return retBd;
 
     }
 

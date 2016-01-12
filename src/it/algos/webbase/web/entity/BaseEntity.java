@@ -12,11 +12,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -354,5 +352,27 @@ public abstract class BaseEntity implements Serializable {
         return sProp;
     }
 
+    /**
+     * Returns the table name for a given entity type in the {@link EntityManager}.
+     * @param em
+     * @param entityClass
+     * @return
+     */
+    public static <T> String getTableName(EntityManager em, Class<T> entityClass) {
+    /*
+     * Check if the specified class is present in the metamodel.
+     * Throws IllegalArgumentException if not.
+     */
+        Metamodel meta = em.getMetamodel();
+        EntityType<T> entityType = meta.entity(entityClass);
+
+        //Check whether @Table annotation is present on the class.
+        Table t = entityClass.getAnnotation(Table.class);
+
+        String tableName = (t == null)
+                ? entityType.getName().toUpperCase()
+                : t.name();
+        return tableName;
+    }
 
 }// end of class

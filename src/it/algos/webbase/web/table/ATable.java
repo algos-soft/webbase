@@ -125,8 +125,8 @@ public abstract class ATable extends Table {
         addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
-                Property prop=event.getProperty();
-                Set<Long> rows = (Set<Long>)prop.getValue();
+                Property prop = event.getProperty();
+                Set<Long> rows = (Set<Long>) prop.getValue();
                 SelectionChangeEvent e = new SelectionChangeEvent(rows);
                 fireSelectionChanged(e);
                 selectionChanged(e);
@@ -164,13 +164,13 @@ public abstract class ATable extends Table {
 
         // fire table created
         fire(TableEvent.created);
-        
+
     }
 
     /**
      * Return the Actions to display in contextual menu
      */
-    protected Action[] getActions(Object target, Object sender){
+    protected Action[] getActions(Object target, Object sender) {
         Action[] actions = null;
         actions = new Action[2];
         actions[0] = actionEdit;
@@ -181,7 +181,7 @@ public abstract class ATable extends Table {
     /**
      * Handle the Action
      */
-    protected void handleAction(Action action, Object sender, Object target){
+    protected void handleAction(Action action, Object sender, Object target) {
     }
 
 
@@ -221,7 +221,6 @@ public abstract class ATable extends Table {
         fire(TableEvent.datachange);
 
     }
-
 
 
 //    /**
@@ -636,7 +635,6 @@ public abstract class ATable extends Table {
     }
 
 
-
     /**
      * Return the selected entity
      */
@@ -648,8 +646,6 @@ public abstract class ATable extends Table {
         }
         return entity;
     }
-
-
 
 
     /**
@@ -672,7 +668,6 @@ public abstract class ATable extends Table {
         return entities;
 
     }
-
 
 
     /**
@@ -764,13 +759,13 @@ public abstract class ATable extends Table {
 
         // Format for Dates
         if (property.getType() == Date.class) {
-            value=property.getValue();
-            if(value!=null && value instanceof Date){
+            value = property.getValue();
+            if (value != null && value instanceof Date) {
                 Date date = (Date) value;
-                try{
+                try {
                     string = this.dateFormat.format(date);
-                }catch (Exception e){
-                    logger.log(Level.WARNING, "unable to format date: "+date);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "unable to format date: " + date);
                 }
             }
 
@@ -798,7 +793,6 @@ public abstract class ATable extends Table {
     }
 
 
-
     /**
      * Updates the totals in the footer
      * <p>
@@ -820,7 +814,6 @@ public abstract class ATable extends Table {
 
 
     }
-
 
 
     /**
@@ -891,9 +884,9 @@ public abstract class ATable extends Table {
 
         Double num = getEntityManager().createQuery(cq).getSingleResult();
 
-        BigDecimal retBd=new BigDecimal(0);
-        if(num!=null){
-            retBd=new BigDecimal(num);
+        BigDecimal retBd = new BigDecimal(0);
+        if (num != null) {
+            retBd = new BigDecimal(num);
         }
         return retBd;
 
@@ -945,7 +938,6 @@ public abstract class ATable extends Table {
     }
 
 
-
     /**
      * Add a form listener to the form
      */
@@ -977,7 +969,7 @@ public abstract class ATable extends Table {
      */
     public long getTotalRows() {
         Class<?> clazz = getEntityClass();
-        return  AQuery.getCount(clazz);
+        return AQuery.getCount(clazz);
     }
 
 
@@ -1039,41 +1031,22 @@ public abstract class ATable extends Table {
 
     /**
      * Creates a filter corresponding to the currently selected rows in the table
-     * <p/>
+     * <p>
      */
-    private Filter createFilterForSelectedRows() {
-        Filter filter = null;
-        Object[] ids = getSelectedIds();
-        if (ids.length > 0) {
-            Filter[] filters = new Filter[ids.length];
-            int idx = 0;
-            for (Object id : ids) {
-                filters[idx] = new Compare.Equal("id", id);
-                idx++;
-            }
-
-            if (filters.length > 1) {
-                filter = new Or(filters);
-            } else {
-                filter = filters[0];
-            }
-        }
-        return filter;
-    }
+    public abstract Filter createFilterForSelectedRows();
 
 
-
-    public void addSelectionChangeListener(SelectionChangeListener l){
+    public void addSelectionChangeListener(SelectionChangeListener l) {
         selectionChangeListeners.add(l);
     }
 
-    private void fireSelectionChanged(SelectionChangeEvent e){
-        for(SelectionChangeListener l : selectionChangeListeners){
+    private void fireSelectionChanged(SelectionChangeEvent e) {
+        for (SelectionChangeListener l : selectionChangeListeners) {
             l.selectionChanged(e);
         }
     }
 
-    public interface SelectionChangeListener{
+    public interface SelectionChangeListener {
         void selectionChanged(SelectionChangeEvent e);
     }
 
@@ -1085,18 +1058,18 @@ public abstract class ATable extends Table {
             this.rows = rows;
         }
 
-        public boolean isSingleRowSelected(){
-            return rows.size()==1;
+        public boolean isSingleRowSelected() {
+            return rows.size() == 1;
         }
-        public boolean isMultipleRowsSelected(){
-            return rows.size()>=1;
+
+        public boolean isMultipleRowsSelected() {
+            return rows.size() >= 1;
         }
 
         public Set<Long> getSelectedRowIds() {
             return rows;
         }
     }
-
 
 
     /**
@@ -1194,36 +1167,39 @@ public abstract class ATable extends Table {
          */
         protected int getDefaultDecimalPlacesForColumn(Object propertyId) {
             Class<?> clazz = getContainerDataSource().getType(propertyId);
-            if (clazz.equals(Integer.class)) {
-                return 0;
+            if (clazz != null) {
+                if (clazz.equals(Integer.class)) {
+                    return 0;
+                }
+                if (clazz.equals(int.class)) {
+                    return 0;
+                }
+                if (clazz.equals(Long.class)) {
+                    return 0;
+                }
+                if (clazz.equals(long.class)) {
+                    return 0;
+                }
+                if (clazz.equals(BigInteger.class)) {
+                    return 0;
+                }
+                if (clazz.equals(Double.class)) {
+                    return 2;
+                }
+                if (clazz.equals(double.class)) {
+                    return 2;
+                }
+                if (clazz.equals(Float.class)) {
+                    return 2;
+                }
+                if (clazz.equals(float.class)) {
+                    return 2;
+                }
+                if (clazz.equals(BigDecimal.class)) {
+                    return 2;
+                }
             }
-            if (clazz.equals(int.class)) {
-                return 0;
-            }
-            if (clazz.equals(Long.class)) {
-                return 0;
-            }
-            if (clazz.equals(long.class)) {
-                return 0;
-            }
-            if (clazz.equals(BigInteger.class)) {
-                return 0;
-            }
-            if (clazz.equals(Double.class)) {
-                return 2;
-            }
-            if (clazz.equals(double.class)) {
-                return 2;
-            }
-            if (clazz.equals(Float.class)) {
-                return 2;
-            }
-            if (clazz.equals(float.class)) {
-                return 2;
-            }
-            if (clazz.equals(BigDecimal.class)) {
-                return 2;
-            }
+
             return 0;
         }
 

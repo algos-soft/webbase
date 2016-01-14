@@ -94,8 +94,6 @@ public class ModuleTable extends ATable{
             Filter[] filters = new Filter[ids.length];
             int idx = 0;
             for (Object id : ids) {
-//                String tableName =BaseEntity.getTableName(getEntityManager(), getModule().getEntityClass());
-//                String propertyId=tableName+"."+BaseEntity_.id.getName();
                 String propertyId=BaseEntity_.id.getName();
                 filters[idx] = new Compare.Equal(propertyId, id);
                 idx++;

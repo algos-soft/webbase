@@ -1029,11 +1029,31 @@ public abstract class ATable extends Table {
     }
 
 
+
     /**
      * Creates a filter corresponding to the currently selected rows in the table
      * <p>
      */
-    public abstract Filter createFilterForSelectedRows();
+    public Filter createFilterForSelectedRows() {
+        Filter filter = null;
+        Object[] ids = getSelectedIds();
+        if (ids.length > 0) {
+            Filter[] filters = new Filter[ids.length];
+            int idx = 0;
+            for (Object id : ids) {
+                String propertyId=BaseEntity_.id.getName();
+                filters[idx] = new Compare.Equal(propertyId, id);
+                idx++;
+            }
+
+            if (filters.length > 1) {
+                filter = new Or(filters);
+            } else {
+                filter = filters[0];
+            }
+        }
+        return filter;
+    }
 
 
     public void addSelectionChangeListener(SelectionChangeListener l) {

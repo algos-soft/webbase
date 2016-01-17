@@ -27,7 +27,7 @@ public class ModuleTable extends ATable{
      * @param module the Module
      */
     public ModuleTable(ModulePop module) {
-        super(module.getEntityClass());
+        super(module.getEntityClass(), module.getEntityManager());
         this.module=module;
         init();
     }

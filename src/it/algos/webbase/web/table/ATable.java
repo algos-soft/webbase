@@ -45,6 +45,8 @@ import java.util.logging.Logger;
  */
 public abstract class ATable extends Table {
 
+    private EntityManager entityManager;
+
     private final static Logger logger = Logger.getLogger(ATable.class.getName());
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -72,9 +74,10 @@ public abstract class ATable extends Table {
      *
      * @param entityClass the Entity class
      */
-    public ATable(Class<? extends BaseEntity> entityClass) {
+    public ATable(Class<? extends BaseEntity> entityClass, EntityManager entityManager) {
         super();
         this.entityClass = entityClass;
+        this.entityManager = entityManager;
 //        init();
     }
 
@@ -344,6 +347,11 @@ public abstract class ATable extends Table {
 
         // define the visible columns
         Object[] columns = getDisplayColumns();
+
+        // if no visible columns, add the id column
+        if(columns==null){
+            columns=new Object[]{BaseEntity_.id};
+        }
 
         ArrayList<String> cNames = new ArrayList();
         for (Object obj : columns) {
@@ -1231,7 +1239,7 @@ public abstract class ATable extends Table {
     }
 
     public EntityManager getEntityManager() {
-        return null;
+        return entityManager;
     }
 
 }

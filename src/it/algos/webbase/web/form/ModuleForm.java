@@ -116,4 +116,8 @@ public class ModuleForm extends AForm {
         return entity;
     }
 
+    public EntityManager getEntityManager(){
+        return getModule().getEntityManager();
+    }
+
 }

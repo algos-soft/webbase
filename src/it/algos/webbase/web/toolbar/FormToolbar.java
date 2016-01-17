@@ -5,19 +5,37 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.form.AForm;
 
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class FormToolbar extends Toolbar {
 
+    private AForm form;
+
     private ArrayList<FormToolbarListener> listeners = new ArrayList<FormToolbarListener>();
 
-    public FormToolbar() {
+    /**
+     * Constructor.
+     * @param form the reference form
+     */
+    public FormToolbar(AForm form) {
         super();
+        this.form=form;
         addButtons();
         removeComponent(helperLayout);
     }// end of constructor
+
+
+    /**
+     * Empty Constructor.
+     * @deprecated, use the constructor with Form instead.
+     */
+    public FormToolbar() {
+        this(null);
+    }// end of constructor
+
 
     /**
      * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
@@ -70,5 +88,9 @@ public class FormToolbar extends Toolbar {
 
         public void reset_();
     }// end of interface
+
+    public AForm getForm() {
+        return form;
+    }
 
 }// end of class

@@ -58,21 +58,12 @@ public abstract class ATable extends Table {
     private ArrayList<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
 
 
-//    /**
-//     * Creates a new table for a given Entity class.
-//     *
-//     * @param entityClass the Entity class
-//     */
-//    public ATable(Class<?> entityClass) {
-//        super();
-//        this.entityClass = entityClass;
-//        init();
-//    }// end of constructor
 
     /**
      * Creates a new table for a given module.
      *
-     * @param entityClass the Entity class
+     * @param entityClass   the Entity class
+     * @param entityManager the Entity Manager
      */
     public ATable(Class<? extends BaseEntity> entityClass, EntityManager entityManager) {
         super();
@@ -349,8 +340,8 @@ public abstract class ATable extends Table {
         Object[] columns = getDisplayColumns();
 
         // if no visible columns, add the id column
-        if(columns==null){
-            columns=new Object[]{BaseEntity_.id};
+        if (columns == null) {
+            columns = new Object[]{BaseEntity_.id};
         }
 
         ArrayList<String> cNames = new ArrayList();
@@ -1037,7 +1028,6 @@ public abstract class ATable extends Table {
     }
 
 
-
     /**
      * Creates a filter corresponding to the currently selected rows in the table
      * <p>
@@ -1049,7 +1039,7 @@ public abstract class ATable extends Table {
             Filter[] filters = new Filter[ids.length];
             int idx = 0;
             for (Object id : ids) {
-                String propertyId=BaseEntity_.id.getName();
+                String propertyId = BaseEntity_.id.getName();
                 filters[idx] = new Compare.Equal(propertyId, id);
                 idx++;
             }

@@ -565,5 +565,28 @@ public abstract class AForm extends VerticalLayout {
         }
     }
 
+    /**
+     * @return the Entity currently edited, retrieved from the Item
+     */
+    public BaseEntity getEntity(){
+        BaseEntity entity=null;
+        Item item=getItem();
+        if(item !=null){
+
+            if(item instanceof BeanItem){
+                BeanItem bi = (BeanItem)item;
+                entity=(BaseEntity)bi.getBean();
+            }
+
+            if(item instanceof CompositeItem){
+                CompositeItem cItem=(CompositeItem)item;
+                BeanItem bi = (BeanItem)cItem.getItem("bean");
+                entity=(BaseEntity)bi.getBean();
+            }
+
+        }
+        return entity;
+    }
+
 
 }

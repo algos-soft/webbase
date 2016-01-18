@@ -60,29 +60,11 @@ public class ModuleForm extends AForm {
     @Override
     public void postCommit() {
 
-        // retrieve the bean
-        BaseEntity bean;
-        if (isNewRecord()) {
-            BeanItem item = (BeanItem)getItem();
-            bean = (BaseEntity)item.getBean();
-        }else{
-            CompositeItem compItem = (CompositeItem) getItem();
-            BeanItem beanItem = (BeanItem) compItem.getItem("bean");
-            bean = (BaseEntity)beanItem.getBean();
-        }
-
         // merge the bean (creates or updates the record(s) in the db)
-        bean.save(getModule().getEntityManager());
+        getEntity().save(getEntityManager());
 
     }
 
-    /**
-     * Returns the container
-     * (uses the same container of the table)
-     */
-    public Container getContainer() {
-        return getModule().getTable().getContainerDataSource();
-    }
 
     public ModulePop getModule() {
         return module;
@@ -90,30 +72,6 @@ public class ModuleForm extends AForm {
 
     public boolean isNewRecord() {
         return newRecord;
-    }
-
-
-    /**
-     * @return the Entity edited
-     */
-    public BaseEntity getEntity(){
-        BaseEntity entity=null;
-        Item item=getItem();
-        if(item !=null){
-
-            if(item instanceof BeanItem){
-                BeanItem bi = (BeanItem)item;
-                entity=(BaseEntity)bi.getBean();
-            }
-
-            if(item instanceof CompositeItem){
-                CompositeItem cItem=(CompositeItem)item;
-                BeanItem bi = (BeanItem)cItem.getItem("bean");
-                entity=(BaseEntity)bi.getBean();
-            }
-
-        }
-        return entity;
     }
 
     public EntityManager getEntityManager(){

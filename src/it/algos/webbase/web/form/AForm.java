@@ -53,27 +53,6 @@ public abstract class AForm extends VerticalLayout {
     }
 
     protected void init() {
-        //        if(this.item==null){
-//            this.item=createItem();
-//        }
-
-//        // create the container
-//        this.container = createContainer();
-
-
-//        // if the item is not present, then it is a new record.
-//        // create a temporary BeanItem of the proper class
-//        if (this.item == null) {
-//            Object bean = BaseEntity.createBean(getModule().getEntityClass());
-//            this.item = new BeanItem(bean);
-//            this.newRecord = true;
-//        }
-
-//        // create the binder for binding the fields to the item.
-//        // binder.commit() is needed to update the item data source.
-//        // validation is run on commit.
-//        this.binder = new FieldGroup(this.item);
-//        this.binder.setBuffered(true);
 
         // create the fields
         createFields();
@@ -285,25 +264,48 @@ public abstract class AForm extends VerticalLayout {
 
 
     /**
-     * @return the Entity managed by this form
+     * @return the Entity edited
      */
-    @SuppressWarnings("rawtypes")
-    protected BaseEntity getBaseEntity() {
-        BaseEntity entity = null;
+    public BaseEntity getEntity(){
+        BaseEntity entity=null;
+        Item item=getItem();
+        if(item !=null){
 
-        Item item = getItem();
-        if (item instanceof BeanItem) {
-            BeanItem beanItem = (BeanItem) item;
-            entity = (BaseEntity) beanItem.getBean();
-        }
-        if (item instanceof CompositeItem) {
-            CompositeItem compItem = (CompositeItem) getItem();
-            BeanItem beanItem = (BeanItem) compItem.getItem("bean");
-            entity = (BaseEntity) beanItem.getBean();
-        }
+            if(item instanceof BeanItem){
+                BeanItem bi = (BeanItem)item;
+                entity=(BaseEntity)bi.getBean();
+            }
 
+            if(item instanceof CompositeItem){
+                CompositeItem cItem=(CompositeItem)item;
+                BeanItem bi = (BeanItem)cItem.getItem("bean");
+                entity=(BaseEntity)bi.getBean();
+            }
+
+        }
         return entity;
-    }// end of method
+    }
+
+//    /**
+//     * @return the Entity managed by this form
+//     */
+//    @SuppressWarnings("rawtypes")
+//    protected BaseEntity getBaseEntity() {
+//        BaseEntity entity = null;
+//
+//        Item item = getItem();
+//        if (item instanceof BeanItem) {
+//            BeanItem beanItem = (BeanItem) item;
+//            entity = (BaseEntity) beanItem.getBean();
+//        }
+//        if (item instanceof CompositeItem) {
+//            CompositeItem compItem = (CompositeItem) getItem();
+//            BeanItem beanItem = (BeanItem) compItem.getItem("bean");
+//            entity = (BaseEntity) beanItem.getBean();
+//        }
+//
+//        return entity;
+//    }// end of method
 
 
     /**

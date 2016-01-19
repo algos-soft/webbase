@@ -5,14 +5,18 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.*;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
@@ -160,7 +164,7 @@ public abstract class BaseEntity implements Serializable {
      * inside the transaction.<br>
      * Otherwise, a new transaction is used to save this single entity.
      *
-     * @param manager     the entity manager to use (if null, a new one is created on the fly)
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
      * @return the merged Entity (new entity, unmanaged, has the id)
      */
     @SuppressWarnings("rawtypes")
@@ -188,7 +192,7 @@ public abstract class BaseEntity implements Serializable {
             }
 
             // assign the new id to this entity
-            if(this.id==null){
+            if (this.id == null) {
                 this.setId(mergedEntity.getId());
             }
 
@@ -354,6 +358,7 @@ public abstract class BaseEntity implements Serializable {
 
     /**
      * Returns the table name for a given entity type in the {@link EntityManager}.
+     *
      * @param em
      * @param entityClass
      * @return
@@ -375,4 +380,8 @@ public abstract class BaseEntity implements Serializable {
         return tableName;
     }
 
-}// end of class
+
+
+
+
+}

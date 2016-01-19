@@ -1,21 +1,12 @@
 package it.algos.webbase.web.importexport;
 
-import it.algos.webbase.web.dialog.ConfirmDialog;
-import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.updown.ExportStreamResource;
-import it.algos.webbase.web.updown.OnDemandFileDownloader;
-import it.algos.webbase.web.updown.OnDemandFileDownloader.OnDemandStreamResource;
-
-import java.util.Set;
-
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.OptionGroup;
+import it.algos.webbase.web.dialog.ConfirmDialog;
+import it.algos.webbase.web.updown.ExportStreamResource;
+import it.algos.webbase.web.updown.OnDemandFileDownloader;
+import it.algos.webbase.web.updown.OnDemandFileDownloader.OnDemandStreamResource;
 
 @SuppressWarnings("serial")
 public class ExportManager extends ConfirmDialog {

@@ -1,10 +1,5 @@
 package it.algos.webbase.web.importexport;
 
-import java.util.ArrayList;
-
-import javax.persistence.metamodel.Attribute;
-
-import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
 
 public class ExportConfiguration {

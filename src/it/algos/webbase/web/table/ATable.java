@@ -17,10 +17,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
-import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.BaseEntity_;
-import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.entity.SortProperties;
+import it.algos.webbase.web.entity.*;
 import it.algos.webbase.web.lib.LibFilter;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
@@ -257,37 +254,39 @@ public abstract class ATable extends Table {
      */
     protected void addPropertiesToContainer() {
         Container cont = getContainerDataSource();
-        EntityType<?> type = EM.getEntityType(getEntityClass());
-        Set<?> attributes = type.getAttributes();
-        Attribute<?, ?> attribute;
+        Entities.addPropertiesToContainer(cont, getEntityClass());
 
-        Collection coll = cont.getContainerPropertyIds();
-
-        for (Object ogg : attributes) {
-            if (ogg instanceof Attribute<?, ?>) {
-                attribute = (Attribute<?, ?>) ogg;
-                String name = attribute.getName();
-
-                if (!coll.contains(name)) {
-                    Class clazz = attribute.getJavaType();
-                    Object defaultValue = null;
-                    try {
-                        defaultValue = clazz.newInstance();
-                    } catch (Exception e) {
-                    }
-
-                    // specific handling for LazyQueryContainer
-                    if (cont instanceof LazyQueryContainer) {
-                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
-                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
-                    } else {
-                        cont.addContainerProperty(name, clazz, defaultValue);
-                    }
-
-                }
-
-            }
-        }
+//        EntityType<?> type = EM.getEntityType(getEntityClass());
+//        Set<?> attributes = type.getAttributes();
+//        Attribute<?, ?> attribute;
+//
+//        Collection coll = cont.getContainerPropertyIds();
+//
+//        for (Object ogg : attributes) {
+//            if (ogg instanceof Attribute<?, ?>) {
+//                attribute = (Attribute<?, ?>) ogg;
+//                String name = attribute.getName();
+//
+//                if (!coll.contains(name)) {
+//                    Class clazz = attribute.getJavaType();
+//                    Object defaultValue = null;
+//                    try {
+//                        defaultValue = clazz.newInstance();
+//                    } catch (Exception e) {
+//                    }
+//
+//                    // specific handling for LazyQueryContainer
+//                    if (cont instanceof LazyQueryContainer) {
+//                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
+//                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
+//                    } else {
+//                        cont.addContainerProperty(name, clazz, defaultValue);
+//                    }
+//
+//                }
+//
+//            }
+//        }
 
     }
 

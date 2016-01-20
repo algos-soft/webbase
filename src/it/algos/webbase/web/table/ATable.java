@@ -634,20 +634,24 @@ public abstract class ATable extends Table {
 
 
     /**
-     * Return the selected entity
+     * Return the selected entity.
+     * @return the selected entity, if one and only one entity if selected.
+     * otherwise, null is returned.
      */
     public BaseEntity getSelectedEntity() {
-        BaseEntity entity = null;
-        Long id = (Long) getSelectedId();
-        if (id != null) {
-            entity = getEntity(id);
+        BaseEntity entity=null;
+        BaseEntity[] entities=getSelectedEntities();
+        if(entities.length==1){
+            entity=entities[0];
         }
         return entity;
     }
 
 
     /**
-     * Return the selected entities (multiple selection)
+     * Return the selected entities (multiple selection).
+     * @return an array containing the selected entities,
+     * empty array if no entities are selected
      */
     public BaseEntity[] getSelectedEntities() {
         BaseEntity[] entities = new BaseEntity[0];

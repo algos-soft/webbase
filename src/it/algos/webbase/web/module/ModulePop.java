@@ -460,11 +460,14 @@ public abstract class ModulePop extends Module {
 
         if (form != null) {
 
-            final Window window = new Window(caption, form);
+            final Window window = new Window();
+            window.setCaption(caption);
+            window.setContent(form);
             window.setResizable(false);
+
             if (this.isModale()) {
                 window.setModal(true);
-            }// end of if cycle
+            }
 
             form.addFormListener(new FormListener() {
 
@@ -505,14 +508,14 @@ public abstract class ModulePop extends Module {
                     getTable().updateTotals();
 
 
-                }// end of inner method
+                }
 
                 @Override
                 public void cancel_() {
                     window.close();
                 }// end of inner method
 
-            });// end of anonymous inner class
+            });
 
             form.setHeightUndefined();
 

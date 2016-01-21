@@ -527,36 +527,7 @@ public abstract class ATable extends Table {
 
     }
 
-    /**
-     * Returns the ids of the single selected row
-     * <p>
-     * Usable for single-select or multi-select tables
-     *
-     * @return the selected row id (if a single row is selected, otherwise null)
-     * @deprecated
-     */
-    public Object getSelectedId() {
-        Object selectedId = null;
-        Object ids = getValue();
-        if (ids != null) {
 
-            // if multi select is enabled
-            if (ids instanceof Collection) {
-                Collection<Long> cIds = (Collection<Long>) ids;
-                if (cIds.size() == 1) {
-                    selectedId = Iterables.get(cIds, 0);
-                }
-            }
-
-            // if multi select is disabled
-            if (ids instanceof Long) {
-                selectedId = ids;
-            }
-
-        }
-
-        return selectedId;
-    }
 
     /**
      * Returns the ids of the single selected row
@@ -593,7 +564,7 @@ public abstract class ATable extends Table {
      * <p>
      * Usable for single-select or multi-select tables
      *
-     * @return the selected row ids
+     * @return the selected row ids, empty array if no selection
      */
     public Object[] getSelectedIds() {
         Object[] selected = new Object[0];
@@ -618,6 +589,23 @@ public abstract class ATable extends Table {
         }
 
         return selected;
+    }
+
+
+    /**
+     * Returns the id of the single selected row
+     * <p>
+     * Usable for single-select or multi-select tables
+     *
+     * @return the selected row id (if a single row is selected, otherwise null)
+     */
+    public Object getSelectedId() {
+        Object id=null;
+        Object[] ids = getSelectedIds();
+        if(ids.length==1){
+            id=ids[0];
+        }
+        return id;
     }
 
     /**

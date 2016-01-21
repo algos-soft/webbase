@@ -60,8 +60,8 @@ public abstract class AForm extends VerticalLayout {
         // create and add the detail component
         Component detail = createComponent();
         this.addComponent(detail);
-        detail.setHeight("100%");
-        this.setExpandRatio(detail, 1f);
+//        this.addStyleName("yellowBg");
+        this.setExpandRatio(detail, 1);
 
         // create and add the form toolbar
         this.toolbar = createToolBar();
@@ -100,35 +100,6 @@ public abstract class AForm extends VerticalLayout {
     public abstract void createFields();
 
 
-//        /**
-//         * Create and add the fields.<p>
-//         * The fields are created as declared in the Module.
-//         */
-//    protected void createFields() {
-////        // create a field for each property
-////        Attribute[] attributes = getModule().getFieldsForm();
-////        for (Attribute attr : attributes) {
-////            Field field = createField(attr);
-////            if (field != null) {
-////                addField(attr, field);
-////            }
-////        }
-//    }
-
-
-//    /**
-//     * Creates the item
-//     */
-//    protected Item createItem() {
-//        return null;
-//    }
-
-//    /**
-//     * Creates the container
-//     */
-//    protected Container createContainer() {
-//        return null;
-//    }
 
 
     /**
@@ -311,7 +282,7 @@ public abstract class AForm extends VerticalLayout {
      * @return the toolbar
      */
     protected FormToolbar createToolBar() {
-        return new FormToolbar();
+        return new FormToolbar(this);
     }// end of method
 
 

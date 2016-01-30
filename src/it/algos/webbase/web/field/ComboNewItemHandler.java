@@ -145,7 +145,7 @@ public class ComboNewItemHandler implements NewItemHandler {
 
 				Item item = form.getItem();
 				BaseEntity bean = itemToBean(item);
-				bean.save();
+				bean.save(field.getEntityManager());
 				window.close();
 
 				Container cont = field.getContainerDataSource();

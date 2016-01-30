@@ -404,22 +404,7 @@ public abstract class ModulePop extends Module {
         editItem(null, true, getTitoloNew());
     }// end of method
 
-    /**
-     * Post create / pre edit item
-     */
-    protected void postCreate(Item item) {
-    }// end of method
 
-
-    /**
-     * Post save item.
-     * A item has been saved. Chance for subclasses to do something.
-     *
-     * @param item      the saved item
-     * @param newRecord if the saved item is a new record
-     */
-    protected void postSave(Item item, boolean newRecord) {
-    }
 
     /**
      * Edit button pressed in table Display the item in a form
@@ -474,8 +459,6 @@ public abstract class ModulePop extends Module {
                 @SuppressWarnings({"rawtypes", "unchecked"})
                 @Override
                 public void commit_() {
-
-                    postSave(item, newRecord);
 
                     window.close();
 

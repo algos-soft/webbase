@@ -36,8 +36,15 @@ import javax.validation.ConstraintViolationException;
 public abstract class BaseEntity implements Serializable {
 
     private final static Logger logger = Logger.getLogger(BaseEntity.class.getName());
-    private static ArrayList<PostPersistListener> postPersistListeners = new ArrayList<PostPersistListener>();
-    private static ArrayList<PostUpdateListener> postUpdateListeners = new ArrayList<PostUpdateListener>();
+    private static ArrayList<PrePersistListener> prePersistListeners = new ArrayList();
+    private static ArrayList<PostPersistListener> postPersistListeners = new ArrayList();
+    private static ArrayList<PostUpdateListener> postUpdateListeners = new ArrayList();
+
+    protected void prePersist(Class<?> entityClass) {
+        for (PrePersistListener l : prePersistListeners) {
+            l.prePersist(entityClass);
+        }// end of for cycle
+    }// end of method
 
     protected void postPersist(Class<?> entityClass, long id) {
         for (PostPersistListener l : postPersistListeners) {
@@ -279,13 +286,17 @@ public abstract class BaseEntity implements Serializable {
 //		manager.close();
 //	}
 
+    public interface PrePersistListener {
+        public void prePersist(Class<?> entityClass);
+    }
+
     public interface PostPersistListener {
         public void postPersist(Class<?> entityClass, long id);
-    }// end of interface
+    }
 
     public interface PostUpdateListener {
         public void postUpdate(Class<?> entityClass, long id);
-    }// end of interface
+    }
 
 
     /**

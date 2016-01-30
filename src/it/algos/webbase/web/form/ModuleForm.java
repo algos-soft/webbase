@@ -61,7 +61,10 @@ public class ModuleForm extends AForm {
     public void postCommit() {
 
         // merge the bean (creates or updates the record(s) in the db)
-        getEntity().save(getEntityManager());
+        EntityManager em = getEntityManager();
+        if(em!=null){
+            getEntity().save(em);
+        }
 
     }
 
@@ -75,7 +78,12 @@ public class ModuleForm extends AForm {
     }
 
     public EntityManager getEntityManager(){
-        return getModule().getEntityManager();
+        EntityManager em = null;
+        ModulePop module = getModule();
+        if(module!=null){
+            em=module.getEntityManager();
+        }
+        return em;
     }
 
 }

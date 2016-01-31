@@ -22,6 +22,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import it.algos.webbase.web.module.ModulePop;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
 /**
@@ -114,23 +115,10 @@ public class ComboNewItemHandler implements NewItemHandler {
 			return;
 		}
 
-		// retrieves the constructor with Item
-		Constructor constr;
-		try {
-			constr = formClass.getConstructor(Item.class);
-		} catch (NoSuchMethodException | SecurityException e) {
-			logger.log(Level.WARNING, "Can't find Constructor with Item.", e);
-			return;
-		}
-
-
-		// instantiate the form class with the item
-		Object[] args = new Object[] { item };
-		final AForm form;
-		try {
-			form = (AForm) constr.newInstance(args);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			logger.log(Level.WARNING, "Can't instantiate the Form.", e);
+		// instantiate the form from the form class by reflection
+		AForm form = instantiateForm(item);
+		if(form==null){
+			logger.log(Level.WARNING, "The form could not be instantiated from class "+formClass.getSimpleName());
 			return;
 		}
 
@@ -179,6 +167,44 @@ public class ComboNewItemHandler implements NewItemHandler {
 		UI ui = UI.getCurrent();
 		ui.addWindow(window);
 	}
+
+
+	/**
+	 * Instantiate the form by reflection from the given form class.
+	 * @param item - the item to be edited
+	 * @return the form object
+	 */
+	private AForm instantiateForm(Item item){
+		AForm form=null;
+
+		Constructor constr=null;
+		Object[] args=null;
+
+		// retrieve a constructor with Item
+		try {
+			constr = formClass.getConstructor(Item.class);
+			args = new Object[] { item };
+		} catch (NoSuchMethodException e) {
+			// if not found, retrieve a constructor with Item and Module
+			try {
+				constr = formClass.getConstructor(Item.class, ModulePop.class);
+				args = new Object[] { item , null };
+			} catch (NoSuchMethodException e1) {
+				logger.log(Level.WARNING, "Can't find suitable Constructor.", e);
+				return null;
+			}
+		}
+
+		// instantiate the form by reflection
+		try {
+			form = (AForm) constr.newInstance(args);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			logger.log(Level.WARNING, "Can't instantiate the Form.", e);
+		}
+
+		return form;
+	}
+
 
 	public void edit(BeanItem bi){
 		editItem(bi, false);

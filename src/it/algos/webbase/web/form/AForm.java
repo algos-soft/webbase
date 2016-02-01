@@ -19,6 +19,7 @@ import it.algos.webbase.web.toolbar.Toolbar;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -98,8 +99,6 @@ public abstract class AForm extends VerticalLayout {
      * Create and add the fields.
      */
     public abstract void createFields();
-
-
 
 
     /**
@@ -217,7 +216,7 @@ public abstract class AForm extends VerticalLayout {
      * @param propertyId the key for the field (if the key is Attribute, the attribute's name is used)
      * @return the field
      */
-    protected Field getField(Object propertyId) {
+    public Field getField(Object propertyId) {
         if (propertyId instanceof Attribute) {
             propertyId = ((Attribute) propertyId).getName();
         }// end of if cycle
@@ -232,8 +231,6 @@ public abstract class AForm extends VerticalLayout {
     protected Collection<Field<?>> getFields() {
         return binder.getFields();
     }// end of method
-
-
 
 
 //    /**
@@ -372,12 +369,12 @@ public abstract class AForm extends VerticalLayout {
         getBinder().discard();
     }
 
-        /**
-         * Checks if the current values are valid and ready to be persisted.
-         * <p>
-         *
-         * @return a list of strings containing the reasons if not valid, empty list if valid.
-         */
+    /**
+     * Checks if the current values are valid and ready to be persisted.
+     * <p>
+     *
+     * @return a list of strings containing the reasons if not valid, empty list if valid.
+     */
     protected ArrayList<String> isValid() {
         ArrayList<String> reasons = new ArrayList();
         return reasons;
@@ -529,20 +526,20 @@ public abstract class AForm extends VerticalLayout {
     /**
      * @return the Entity currently edited, retrieved from the Item
      */
-    public BaseEntity getEntity(){
-        BaseEntity entity=null;
-        Item item=getItem();
-        if(item !=null){
+    public BaseEntity getEntity() {
+        BaseEntity entity = null;
+        Item item = getItem();
+        if (item != null) {
 
-            if(item instanceof BeanItem){
-                BeanItem bi = (BeanItem)item;
-                entity=(BaseEntity)bi.getBean();
+            if (item instanceof BeanItem) {
+                BeanItem bi = (BeanItem) item;
+                entity = (BaseEntity) bi.getBean();
             }
 
-            if(item instanceof CompositeItem){
-                CompositeItem cItem=(CompositeItem)item;
-                BeanItem bi = (BeanItem)cItem.getItem("bean");
-                entity=(BaseEntity)bi.getBean();
+            if (item instanceof CompositeItem) {
+                CompositeItem cItem = (CompositeItem) item;
+                BeanItem bi = (BeanItem) cItem.getItem("bean");
+                entity = (BaseEntity) bi.getBean();
             }
 
         }

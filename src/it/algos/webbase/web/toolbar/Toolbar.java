@@ -7,6 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.VerticalLayout;
+import it.algos.webbase.web.component.Spacer;
 
 /**
  * Base toolbar composed by:<br>
@@ -41,9 +42,12 @@ public abstract class Toolbar extends VerticalLayout {
         addComponent(helperLayout);
         addComponent(commandLayout);
 
-        // set alignments
-//		setComponentAlignment(commandLayout, Alignment.MIDDLE_LEFT);
-//		setComponentAlignment(rightLayout, Alignment.MIDDLE_RIGHT);
+        // regola il layout: aggiunge per primo un componente espandibile in modo che
+        // i bottoni vadano ad allinearsi a destra
+        commandLayout.setWidth("100%");
+        Spacer spc = new Spacer();
+        commandLayout.addComponent(spc);
+        commandLayout.setExpandRatio(spc,1);
 
         if (DEBUG_GUI) {
             commandLayout.addStyleName("greenBg");

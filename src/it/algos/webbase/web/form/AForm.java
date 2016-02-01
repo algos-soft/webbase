@@ -364,11 +364,20 @@ public abstract class AForm extends VerticalLayout {
     }
 
     /**
-     * Checks if the current values are valid and ready to be persisted.
+     * Reloads the fields from the Item data source.
+     * Unsaved changes are discarded.
      * <p>
-     *
-     * @return a list of strings containing the reasons if not valid, empty list if valid.
      */
+    protected void reload() {
+        getBinder().discard();
+    }
+
+        /**
+         * Checks if the current values are valid and ready to be persisted.
+         * <p>
+         *
+         * @return a list of strings containing the reasons if not valid, empty list if valid.
+         */
     protected ArrayList<String> isValid() {
         ArrayList<String> reasons = new ArrayList();
         return reasons;

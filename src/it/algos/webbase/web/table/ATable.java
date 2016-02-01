@@ -214,19 +214,6 @@ public abstract class ATable extends Table {
     }
 
 
-//    /**
-//     * Creates the container
-//     * <p/>
-//     * JPAContainerFactory creates a container with all the properties
-//     *
-//     * @return the container Override in the subclass to use a different container
-//     */
-//    protected Container createContainer() {
-//        JPAContainer cont = JPAContainerFactory.makeNonCached(getEntityClass(), EM.createEntityManager());
-//        return cont;
-//    }
-
-
     /**
      * Creates the container
      * <p>
@@ -255,39 +242,6 @@ public abstract class ATable extends Table {
     protected void addPropertiesToContainer() {
         Container cont = getContainerDataSource();
         Entities.addPropertiesToContainer(cont, getEntityClass());
-
-//        EntityType<?> type = EM.getEntityType(getEntityClass());
-//        Set<?> attributes = type.getAttributes();
-//        Attribute<?, ?> attribute;
-//
-//        Collection coll = cont.getContainerPropertyIds();
-//
-//        for (Object ogg : attributes) {
-//            if (ogg instanceof Attribute<?, ?>) {
-//                attribute = (Attribute<?, ?>) ogg;
-//                String name = attribute.getName();
-//
-//                if (!coll.contains(name)) {
-//                    Class clazz = attribute.getJavaType();
-//                    Object defaultValue = null;
-//                    try {
-//                        defaultValue = clazz.newInstance();
-//                    } catch (Exception e) {
-//                    }
-//
-//                    // specific handling for LazyQueryContainer
-//                    if (cont instanceof LazyQueryContainer) {
-//                        LazyQueryContainer lqCont = (LazyQueryContainer) cont;
-//                        lqCont.addContainerProperty(name, clazz, defaultValue, true, true);
-//                    } else {
-//                        cont.addContainerProperty(name, clazz, defaultValue);
-//                    }
-//
-//                }
-//
-//            }
-//        }
-
     }
 
 
@@ -408,31 +362,6 @@ public abstract class ATable extends Table {
     }
 
 
-//    /**
-//     * Adds/removes a column to the list of totalizable columns
-//     * <p/>
-//     *
-//     * @param propertyId    - the id of the column
-//     * @param useTotals     - to add or remove the column from the list
-//     * @param decimalPlaces - the number of decimal places, -1 for autodetect
-//     */
-//    public void setColumnUseTotals(SingularAttribute attr, boolean useTotals, int decimalPlaces) {
-//
-//        TotalizableColumn tcol = new TotalizableColumn(attr, decimalPlaces);
-//
-//        if (useTotals) {
-//            if (!totalizableColumns.contains(tcol)) {
-//                totalizableColumns.add(tcol);
-//            }
-//        } else {
-//            totalizableColumns.remove(tcol);
-//        }
-//
-//        // the first call with useTotals=true activates automatically the footer
-//        if (useTotals) {
-//            setFooterVisible(true);
-//        }
-//    }
 
 
     /**
@@ -1147,12 +1076,6 @@ public abstract class ATable extends Table {
             }
             return places;
         }
-
-//        @Override
-//        public boolean equals(Object obj) {
-//            TotalizableColumn other = (TotalizableColumn) obj;
-//            return propertyId.equals(other.getPropertyId());
-//        }
 
         @Override
         public boolean equals(Object o) {

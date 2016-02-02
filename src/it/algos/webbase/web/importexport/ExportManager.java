@@ -2,11 +2,16 @@ package it.algos.webbase.web.importexport;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.OptionGroup;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.updown.ExportStreamResource;
 import it.algos.webbase.web.updown.OnDemandFileDownloader;
 import it.algos.webbase.web.updown.OnDemandFileDownloader.OnDemandStreamResource;
+
+import java.io.File;
 
 @SuppressWarnings("serial")
 public class ExportManager extends ConfirmDialog {
@@ -41,9 +46,15 @@ public class ExportManager extends ConfirmDialog {
 	}
 
 	private void createDownloader() {
+
 		OnDemandStreamResource streamRes = new ExportStreamResource(config);
 		OnDemandFileDownloader downloader = new OnDemandFileDownloader(streamRes);
 		downloader.extend(getConfirmButton());
+
+//		Resource res = new FileResource(new File("/tmp/CRIF_Algos_feb-2013.pdf"));
+//		FileDownloader fd = new FileDownloader(res);
+//		fd.extend(getConfirmButton());
+
 	}
 
 	@Override

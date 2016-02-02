@@ -257,21 +257,21 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
     }
 
     public interface TableToolbarListener {
-        public void create_();
+        void create_();
 
-        public void edit_();
+        void edit_();
 
-        public void delete_();
+        void delete_();
 
-        public void search_();
+        void search_();
 
-        public void selectedonly_();
+        void selectedonly_();
 
-        public void removeselected_();
+        void removeselected_();
 
-        public void showall_();
+        void showall_();
 
-        public void deselectall_();
+        void deselectall_();
 
     }
 

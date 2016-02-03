@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="webbase">
+    <output-path>$PROJECT_DIR$/out/artifacts/webbase</output-path>
+    <root id="root">
+      <element id="library" level="module" name="IvyIDEA" module-name="webbase" />
+      <element id="archive" name="webbase.jar">
+        <element id="module-output" name="webbase" />
+      </element>
+    </root>
+  </artifact>
+</component>

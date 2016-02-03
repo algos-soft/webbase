@@ -43,7 +43,7 @@ public class SortProperty {
         if (attributes != null && attributes.length > 0) {
             properties = new String[attributes.length];
             for (int k = 0; k < attributes.length; k++) {
-                properties[k] = attributes[k].toString();
+                properties[k] = attributes[k].getName();
             }// end of for cycle
 
             doInit(properties);
@@ -53,7 +53,7 @@ public class SortProperty {
     /**
      * Costruttore completo
      *
-     * @param properties  nomi (quantità variabile) delle property
+     * @param properties nomi (quantità variabile) delle property
      */
     public SortProperty(ArrayList<String> properties) {
         if (properties != null && properties.size() > 0) {
@@ -88,6 +88,14 @@ public class SortProperty {
     }// fine del metodo
 
     /**
+     * @param attribute della property
+     */
+    public void add(SingularAttribute attribute) {
+        this.add(attribute.getName());
+    }// fine del metodo
+
+
+    /**
      * @param property nome della property
      */
     public void add(String property) {
@@ -105,11 +113,25 @@ public class SortProperty {
     }// fine del metodo
 
 
-    public ArrayList<String> getProperties() {
-        return properties;
+    public ArrayList<String> getListProperties() {
+        return this.properties;
     }// end of getter method
 
-    public ArrayList<Boolean> getOrdinamenti() {
+    public ArrayList<Boolean> getListOrdinamenti() {
+        return this.ordinamenti;
+    }// end of getter method
+
+    public String[] getProperties() {
+        return (String[]) properties.toArray();
+    }// end of getter method
+
+    public boolean[] getOrdinamenti() {
+        boolean[] ordinamenti = new boolean[this.ordinamenti.size()];
+
+        for (int k = 0; k < this.ordinamenti.size(); k++) {
+            ordinamenti[k] = this.ordinamenti.get(k);
+        }// end of for cycle
+
         return ordinamenti;
     }// end of getter method
 

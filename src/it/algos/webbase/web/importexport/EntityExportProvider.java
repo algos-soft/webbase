@@ -2,6 +2,8 @@ package it.algos.webbase.web.importexport;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.EntityItemProperty;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import it.algos.webbase.web.entity.EM;
 
 import javax.persistence.EntityManager;
@@ -18,7 +20,7 @@ import java.util.Set;
  * All exported values are converted toString().
  * Created by alex on 31-05-2015.
  */
-public class EntityExportProvider extends ExportProvider<EntityItem> {
+public class EntityExportProvider extends ExportProvider {
 
     private Class clazz;
 
@@ -42,13 +44,14 @@ public class EntityExportProvider extends ExportProvider<EntityItem> {
 
 
     @Override
-    public Object[] getExportValues(EntityItem item) {
+    public Object[] getExportValues(Item item) {
         Attribute[] attrs = getAttributes();
         Object[] objects = new Object[attrs.length];
         if (item != null) {
             int idx = 0;
             for (Attribute attr : attrs) {
-                EntityItemProperty property = item.getItemProperty(attr.getName());
+                Property property=item.getItemProperty(attr.getName());
+                //EntityItemProperty property = item.getItemProperty(attr.getName());
                 Object value = property.getValue();
                 String s = "";
                 if(value!=null){

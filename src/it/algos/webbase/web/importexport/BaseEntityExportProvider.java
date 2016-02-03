@@ -7,7 +7,8 @@ import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
 /**
  * Created by alex on 3-02-2016.
- * Redefines getExportValues() extracting the Entity from the Item
+ * Redefines getExportValues() extracting the Entity from the Item.
+ * Subclasses receive Entities instead of Items.
  */
 public abstract class BaseEntityExportProvider extends ExportProvider {
 

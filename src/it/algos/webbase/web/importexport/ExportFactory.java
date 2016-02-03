@@ -17,7 +17,7 @@ public class ExportFactory {
      * @param conf - la configurazione di esportazione
      * @param targetComp - il componente parente (il riferimento serve unicamente per rilasciare
      *                   le risorse di stream quando il componente viene rilasciato, il download
-     *                   parte subito non c'è alcun legame funzionale con il componente)
+     *                   parte subito, non c'è alcun legame funzionale con il componente)
      */
     public static void doExport(ExportConfiguration conf, AbstractComponent targetComp){
         ExportStreamSource streamSource = new ExportStreamSource(conf);

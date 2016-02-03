@@ -1,14 +1,18 @@
 package it.algos.webbase.web.updown;
 
+import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.server.StreamResource;
+import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.importexport.ExportConfiguration;
 import it.algos.webbase.web.importexport.ExportProvider;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.EntityManager;
@@ -56,27 +60,25 @@ public class ExportStreamSource implements StreamResource.StreamSource {
         CreationHelper createHelper = wb.getCreationHelper();
         dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
+        // create the worksheet and the header row
         Sheet sheet = wb.createSheet(config.getDomainClass().getSimpleName());
         createFirstRow(sheet); // create row 0
 
-        // create container
+        // create or use the container
         EntityManager manager = EM.createEntityManager();
-        Container container;
-        if (config.isExportAll()) {
-            container = JPAContainerFactory.makeNonCachedReadOnly(config.getDomainClass(), manager);
-        } else {
-            container = config.getContainer();
-        }
+        Container container = config.getContainer();
 
-        if(container instanceof LazyQueryContainer){
-            LazyQueryContainer lqc=(LazyQueryContainer)container;
+        // iterate the container and create the rows
+        if(container instanceof Container.Indexed){
+            Container.Indexed iCont=(Container.Indexed)container;
             for (int i = 0; i < container.size(); i++) {
-                Object id = lqc.getIdByIndex(i);
-                Item item = lqc.getItem(id);
+                Object id = iCont.getIdByIndex(i);
+                Item item = iCont.getItem(id);
                 Row row = sheet.createRow((short) i + 1);
                 createCells(item, row);
             }
         }
+
 
         manager.close();
 

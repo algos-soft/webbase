@@ -4,6 +4,8 @@ import com.vaadin.ui.Notification;
 import it.algos.webbase.domain.pref.Pref;
 import it.algos.webbase.domain.pref.TypePref;
 
+import java.util.Date;
+
 /**
  * Created by gac on 05 set 2015.
  * .
@@ -50,6 +52,19 @@ public abstract class LibPref {
 
 
     /**
+     * Crea una nuova preferenza di tipo data
+     * La crea solo se non esistente
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newData(String code, Date value, String descPref) {
+        newBase(false, code, value, descPref, TypePref.data);
+    }// end of static method
+
+
+    /**
      * Crea una nuova preferenza di tipo booleano
      * La crea solo se non esistente
      * Crea anche un record di log nella tavola Versione
@@ -62,32 +77,6 @@ public abstract class LibPref {
         newBase(true, code, value, descPref, "", TypePref.booleano);
     }// end of method
 
-    /**
-     * Crea una nuova preferenza di tipo booleano
-     * La crea solo se non esistente
-     * Crea anche un record di log nella tavola Versione
-     *
-     * @param code     key code
-     * @param value    di default
-     * @param descPref dettagliata (obbligatoria per Pref)
-     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
-     */
-    public static void newVersBool(String code, boolean value, String descPref, String descVers) {
-        newBase(true, code, value, descPref, descVers, TypePref.booleano);
-    }// end of static method
-
-    /**
-     * Crea una nuova preferenza di tipo stringa
-     * La crea solo se non esistente
-     * Crea anche un record di log nella tavola Versione
-     *
-     * @param code     key code
-     * @param value    di default
-     * @param descPref dettagliata (obbligatoria per Pref)
-     */
-    public static void newVersStr(String code, String value, String descPref) {
-        newBase(true, code, value, descPref, "", TypePref.stringa);
-    }// end of static method
 
     /**
      * Crea una nuova preferenza di tipo stringa
@@ -103,6 +92,7 @@ public abstract class LibPref {
         newBase(true, code, value, descPref, descVers, TypePref.stringa);
     }// end of static method
 
+
     /**
      * Crea una nuova preferenza di tipo intero
      * La crea solo se non esistente
@@ -114,6 +104,49 @@ public abstract class LibPref {
      */
     public static void newVersInt(String code, int value, String descPref) {
         newBase(true, code, value, descPref, "", TypePref.intero);
+    }// end of static method
+
+
+    /**
+     * Crea una nuova preferenza di tipo data
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newVersData(String code, Date value, String descPref) {
+        newBase(true, code, value, descPref, "", TypePref.data);
+    }// end of static method
+
+
+    /**
+     * Crea una nuova preferenza di tipo booleano
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
+     */
+    public static void newVersBool(String code, boolean value, String descPref, String descVers) {
+        newBase(true, code, value, descPref, descVers, TypePref.booleano);
+    }// end of static method
+
+
+    /**
+     * Crea una nuova preferenza di tipo stringa
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public static void newVersStr(String code, String value, String descPref) {
+        newBase(true, code, value, descPref, "", TypePref.stringa);
     }// end of static method
 
     /**
@@ -128,6 +161,20 @@ public abstract class LibPref {
      */
     public static void newVersInt(String code, int value, String descPref, String descVers) {
         newBase(true, code, value, descPref, descVers, TypePref.intero);
+    }// end of static method
+
+    /**
+     * Crea una nuova preferenza di tipo data
+     * La crea solo se non esistente
+     * Crea anche un record di log nella tavola Versione
+     *
+     * @param code     key code
+     * @param value    di default
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
+     */
+    public static void newVersInt(String code, Date value, String descPref, String descVers) {
+        newBase(true, code, value, descPref, descVers, TypePref.data);
     }// end of static method
 
 
@@ -166,6 +213,7 @@ public abstract class LibPref {
             pref.setCode(code);
             pref.setDescrizione(descPref);
             pref.setType(type);
+
             if (type == TypePref.booleano) {
                 try { // prova ad eseguire il codice
                     pref.setBool((Boolean) value);
@@ -174,6 +222,7 @@ public abstract class LibPref {
                     Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
             }// fine del blocco if
+
             if (type == TypePref.stringa) {
                 try { // prova ad eseguire il codice
                     pref.setStringa((String) value);
@@ -182,6 +231,7 @@ public abstract class LibPref {
                     Notification.show("La preferenza " + code + " non è di tipo stringa", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
             }// fine del blocco if
+
             if (type == TypePref.intero) {
                 try { // prova ad eseguire il codice
                     pref.setIntero((Integer) value);
@@ -190,6 +240,16 @@ public abstract class LibPref {
                     Notification.show("La preferenza " + code + " non è di tipo intero", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
             }// fine del blocco if
+
+            if (type == TypePref.data) {
+                try { // prova ad eseguire il codice
+                    pref.setData((Date) value);
+                    strValue = LibDate.toStringDMYY((Date)value);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    Notification.show("La preferenza " + code + " non è di tipo data", Notification.Type.ERROR_MESSAGE);
+                }// fine del blocco try-catch
+            }// fine del blocco if
+
             pref.save();
 
             if (logVersione) {

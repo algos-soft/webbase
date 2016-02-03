@@ -1,8 +1,6 @@
 package it.algos.webbase.web.table;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.filter.Or;
 import com.vaadin.event.Action;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;

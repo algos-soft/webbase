@@ -1,17 +1,12 @@
 package it.algos.webbase.domain.ruolo;
 
-import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.metamodel.SingularAttribute;
 
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import java.util.List;
 
 @Entity
 public class Ruolo extends BaseEntity {

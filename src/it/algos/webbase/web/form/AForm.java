@@ -1,7 +1,5 @@
 package it.algos.webbase.web.form;
 
-import com.vaadin.data.Buffered;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -15,11 +13,9 @@ import it.algos.webbase.web.field.DateField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.toolbar.FormToolbar;
-import it.algos.webbase.web.toolbar.Toolbar;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
 import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;

@@ -36,6 +36,52 @@ import java.util.*;
  */
 public abstract class LibArray {
 
+
+    /**
+     * Utility di conversione di una stringa.
+     * <p>
+     * Crea una lista da un testo che usa una virgola come separatore
+     * Vengono eliminati gli spazi vuoti iniziali e finali
+     *
+     * @param testo da suddividere
+     * @return una lista contenente le parti di stringa separate
+     */
+    public static ArrayList<String> fromStringaVirgola(String testo) {
+        return fromStringa(testo, ",");
+    } // fine del metodo
+
+    /**
+     * Utility di conversione di una stringa.
+     * <p>
+     * Crea una lista da un testo che usa un separatore
+     * Vengono eliminati gli spazi vuoti iniziali e finali
+     *
+     * @param testo da suddividere
+     * @param sep   separatore
+     * @return una lista contenente le parti di stringa separate
+     */
+    public static ArrayList<String> fromStringa(String testo, String sep) {
+        ArrayList<String> array = null;
+        String[] parti = null;
+
+        if (!testo.equals("") && !sep.equals("")) {
+            array = new ArrayList<String>();
+            if (testo.contains(sep)) {
+                parti = testo.split(sep);
+            } else {
+                array.add(testo);
+            }// end of if/else cycle
+        }// end of if cycle
+
+        if (parti != null) {
+            for (String elemento : parti) {
+                array.add(elemento);
+            }// end of for cycle
+        }// end of if cycle
+
+        return array;
+    } // fine del metodo
+
     /**
      * Convert a stringArray to ArrayList
      *
@@ -244,10 +290,11 @@ public abstract class LibArray {
     }// end of static method
 
     /**
-     * Somma due array (liste) e restituisce una lista disordinata
+     * Somma due array (liste) e restituisce una lista NON ordinata
      * <p>
      * Almeno uno dei due array in ingresso deve essere non nullo
      * Normalmente si usa di meno la somma disordinata
+     * I valori negli array sono unici
      * <p>
      * Se entrambi i parametri sono nulli, restituisce un nullo
      * Se uno dei parametri è nullo, restituisce l'altro
@@ -278,22 +325,6 @@ public abstract class LibArray {
             return arrayPrimo;
         }// fine del blocco if
 
-//        if (arrayPrimo != null || arraySecondo != null) {
-//            arraySomma = new ArrayList();
-//        }// fine del blocco if
-//
-//        if (arrayPrimo != null) {
-//            for (Object ogg : arrayPrimo) {
-//                add(arraySomma, ogg);
-//            } // fine del ciclo for-each
-//        }// fine del blocco if
-//
-//        if (arraySecondo != null) {
-//            for (Object ogg : arraySecondo) {
-//                add(arraySomma, ogg);
-//            } // fine del ciclo for-each
-//        }// fine del blocco if
-
         return arraySomma;
     }// end of static method
 
@@ -303,6 +334,7 @@ public abstract class LibArray {
      * <p>
      * Almeno uno dei due array in ingresso deve essere non nullo
      * Normalmente si usa di più la somma ordinata
+     * I valori negli array sono unici
      * <p>
      * Se entrambi i parametri sono nulli, restituisce un nullo
      * Se uno dei parametri è nullo, restituisce l'altro
@@ -324,15 +356,15 @@ public abstract class LibArray {
 
 
     /**
-     * Differenza tra due array (liste) e restituisce una lista
+     * Differenza tra due array (liste) e restituisce una lista NON ordinata
      * <p>
-     * Il primo array in ingresso deve essere non nullo e deve essere una lista
-     * I valori negli array sono unici
+     * Il primo array in ingresso deve essere non nullo
      * Normalmente si usa di meno la differenza disordinata
+     * I valori negli array sono unici
      * <p>
-     * Se entrambi i parametri sono liste della stessa classe, restituisce la differenza
-     * Se entrambi i parametri sono liste ma di classe diversa, restituisce un nullo
      * Se il primo parametro è nullo, restituisce un nullo
+     * Se il secondo parametro è nullo, restituisce la prima lista
+     * La lista di valori in uscita è unica
      *
      * @param arrayPrimo   - prima lista
      * @param arraySecondo - seconda lista
@@ -341,6 +373,7 @@ public abstract class LibArray {
     @SuppressWarnings("all")
     public static ArrayList differenzaDisordinata(ArrayList arrayPrimo, ArrayList arraySecondo) {
         ArrayList arrayDifferenza = null;
+
         if (arraySecondo == null) {
             return arrayPrimo;
         }// fine del blocco if
@@ -358,6 +391,32 @@ public abstract class LibArray {
                     }// fine del blocco if
                 } // fine del ciclo for-each
             }// fine del blocco if
+        }// fine del blocco if
+
+        return arrayDifferenza;
+    }// end of static method
+
+    /**
+     * Differenza tra due array (liste) e restituisce una lista ordinata
+     * <p>
+     * Il primo array in ingresso deve essere non nullo e deve essere una lista
+     * I valori negli array sono unici
+     * Normalmente si usa di più la differenza ordinata
+     * <p>
+     * Se il primo parametro è nullo, restituisce un nullo
+     * Se il secondo parametro è nullo, restituisce la prima lista
+     * La lista di valori in uscita è unica
+     *
+     * @param arrayPrimo   - prima lista
+     * @param arraySecondo - seconda lista
+     * @return arrayDifferenza disordinato
+     */
+    @SuppressWarnings("all")
+    public static ArrayList differenza(ArrayList arrayPrimo, ArrayList arraySecondo) {
+        ArrayList arrayDifferenza = differenzaDisordinata(arrayPrimo, arraySecondo);
+
+        if (arrayDifferenza != null) {
+            arrayDifferenza = sort(arrayDifferenza);
         }// fine del blocco if
 
         return arrayDifferenza;

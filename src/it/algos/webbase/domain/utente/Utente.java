@@ -4,7 +4,6 @@ import it.algos.webbase.domain.ruolo.Ruolo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.lib.LibCrypto;
-import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.query.AQuery;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;

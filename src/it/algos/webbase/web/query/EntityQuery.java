@@ -1,12 +1,11 @@
 package it.algos.webbase.web.query;
 
-import it.algos.webbase.web.entity.BaseEntity;
-
 import java.util.List;
 
 import javax.persistence.metamodel.SingularAttribute;
 
 import com.vaadin.data.Container.Filter;
+import it.algos.webbase.web.entity.BaseEntity;
 
 /**
  * Query class typed on a specific Entity type.

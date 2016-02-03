@@ -607,6 +607,17 @@ public abstract class LibDate {
     }// end of static method
 
     /**
+     * Ritorna il numero dell'anno di una data fornita.
+     * <p>
+     *
+     * @return il numero dell'anno
+     */
+    public static int getYear(Date data) {
+        Calendar calendario = getCal(data);
+        return calendario.get(Calendar.YEAR);
+    }// end of static method
+
+    /**
      * Ritorna il numero del giorno dell'anno della data corrente.
      * <p>
      *
@@ -636,6 +647,7 @@ public abstract class LibDate {
         return getDayWeek(new Date());
     }// end of static method
 
+
     /**
      * Ritorna il numero delle ore della data corrente.
      *
@@ -661,6 +673,15 @@ public abstract class LibDate {
      */
     public static int getSecondi() {
         return getSecondi(new Date());
+    }// end of static method
+
+    /**
+     * Ritorna il numero dell'anno della data corrente.
+     *
+     * @return il numero dei secondi
+     */
+    public static int getYear() {
+        return getYear(new Date());
     }// end of static method
 
     /**

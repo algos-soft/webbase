@@ -1,6 +1,5 @@
 package it.algos.webbase.domain.log;
 
-import com.vaadin.ui.Notification;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.lib.LibTime;
 import it.algos.webbase.web.query.AQuery;
@@ -10,7 +9,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 

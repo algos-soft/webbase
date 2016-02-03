@@ -3,7 +3,6 @@ package it.algos.webbase.web.field;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AForm.FormListener;
 
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 
 import com.vaadin.data.Item;
@@ -23,7 +21,6 @@ import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.module.ModulePop;
-import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
 /**
  * Handler for new creating new items from a RelatedComboField. <br>

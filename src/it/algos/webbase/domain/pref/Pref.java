@@ -5,7 +5,6 @@ package it.algos.webbase.domain.pref;
  */
 
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.lib.LibDate;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -131,6 +130,20 @@ public class Pref extends BaseEntity {
 
         if (pref != null && pref.type == TypePref.intero) {
             return pref.getInt();
+        } else {
+            return suggerito;
+        }// fine del blocco if-else
+    } // end of method
+
+    public static Date getData(String code) {
+        return findByCode(code).getData();
+    } // end of method
+
+    public static Date getData(String code, Date suggerito) {
+        Pref pref = findByCode(code);
+
+        if (pref != null && pref.type == TypePref.data) {
+            return pref.getData();
         } else {
             return suggerito;
         }// fine del blocco if-else

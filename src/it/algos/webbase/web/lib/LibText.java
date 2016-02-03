@@ -344,7 +344,6 @@ public abstract class LibText {
     /**
      * Sostituisce tutte le occorrenze.
      * Esegue solo se il testo è valido
-     * Se arriva un oggetto non stringa, restituisce null
      *
      * @param testoIn    in ingresso
      * @param oldStringa da eliminare
@@ -379,6 +378,37 @@ public abstract class LibText {
 
 
     /**
+     * Sostituisce il testo nella posizione indicata.
+     * Esegue solo se il testo è valido
+     *
+     * @param testoIn    in ingresso
+     * @param posIni     inizio del testo da eliminare
+     * @param posEnd     fine del testo da eliminare
+     * @param newStringa da sostituire
+     * @return testoOut convertito
+     */
+    public static String sostituisce(String testoIn, int posIni, int posEnd, String newStringa) {
+        String testoOut = testoIn;
+        String prima;
+        String dopo;
+        int length = 0;
+
+        if (testoIn != null && newStringa != null) {
+            length = testoIn.length();
+            if (posIni > 0 && posEnd > 0 && posEnd > posIni && posEnd < length) {
+
+                prima = testoIn.substring(0, posIni);
+                dopo = testoIn.substring(posEnd);
+                testoOut = prima + newStringa + dopo;
+
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return testoOut;
+    }// end of static method
+
+
+    /**
      * Restituisce la posizione di un tag in un testo
      * Riceve una lista di tag da provare
      * Restituisce la prima posizione tra tutti i tag trovati
@@ -391,6 +421,7 @@ public abstract class LibText {
      * -1 se il secondo parametro è nullo
      * -1 se il secondo parametro non è ne una lista di stringhe, ne una stringa
      */
+
     public static int getPos(String testo, ArrayList<String> lista) {
         int pos = testo.length();
         int posTmp;

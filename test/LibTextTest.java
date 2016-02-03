@@ -356,12 +356,12 @@ public class LibTextTest {
 
     @Test
     /**
-       * Trova nel testo, la prima occorrenza di un tag compreso nella lista di tag
-       *
-       * @param testo    da controllare
-       * @param listaTag tag da trovare (uno o più)
-       * @return posizione nel testo del primo tag trovato, zero se non ce ne sono
-       */
+     * Trova nel testo, la prima occorrenza di un tag compreso nella lista di tag
+     *
+     * @param testo    da controllare
+     * @param listaTag tag da trovare (uno o più)
+     * @return posizione nel testo del primo tag trovato, zero se non ce ne sono
+     */
     public void trovaPrimo() {
         String originale = "Prova di tag varii tipo{{";
         String tag = "varii";
@@ -414,5 +414,31 @@ public class LibTextTest {
     }// end of single test
 
 
+    @Test
+    /**
+     * Sostituisce il testo nella posizione indicata.
+     * Esegue solo se il testo è valido
+     *
+     * @param testoIn    in ingresso
+     * @param posIni     inizio del testo da eliminare
+     * @param posEnd     fine del testo da eliminare
+     * @param newStringa da sostituire
+     * @return testoOut convertito
+     */
+    public void sostituisce() {
+        int posIni;
+        int posEnd;
+        String tagOld;
+        String tagNew;
+        sorgente = "Marco Rapetti non dovrebbe mai fare questo anche se giammai si può";
+
+        tagOld = "mai";
+        tagNew = "sempre";
+        posIni = sorgente.indexOf(tagOld);
+        posEnd = posIni + tagOld.length();
+        previsto = "Marco Rapetti non dovrebbe sempre fare questo anche se giammai si può";
+        ottenuto = LibText.sostituisce(sorgente, posIni, posEnd, tagNew);
+        assertEquals(previsto,ottenuto);
+    }// end of static method
 
 }// end of test class

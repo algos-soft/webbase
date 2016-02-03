@@ -1,19 +1,13 @@
 package it.algos.webbase.web.form;
 
-import com.vaadin.data.Buffered;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.module.ModulePop;
-import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
-import java.util.Collection;
 
 /**
  * A Form for creating and editing records in a Module.

@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 import com.vaadin.data.Container.Filter;
 
 import it.algos.webbase.domain.ruolo.Ruolo;
-import it.algos.webbase.domain.ruolo.Ruolo_;
 import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.domain.utente.Utente_;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.FilterFactory;

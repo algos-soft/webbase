@@ -17,7 +17,6 @@ import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.lib.Lib;
-import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 

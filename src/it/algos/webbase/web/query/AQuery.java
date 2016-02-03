@@ -157,7 +157,7 @@ public class AQuery {
      * Search for the all entities
      *
      * @param clazz the entity class
-     * @return a list of entities
+     * @return an ArrayList of entities
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> clazz) {
         ArrayList<? extends BaseEntity> lista = null;
@@ -181,15 +181,37 @@ public class AQuery {
      * @return the list with the entities found
      */
     public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, Filter... filters) {
+        return getList(entityClass, null, filters);
+    }// end of method
+
+
+    /**
+     * Return a list of entities for a given domain class and filters.
+     * <p>
+     *
+     * @param entityClass - the entity class
+     * @param sorts       - an array of sort wrapper
+     * @param filters     - an array of filters (you can use FilterFactory to build
+     *                    filters, or create them as Compare....)
+     * @return the list with the entities found
+     */
+    public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, SortProperty sorts, Filter... filters) {
         EntityItem<BaseEntity> item;
         ArrayList<BaseEntity> list = new ArrayList<BaseEntity>();
         JPAContainer<BaseEntity> container = getContainer(entityClass, filters);
+
+        if (sorts != null) {
+            container.sort(sorts.getProperties(), sorts.getOrdinamenti());
+        }// end of if cycle
+
         for (Object id : container.getItemIds()) {
             item = container.getItem(id);
             list.add(item.getEntity());
-        }
+        }// end of for cycle
+
         return list;
-    }
+    }// end of method
+
 
     /**
      * Return a single entity for a given domain class and filters.

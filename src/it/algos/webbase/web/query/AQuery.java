@@ -184,6 +184,7 @@ public class AQuery {
         EntityItem<BaseEntity> item;
         ArrayList<BaseEntity> list = new ArrayList<BaseEntity>();
         JPAContainer<BaseEntity> container = getContainer(entityClass, filters);
+
         for (Object id : container.getItemIds()) {
             item = container.getItem(id);
             list.add(item.getEntity());

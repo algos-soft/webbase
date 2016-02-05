@@ -5,6 +5,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.AlgosApp;
+import it.algos.webbase.web.component.Spacer;
 import it.algos.webbase.web.form.AForm;
 
 import java.util.ArrayList;
@@ -23,8 +24,23 @@ public class FormToolbar extends Toolbar {
     public FormToolbar(AForm form) {
         super();
         this.form=form;
-        addButtons();
+
         removeComponent(helperLayout);
+
+        // regola il layout: aggiunge per primo un componente espandibile in modo che
+        // i bottoni vadano ad allinearsi a destra
+        Spacer spc = new Spacer();
+        spc.setWidth("100%");
+        commandLayout.setWidth("100%");
+        commandLayout.addComponent(spc);
+        commandLayout.setExpandRatio(spc, 1);
+
+        if (DEBUG_GUI) {
+            spc.addStyleName("blueBg");
+        }// end of if cycle
+
+        addButtons();
+
     }// end of constructor
 
 

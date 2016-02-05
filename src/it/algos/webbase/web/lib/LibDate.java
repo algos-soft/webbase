@@ -322,7 +322,7 @@ public abstract class LibDate {
     private static Date fromMeseAnno(int numMeseDellAnno, int anno, InizioOppureFine flag) {
         Date data = null;
         Calendar calendario = getCal();
-        int giorniMese = Mese.getGiorni(numMeseDellAnno);
+        int giorniMese = Mese.getGiorni(numMeseDellAnno, anno);
 
         if (numMeseDellAnno > 0) {
             numMeseDellAnno--;

@@ -5,12 +5,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.themes.Reindeer;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class ConfirmDialog extends BaseDialog {
 
 	private Listener listener;
-	private ConfirmListener confirmListener;
+	//private ConfirmListener confirmListener;
+	private ArrayList<ConfirmListener> confirmListeners=new ArrayList<>();
+
 	private Button confirmButton;
 	private Button cancelButton;
 
@@ -76,9 +79,9 @@ public class ConfirmDialog extends BaseDialog {
 			listener.onClose(this, true);
 		}
 
-		if (confirmListener != null) {
-			confirmListener.confirmed(this);
-		}
+        for(ConfirmListener l : confirmListeners){
+            l.confirmed(this);
+        }
 
 		close();
 	}// end of method
@@ -92,10 +95,17 @@ public class ConfirmDialog extends BaseDialog {
 	}// end of method
 
 	public void setConfirmListener(ConfirmListener l) {
-		this.confirmListener = l;
+        confirmListeners.clear();
+        addConfirmListener(l);
 	}// end of method
 
-	public interface ConfirmListener {
+
+    public void addConfirmListener(ConfirmListener l) {
+        confirmListeners.add(l);
+    }// end of method
+
+
+    public interface ConfirmListener {
 		public void confirmed(ConfirmDialog dialog);
 	}// end of method
 

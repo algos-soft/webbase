@@ -1,34 +1,37 @@
 package it.algos.webbase.web.lib;
 
+import java.time.Year;
 import java.util.ArrayList;
 
 public enum Mese {
 
-    gennaio("gen", "gennaio", 31),
-    febbraio("feb", "febbraio", 28),
-    marzo("mar", "marzo", 31),
-    aprile("apr", "aprile", 30),
-    maggio("mag", "maggio", 31),
-    giugno("giu", "giugno", 30),
-    luglio("lug", "luglio", 31),
-    agosto("ago", "agosto", 31),
-    settembre("set", "settembre", 30),
-    ottobre("ott", "ottobre", 31),
-    novembre("nov", "novembre", 30),
-    dicembre("dic", "dicembre", 31);
+    gennaio("gen", "gennaio", 31, 31),
+    febbraio("feb", "febbraio", 28, 29),
+    marzo("mar", "marzo", 31, 31),
+    aprile("apr", "aprile", 30, 30),
+    maggio("mag", "maggio", 31, 31),
+    giugno("giu", "giugno", 30, 30),
+    luglio("lug", "luglio", 31, 31),
+    agosto("ago", "agosto", 31, 31),
+    settembre("set", "settembre", 30, 30),
+    ottobre("ott", "ottobre", 31, 31),
+    novembre("nov", "novembre", 30, 30),
+    dicembre("dic", "dicembre", 31, 31);
 
     String breve;
     String lungo;
     int giorni;
+    int giorniBis;
 
 
     /**
      * Costruttore interno dell'Enumeration
      */
-    Mese(String breve, String lungo, int giorni) {
+    Mese(String breve, String lungo, int giorni, int giorniBis) {
         this.breve = breve;
         this.lungo = lungo;
         this.giorni = giorni;
+        this.giorniBis = giorniBis;
     }// fine del costruttore interno
 
 
@@ -36,14 +39,20 @@ public enum Mese {
      * Numero di giorni del mese
      *
      * @param numMeseDellAnno L'anno parte da gennaio che è il mese numero 1
+     * @param anno l'anno di riferimento (per sapere se è bisestile)
      * @return Numero di giorni del mese
+     *
      */
-    public static int getGiorni(int numMeseDellAnno) {
+    public static int getGiorni(int numMeseDellAnno, int anno) {
         int giorniDelMese = 0;
         Mese mese = getMese(numMeseDellAnno);
 
         if (mese != null) {
-            giorniDelMese = mese.giorni;
+            if(!Year.of(anno).isLeap()){
+                giorniDelMese = mese.giorni;
+            }else{
+                giorniDelMese = mese.giorniBis;
+            }
         }// fine del blocco if
 
         return giorniDelMese;

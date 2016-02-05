@@ -21,7 +21,7 @@ import it.algos.webbase.web.component.Spacer;
 @SuppressWarnings("serial")
 public abstract class Toolbar extends VerticalLayout {
 
-    private static final boolean DEBUG_GUI = false;
+    protected static final boolean DEBUG_GUI = false;
     public static int ALTEZZA_BOTTONI = 32;
     public static int LARGHEZZA_BOTTONI = 100;
 //    public static int ALTEZZA_BOTTONI = 40;
@@ -36,18 +36,13 @@ public abstract class Toolbar extends VerticalLayout {
 
         // set layout properties
         commandLayout.setSpacing(true);
+        commandLayout.setWidthUndefined();
         helperLayout.setSpacing(true);
 
         // adds components
         addComponent(helperLayout);
         addComponent(commandLayout);
 
-        // regola il layout: aggiunge per primo un componente espandibile in modo che
-        // i bottoni vadano ad allinearsi a destra
-        commandLayout.setWidth("100%");
-        Spacer spc = new Spacer();
-        commandLayout.addComponent(spc);
-        commandLayout.setExpandRatio(spc,1);
 
         if (DEBUG_GUI) {
             commandLayout.addStyleName("greenBg");

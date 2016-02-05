@@ -1,11 +1,13 @@
 package it.algos.webbase.web.lib;
 
+import com.google.common.collect.Iterables;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.filter.*;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by alex on 30/12/15.
@@ -13,8 +15,9 @@ import java.util.List;
  */
 public class LibFilter {
 
+
     /**
-     * Implements conversion of Vaadin filter to JPA 2.0 Criteria API based predicate.
+     * Implements conversion of a single Vaadin filter to JPA 2.0 Criteria API based predicate.
      * Supports the following operations:
      *
      * And, Between, Compare, Compare.Equal, Compare.Greater, Compare.GreaterOrEqual,
@@ -28,6 +31,40 @@ public class LibFilter {
      */
     public static Predicate getPredicate(final Container.Filter filter, final CriteriaBuilder cb,
                                          final CriteriaQuery<?> cq, final Root<?> root) {
+        ArrayList<Container.Filter> filters = new ArrayList();
+        filters.add(filter);
+        return getPredicate(filters, cb, cq, root);
+    }
+
+
+    /**
+     * Implements conversion of a collection of Vaadin filters to JPA 2.0 Criteria API based predicate.
+     * Supports the following operations:
+     *
+     * And, Between, Compare, Compare.Equal, Compare.Greater, Compare.GreaterOrEqual,
+     * Compare.Less, Compare.LessOrEqual, IsNull, Like, Not, Or, SimpleStringFilter
+     *
+     * @param filter a collection of Vaadin filters
+     * @param cb the CriteriaBuilder
+     * @param cq the CriteriaQuery
+     * @param root the root
+     * @return the predicate
+     */
+    public static Predicate getPredicate(final Collection<Container.Filter> cFilters, final CriteriaBuilder cb,
+                                         final CriteriaQuery<?> cq, final Root<?> root) {
+
+
+
+        // create a single Filter
+        Container.Filter filter;
+        if (cFilters.size() == 1) {
+            filter = Iterables.get(cFilters, 0);
+        } else {
+            Container.Filter[] aFilters = cFilters.toArray(new Container.Filter[cFilters.size()]);
+            filter = new And(aFilters);
+        }
+
+
         if (filter instanceof And) {
             final And and = (And) filter;
             final List<Container.Filter> filters = new ArrayList<Container.Filter>(and.getFilters());

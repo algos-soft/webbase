@@ -822,18 +822,9 @@ public abstract class ATable extends Table {
      */
     protected Predicate getFiltersPredicate(final CriteriaBuilder cb, final CriteriaQuery<?> cq, final Root<?> root) {
         Predicate pred = null;
-        Collection<Filter> filters = null;
 
         // retrieve an array of the current Container.Filter(s)
-        Container cont = getContainerDataSource();
-        if (cont instanceof LazyEntityContainer) {
-            LazyEntityContainer lec = (LazyEntityContainer) cont;
-            filters = lec.getContainerFilters();
-        }
-        if (cont instanceof JPAContainer) {
-            JPAContainer jpac = (JPAContainer) cont;
-            filters = jpac.getFilters();
-        }
+        Collection<Filter> filters = getContainerFilters();
 
         // do only if there are filters
         if (filters != null && filters.size() > 0) {
@@ -847,6 +838,8 @@ public abstract class ATable extends Table {
                 singleFilter = new And(aFilters);
             }
 
+
+
             // create the Predicate
             pred = LibFilter.getPredicate(singleFilter, cb, cq, root);
 
@@ -855,6 +848,32 @@ public abstract class ATable extends Table {
         return pred;
 
     }
+
+
+    /**
+     * Return a collection of the current container filters.
+     * Empty collection if no filters.
+     * @return the current filters
+     */
+    public Collection<Filter> getContainerFilters(){
+
+        Collection<Filter> filters = new ArrayList<Filter>();
+
+        // retrieve an array of the current Container.Filter(s)
+        Container cont = getContainerDataSource();
+        if (cont instanceof LazyEntityContainer) {
+            LazyEntityContainer lec = (LazyEntityContainer) cont;
+            filters = lec.getContainerFilters();
+        }
+        if (cont instanceof JPAContainer) {
+            JPAContainer jpac = (JPAContainer) cont;
+            filters = jpac.getFilters();
+        }
+
+        return filters;
+
+    }
+
 
 
     /**

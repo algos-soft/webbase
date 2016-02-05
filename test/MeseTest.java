@@ -21,95 +21,102 @@ public class MeseTest {
         int previsto = 0;
         int ottenuto = 0;
         int numMeseDellAnno = 0;
+        int anno = 1984;
 
         // errore
         numMeseDellAnno = -1;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // errore
         numMeseDellAnno = 0;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // errore
         numMeseDellAnno = 13;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // gennaio
         numMeseDellAnno = 1;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
-        // febbraio
+        // febbraio non bisestile
         numMeseDellAnno = 2;
         previsto = 28;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, 2015);
+        assertEquals(ottenuto, previsto);
+
+        // febbraio non bisestile
+        numMeseDellAnno = 2;
+        previsto = 29;
+        ottenuto = Mese.getGiorni(numMeseDellAnno, 2016);
         assertEquals(ottenuto, previsto);
 
         // marzo
         numMeseDellAnno = 3;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // aprile
         numMeseDellAnno = 4;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // maggio
         numMeseDellAnno = 5;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // giugno
         numMeseDellAnno = 6;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // luglio
         numMeseDellAnno = 7;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // agosto
         numMeseDellAnno = 8;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // settembre
         numMeseDellAnno = 9;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // ottobre
         numMeseDellAnno = 10;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // novembre
         numMeseDellAnno = 11;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // dicembre
         numMeseDellAnno = 12;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno);
+        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
     }// end of single test
 

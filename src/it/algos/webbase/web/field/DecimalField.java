@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 
 @SuppressWarnings("serial")
-public class DecimalField extends CustomField<BigDecimal> implements FieldInterface<BigDecimal> {
+public class DecimalField extends ACustomField<BigDecimal> implements FieldInterface<BigDecimal> {
 
 	private TextField textField;
 	private StringToBigDecimalConverter converter = new StringToBigDecimalConverter();

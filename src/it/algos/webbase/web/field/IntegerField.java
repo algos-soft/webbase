@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 
 @SuppressWarnings({ "serial" })
-public class IntegerField extends CustomField<Integer> implements FieldInterface<Integer> {
+public class IntegerField extends ACustomField<Integer> implements FieldInterface<Integer> {
 
 	private TextField textField;
 	private StringToIntegerConverter converter = new StringToIntegerConverter();

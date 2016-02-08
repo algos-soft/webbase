@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 @SuppressWarnings({ "serial" })
-public class ImageField extends CustomField<byte[]> implements FieldInterface<byte[]> {
+public class ImageField extends ACustomField<byte[]> implements FieldInterface<byte[]> {
 
 	private static final boolean DEBUG_GUI=false;
 	private Image image;

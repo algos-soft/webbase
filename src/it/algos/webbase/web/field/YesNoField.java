@@ -8,7 +8,7 @@ import it.algos.webbase.web.component.YesNoCheckboxComponent;
  * Created by alex on 28-05-2015.
  * .
  */
-public class YesNoField extends CustomField<Boolean> implements FieldInterface<Boolean>{
+public class YesNoField extends ACustomField<Boolean> implements FieldInterface<Boolean>{
 
     YesNoCheckboxComponent comp;
 

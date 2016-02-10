@@ -44,7 +44,7 @@ public class LibFilter {
      * And, Between, Compare, Compare.Equal, Compare.Greater, Compare.GreaterOrEqual,
      * Compare.Less, Compare.LessOrEqual, IsNull, Like, Not, Or, SimpleStringFilter
      *
-     * @param filter a collection of Vaadin filters
+     * @param cFilters a collection of Vaadin filters
      * @param cb the CriteriaBuilder
      * @param cq the CriteriaQuery
      * @param root the root

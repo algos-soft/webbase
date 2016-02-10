@@ -36,10 +36,10 @@ public class @NAME@ extends BaseEntity {
 	}// end of general constructor
 
     /**
-     * Recupera una istanza di Bolla usando la query standard della Primary Key
+     * Recupera una istanza di @NAME@ usando la query standard della Primary Key
      *
      * @param id valore della Primary Key
-     * @return istanza di Bolla, null se non trovata
+     * @return istanza di @NAME@, null se non trovata
      */
 	public static @NAME@ find(long id) {
 		@NAME@ instance = null;
@@ -55,10 +55,10 @@ public class @NAME@ extends BaseEntity {
 	}// end of method
 
     /**
-     * Recupera una istanza di Bolla usando la query di una property specifica
+     * Recupera una istanza di @NAME@ usando la query di una property specifica
      *
      * @param nome valore della property Nome
-     * @return istanza di Bolla, null se non trovata
+     * @return istanza di @NAME@, null se non trovata
      */
 	public static @NAME@ findByNome(String nome) {
 		@NAME@ instance = null;
@@ -96,7 +96,7 @@ public class @NAME@ extends BaseEntity {
      */
     @SuppressWarnings("unchecked")
     public synchronized static ArrayList<@NAME@> findAll() {
-        return (ArrayList<@NAME@>) AQuery.getList(@NAME@.class);
+        return (ArrayList<@NAME@>) AQuery.getLista(@NAME@.class);
     }// end of method
 
     @Override

@@ -650,6 +650,30 @@ public abstract class LibArray {
      * @param cicloCorrente attuale
      * @return sublista corrente del ciclo
      */
+    public static ArrayList<String> estraeSublistaStr(ArrayList<String> listatTotale, int dimBlocco, int cicloCorrente) {
+        ArrayList<String> sublista = null;
+        int delta;
+
+        if (listatTotale == null || listatTotale.size() < 1) {
+            return null;
+        }// end of if cycle
+
+        delta = dimBlocco * (cicloCorrente + 1);
+        delta = Math.min(listatTotale.size(), delta);
+        sublista = new ArrayList<String>(listatTotale.subList(dimBlocco * cicloCorrente, delta));
+
+        return sublista;
+    }// end of static method
+
+
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     * @return sublista corrente del ciclo
+     */
     public static ArrayList<Integer> estraeSublistaInt(ArrayList<Integer> listatTotale, int dimBlocco, int cicloCorrente) {
         ArrayList<Integer> sublista = null;
         int delta;

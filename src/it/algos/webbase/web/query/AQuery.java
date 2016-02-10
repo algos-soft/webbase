@@ -134,10 +134,10 @@ public class AQuery {
     /**
      * Search for the all entities
      *
-     * @param clazz the entity class
+     * @param entityClass the entity class
      * @return a list of entities
      */
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz) {
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass) {
         List<? extends BaseEntity> entities;
         CriteriaBuilder builder;
         CriteriaQuery<? extends BaseEntity> criteria;
@@ -146,7 +146,7 @@ public class AQuery {
         EntityManager manager = EM.createEntityManager();
 
         builder = manager.getCriteriaBuilder();
-        criteria = builder.createQuery(clazz);
+        criteria = builder.createQuery(entityClass);
         query = manager.createQuery(criteria);
         entities = query.getResultList();
         manager.close();
@@ -156,12 +156,12 @@ public class AQuery {
     /**
      * Search for the all entities
      *
-     * @param clazz the entity class
+     * @param entityClass the entity class
      * @return an ArrayList of entities
      */
-    public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> clazz) {
+    public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass) {
         ArrayList<? extends BaseEntity> lista = null;
-        List<? extends BaseEntity> entities = getList(clazz);
+        List<? extends BaseEntity> entities = getList(entityClass);
 
         if (entities != null) {
             lista = new ArrayList<BaseEntity>(entities);
@@ -182,6 +182,26 @@ public class AQuery {
      */
     public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, Filter... filters) {
         return getList(entityClass, null, filters);
+    }// end of method
+
+    /**
+     * Return a list of entities for a given domain class and filters.
+     * <p>
+     *
+     * @param entityClass - the entity class
+     * @param filters     - an array of filters (you can use FilterFactory to build
+     *                    filters, or create them as Compare....)
+     * @return an ArrayList of entities
+     */
+    public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, Filter... filters) {
+        ArrayList<? extends BaseEntity> lista = null;
+        List<? extends BaseEntity> entities = getList(entityClass,filters);
+
+        if (entities != null) {
+            lista = new ArrayList<BaseEntity>(entities);
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
 

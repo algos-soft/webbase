@@ -122,7 +122,13 @@ public class SortProperty {
     }// end of getter method
 
     public String[] getProperties() {
-        return (String[]) properties.toArray();
+        String[] proprieta = new String[properties.size()];
+
+        for (int k = 0; k < this.properties.size(); k++) {
+            proprieta[k] = this.properties.get(k);
+        }// end of for cycle
+
+        return proprieta;
     }// end of getter method
 
     public boolean[] getOrdinamenti() {

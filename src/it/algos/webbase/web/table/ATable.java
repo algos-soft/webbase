@@ -7,6 +7,7 @@ import com.vaadin.addon.jpacontainer.JPAContainerItem;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
@@ -17,12 +18,15 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
-import it.algos.webbase.web.entity.*;
+import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.BaseEntity_;
+import it.algos.webbase.web.entity.Entities;
+import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.lib.LibFilter;
-import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
+import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
-import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
+import org.vaadin.addons.lazyquerycontainer.NestingBeanItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
@@ -42,18 +46,15 @@ import java.util.logging.Logger;
  */
 public abstract class ATable extends Table {
 
-    private EntityManager entityManager;
-
     private final static Logger logger = Logger.getLogger(ATable.class.getName());
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    private Class<?> entityClass;
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
     protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
     protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList();
+    private EntityManager entityManager;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    private Class<?> entityClass;
     private ArrayList<TableListener> listeners = new ArrayList();
     private ArrayList<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
-
 
 
     /**
@@ -184,6 +185,59 @@ public abstract class ATable extends Table {
      */
     public void itemClick(ItemClickEvent itemClickEvent) {
     }
+
+
+    /**
+     * Recupera l'istanza di una riga
+     *
+     * @param itemId della riga
+     */
+    protected BaseEntity getBean(Object itemId) {
+        BaseEntity bean;
+        Container cont = this.getContainerDataSource();
+        CompositeItem item = (CompositeItem) cont.getItem(itemId);
+        NestingBeanItem beanItem = (NestingBeanItem) item.getItem("bean");
+        bean = (BaseEntity) beanItem.getBean();
+        return bean;
+    }// end of method
+
+
+    /**
+     * Recupera l'istanza della riga selezionata col click
+     *
+     * @param itemClickEvent the event
+     */
+    protected BaseEntity getBean(ItemClickEvent itemClickEvent) {
+        BaseEntity bean = null;
+        Object oby = itemClickEvent.getItemId();
+        Object oggetto = getContainerDataSource().getItem(oby);
+
+        if (oggetto instanceof CompositeItem) {
+            CompositeItem itemComp = (CompositeItem) oggetto;
+            BeanItem beanItem = (BeanItem) itemComp.getItem("bean");
+            bean = (BaseEntity) beanItem.getBean();
+        }// fine del blocco if
+
+        return bean;
+    }// end of method
+
+
+    /**
+     * Recupera l'istanza della riga selezionata se il click è nella colonna indicata
+     *
+     * @param itemClickEvent the event
+     * @param column         colonna 'sensibile'
+     */
+    protected BaseEntity getBeanClickOnColumn(ItemClickEvent itemClickEvent, String column) {
+        BaseEntity bean = null;
+        String titoloColonna = itemClickEvent.getPropertyId().toString();
+
+        if (titoloColonna.equals(column)) {
+            bean = getBean(itemClickEvent);
+        }// fine del blocco if
+
+        return bean;
+    }// end of method
 
     /**
      * Invoked when the user selection changes
@@ -362,8 +416,6 @@ public abstract class ATable extends Table {
     }
 
 
-
-
     /**
      * Adds/removes a column to the list of totalizable columns
      * <p>
@@ -457,7 +509,6 @@ public abstract class ATable extends Table {
     }
 
 
-
     /**
      * Returns the ids of the single selected row
      * <p>
@@ -529,10 +580,10 @@ public abstract class ATable extends Table {
      * @return the selected row id (if a single row is selected, otherwise null)
      */
     public Object getSelectedId() {
-        Object id=null;
+        Object id = null;
         Object[] ids = getSelectedIds();
-        if(ids.length==1){
-            id=ids[0];
+        if (ids.length == 1) {
+            id = ids[0];
         }
         return id;
     }
@@ -552,14 +603,15 @@ public abstract class ATable extends Table {
 
     /**
      * Return the selected entity.
+     *
      * @return the selected entity, if one and only one entity if selected.
      * otherwise, null is returned.
      */
     public BaseEntity getSelectedEntity() {
-        BaseEntity entity=null;
-        BaseEntity[] entities=getSelectedEntities();
-        if(entities.length==1){
-            entity=entities[0];
+        BaseEntity entity = null;
+        BaseEntity[] entities = getSelectedEntities();
+        if (entities.length == 1) {
+            entity = entities[0];
         }
         return entity;
     }
@@ -567,6 +619,7 @@ public abstract class ATable extends Table {
 
     /**
      * Return the selected entities (multiple selection).
+     *
      * @return an array containing the selected entities,
      * empty array if no entities are selected
      */
@@ -1003,8 +1056,35 @@ public abstract class ATable extends Table {
         }
     }
 
+    protected ATable getTable() {
+        return this;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+
+    /**
+     * Enum di eventi previsti.
+     */
+    public enum TableEvent {
+        created, attached, datachange
+    }
+
     public interface SelectionChangeListener {
         void selectionChanged(SelectionChangeEvent e);
+    }
+
+    /**
+     * Table high-level events
+     */
+    public interface TableListener {
+        void created_(); // table created
+
+        void attached_(); // table attached to UI
+
+        void datachange_(); // table data changed
     }
 
     public class SelectionChangeEvent extends EventObject {
@@ -1026,25 +1106,6 @@ public abstract class ATable extends Table {
         public Set<Long> getSelectedRowIds() {
             return rows;
         }
-    }
-
-
-    /**
-     * Enum di eventi previsti.
-     */
-    public enum TableEvent {
-        created, attached, datachange
-    }
-
-    /**
-     * Table high-level events
-     */
-    public interface TableListener {
-        void created_(); // table created
-
-        void attached_(); // table attached to UI
-
-        void datachange_(); // table data changed
     }
 
     /**
@@ -1154,15 +1215,6 @@ public abstract class ATable extends Table {
             return 0;
         }
 
-    }
-
-
-    protected ATable getTable() {
-        return this;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 
 }

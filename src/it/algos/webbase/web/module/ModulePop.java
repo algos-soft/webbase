@@ -342,7 +342,7 @@ public abstract class ModulePop extends Module {
      */
     public ModuleForm createForm(Item item) {
         return (new ModuleForm(item, this));
-    }
+    }// end of method
 
 
     /**

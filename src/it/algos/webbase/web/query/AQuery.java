@@ -221,6 +221,12 @@ public class AQuery {
         JPAContainer<BaseEntity> container = getContainer(entityClass, filters);
 
         if (sorts != null) {
+            for (String stringa : sorts.getProperties()) {
+                if (stringa.contains(".")) {
+                    container.addNestedContainerProperty(stringa.substring(0,stringa.lastIndexOf("."))+".*");
+                }// end of if cycle
+            }// end of for cycle
+
             container.sort(sorts.getProperties(), sorts.getOrdinamenti());
         }// end of if cycle
 

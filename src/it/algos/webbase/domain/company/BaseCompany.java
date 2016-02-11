@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Entity
 @MappedSuperclass
-@Table(name="company")
+@Table(name="COMPANY")
 @DefaultSort({"companyCode"})
 public class BaseCompany extends BaseEntity {
 

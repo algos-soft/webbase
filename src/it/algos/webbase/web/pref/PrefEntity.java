@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "prefs")
+@Table(name = "PREFS")
 public class PrefEntity extends BaseEntity {
 
 	private String code;

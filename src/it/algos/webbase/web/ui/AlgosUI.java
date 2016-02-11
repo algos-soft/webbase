@@ -380,7 +380,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * @param clazz the class to instantiate (must implement View)
      */
     protected void addModulo(Class<? extends View> viewClass) {
-        addView(viewClass, true, null, null);
+        String label = viewClass.getSimpleName();
+        addView(viewClass, true, label, null);
     }// end of method
 
 

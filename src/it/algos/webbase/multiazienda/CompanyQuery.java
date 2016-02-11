@@ -1,7 +1,7 @@
 package it.algos.webbase.multiazienda;
 
 import com.vaadin.data.Container.Filter;
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
 
@@ -250,7 +250,7 @@ public class CompanyQuery {
      * Crea un filtro sulla company corrente a una query.
      */
     private static Predicate creaFiltroCompany(Root root, CriteriaBuilder cb) {
-        Company company = CompanySessionLib.getCompany();
+        BaseCompany company = CompanySessionLib.getCompany();
         return cb.equal(root.get(CompanyEntity_.company), company);
     }
 

@@ -1,7 +1,7 @@
 package it.algos.webbase.multiazienda;
 
 import com.vaadin.ui.Field;
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.field.RelatedComboField;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.search.SearchManager;
@@ -36,7 +36,7 @@ public class ESearchManager extends SearchManager {
         boolean skip=false;
         if(attr.isAssociation()){
             Class clazz = attr.getJavaType();
-            if(clazz.equals(Company.class)){
+            if(clazz.equals(BaseCompany.class)){
                 skip=true;
             }
         }

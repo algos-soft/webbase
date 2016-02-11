@@ -1,7 +1,7 @@
 package it.algos.webbase.multiazienda;
 
 import com.vaadin.data.util.filter.Compare;
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.entity.BaseEntity_;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 
@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
  */
 public class ELazyContainer extends LazyEntityContainer {
 
-    private static Company company;
+    private static BaseCompany company;
 
     /**
      * Create a container filtered on a given company.
@@ -22,7 +22,7 @@ public class ELazyContainer extends LazyEntityContainer {
      * @param batchSize     the paging size
      * @param company       the company on which to filter
      */
-    public ELazyContainer(EntityManager entityManager, Class entityClass, int batchSize, Company company) {
+    public ELazyContainer(EntityManager entityManager, Class entityClass, int batchSize, BaseCompany company) {
         super(entityManager, entityClass, batchSize, BaseEntity_.id.getName(), true, true, true);
         ELazyContainer.company = company;
 
@@ -51,7 +51,7 @@ public class ELazyContainer extends LazyEntityContainer {
      * @param entityClass   the entity class
      * @param company       the company on which to filter
      */
-    public ELazyContainer(EntityManager entityManager, Class entityClass, Company company) {
+    public ELazyContainer(EntityManager entityManager, Class entityClass, BaseCompany company) {
         this(entityManager, entityClass, 1000, company);
     }
 

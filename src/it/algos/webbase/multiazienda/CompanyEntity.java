@@ -1,6 +1,6 @@
 package it.algos.webbase.multiazienda;
 
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.entity.BaseEntity;
 
 import javax.persistence.ManyToOne;
@@ -13,7 +13,7 @@ public abstract class CompanyEntity extends BaseEntity {
     @ManyToOne
     // @NotNull - NotNull l'ho dovuto togliere, se no da' constraint violation
     // anche quando non è nullo (???) 28 nov 2014
-    private Company company;
+    private BaseCompany company;
 
     /**
      * Gli oggetti di questa classe e sottoclassi vengono sempre costruiti con
@@ -29,11 +29,11 @@ public abstract class CompanyEntity extends BaseEntity {
 
     }
 
-    public Company getCompany() {
+    public BaseCompany getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(BaseCompany company) {
         this.company = company;
     }
 

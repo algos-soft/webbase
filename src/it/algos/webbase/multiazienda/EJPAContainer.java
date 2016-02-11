@@ -4,7 +4,7 @@ import com.vaadin.addon.jpacontainer.EntityProvider;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.provider.LocalEntityProvider;
 import com.vaadin.data.util.filter.Compare;
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 
 import javax.persistence.EntityManager;
 
@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 @SuppressWarnings("serial")
 public class EJPAContainer extends JPAContainer<CompanyEntity> {
 
-    private static Company company;
+    private static BaseCompany company;
 
     /**
      * Create a container filtered on a given company.
@@ -24,7 +24,7 @@ public class EJPAContainer extends JPAContainer<CompanyEntity> {
      * @param company     the company on which to filter
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public EJPAContainer(Class entityClass, EntityManager manager, Company company) {
+    public EJPAContainer(Class entityClass, EntityManager manager, BaseCompany company) {
         super(entityClass);
         EJPAContainer.company = company;
         EntityProvider entityProvider = new LocalEntityProvider<CompanyEntity>(entityClass, manager);

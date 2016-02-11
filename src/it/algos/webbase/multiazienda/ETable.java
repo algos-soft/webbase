@@ -1,7 +1,7 @@
 package it.algos.webbase.multiazienda;
 
 import com.vaadin.data.Container;
-import it.algos.webbase.domain.company.Company;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.table.ModuleTable;
 
@@ -29,7 +29,7 @@ public class ETable extends ModuleTable{
 	@Override
 	public Container createContainer() {
 		Class<CompanyEntity> entityClass = (Class<CompanyEntity>)getEntityClass();
-		Company company = CompanySessionLib.getCompany();
+		BaseCompany company = CompanySessionLib.getCompany();
 		ELazyContainer entityContainer = new ELazyContainer(getEntityManager(), entityClass, getContainerPageSize() , company);
 		return entityContainer;
 	}// end of method

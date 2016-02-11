@@ -12,12 +12,15 @@ import it.algos.webbase.web.table.TablePortal;
 import javax.persistence.metamodel.Attribute;
 
 @SuppressWarnings("serial")
-public class CompanyModule extends ModulePop implements View {
+public class BaseCompanyModule extends ModulePop implements View {
 
-	public CompanyModule() {
-		super(Company.class);
+	public BaseCompanyModule() {
+		this(BaseCompany.class);
 	}// end of constructor
 
+	public BaseCompanyModule(Class entityClass) {
+		super(entityClass);
+	}// end of constructor
 
 	// come default spazzola tutti i campi della Entity
 	// non garantisce l'ordine con cui vengono presentati i campi
@@ -26,34 +29,25 @@ public class CompanyModule extends ModulePop implements View {
 	// se si vuole differenziare tra Table, Form e Search, sovrascrivere
 	// creaFieldsList, creaFieldsForm e creaFieldsSearch
 	protected Attribute<?, ?>[] creaFieldsAll() {
-		return new Attribute[] { Company_.name, Company_.contractType,  Company_.contractEnd};
+		return new Attribute[] { BaseCompany_.name, BaseCompany_.contractType,  BaseCompany_.contractEnd};
 	}// end of method
 
 	
 	@Override
 	protected Attribute<?, ?>[] creaFieldsList() {
-		return new Attribute[] { Company_.name, Company_.companyCode, Company_.contractType,  Company_.contractEnd};
+		return new Attribute[] { BaseCompany_.name, BaseCompany_.companyCode, BaseCompany_.contractType,  BaseCompany_.contractEnd};
 	}
 
 	@Override
 	public ModuleForm createForm(Item item) {
-		return (new CompanyForm(this, item));
+		return (new BaseCompanyForm(this, item));
 	}// end of method
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-	}
-
-	public TablePortal createTablePortal() {
-		return new CompanyTablePortal(this);
-	}
-
 
 
 	public void delete(Object id){
 		
 		// cancella prima tutti i dati
-		Company company = (Company)AQuery.queryById(Company.class, id);
+		BaseCompany company = (BaseCompany)AQuery.queryById(BaseCompany.class, id);
 		company.deleteAllData();
 		
 		// poi cancella la company
@@ -61,29 +55,5 @@ public class CompanyModule extends ModulePop implements View {
 		
 	}
 
-	/**
-	 * Create button pressed in table
-	 * <p>
-	 * Create a new item and edit it in a form
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void create() {
-
-		String msg = "<b>Normalmente le aziende si creano tramite la funzione Altro->Attiva nuova azienda.</b><p>";
-		msg+="Se crei una azienda manualmente dovrai anche creare l'utente e i dati.<br>";
-		msg+="Vuoi continuare?<br>";
-
-		ConfirmDialog dialog = new ConfirmDialog("Creazione azienda", msg, new ConfirmDialog.Listener() {
-			@Override
-			public void onClose(ConfirmDialog dialog, boolean confirmed) {
-				if(confirmed){
-					CompanyModule.super.create();
-				}
-			}
-		});
-
-		dialog.show();
-
-	}// end of method
 
 }// end of class

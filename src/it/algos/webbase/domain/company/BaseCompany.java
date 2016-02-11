@@ -7,16 +7,14 @@ import it.algos.webbase.web.query.EntityQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 
-
 @Entity
+@MappedSuperclass
+@Table(name="company")
 @DefaultSort({"companyCode"})
-public class Company extends BaseEntity {
+public class BaseCompany extends BaseEntity {
 
 	private static final long serialVersionUID = 8238775575826490450L;
 
@@ -50,9 +48,9 @@ public class Company extends BaseEntity {
 	private Date contractEnd;
 	
 
-	public static EntityQuery<Company> query = new EntityQuery(Company.class);
+	public static EntityQuery<BaseCompany> query = new EntityQuery(BaseCompany.class);
 
-	public Company() {
+	public BaseCompany() {
 		super();
 	}// end of constructor
 	
@@ -266,7 +264,7 @@ public class Company extends BaseEntity {
 	 * Ritorna la Company corrente.
 	 * @return la Company corrente
 	 */
-	public static Company getCurrent(){
+	public static BaseCompany getCurrent(){
 		return CompanySessionLib.getCompany();
 	}
 	

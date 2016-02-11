@@ -1,7 +1,7 @@
 package it.algos.webbase.multiazienda;
 
-import it.algos.webbase.domain.company.Company;
-import it.algos.webbase.domain.company.Company_;
+import it.algos.webbase.domain.company.BaseCompany;
+import it.algos.webbase.domain.company.BaseCompany_;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.Login;
@@ -16,17 +16,17 @@ public class CompanySessionLib {
      * Ritorna la Company corrente.
      * @return la Company corrente
      */
-    public static Company getCompany() {
-        Company company = null;
+    public static BaseCompany getCompany() {
+        BaseCompany company = null;
         Object attr = LibSession.getAttribute("company");
-        if ((attr != null) & (attr instanceof Company)) {
-            company = (Company) attr;
+        if ((attr != null) & (attr instanceof BaseCompany)) {
+            company = (BaseCompany) attr;
         }// fine del blocco if
 
         return company;
     }
 
-    public static void setCompany(Company company) {
+    public static void setCompany(BaseCompany company) {
         LibSession.setAttribute("company", company);
     }
 
@@ -42,7 +42,7 @@ public class CompanySessionLib {
 
         // cerca una company con lo stesso nome
         String username=user.getNickname();
-        Company company = Company.query.queryOne(Company_.companyCode, username);
+        BaseCompany company = BaseCompany.query.queryOne(BaseCompany_.companyCode, username);
         if(company!=null){
             setCompany(company);
             success=true;

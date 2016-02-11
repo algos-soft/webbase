@@ -12,14 +12,14 @@ import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 
 @SuppressWarnings("serial")
-public class CompanyForm extends ModuleForm {
+public class BaseCompanyForm extends ModuleForm {
 
 //	public CompanyForm(ModulePop modulo) {
 //		super(modulo);
 //		doInit();
 //	}// end of constructor
 
-	public CompanyForm(ModulePop modulo, Item item) {
+	public BaseCompanyForm(ModulePop modulo, Item item) {
 		super(item, modulo);
 		doInit();
 	}// end of constructor
@@ -34,25 +34,25 @@ public class CompanyForm extends ModuleForm {
 		Field field;
 
 		field = new TextField("Id");
-		addField(Company_.id, field);
+		addField(BaseCompany_.id, field);
 
 		field = new TextField("Nome");
-		addField(Company_.name, field);
+		addField(BaseCompany_.name, field);
 		
 		field = new EmailField("Email");
-		addField(Company_.email, field);
+		addField(BaseCompany_.email, field);
 		
 		field = new TextField("Codice azienda");
-		addField(Company_.companyCode, field);
+		addField(BaseCompany_.companyCode, field);
 		
 		field = new TextField("Contatto");
-		addField(Company_.contact, field);
+		addField(BaseCompany_.contact, field);
 		
 		field = new TextField("Indirizzo1");
-		addField(Company_.address1, field);
+		addField(BaseCompany_.address1, field);
 		
 		field = new TextField("Indirizzo2");
-		addField(Company_.address2, field);
+		addField(BaseCompany_.address2, field);
 
 	}
 
@@ -65,23 +65,23 @@ public class CompanyForm extends ModuleForm {
 
 
 	protected void addComponents(Layout layout){
-		Field<?> field=getField(Company_.id);
+		Field<?> field=getField(BaseCompany_.id);
 		field.setReadOnly(true);
 		field.setEnabled(false);
 		layout.addComponent(field);
-		layout.addComponent(getField(Company_.name));
-		layout.addComponent(getField(Company_.email));
-		layout.addComponent(getField(Company_.companyCode));
-		layout.addComponent(getField(Company_.contact));
-		layout.addComponent(getField(Company_.address1));
-		layout.addComponent(getField(Company_.address2));
+		layout.addComponent(getField(BaseCompany_.name));
+		layout.addComponent(getField(BaseCompany_.email));
+		layout.addComponent(getField(BaseCompany_.companyCode));
+		layout.addComponent(getField(BaseCompany_.contact));
+		layout.addComponent(getField(BaseCompany_.address1));
+		layout.addComponent(getField(BaseCompany_.address2));
 	}
 
 
 
-	private Company getCompany(){
+	private BaseCompany getCompany(){
 		BaseEntity entity = getEntity();
-		return (Company)entity;
+		return (BaseCompany)entity;
 	}
 
 }

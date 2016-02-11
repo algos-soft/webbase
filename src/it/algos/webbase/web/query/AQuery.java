@@ -98,29 +98,34 @@ public class AQuery {
 
 
     public static long getCount(Class<?> c) {
-//		EntityManager manager = EM.createEntityManager();
-//		CriteriaBuilder qb = manager.getCriteriaBuilder();
-//		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-//		cq.select(qb.count(cq.from(c)));
-//		long count = manager.createQuery(cq).getSingleResult();
-//		manager.close();
-//		return count;
-        return getCount(c, null, null);
+        return getCount(c, (Attribute)null, null);
     }// end of method
 
 
     /**
      * Ritorna il numero di record in una tabella corrispondenti a una data condizione.
      */
-    public static long getCount(Class<?> c, Attribute attr, Object value) {
+    public static long getCount(Class<?> clazz, Attribute attr, Object value) {
+        if (attr != null) {
+            return getCount(clazz,attr,value);
+        } else {
+            return 0;
+        }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Ritorna il numero di record in una tabella corrispondenti a una data condizione.
+     */
+    public static long getCount(Class<?> clazz, String propertyName, Object value) {
         EntityManager manager = EM.createEntityManager();
         CriteriaBuilder qb = manager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-        cq.select(qb.count(cq.from(c)));
+        cq.select(qb.count(cq.from(clazz)));
 
-        if (attr != null) {
-            Root root = cq.from(c);
-            Expression exp = root.get(attr.getName());
+        if (!propertyName.equals("")) {
+            Root root = cq.from(clazz);
+            Expression exp = root.get(propertyName);
             Predicate restrictions = qb.equal(exp, value);
             cq.where(restrictions);
         }
@@ -195,7 +200,7 @@ public class AQuery {
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, Filter... filters) {
         ArrayList<? extends BaseEntity> lista = null;
-        List<? extends BaseEntity> entities = getList(entityClass,filters);
+        List<? extends BaseEntity> entities = getList(entityClass, filters);
 
         if (entities != null) {
             lista = new ArrayList<BaseEntity>(entities);
@@ -223,7 +228,7 @@ public class AQuery {
         if (sorts != null) {
             for (String stringa : sorts.getProperties()) {
                 if (stringa.contains(".")) {
-                    container.addNestedContainerProperty(stringa.substring(0,stringa.lastIndexOf("."))+".*");
+                    container.addNestedContainerProperty(stringa.substring(0, stringa.lastIndexOf(".")) + ".*");
                 }// end of if cycle
             }// end of for cycle
 

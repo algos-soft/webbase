@@ -39,15 +39,32 @@ public class ModuleForm extends AForm {
         super.init();
     }
 
-    // create a field for each property declared for this form
+    //
+
+    /**
+     * Create and add a field for each property declared for this form
+     * <p>
+     * Crea e aggiunge i campi.<br>
+     * Implementazione di default nella superclasse.<br>
+     * I campi vengono recuperati dal Modello (di default) <br>
+     * I campi vengono creti del tipo grafico previsto nella Entity.<br>
+     * Se si vuole aggiungere un campo (solo nel form e non nel Modello),<br>
+     * usare il metodo sovrascritto nella sottoclasse
+     * invocando prima (o dopo) il metodo della superclasse.
+     * Se si vuole un layout completamente diverso sovrascrivere
+     * senza invocare il metodo della superclasse
+     */
     public void createFields() {
+        Field field;
         Attribute[] attributes = this.getAttributesList();
+
         for (Attribute attr : attributes) {
-            Field field = createField(attr);
+            field = createField(attr);
             if (field != null) {
                 addField(attr, field);
-            }
-        }
+            }// end of if cycle
+        }// end of for cycle
+
     }// end of method
 
     /**

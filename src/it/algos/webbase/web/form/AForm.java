@@ -93,7 +93,7 @@ public abstract class AForm extends VerticalLayout {
     }
 
     /**
-     * Create and add the fields.
+     * Create and add a field for each property declared for this form
      */
     public abstract void createFields();
 

@@ -77,40 +77,63 @@ public enum Secolo {
         this.setAnteCristo(anteCristo);
     } // fine del costruttore
 
-    public static String getSecoloAC(int anno) {
-        String nome = "";
+    public static Secolo getSecoloAC(int anno) {
+        Secolo secolo = null;
         int inizio;
         int fine;
 
-        for (Secolo secolo : values()) {
-            if (secolo.anteCristo) {
-                inizio = secolo.inizio;
-                fine = secolo.fine;
+        for (Secolo secoloTmp : values()) {
+            if (secoloTmp.anteCristo) {
+                inizio = secoloTmp.inizio;
+                fine = secoloTmp.fine;
                 if (anno > fine && anno < inizio) {
-                    nome = secolo.titolo;
+                    secolo = secoloTmp;
                 }// fine del blocco if
             }// fine del blocco if
         }// end of for cycle
 
-        return nome;
+        return secolo;
     }// fine del metodo
 
-    public static String getSecoloDC(int anno) {
-        String nome = "";
+    public static String getTextSecoloAC(int anno) {
+        String titolo = "";
+        Secolo secolo = getSecoloAC(anno);
+
+        if (secolo != null) {
+            titolo = secolo.getTitolo();
+        }// end of if cycle
+
+        return titolo;
+    }// fine del metodo
+
+    public static Secolo getSecoloDC(int anno) {
+        Secolo secolo = null;
         int inizio;
         int fine;
 
-        for (Secolo secolo : values()) {
-            if (!secolo.anteCristo) {
-                inizio = secolo.inizio;
-                fine = secolo.fine;
+        for (Secolo secoloTmp : values()) {
+            if (!secoloTmp.anteCristo) {
+                inizio = secoloTmp.inizio;
+                fine = secoloTmp.fine;
                 if (anno >= inizio && anno <= fine) {
-                    nome = secolo.titolo;
+                    secolo = secoloTmp;
                 }// fine del blocco if
             }// fine del blocco if
         }// end of for cycle
 
-        return nome;
+        return secolo;
+    }// fine del metodo
+
+
+    public static String getTextSecoloDC(int anno) {
+        String titolo = "";
+        Secolo secolo = getSecoloDC(anno);
+
+        if (secolo != null) {
+            titolo = secolo.getTitolo();
+        }// end of if cycle
+
+        return titolo;
     }// fine del metodo
 
 //    public static String getSecolo(String annoTxt) {

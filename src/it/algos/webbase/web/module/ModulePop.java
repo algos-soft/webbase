@@ -334,15 +334,16 @@ public abstract class ModulePop extends Module {
 
 
     /**
-     * Returns the form used to edit an item.
-     * <p>
+     * Returns the form used to edit an item. <br>
+     * The concrete subclass must override for a specific Form.
      *
-     * @param item item to edit
+     * @param item singola istanza della classe
      * @return the Form
      */
     public ModuleForm createForm(Item item) {
         return (new ModuleForm(item, this));
     }// end of method
+
 
 
     /**

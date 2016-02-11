@@ -39,24 +39,34 @@ public class ModuleForm extends AForm {
         super.init();
     }
 
-    // create a field for each property declared in the module
-    public void createFields(){
-        Attribute[] attributes = getModule().getFieldsForm();
+    // create a field for each property declared for this form
+    public void createFields() {
+        Attribute[] attributes = this.getAttributesList();
         for (Attribute attr : attributes) {
             Field field = createField(attr);
             if (field != null) {
                 addField(attr, field);
             }
         }
-    }
+    }// end of method
 
+    /**
+     * Attributes used in this form
+     * Di default prende dal modulo
+     * Può essere sovrascritto se c'è un Form specifico
+     *
+     * @return a list containing all the attributes used in this form
+     */
+    protected Attribute<?, ?>[] getAttributesList() {
+        return this.getModule().getFieldsForm();
+    }// end of method
 
     @Override
     public void postCommit() {
 
         // merge the bean (creates or updates the record(s) in the db)
         EntityManager em = getEntityManager();
-        if(em!=null){
+        if (em != null) {
             getEntity().save(em);
         }
 
@@ -71,13 +81,13 @@ public class ModuleForm extends AForm {
         return newRecord;
     }
 
-    public EntityManager getEntityManager(){
+    public EntityManager getEntityManager() {
         EntityManager em = null;
         ModulePop module = getModule();
-        if(module!=null){
-            em=module.getEntityManager();
+        if (module != null) {
+            em = module.getEntityManager();
         }
         return em;
     }
 
-}
+}// end of class

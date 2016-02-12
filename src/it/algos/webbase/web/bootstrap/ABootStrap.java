@@ -2,6 +2,8 @@ package it.algos.webbase.web.bootstrap;
 
 import it.algos.webbase.domain.ruolo.TipoRuolo;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -47,6 +49,9 @@ public abstract class ABootStrap implements ServletContextListener {
         SingletonBootStrap.getIstanza();
         context = contextEvent.getServletContext();
     }// end of method
+
+
+
 
     /**
      * Executed on container shutdown

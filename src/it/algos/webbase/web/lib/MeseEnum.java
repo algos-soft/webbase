@@ -3,7 +3,7 @@ package it.algos.webbase.web.lib;
 import java.time.Year;
 import java.util.ArrayList;
 
-public enum Mese {
+public enum MeseEnum {
 
     gennaio("gen", "gennaio", 31, 31),
     febbraio("feb", "febbraio", 28, 29),
@@ -27,7 +27,7 @@ public enum Mese {
     /**
      * Costruttore interno dell'Enumeration
      */
-    Mese(String breve, String lungo, int giorni, int giorniBis) {
+    MeseEnum(String breve, String lungo, int giorni, int giorniBis) {
         this.breve = breve;
         this.lungo = lungo;
         this.giorni = giorni;
@@ -45,7 +45,7 @@ public enum Mese {
      */
     public static int getGiorni(int numMeseDellAnno, int anno) {
         int giorniDelMese = 0;
-        Mese mese = getMese(numMeseDellAnno);
+        MeseEnum mese = getMese(numMeseDellAnno);
 
         if (mese != null) {
             if(!Year.of(anno).isLeap()){
@@ -65,12 +65,12 @@ public enum Mese {
      * @param numMeseDellAnno L'anno parte da gennaio che è il mese numero 1
      * @return Mese
      */
-    public static Mese getMese(int numMeseDellAnno) {
-        Mese mese = null;
+    public static MeseEnum getMese(int numMeseDellAnno) {
+        MeseEnum mese = null;
 
         if (numMeseDellAnno > 0 && numMeseDellAnno < 13) {
             numMeseDellAnno = numMeseDellAnno - 1;
-            for (Mese meseTmp : Mese.values()) {
+            for (MeseEnum meseTmp : MeseEnum.values()) {
                 if (meseTmp.ordinal() == numMeseDellAnno) {
                     mese = meseTmp;
                 }// fine del blocco if
@@ -87,13 +87,13 @@ public enum Mese {
      * @param nomeBreveLungo Nome breve o lungo del mese
      * @return Mese
      */
-    public static Mese getMese(String nomeBreveLungo) {
-        Mese mese = null;
+    public static MeseEnum getMese(String nomeBreveLungo) {
+        MeseEnum mese = null;
         String nomeBreveLungoMinuscolo;
 
         if (nomeBreveLungo != null && !nomeBreveLungo.equals("")) {
             nomeBreveLungoMinuscolo = nomeBreveLungo.toLowerCase();
-            for (Mese meseTmp : Mese.values()) {
+            for (MeseEnum meseTmp : MeseEnum.values()) {
                 if (meseTmp.breve.equals(nomeBreveLungoMinuscolo) || meseTmp.lungo.equals(nomeBreveLungoMinuscolo)) {
                     mese = meseTmp;
                 }// fine del blocco if
@@ -112,7 +112,7 @@ public enum Mese {
      */
     public static int getOrd(String nomeBreveLungo) {
         int numMeseDellAnno = 0;
-        Mese mese = getMese(nomeBreveLungo);
+        MeseEnum mese = getMese(nomeBreveLungo);
 
         if (mese != null) {
             numMeseDellAnno = mese.ordinal();
@@ -126,7 +126,7 @@ public enum Mese {
     // l'anno parte da gennaio che è il numero 1
     private static String getMese(int ord, boolean flagBreve) {
         String nome = "";
-        Mese mese = null;
+        MeseEnum mese = null;
 
         mese = getMese(ord);
         if (mese != null) {
@@ -172,7 +172,7 @@ public enum Mese {
         String stringa = "";
         String sep = ", ";
 
-        for (Mese mese : Mese.values()) {
+        for (MeseEnum mese : MeseEnum.values()) {
             stringa += mese.breve;
             stringa += sep;
         }// end of for cycle
@@ -191,7 +191,7 @@ public enum Mese {
         String stringa = "";
         String sep = ", ";
 
-        for (Mese mese : Mese.values()) {
+        for (MeseEnum mese : MeseEnum.values()) {
             stringa += mese.lungo;
             stringa += sep;
         }// end of for cycle
@@ -209,7 +209,7 @@ public enum Mese {
     public static ArrayList<String> getAllShortList() {
         ArrayList<String> lista = new ArrayList<String>();
 
-        for (Mese mese : Mese.values()) {
+        for (MeseEnum mese : MeseEnum.values()) {
             lista.add(mese.breve);
         }// end of for cycle
 
@@ -225,16 +225,40 @@ public enum Mese {
     public static ArrayList<String> getAllLongList() {
         ArrayList<String> lista = new ArrayList<String>();
 
-        for (Mese mese : Mese.values()) {
+        for (MeseEnum mese : MeseEnum.values()) {
             lista.add(mese.lungo);
         }// end of for cycle
 
         return lista;
     }// fine del metodo statico
 
+    @Override
+    public String toString() {
+        return lungo;
+    }// end of method
+
 
     public int getOrd() {
         return this.ordinal() + 1;
     }// fine del metodo
+
+    public String getBreve() {
+        return breve;
+    }// end of getter method
+
+
+    public String getLungo() {
+        return lungo;
+    }// end of getter method
+
+
+    public int getGiorni() {
+        return giorni;
+    }// end of getter method
+
+
+    public int getGiorniBis() {
+        return giorniBis;
+    }// end of getter method
 
 }// fine della classe Enumeration

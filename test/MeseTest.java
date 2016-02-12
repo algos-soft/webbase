@@ -1,4 +1,4 @@
-import it.algos.webbase.web.lib.Mese;
+import it.algos.webbase.web.lib.MeseEnum;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,97 +26,97 @@ public class MeseTest {
         // errore
         numMeseDellAnno = -1;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // errore
         numMeseDellAnno = 0;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // errore
         numMeseDellAnno = 13;
         previsto = 0;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // gennaio
         numMeseDellAnno = 1;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // febbraio non bisestile
         numMeseDellAnno = 2;
         previsto = 28;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, 2015);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, 2015);
         assertEquals(ottenuto, previsto);
 
         // febbraio non bisestile
         numMeseDellAnno = 2;
         previsto = 29;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, 2016);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, 2016);
         assertEquals(ottenuto, previsto);
 
         // marzo
         numMeseDellAnno = 3;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // aprile
         numMeseDellAnno = 4;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // maggio
         numMeseDellAnno = 5;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // giugno
         numMeseDellAnno = 6;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // luglio
         numMeseDellAnno = 7;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // agosto
         numMeseDellAnno = 8;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // settembre
         numMeseDellAnno = 9;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // ottobre
         numMeseDellAnno = 10;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // novembre
         numMeseDellAnno = 11;
         previsto = 30;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
 
         // dicembre
         numMeseDellAnno = 12;
         previsto = 31;
-        ottenuto = Mese.getGiorni(numMeseDellAnno, anno);
+        ottenuto = MeseEnum.getGiorni(numMeseDellAnno, anno);
         assertEquals(ottenuto, previsto);
     }// end of single test
 
@@ -128,95 +128,95 @@ public class MeseTest {
      * @return Mese
      */
     public void getMese() {
-        Mese previsto = null;
-        Mese ottenuto = null;
+        MeseEnum previsto = null;
+        MeseEnum ottenuto = null;
         int numMeseDellAnno = 0;
 
         // errore
         numMeseDellAnno = -1;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertNull(ottenuto);
 
         // errore
         numMeseDellAnno = 0;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertNull(ottenuto);
 
         // errore
         numMeseDellAnno = 13;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertNull(ottenuto);
 
         // gennaio
         numMeseDellAnno = 1;
-        previsto = Mese.gennaio;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.gennaio;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // febbraio
         numMeseDellAnno = 2;
-        previsto = Mese.febbraio;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.febbraio;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // marzo
         numMeseDellAnno = 3;
-        previsto = Mese.marzo;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.marzo;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // aprile
         numMeseDellAnno = 4;
-        previsto = Mese.aprile;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.aprile;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // maggio
         numMeseDellAnno = 5;
-        previsto = Mese.maggio;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.maggio;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // giugno
         numMeseDellAnno = 6;
-        previsto = Mese.giugno;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.giugno;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // luglio
         numMeseDellAnno = 7;
-        previsto = Mese.luglio;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.luglio;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // agosto
         numMeseDellAnno = 8;
-        previsto = Mese.agosto;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.agosto;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // settembre
         numMeseDellAnno = 9;
-        previsto = Mese.settembre;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.settembre;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // ottobre
         numMeseDellAnno = 10;
-        previsto = Mese.ottobre;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.ottobre;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // novembre
         numMeseDellAnno = 11;
-        previsto = Mese.novembre;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.novembre;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
 
         // dicembre
         numMeseDellAnno = 12;
-        previsto = Mese.dicembre;
-        ottenuto = Mese.getMese(numMeseDellAnno);
+        previsto = MeseEnum.dicembre;
+        ottenuto = MeseEnum.getMese(numMeseDellAnno);
         assertEquals(ottenuto, previsto);
     }// end of single test
 
@@ -228,36 +228,36 @@ public class MeseTest {
      * @return Mese
      */
     public void getMese2() {
-        Mese ottenuto = null;
+        MeseEnum ottenuto = null;
         String nomeBreveLungo = "";
 
         // errore
-        ottenuto = Mese.getMese(null);
+        ottenuto = MeseEnum.getMese(null);
         assertNull(ottenuto);
 
         // errore
         nomeBreveLungo = "";
-        ottenuto = Mese.getMese(nomeBreveLungo);
+        ottenuto = MeseEnum.getMese(nomeBreveLungo);
         assertNull(ottenuto);
 
         // errore
         nomeBreveLungo = "prova";
-        ottenuto = Mese.getMese(nomeBreveLungo);
+        ottenuto = MeseEnum.getMese(nomeBreveLungo);
         assertNull(ottenuto);
 
         // mesi validi
-        this.checkMese(Mese.gennaio, "gen", "gennaio", "Gen", "Gennaio");
-        this.checkMese(Mese.febbraio, "feb", "febbraio", "Feb", "Febbraio");
-        this.checkMese(Mese.marzo, "mar", "marzo", "Mar", "Marzo");
-        this.checkMese(Mese.aprile, "apr", "aprile", "Apr", "Aprile");
-        this.checkMese(Mese.maggio, "mag", "maggio", "Mag", "Maggio");
-        this.checkMese(Mese.giugno, "giu", "giu", "Giu", "Giugno");
-        this.checkMese(Mese.luglio, "lug", "luglio", "Lug", "Luglio");
-        this.checkMese(Mese.agosto, "ago", "agosto", "Ago", "Agosto");
-        this.checkMese(Mese.settembre, "set", "settembre", "Set", "Settembre");
-        this.checkMese(Mese.ottobre, "ott", "ottobre", "Ott", "Ottobre");
-        this.checkMese(Mese.novembre, "nov", "novembre", "Nov", "Novembre");
-        this.checkMese(Mese.dicembre, "dic", "dicembre", "Dic", "Dicembre");
+        this.checkMese(MeseEnum.gennaio, "gen", "gennaio", "Gen", "Gennaio");
+        this.checkMese(MeseEnum.febbraio, "feb", "febbraio", "Feb", "Febbraio");
+        this.checkMese(MeseEnum.marzo, "mar", "marzo", "Mar", "Marzo");
+        this.checkMese(MeseEnum.aprile, "apr", "aprile", "Apr", "Aprile");
+        this.checkMese(MeseEnum.maggio, "mag", "maggio", "Mag", "Maggio");
+        this.checkMese(MeseEnum.giugno, "giu", "giu", "Giu", "Giugno");
+        this.checkMese(MeseEnum.luglio, "lug", "luglio", "Lug", "Luglio");
+        this.checkMese(MeseEnum.agosto, "ago", "agosto", "Ago", "Agosto");
+        this.checkMese(MeseEnum.settembre, "set", "settembre", "Set", "Settembre");
+        this.checkMese(MeseEnum.ottobre, "ott", "ottobre", "Ott", "Ottobre");
+        this.checkMese(MeseEnum.novembre, "nov", "novembre", "Nov", "Novembre");
+        this.checkMese(MeseEnum.dicembre, "dic", "dicembre", "Dic", "Dicembre");
     }// end of single test
 
     @Test
@@ -272,17 +272,17 @@ public class MeseTest {
         String nomeBreveLungo = "";
 
         // errore
-        ottenuto = Mese.getOrd(null);
+        ottenuto = MeseEnum.getOrd(null);
         assertEquals(0, ottenuto);
 
         // errore
         nomeBreveLungo = "";
-        ottenuto = Mese.getOrd(nomeBreveLungo);
+        ottenuto = MeseEnum.getOrd(nomeBreveLungo);
         assertEquals(0, ottenuto);
 
         // errore
         nomeBreveLungo = "prova";
-        ottenuto = Mese.getOrd(nomeBreveLungo);
+        ottenuto = MeseEnum.getOrd(nomeBreveLungo);
         assertEquals(0, ottenuto);
 
         // mesi validi
@@ -312,15 +312,15 @@ public class MeseTest {
         String ottenuto = "";
 
         // errore
-        ottenuto = Mese.getShort(-1);
+        ottenuto = MeseEnum.getShort(-1);
         assertEquals(previsto, ottenuto);
 
         // errore
-        ottenuto = Mese.getShort(0);
+        ottenuto = MeseEnum.getShort(0);
         assertEquals(previsto, ottenuto);
 
         // errore
-        ottenuto = Mese.getShort(13);
+        ottenuto = MeseEnum.getShort(13);
         assertEquals(previsto, ottenuto);
 
         // mesi validi
@@ -350,15 +350,15 @@ public class MeseTest {
         String ottenuto = "";
 
         // errore
-        ottenuto = Mese.getLong(-1);
+        ottenuto = MeseEnum.getLong(-1);
         assertEquals(previsto, ottenuto);
 
         // errore
-        ottenuto = Mese.getLong(0);
+        ottenuto = MeseEnum.getLong(0);
         assertEquals(previsto, ottenuto);
 
         // errore
-        ottenuto = Mese.getLong(13);
+        ottenuto = MeseEnum.getLong(13);
         assertEquals(previsto, ottenuto);
 
         // mesi validi
@@ -384,7 +384,7 @@ public class MeseTest {
      */
     public void getAllShortString() {
         String previsto = "gen, feb, mar, apr, mag, giu, lug, ago, set, ott, nov, dic";
-        String ottenuto = Mese.getAllShortString();
+        String ottenuto = MeseEnum.getAllShortString();
         assertEquals(ottenuto, previsto);
     }// end of single test
 
@@ -396,7 +396,7 @@ public class MeseTest {
      */
     public void getAllLongString() {
         String previsto = "gennaio, febbraio, marzo, aprile, maggio, giugno, luglio, agosto, settembre, ottobre, novembre, dicembre";
-        String ottenuto = Mese.getAllLongString();
+        String ottenuto = MeseEnum.getAllLongString();
         assertEquals(ottenuto, previsto);
     }// end of single test
 
@@ -409,7 +409,7 @@ public class MeseTest {
     public void getAllShortList() {
         ArrayList<String> previsto = new ArrayList(Arrays.asList("gen", "feb", "mar", "apr", "mag", "giu", "lug",
                 "ago", "set", "ott", "nov", "dic"));
-        ArrayList<String> ottenuto = Mese.getAllShortList();
+        ArrayList<String> ottenuto = MeseEnum.getAllShortList();
         assertEquals(ottenuto, previsto);
     }// end of single test
 
@@ -422,17 +422,17 @@ public class MeseTest {
     public void getAllLongList() {
         ArrayList<String> previsto = new ArrayList(Arrays.asList("gennaio", "febbraio", "marzo", "aprile", "maggio",
                 "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"));
-        ArrayList<String> ottenuto = Mese.getAllLongList();
+        ArrayList<String> ottenuto = MeseEnum.getAllLongList();
         assertEquals(ottenuto, previsto);
     }// end of single test
 
 
-    private void checkMese(Mese previsto, String... listaNomi) {
-        Mese ottenuto = null;
+    private void checkMese(MeseEnum previsto, String... listaNomi) {
+        MeseEnum ottenuto = null;
 
         if (previsto != null && listaNomi != null) {
             for (String nomeBreveLungo : listaNomi) {
-                ottenuto = Mese.getMese(nomeBreveLungo);
+                ottenuto = MeseEnum.getMese(nomeBreveLungo);
                 assertEquals(ottenuto, previsto);
             }// end of for cycle
         }// fine del blocco if
@@ -443,7 +443,7 @@ public class MeseTest {
 
         if (previsto > 0 && listaNomi != null) {
             for (String nomeBreveLungo : listaNomi) {
-                ottenuto = Mese.getOrd(nomeBreveLungo);
+                ottenuto = MeseEnum.getOrd(nomeBreveLungo);
                 assertEquals(ottenuto, previsto);
             }// end of for cycle
         }// fine del blocco if
@@ -453,7 +453,7 @@ public class MeseTest {
         String ottenuto = "";
 
         if (numMeseDellAnno > 0 && previsto != null && !previsto.equals("")) {
-            ottenuto = Mese.getShort(numMeseDellAnno);
+            ottenuto = MeseEnum.getShort(numMeseDellAnno);
             assertEquals(ottenuto, previsto);
         }// fine del blocco if
     }// end of method
@@ -462,7 +462,7 @@ public class MeseTest {
         String ottenuto = "";
 
         if (numMeseDellAnno > 0 && previsto != null && !previsto.equals("")) {
-            ottenuto = Mese.getLong(numMeseDellAnno);
+            ottenuto = MeseEnum.getLong(numMeseDellAnno);
             assertEquals(ottenuto, previsto);
         }// fine del blocco if
     }// end of method

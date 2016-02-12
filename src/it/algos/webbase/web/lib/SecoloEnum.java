@@ -5,7 +5,7 @@ package it.algos.webbase.web.lib;
  * Created by gac on 15/10/14.
  * .
  */
-public enum Secolo {
+public enum SecoloEnum {
 
     XXac("XX", 2000, 1901, true),
     XIXac("XIX", 1900, 1801, true),
@@ -66,7 +66,7 @@ public enum Secolo {
      * @param fine       ultimo anno
      * @param anteCristo flag booleano
      */
-    Secolo(String titolo, int inizio, int fine, boolean anteCristo) {
+    SecoloEnum(String titolo, int inizio, int fine, boolean anteCristo) {
         if (anteCristo) {
             this.setTitolo(titolo + SECOLO_AC);
         } else {
@@ -77,16 +77,16 @@ public enum Secolo {
         this.setAnteCristo(anteCristo);
     } // fine del costruttore
 
-    public static Secolo getSecoloAC(int anno) {
-        Secolo secolo = null;
+    public static SecoloEnum getSecoloAC(int anno) {
+        SecoloEnum secolo = null;
         int inizio;
         int fine;
 
-        for (Secolo secoloTmp : values()) {
+        for (SecoloEnum secoloTmp : values()) {
             if (secoloTmp.anteCristo) {
                 inizio = secoloTmp.inizio;
                 fine = secoloTmp.fine;
-                if (anno > fine && anno < inizio) {
+                if (anno >= fine && anno <= inizio) {
                     secolo = secoloTmp;
                 }// fine del blocco if
             }// fine del blocco if
@@ -97,7 +97,7 @@ public enum Secolo {
 
     public static String getTextSecoloAC(int anno) {
         String titolo = "";
-        Secolo secolo = getSecoloAC(anno);
+        SecoloEnum secolo = getSecoloAC(anno);
 
         if (secolo != null) {
             titolo = secolo.getTitolo();
@@ -106,12 +106,12 @@ public enum Secolo {
         return titolo;
     }// fine del metodo
 
-    public static Secolo getSecoloDC(int anno) {
-        Secolo secolo = null;
+    public static SecoloEnum getSecoloDC(int anno) {
+        SecoloEnum secolo = null;
         int inizio;
         int fine;
 
-        for (Secolo secoloTmp : values()) {
+        for (SecoloEnum secoloTmp : values()) {
             if (!secoloTmp.anteCristo) {
                 inizio = secoloTmp.inizio;
                 fine = secoloTmp.fine;
@@ -127,7 +127,7 @@ public enum Secolo {
 
     public static String getTextSecoloDC(int anno) {
         String titolo = "";
-        Secolo secolo = getSecoloDC(anno);
+        SecoloEnum secolo = getSecoloDC(anno);
 
         if (secolo != null) {
             titolo = secolo.getTitolo();

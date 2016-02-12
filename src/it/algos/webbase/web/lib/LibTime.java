@@ -314,7 +314,7 @@ public abstract class LibTime {
                 giorno = cal.get(Calendar.DAY_OF_MONTH);
                 numMese = cal.get(Calendar.MONTH);
                 numMese++;
-                mese = Mese.getShort(numMese);
+                mese = MeseEnum.getShort(numMese);
                 numAnno = cal.get(Calendar.YEAR);
                 numOre = cal.get(Calendar.HOUR_OF_DAY);
                 numMinuti = cal.get(Calendar.MINUTE);

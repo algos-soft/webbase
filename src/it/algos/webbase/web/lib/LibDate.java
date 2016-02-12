@@ -275,7 +275,7 @@ public abstract class LibDate {
      * @return la data in formato data
      */
     public static Date fromInizioMeseAnno(String nomeBreveLungo, int anno) {
-        int numMeseDellAnno = Mese.getOrd(nomeBreveLungo);
+        int numMeseDellAnno = MeseEnum.getOrd(nomeBreveLungo);
         return fromInizioMeseAnno(numMeseDellAnno, anno);
     }// end of static method
 
@@ -304,7 +304,7 @@ public abstract class LibDate {
      * @return la data in formato data
      */
     public static Date fromFineMeseAnno(String nomeBreveLungo, int anno) {
-        int numMeseDellAnno = Mese.getOrd(nomeBreveLungo);
+        int numMeseDellAnno = MeseEnum.getOrd(nomeBreveLungo);
         return fromFineMeseAnno(numMeseDellAnno, anno);
     }// end of static method
 
@@ -322,7 +322,7 @@ public abstract class LibDate {
     private static Date fromMeseAnno(int numMeseDellAnno, int anno, InizioOppureFine flag) {
         Date data = null;
         Calendar calendario = getCal();
-        int giorniMese = Mese.getGiorni(numMeseDellAnno, anno);
+        int giorniMese = MeseEnum.getGiorni(numMeseDellAnno, anno);
 
         if (numMeseDellAnno > 0) {
             numMeseDellAnno--;

@@ -30,6 +30,11 @@ public class @NAME@ extends BaseEntity {
 		this("");
     }// end of nullary constructor
 
+    /**
+     * Costruttore completo
+     *
+     * @param nome previsto
+     */
 	public @NAME@(String nome) {
 		super();
 		this.setNome(nome);
@@ -78,7 +83,7 @@ public class @NAME@ extends BaseEntity {
      *
      * @return numero totale di records della tavola
      */
-    public synchronized static int count() {
+    public static int count() {
         int totRec = 0;
         long totTmp = AQuery.getCount(@NAME@.class);
 
@@ -95,7 +100,7 @@ public class @NAME@ extends BaseEntity {
      * @return lista di tutte le istanze di @NAME@
      */
     @SuppressWarnings("unchecked")
-    public synchronized static ArrayList<@NAME@> findAll() {
+    public static ArrayList<@NAME@> findAll() {
         return (ArrayList<@NAME@>) AQuery.getLista(@NAME@.class);
     }// end of method
 

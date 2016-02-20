@@ -97,8 +97,8 @@ public class AQuery {
     }
 
 
-    public static long getCount(Class<?> c) {
-        return getCount(c, (Attribute)null, null);
+    public static long getCount(Class<?> clazz) {
+        return getCount(clazz, (Attribute) null, null);
     }// end of method
 
 
@@ -107,9 +107,9 @@ public class AQuery {
      */
     public static long getCount(Class<?> clazz, Attribute attr, Object value) {
         if (attr != null) {
-            return getCount(clazz,attr,value);
+            return getCount(clazz, attr.getName(), value);
         } else {
-            return 0;
+            return getCount(clazz, "", value);
         }// end of if/else cycle
     }// end of method
 
@@ -128,7 +128,7 @@ public class AQuery {
             Expression exp = root.get(propertyName);
             Predicate restrictions = qb.equal(exp, value);
             cq.where(restrictions);
-        }
+        }// end of if cycle
 
         long count = manager.createQuery(cq).getSingleResult();
         manager.close();

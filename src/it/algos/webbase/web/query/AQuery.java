@@ -55,7 +55,28 @@ public class AQuery {
         List<? extends BaseEntity> entities = query.getResultList();
         manager.close();
         return entities;
-    }
+    }// end of method
+
+    /**
+     * Search for all entities with a specified attribute value.
+     * <p>
+     *
+     * @param clazz the entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return a list of entities corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static ArrayList<? extends BaseEntity> queryLista(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        ArrayList<? extends BaseEntity> lista = null;
+        List<? extends BaseEntity> entities = queryList(clazz, attr, value);
+
+        if (entities != null) {
+            lista = new ArrayList<BaseEntity>(entities);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
 
     /**
      * Search for the first entity with a specified attribute value.

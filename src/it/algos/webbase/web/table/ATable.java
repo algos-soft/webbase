@@ -24,6 +24,7 @@ import it.algos.webbase.web.entity.Entities;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.lib.LibFilter;
 import it.algos.webbase.web.query.AQuery;
+import org.eclipse.persistence.internal.jpa.metamodel.SingularAttributeImpl;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import org.vaadin.addons.lazyquerycontainer.NestingBeanItem;

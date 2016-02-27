@@ -7,5 +7,5 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(@NAME@.class)
 public class @NAME@_ extends BaseEntity_ {
-	public static volatile SingularAttribute<@NAME@, String> nome;
+	public static volatile SingularAttribute<@NAME@, String> sigla;
 }// end of entity class

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class @NAME@ extends BaseEntity {
 
 	@NotEmpty
-	private String nome = "";
+	private String sigla = "";
 
     /**
      * Costruttore senza argomenti
@@ -28,16 +28,16 @@ public class @NAME@ extends BaseEntity {
      */
 	public @NAME@() {
 		this("");
-    }// end of nullary constructor
+    }// end of constructor
 
     /**
      * Costruttore completo
      *
-     * @param nome previsto
+     * @param sigla
      */
-	public @NAME@(String nome) {
+	public @NAME@(String sigla) {
 		super();
-		this.setNome(nome);
+		this.setSigla(sigla);
 	}// end of general constructor
 
     /**
@@ -62,12 +62,12 @@ public class @NAME@ extends BaseEntity {
     /**
      * Recupera una istanza di @NAME@ usando la query di una property specifica
      *
-     * @param nome valore della property Nome
+     * @param nome valore della property Sigla
      * @return istanza di @NAME@, null se non trovata
      */
-	public static @NAME@ findByNome(String nome) {
+	public static @NAME@ findByv(String sigla) {
 		@NAME@ instance = null;
-		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.nome, nome);
+		BaseEntity entity = AQuery.queryOne(@NAME@.class, @NAME@_.sigla, sigla);
 
 		if (entity != null) {
 			if (entity instanceof @NAME@) {

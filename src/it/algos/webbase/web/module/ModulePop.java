@@ -71,7 +71,6 @@ public abstract class ModulePop extends Module {
     // entity manager del modulo
     public EntityManager entityManager;
 
-
     /**
      * Costruttore minimo
      *
@@ -102,13 +101,13 @@ public abstract class ModulePop extends Module {
     }// end of constructor
 
 
-    /**
-     * Costruttore standard
-     *
-     * @param entity    di riferimento del modulo
-     * @param menuLabel etichetta visibile nella menu bar
-     * @param menuIcon  icona del menu
-     */
+        /**
+         * Costruttore standard
+         *
+         * @param entity    di riferimento del modulo
+         * @param menuLabel etichetta visibile nella menu bar
+         * @param menuIcon  icona del menu
+         */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ModulePop(Class entity, String menuLabel, Resource menuIcon) {
         super();

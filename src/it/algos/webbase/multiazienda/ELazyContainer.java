@@ -30,7 +30,11 @@ public class ELazyContainer extends LazyEntityContainer {
         addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
 
         // add the company filter
-        addContainerFilter(createCompanyFilter());
+        Filter filter = createCompanyFilter();
+        if (filter!=null){
+            addContainerFilter(filter);
+        }
+
     }
 
     /**
@@ -65,10 +69,12 @@ public class ELazyContainer extends LazyEntityContainer {
         this(entityManager, entityClass, CompanySessionLib.getCompany());
     }
 
-
-
     private static Filter createCompanyFilter() {
-        return new Compare.Equal(CompanyEntity_.company.getName(), company);
+        Filter filter=null;
+        if (company!=null){
+            filter = new Compare.Equal(CompanyEntity_.company.getName(), company);
+        }
+        return filter;
     }
 
     /**

@@ -77,6 +77,17 @@ public class ELazyContainer extends LazyEntityContainer {
         return filter;
     }
 
+    public void setFilter(BaseCompany company) {
+        ELazyContainer.company=company;
+        // add the company filter
+        super.removeAllContainerFilters();
+        Filter filter = createCompanyFilter();
+        if (filter!=null){
+            addContainerFilter(filter);
+        }
+    }
+
+
     /**
      * Restores the company filter after removing all the filters
      */
@@ -85,6 +96,7 @@ public class ELazyContainer extends LazyEntityContainer {
         super.removeAllContainerFilters();
         addContainerFilter(createCompanyFilter());
     }
+
 
 
 }

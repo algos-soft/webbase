@@ -1,5 +1,6 @@
 package it.algos.webbase.multiazienda;
 
+import com.vaadin.server.Resource;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
@@ -13,6 +14,18 @@ public class CompanyModule extends ModulePop {
     @SuppressWarnings("rawtypes")
     public CompanyModule(Class entity) {
         super(entity);
+    }
+
+    public CompanyModule(Class entity, String menuLabel) {
+        super(entity, menuLabel);
+    }
+
+    public CompanyModule(Class entity, Resource menuIcon) {
+        super(entity, menuIcon);
+    }
+
+    public CompanyModule(Class entity, String menuLabel, Resource menuIcon) {
+        super(entity, menuLabel, menuIcon);
     }
 
     /**

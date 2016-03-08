@@ -479,6 +479,7 @@ public abstract class ModulePop extends Module {
                                 getTable().select(id);
                             }
                         }
+//                        getTable().refresh();
                     }else{
                         // This is needed to update generated columns in the table.
                         // (standard columns which are bound to properties are updated

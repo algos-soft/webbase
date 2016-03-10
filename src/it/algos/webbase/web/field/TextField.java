@@ -5,6 +5,7 @@ import com.vaadin.data.Property;
 @SuppressWarnings("serial")
 public class TextField extends com.vaadin.ui.TextField implements FieldInterface<String> {
 
+
     /**
      * Constructs an empty <code>TextField</code> with no caption.
      */

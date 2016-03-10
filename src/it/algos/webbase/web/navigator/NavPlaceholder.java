@@ -11,6 +11,10 @@ import com.vaadin.ui.SingleComponentContainer;
 @SuppressWarnings("serial")
 public class NavPlaceholder extends CustomComponent implements SingleComponentContainer {
 
+    public NavPlaceholder(){
+        this(null);
+    }
+
     public NavPlaceholder(Component content) {
         super();
         setContent(content);

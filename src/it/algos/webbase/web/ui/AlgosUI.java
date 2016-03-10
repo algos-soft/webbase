@@ -377,7 +377,7 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * <p/>
      * the view will be instantiated only once
      *
-     * @param clazz the class to instantiate (must implement View)
+     * @param viewClass  the view class to instantiate
      */
     protected void addModulo(Class<? extends View> viewClass) {
         String label = viewClass.getSimpleName();
@@ -391,7 +391,8 @@ public class AlgosUI extends UI implements LoginListener, LogoutListener {
      * the view will be instantiated only once and then cached.
      *
      * @param viewClass  the view class to instantiate
-     * @param viewCached true to instantiated only once, false to instantiate each time
+     * @param label  the text for the menu item
+     * @param icon  the icon for the menu item
      */
     protected void addView(Class<? extends View> viewClass, String label, Resource icon) {
         addView(viewClass, true, label, icon);

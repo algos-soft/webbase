@@ -57,22 +57,19 @@ public class FormToolbar extends Toolbar {
     }// end of constructor
 
 
-    /**
-     * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
-     */
     protected void addButtons() {
         cancelItem = addButton("Annulla", FontAwesome.TIMES, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Events.cancel);
             }// end of method
-        });// end of anonymous inner class
+        });
 
         confirmItem = addButton("Registra", FontAwesome.CHECK, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Events.save);
             }// end of method
-        });// end of anonymous inner class
-    }// end of method
+        });
+    }
 
     public void addToolbarListener(FormToolbarListener listener) {
         this.listeners.add(listener);

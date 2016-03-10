@@ -25,6 +25,20 @@ import java.util.Date;
 
 /**
  * A generic form to edit one Item.
+ *
+ * Usage:
+ *
+ * - make a subclass, then:
+ * - create and add the fields in the createFields() method
+ * - add a constructor
+ * - call super() with some kind of Item
+ * - call the init() method
+ * - eventually modify other stuff like toolbar etc
+ *
+ * To read field values use getFieldValue()
+ * To listen for confirm or cancel buttons, add a FormListener.
+ * To change the button's text use setCancelText() and setConfirmText().
+ * If you need a different toolbar, get it with getToolbar() and customize it.
  */
 public abstract class AForm extends VerticalLayout {
 
@@ -58,7 +72,6 @@ public abstract class AForm extends VerticalLayout {
         // create and add the detail component
         Component detail = createComponent();
         this.addComponent(detail);
-//        this.addStyleName("yellowBg");
         this.setExpandRatio(detail, 1);
 
         // create and add the form toolbar
@@ -199,7 +212,6 @@ public abstract class AForm extends VerticalLayout {
 
             // reassign the the key as the member name
             key = attr.getName();
-
         }
 
         this.binder.bind(field, key);
@@ -519,5 +531,19 @@ public abstract class AForm extends VerticalLayout {
 //        }
 //        return entity;
     }
+
+
+    public FormToolbar getToolbar() {
+        return toolbar;
+    }
+
+    public void setConfirmText(String text){
+        getToolbar().getConfirmItem().setText(text);
+    }
+
+    public void setCancelText(String text){
+        getToolbar().getCancelItem().setText(text);
+    }
+
 
 }

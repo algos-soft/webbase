@@ -15,6 +15,10 @@ public class FormToolbar extends Toolbar {
 
     private AForm form;
 
+    MenuBar.MenuItem cancelItem;
+    MenuBar.MenuItem confirmItem;
+
+
     private ArrayList<FormToolbarListener> listeners = new ArrayList<FormToolbarListener>();
 
     /**
@@ -57,13 +61,13 @@ public class FormToolbar extends Toolbar {
      * A seconda del flag, usa il Font Awesome oppure l'icona del Theme corrente
      */
     protected void addButtons() {
-        addButton("Annulla", FontAwesome.TIMES, new MenuBar.Command() {
+        cancelItem = addButton("Annulla", FontAwesome.TIMES, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Events.cancel);
             }// end of method
         });// end of anonymous inner class
 
-        addButton("Registra", FontAwesome.CHECK, new MenuBar.Command() {
+        confirmItem = addButton("Registra", FontAwesome.CHECK, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Events.save);
             }// end of method
@@ -108,5 +112,21 @@ public class FormToolbar extends Toolbar {
     public AForm getForm() {
         return form;
     }
+
+    /**
+     * @return the "cancel" menu item
+     */
+    public MenuBar.MenuItem getCancelItem(){
+        return cancelItem;
+    }
+
+    /**
+     * @return the "confirm" menu item
+     */
+    public MenuBar.MenuItem getConfirmItem(){
+        return confirmItem;
+    }
+
+
 
 }// end of class

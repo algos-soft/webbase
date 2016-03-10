@@ -3,13 +3,15 @@ package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.persistence.annotations.Index;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.ArrayList;
 
 /**
- * Classe di tipo JavaBean
+ * Classe di tipo JavaBean.
  * <p>
  * 1) la classe deve avere un costruttore senza argomenti
  * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolena al posto di get)
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 public class @NAME@ extends BaseEntity {
 
 	@NotEmpty
+    @Column(length = 20)
+    @Index
 	private String sigla = "";
 
     /**
@@ -62,7 +66,7 @@ public class @NAME@ extends BaseEntity {
     /**
      * Recupera una istanza di @NAME@ usando la query di una property specifica
      *
-     * @param nome valore della property Sigla
+     * @param sigla valore della property Sigla
      * @return istanza di @NAME@, null se non trovata
      */
 	public static @NAME@ findByv(String sigla) {
@@ -106,21 +110,21 @@ public class @NAME@ extends BaseEntity {
 
     @Override
     public String toString() {
-        return nome;
+        return sigla;
     }// end of method
 
     /**
-     * @return the nome
+     * @return the sigla
      */
-    public String getNome() {
-        return nome;
+    public String getSigla() {
+        return sigla;
     }// end of getter method
 
     /**
-     * @param nome the nome to set
+     * @param sigla the sigla to set
      */
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }// end of setter method
 
 

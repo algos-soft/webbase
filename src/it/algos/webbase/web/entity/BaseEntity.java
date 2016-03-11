@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("serial")
 public abstract class BaseEntity implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private final static Logger logger = Logger.getLogger(BaseEntity.class.getName());
     private static ArrayList<PrePersistListener> prePersistListeners = new ArrayList();
     private static ArrayList<PostPersistListener> postPersistListeners = new ArrayList();
@@ -380,8 +382,20 @@ public abstract class BaseEntity implements Serializable {
         return tableName;
     }
 
-
-
-
-
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//
+//        BaseEntity that = (BaseEntity) o;
+//
+//        if (!id.equals(that.id)) return false;
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return id.hashCode();
+//    }
 }

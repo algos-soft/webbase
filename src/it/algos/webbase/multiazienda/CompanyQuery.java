@@ -249,7 +249,7 @@ public class CompanyQuery {
     /**
      * Crea un filtro sulla company corrente a una query.
      */
-    private static Predicate creaFiltroCompany(Root root, CriteriaBuilder cb) {
+    public static Predicate creaFiltroCompany(Root root, CriteriaBuilder cb) {
         BaseCompany company = CompanySessionLib.getCompany();
         return cb.equal(root.get(CompanyEntity_.company), company);
     }

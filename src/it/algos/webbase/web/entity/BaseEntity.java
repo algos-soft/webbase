@@ -230,28 +230,51 @@ public abstract class BaseEntity implements Serializable {
     /**
      * Removes this entity from the database.
      * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to delete this single entity.
+     *
+     * @param the EntityManager
      */
-    public void delete() {
+    public void delete(EntityManager manager) {
 
-        EntityManager manager = EM.createEntityManager();
+        boolean createTransaction = !manager.isJoinedToTransaction();
 
         try {
 
-            manager.getTransaction().begin();
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }
 
             BaseEntity entityToBeRemoved = manager.getReference(this.getClass(), this.getId());
             manager.remove(entityToBeRemoved);
 
-            manager.getTransaction().commit();
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }
 
         } catch (Exception e) {
-            manager.getTransaction().rollback();
+
+            // rollback transaction
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }
+
             logger.log(Level.WARNING, "The record cannot be deleted ", e);
         }
 
-        manager.close();
+    }
 
-    }// end of method
+
+    /**
+     * Removes this entity from the database using a local EntityManager
+     * <p>
+     */
+    public void delete() {
+        EntityManager manager = EM.createEntityManager();
+        delete(manager);
+        manager.close();
+    }
 
 
     public static Object createBean(Class<?> clazz) {
@@ -382,20 +405,19 @@ public abstract class BaseEntity implements Serializable {
         return tableName;
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        BaseEntity that = (BaseEntity) o;
-//
-//        if (!id.equals(that.id)) return false;
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return id.hashCode();
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseEntity that = (BaseEntity) o;
+
+        return !(id != null ? !id.equals(that.id) : that.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

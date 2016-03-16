@@ -21,6 +21,8 @@ import java.util.ArrayList;
 @Entity
 public class @NAME@ extends BaseEntity {
 
+    private static final long serialVersionUID = 1L;
+
 	@NotEmpty
     @Column(length = 20)
     @Index

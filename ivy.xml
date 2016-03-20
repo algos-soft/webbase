@@ -47,7 +47,7 @@
         <dependency org="com.vaadin.addon" name="jpacontainer" rev="3.2.0"/>
 
         <!-- Eclipselink -->
-        <dependency org="org.eclipse.persistence" name="eclipselink" rev="2.6.0"/>
+        <dependency org="org.eclipse.persistence" name="eclipselink" rev="2.6.2"/>
 
         <!-- MySQL Connector -->
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.31"/>

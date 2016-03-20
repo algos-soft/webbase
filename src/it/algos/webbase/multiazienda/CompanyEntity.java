@@ -12,6 +12,7 @@ public abstract class CompanyEntity extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    // company di riferimento
     @ManyToOne
     // @NotNull - NotNull l'ho dovuto togliere, se no da' constraint violation
     // anche quando non è nullo (???) 28 nov 2014

@@ -31,7 +31,7 @@ public class CompanyQuery {
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(c);
-        Predicate predicate = cb.equal(root.get(CompanyEntity_.company), CompanySessionLib.getCompany());
+        Predicate predicate =  cb.equal(root.get(CompanyEntity_.company), CompanySessionLib.getCompany());
         cq.where(predicate);
         CriteriaQuery<Long> select = cq.select(cb.count(root));
         TypedQuery<Long> typedQuery = manager.createQuery(select);

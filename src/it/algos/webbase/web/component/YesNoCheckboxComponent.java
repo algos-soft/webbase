@@ -13,7 +13,7 @@ import com.vaadin.ui.HorizontalLayout;
 import java.util.ArrayList;
 
 /**
- * Component to display and edit a yes/no search option
+ * Component to display and edit a yes/no option
  */
 @SuppressWarnings("serial")
 public class YesNoCheckboxComponent extends HorizontalLayout {
@@ -84,7 +84,7 @@ public class YesNoCheckboxComponent extends HorizontalLayout {
 	}
 
 	/**
-	 * @return tthe value, true, false, or null if no checks selected
+	 * @return the value, true, false, or null if no checks selected
 	 */
 	public Boolean getValue(){
 		Boolean out=null;
@@ -95,6 +95,14 @@ public class YesNoCheckboxComponent extends HorizontalLayout {
 			out=yesValue;
 		}
 		return out;
+	}
+
+	public void setYesText(String text){
+		yesCheck.setCaption(text);
+	}
+
+	public void setNoText(String text){
+		noCheck.setCaption(text);
 	}
 
 

@@ -42,6 +42,14 @@ public class YesNoField extends ACustomField<Boolean> implements FieldInterface<
         return comp;
     }
 
+    public void setYesText(String text){
+        comp.setYesText(text);
+    }
+
+    public void setNoText(String text){
+        comp.setNoText(text);
+    }
+
 
     @Override
     public Class<? extends Boolean> getType() {

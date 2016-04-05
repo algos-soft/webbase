@@ -16,7 +16,7 @@ import it.algos.webbase.web.lib.LibBean;
 import it.algos.webbase.web.toolbar.FormToolbar;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
-import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -122,11 +122,26 @@ public abstract class AForm extends VerticalLayout {
 
         if (attr != null) {
 
-            Class clazz = attr.getJavaType();
-
             if (attr.isAssociation()) {
-                field = new RelatedComboField(clazz);
+
+                // relazione OneToMany - usiamo un campo lista (?)
+                if(attr instanceof PluralAttribute){
+                    PluralAttribute pa = (PluralAttribute)attr;
+                    Class clazz = pa.getElementType().getJavaType();
+                    //field = new RelatedComboField(clazz);
+                    //field=null;// todo qui ci vuole una lista
+                }
+
+                // relazione ManyToOne - usiamo un campo combo
+                if(attr instanceof SingularAttribute){
+                    SingularAttribute sa = (SingularAttribute)attr;
+                    Class clazz = sa.getJavaType();
+                    field = new RelatedComboField(clazz);
+                }
+
             } else {
+
+                Class clazz = attr.getJavaType();
 
                 if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
                     field = new CheckBoxField();
@@ -142,6 +157,10 @@ public abstract class AForm extends VerticalLayout {
 
                 if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
                     field = new IntegerField();
+                }
+
+                if (clazz.equals(Long.class) || clazz.equals(long.class)) {
+                    field = new LongField();
                 }
 
                 if (clazz.equals(Date.class)) {
@@ -165,14 +184,11 @@ public abstract class AForm extends VerticalLayout {
 
             }
 
-            // any other case
-            if (field == null) {
-                field = new TextField();
-            }
-
             // create and assign the caption
-            String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
-            field.setCaption(caption);
+            if(field!=null){
+                String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
+                field.setCaption(caption);
+            }
 
         }
 

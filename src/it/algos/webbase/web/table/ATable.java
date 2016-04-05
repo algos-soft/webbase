@@ -356,7 +356,9 @@ public abstract class ATable extends Table {
         for (Object obj : columns) {
             String cName = "";
             if (obj instanceof Attribute) {
-                cNames.add(((Attribute<?, ?>) obj).getName());
+                Attribute<?,?> attr = (Attribute<?, ?>)obj;
+                String name = attr.getName();
+                cNames.add(name);
             }
             if (obj instanceof String) {
                 cNames.add((String) obj);

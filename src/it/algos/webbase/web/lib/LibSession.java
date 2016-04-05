@@ -54,6 +54,19 @@ public abstract class LibSession {
         setBool(Attribute.debug, status);
     }// end of static method
 
+    /**
+     * Recupera dalla sessione l'attributo firstTime
+     */
+    public static boolean isFirstTime() {
+        return isBool(Attribute.firstTime);
+    }// end of static method
+
+    /**
+     * Regola per la sessione corrente l'attributo firstTime
+     */
+    public static void setFirstTime(boolean status) {
+        setBool(Attribute.firstTime, status);
+    }// end of static method
 
     /**
      * @return true if a user is logged in
@@ -190,7 +203,7 @@ public abstract class LibSession {
     }// end of static method
 
     public enum Attribute {
-        developer, debug
+        developer, debug, firstTime
     }// end of inner enumeration
 
 }// end of abstract static class

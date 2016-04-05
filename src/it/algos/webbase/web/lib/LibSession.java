@@ -56,9 +56,25 @@ public abstract class LibSession {
 
     /**
      * Recupera dalla sessione l'attributo firstTime
+     * Se l'attributo manca, di default ritorna 'true'
+     *
+     * @return false se manca l'attributo
      */
     public static boolean isFirstTime() {
-        return isBool(Attribute.firstTime);
+        boolean status = true;
+        Object devObj = null;
+        VaadinSession sessione = VaadinSession.getCurrent();
+
+        if (sessione != null) {
+            devObj = sessione.getAttribute(Attribute.firstTime.toString());
+            if (devObj != null) {
+                if (devObj instanceof Boolean) {
+                    status = (Boolean) devObj;
+                }// fine del blocco if
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return status;
     }// end of static method
 
     /**
@@ -71,12 +87,12 @@ public abstract class LibSession {
     /**
      * @return true if a user is logged in
      */
-    public static boolean isLogged(){
-        boolean logged=false;
-        Object obj=getAttribute(Login.LOGIN_KEY_IN_SESSION);
-        if(obj!=null){
-            Login login = (Login)obj;
-            logged=login.isLogged();
+    public static boolean isLogged() {
+        boolean logged = false;
+        Object obj = getAttribute(Login.LOGIN_KEY_IN_SESSION);
+        if (obj != null) {
+            Login login = (Login) obj;
+            logged = login.isLogged();
         }
         return logged;
     }

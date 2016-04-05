@@ -122,73 +122,83 @@ public abstract class AForm extends VerticalLayout {
 
         if (attr != null) {
 
-            if (attr.isAssociation()) {
 
-                // relazione OneToMany - usiamo un campo lista (?)
-                if(attr instanceof PluralAttribute){
-                    PluralAttribute pa = (PluralAttribute)attr;
-                    Class clazz = pa.getElementType().getJavaType();
-                    //field = new RelatedComboField(clazz);
-                    //field=null;// todo qui ci vuole una lista
+            try {
+
+                if (attr.isAssociation()) { // questo può fallire!!
+
+                    // relazione OneToMany - usiamo un campo lista (?)
+                    if(attr instanceof PluralAttribute){
+                        PluralAttribute pa = (PluralAttribute)attr;
+                        Class clazz = pa.getElementType().getJavaType();
+                        //field = new RelatedComboField(clazz);
+                        //field=null;// todo qui ci vuole una lista
+                    }
+
+                    // relazione ManyToOne - usiamo un campo combo
+                    if(attr instanceof SingularAttribute){
+                        SingularAttribute sa = (SingularAttribute)attr;
+                        Class clazz = sa.getJavaType();
+                        field = new RelatedComboField(clazz);
+                    }
+
+                } else {
+
+                    Class clazz = attr.getJavaType();
+
+                    if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
+                        field = new CheckBoxField();
+                    }
+
+                    if (clazz.equals(String.class)) {
+                        field = new TextField();
+                    }
+
+                    if (clazz.equals(String.class)) {
+                        field = new TextField();
+                    }
+
+                    if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
+                        field = new IntegerField();
+                    }
+
+                    if (clazz.equals(Long.class) || clazz.equals(long.class)) {
+                        field = new LongField();
+                    }
+
+                    if (clazz.equals(Date.class)) {
+                        field = new DateField();
+                    }
+
+                    if (clazz.equals(BigDecimal.class)) {
+                        field = new DecimalField();
+                    }
+
+                    if (clazz.equals(Timestamp.class)) {
+                        field = new DateField();
+                    }
+
+                    if (clazz.isEnum()) {
+                        Object[] values = clazz.getEnumConstants();
+                        ArrayComboField acf = new ArrayComboField(values);
+                        acf.setNullSelectionAllowed(true);
+                        field = acf;
+                    }
+
                 }
 
-                // relazione ManyToOne - usiamo un campo combo
-                if(attr instanceof SingularAttribute){
-                    SingularAttribute sa = (SingularAttribute)attr;
-                    Class clazz = sa.getJavaType();
-                    field = new RelatedComboField(clazz);
+                // create and assign the caption
+                if(field!=null){
+                    String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
+                    field.setCaption(caption);
                 }
 
-            } else {
-
-                Class clazz = attr.getJavaType();
-
-                if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
-                    field = new CheckBoxField();
-                }
-
-                if (clazz.equals(String.class)) {
-                    field = new TextField();
-                }
-
-                if (clazz.equals(String.class)) {
-                    field = new TextField();
-                }
-
-                if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
-                    field = new IntegerField();
-                }
-
-                if (clazz.equals(Long.class) || clazz.equals(long.class)) {
-                    field = new LongField();
-                }
-
-                if (clazz.equals(Date.class)) {
-                    field = new DateField();
-                }
-
-                if (clazz.equals(BigDecimal.class)) {
-                    field = new DecimalField();
-                }
-
-                if (clazz.equals(Timestamp.class)) {
-                    field = new DateField();
-                }
-
-                if (clazz.isEnum()) {
-                    Object[] values = clazz.getEnumConstants();
-                    ArrayComboField acf = new ArrayComboField(values);
-                    acf.setNullSelectionAllowed(true);
-                    field = acf;
-                }
-
+            }catch (Exception e){
+                e.printStackTrace();
             }
 
-            // create and assign the caption
-            if(field!=null){
-                String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
-                field.setCaption(caption);
-            }
+
+
 
         }
 

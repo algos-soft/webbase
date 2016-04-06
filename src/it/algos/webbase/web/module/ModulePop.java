@@ -409,14 +409,25 @@ public abstract class ModulePop extends Module {
      */
     @SuppressWarnings("rawtypes")
     public void edit() {
-        BaseEntity entity= getTable().getSelectedEntity();
-        if(entity!=null){
-            Long itemId = entity.getId();
-            if (itemId != null) {
-                Item item = getTable().getItem(itemId);
-                editItem(item, false, getTitoloEdit());
-            }
+
+//        BaseEntity entity= getTable().getSelectedEntity();
+//        if(entity!=null){
+//            Long itemId = entity.getId();
+//            if (itemId != null) {
+//                Item item = getTable().getItem(itemId);
+//                editItem(item, false, getTitoloEdit());
+//            }
+//        }
+
+        // new 6 apr-2016
+        // prima di andare alla scheda ricarico l'entity dal database per essere sicuro che sia aggiornata
+        Object id = getTable().getSelectedId();
+        if(id!=null){
+            BaseEntity e = getEntityManager().find(getEntityClass(), id);
+            Item item=new BeanItem(e);
+            editItem(item, false, getTitoloEdit());
         }
+
     }// end of method
 
 

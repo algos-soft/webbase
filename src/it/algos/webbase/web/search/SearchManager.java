@@ -1,5 +1,6 @@
 package it.algos.webbase.web.search;
 
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.*;
 import com.vaadin.ui.DateField;
 import it.algos.webbase.web.dialog.ConfirmDialog;
@@ -24,7 +25,6 @@ import javax.persistence.metamodel.Attribute;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.filter.SimpleStringFilter;
 
 @SuppressWarnings("serial")
 public class SearchManager extends ConfirmDialog {
@@ -568,6 +568,5 @@ public class SearchManager extends ConfirmDialog {
 
     }
 
-    ;
 
 }// end of class

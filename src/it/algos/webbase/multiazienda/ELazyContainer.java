@@ -94,7 +94,10 @@ public class ELazyContainer extends LazyEntityContainer {
     @Override
     public void removeAllContainerFilters() {
         super.removeAllContainerFilters();
-        addContainerFilter(createCompanyFilter());
+        Filter filter = createCompanyFilter();
+        if(filter!=null){
+            addContainerFilter(filter);
+        }
     }
 
 

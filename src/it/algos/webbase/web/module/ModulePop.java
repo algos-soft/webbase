@@ -672,7 +672,7 @@ public abstract class ModulePop extends Module {
                                 } else { // no combine option
 
                                     filtCont.removeAllContainerFilters();
-                                    // cont.refresh(); // refresh before applying
+                                    //cont.refresh(); // refresh before applying
                                     // new filters -- disabled alex 24-09-2014
                                     // too slow
                                     if (filter != null) {

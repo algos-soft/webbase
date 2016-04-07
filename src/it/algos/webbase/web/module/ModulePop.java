@@ -1,5 +1,6 @@
 package it.algos.webbase.web.module;
 
+import com.vaadin.addon.jpacontainer.EntityContainer;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
@@ -33,6 +34,7 @@ import it.algos.webbase.web.table.TablePortal;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
@@ -490,8 +492,21 @@ public abstract class ModulePop extends Module {
                                 getTable().select(id);
                             }
                         }
-//                        getTable().refresh();
+
                     }else{
+
+                        // after editing, refresh the table's container
+                        Container cont = getTable().getContainerDataSource();
+                        if(cont instanceof EntityContainer){
+                            EntityContainer ec = (EntityContainer)cont;
+                            ec.refresh();
+                        }
+                        if(cont instanceof LazyQueryContainer){
+                            LazyQueryContainer lc = (LazyQueryContainer)cont;
+                            lc.refresh();
+                        }
+
+
                         // This is needed to update generated columns in the table.
                         // (standard columns which are bound to properties are updated
                         // automatically when the item changes)

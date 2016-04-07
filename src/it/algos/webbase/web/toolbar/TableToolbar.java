@@ -208,7 +208,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      * @param singleSelected if a single row is selected in the table
      * @param multiSelected  if multiple rows (1+) are selected in the table
      */
-    private void syncButtons(boolean singleSelected, boolean multiSelected) {
+    protected void syncButtons(boolean singleSelected, boolean multiSelected) {
         
         if (bottoni.get(Bottoni.edit) != null) {
             bottoni.get(Bottoni.edit).setEnabled(singleSelected);

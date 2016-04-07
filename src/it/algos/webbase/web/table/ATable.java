@@ -2,6 +2,7 @@ package it.algos.webbase.web.table;
 
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Primitives;
+import com.vaadin.addon.jpacontainer.EntityContainer;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerItem;
 import com.vaadin.data.Container;
@@ -27,6 +28,7 @@ import it.algos.webbase.web.query.AQuery;
 import org.eclipse.persistence.internal.jpa.metamodel.SingularAttributeImpl;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 import org.vaadin.addons.lazyquerycontainer.NestingBeanItem;
 
 import javax.persistence.EntityManager;
@@ -678,13 +680,14 @@ public abstract class ATable extends Table {
      * Refreshes the underlying container from the database
      */
     public void refresh() {
+
         Container cont = getContainerDataSource();
         if (cont != null) {
             // refresh() is not in any interface, so we have
             // to cast to any specific classes
-            if (cont instanceof JPAContainer) {
-                JPAContainer jpac = (JPAContainer) cont;
-                jpac.refresh();
+            if(cont instanceof EntityContainer){
+                EntityContainer ec = (EntityContainer)cont;
+                ec.refresh();
             }
             if (cont instanceof LazyEntityContainer) {
                 LazyEntityContainer lec = (LazyEntityContainer) cont;

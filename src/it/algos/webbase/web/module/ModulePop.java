@@ -496,16 +496,7 @@ public abstract class ModulePop extends Module {
                     }else{
 
                         // after editing, refresh the table's container
-                        Container cont = getTable().getContainerDataSource();
-                        if(cont instanceof EntityContainer){
-                            EntityContainer ec = (EntityContainer)cont;
-                            ec.refresh();
-                        }
-                        if(cont instanceof LazyQueryContainer){
-                            LazyQueryContainer lc = (LazyQueryContainer)cont;
-                            lc.refresh();
-                        }
-
+                        getTable().refresh();
 
                         // This is needed to update generated columns in the table.
                         // (standard columns which are bound to properties are updated

@@ -99,7 +99,5 @@
         <!--<dependency org="org.vaadin.addons.lazyquerycontainer" name="vaadin-lazyquerycontainer" rev="7.4.0.1" />-->
 
 
-
-
     </dependencies>
 </ivy-module>

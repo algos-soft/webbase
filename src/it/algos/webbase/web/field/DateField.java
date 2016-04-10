@@ -1,5 +1,10 @@
 package it.algos.webbase.web.field;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter;
+import it.algos.webbase.web.lib.DateConvertUtils;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @SuppressWarnings("serial")
@@ -52,5 +57,9 @@ public class DateField extends com.vaadin.ui.DateField implements FieldInterface
 
     public void setAlignment(FieldAlignment alignment) {
     }// end of method
+
+    public void setValue(LocalDate date)  {
+       setValue(DateConvertUtils.asUtilDate(date));
+    }
 
 }// end of class

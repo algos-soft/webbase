@@ -58,8 +58,8 @@ public class DateField extends com.vaadin.ui.DateField implements FieldInterface
     public void setAlignment(FieldAlignment alignment) {
     }// end of method
 
-    public void setValue(LocalDate date)  {
-       setValue(DateConvertUtils.asUtilDate(date));
-    }
+//    public void setValue(LocalDate date)  {
+//       setValue(DateConvertUtils.asUtilDate(date));
+//    }
 
 }// end of class

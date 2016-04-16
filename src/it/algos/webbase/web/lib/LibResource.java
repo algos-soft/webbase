@@ -33,10 +33,12 @@ public class LibResource {
         Path fullpath = Paths.get(path, name);
         try {
             ServletContext sc = AlgosApp.getServletContext();
-            String realpath = sc.getRealPath("/" + fullpath.toString());
-            File f = new File(realpath);
-            if(f.exists() && !f.isDirectory()) {
-                bytes = Files.readAllBytes(Paths.get(realpath));
+            if(sc!=null){
+                String realpath = sc.getRealPath("/" + fullpath.toString());
+                File f = new File(realpath);
+                if(f.exists() && !f.isDirectory()) {
+                    bytes = Files.readAllBytes(Paths.get(realpath));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

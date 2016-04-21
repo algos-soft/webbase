@@ -28,9 +28,19 @@ public class ModuleForm extends AForm {
     @Override
     protected void init() {
 
+        Item item=getItem();
+
+        // if the item exists and it is a bean item, refresh the entity
+        // from the persistence layer before displaying data
+        if(item!=null && item instanceof BeanItem){
+            BeanItem bi = (BeanItem)item;
+            BaseEntity entity = (BaseEntity)bi.getBean();
+            getEntityManager().refresh(entity);
+        }
+
         // if the item is not present, then it is a new record.
         // create a temporary BeanItem of the proper class
-        if (getItem() == null) {
+        if (item == null) {
             Object bean = BaseEntity.createBean(getModule().getEntityClass());
             setItem(new BeanItem(bean));
             getBinder().setItemDataSource(getItem());   // link the binder to the new item before adding the fields

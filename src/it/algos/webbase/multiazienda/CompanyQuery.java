@@ -20,64 +20,41 @@ import java.util.List;
 public class CompanyQuery {
 
     /**
-     * Ritorna il numero di record di competenza della azienda corrente
-     * presenti nella domain class specificata
+     * Ritorna il numero di record presenti nella domain class specificata
+     * Filtrato sulla azienda corrente.
      *
-     * @param c la domain class
+     * @param clazz la domain class
      * @return il numero di record
      */
-    public static long getCount(Class<? extends CompanyEntity> c) {
+    public static long getCount(Class<? extends CompanyEntity> clazz) {
+        return getCount(clazz, CompanySessionLib.getCompany());
+    }// end of method
+
+    /**
+     * Ritorna il numero di record presenti nella domain class specificata
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param clazz   la domain class
+     * @param company azienda da filtrare
+     * @return il numero di record
+     */
+    public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company) {
         EntityManager manager = EM.createEntityManager();
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(c);
-        Predicate predicate =  cb.equal(root.get(CompanyEntity_.company), CompanySessionLib.getCompany());
+        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
+        Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
         cq.where(predicate);
         CriteriaQuery<Long> select = cq.select(cb.count(root));
         TypedQuery<Long> typedQuery = manager.createQuery(select);
         Long count = typedQuery.getSingleResult();
-        if(count==null){
-            count=0l;
+        if (count == null) {
+            count = 0l;
         }
         manager.close();
         return count;
     }// end of method
 
-
-    /**
-     * Search for all entities with a specified attribute value.
-     * Filtrato sulla azienda corrente.
-     * <p>
-     *
-     * @param clazz the entity class
-     * @param attr  the searched attribute
-     * @param value the value to search for
-     * @param manager the EntityManager to use
-     * @return a list of entities corresponding to the specified criteria
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz, SingularAttribute attr,
-                                                         Object value, EntityManager manager) {
-        CriteriaBuilder cb = manager.getCriteriaBuilder();
-        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
-        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
-
-        Predicate pred;
-        List<Predicate> predicates = new ArrayList<Predicate>();
-
-        pred = cb.equal(root.get(attr), value);
-        predicates.add(pred);
-
-        pred = cb.equal(root.get(CompanyEntity_.company), CompanySessionLib.getCompany());
-        predicates.add(pred);
-
-        cq.where(predicates.toArray(new Predicate[]{}));
-
-        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
-        List<CompanyEntity> entities = (List<CompanyEntity>) query.getResultList();
-
-        return entities;
-    }
 
     /**
      * Search for all entities with a specified attribute value.
@@ -91,36 +68,153 @@ public class CompanyQuery {
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz, SingularAttribute attr,
-                                                         Object value) {
+    public static List<? extends CompanyEntity> queryList(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value) {
         EntityManager manager = EM.createEntityManager();
         List<? extends CompanyEntity> entities = queryList(clazz, attr, value, manager);
         manager.close();
 
         return entities;
-    }
+    }// end of method
 
+    /**
+     * Search for all entities with a specified attribute value.
+     * Filtrato sulla azienda corrente.
+     * <p>
+     *
+     * @param clazz   the entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return a list of entities corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static List<? extends CompanyEntity> queryList(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value,
+            EntityManager manager) {
+
+        return queryList(clazz, attr, value, manager, CompanySessionLib.getCompany());
+    }// end of method
+
+
+    /**
+     * Search for all entities with a specified attribute value.
+     * Filtrato sulla azienda passata come parametro.
+     * <p>
+     *
+     * @param clazz   the entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @param company azienda da filtrare
+     * @return a list of entities corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static List<? extends CompanyEntity> queryList(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value,
+            EntityManager manager,
+            BaseCompany company) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
+        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
+
+        Predicate pred;
+        List<Predicate> predicates = new ArrayList<Predicate>();
+
+        pred = cb.equal(root.get(attr), value);
+        predicates.add(pred);
+
+        pred = cb.equal(root.get(CompanyEntity_.company), company);
+        predicates.add(pred);
+
+        cq.where(predicates.toArray(new Predicate[]{}));
+
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+        List<CompanyEntity> entities = (List<CompanyEntity>) query.getResultList();
+
+        return entities;
+    }// end of method
 
 
     /**
      * Search for the only entity with a specified attribute value.
+     * Filtrato sulla azienda corrente.
+     * Crea un EntityManager al volo
      * <p>
      * If multiple entities exist, null is returned.
      *
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     * @returnthe the only entity corresponding to the specified criteria, or null
+     * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
-    public static BaseEntity queryOne(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value) {
+    public static BaseEntity queryOne(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value) {
+        EntityManager manager = EM.createEntityManager();
+        BaseEntity bean = queryOne(clazz, attr, value, manager);
+        manager.close();
+
+        return bean;
+    }// end of method
+
+    /**
+     * Search for the only entity with a specified attribute value.
+     * Filtrato sulla azienda corrente.
+     * <p>
+     * If multiple entities exist, null is returned.
+     *
+     * @param clazz the entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity queryOne(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value,
+            EntityManager manager) {
+
+        return queryOne(clazz, attr, value, manager, CompanySessionLib.getCompany());
+    }// end of method
+
+    /**
+     * Search for the only entity with a specified attribute value.
+     * Filtrato sulla azienda passata come parametro.
+     * <p>
+     * If multiple entities exist, null is returned.
+     *
+     * @param clazz   the entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @param company azienda da filtrare
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity queryOne(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value,
+            EntityManager manager,
+            BaseCompany company) {
         BaseEntity bean = null;
-        List<? extends CompanyEntity> entities = queryList(clazz, attr, value);
-        if (entities.size() == 1) {
+
+        List<? extends CompanyEntity> entities = queryList(clazz, attr, value, manager, company);
+        if (entities != null && entities.size() == 1) {
             bean = entities.get(0);
         }
         return bean;
-    }
+    }// end of method
 
     /**
      * Search for the first entities with a specified attribute value.
@@ -153,7 +247,6 @@ public class CompanyQuery {
         return getList(clazz, null);
     }// end of method
 
-
     /**
      * Return a list of entities for a given domain class and filters.
      * <p>
@@ -182,7 +275,7 @@ public class CompanyQuery {
         }
 
         for (Object id : container.getItemIds()) {
-            CompanyEntity entity = (CompanyEntity)container.getEntity(id);
+            CompanyEntity entity = (CompanyEntity) container.getEntity(id);
             list.add(entity);
         }
         em.close();
@@ -199,6 +292,7 @@ public class CompanyQuery {
      *                    to build filters, or create them as Compare....)
      * @return the single (or first) entity found
      */
+
     public static CompanyEntity getEntity(Class<? extends CompanyEntity> entityClass, Filter... filters) {
         CompanyEntity entity = null;
         List<? extends CompanyEntity> list = getList(entityClass, filters);
@@ -207,8 +301,6 @@ public class CompanyQuery {
         }
         return entity;
     }
-
-
 
 
     /**
@@ -253,7 +345,6 @@ public class CompanyQuery {
         BaseCompany company = CompanySessionLib.getCompany();
         return cb.equal(root.get(CompanyEntity_.company), company);
     }
-
 
 
 }

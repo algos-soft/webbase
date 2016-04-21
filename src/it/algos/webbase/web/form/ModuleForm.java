@@ -58,7 +58,7 @@ public class ModuleForm extends AForm {
      * Crea e aggiunge i campi.<br>
      * Implementazione di default nella superclasse.<br>
      * I campi vengono recuperati dal Modello (di default) <br>
-     * I campi vengono creti del tipo grafico previsto nella Entity.<br>
+     * I campi vengono creati del tipo grafico previsto nella Entity.<br>
      * Se si vuole aggiungere un campo (solo nel form e non nel Modello),<br>
      * usare il metodo sovrascritto nella sottoclasse
      * invocando prima (o dopo) il metodo della superclasse.

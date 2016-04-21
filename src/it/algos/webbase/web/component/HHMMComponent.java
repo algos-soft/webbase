@@ -17,11 +17,11 @@ public class HHMMComponent extends HorizontalLayout {
         setSpacing(true);
 
         fHours = new IntegerField();
-        fHours.setWidth("3em");
+        fHours.setWidth("2.5em");
         fHours.setValue(h);
 
         fMinutes = new IntegerField();
-        fMinutes.setWidth("3em");
+        fMinutes.setWidth("2.5em");
         fMinutes.setValue(m);
 
         addComponent(fHours);

@@ -35,7 +35,10 @@ public class ModuleForm extends AForm {
         if(item!=null && item instanceof BeanItem){
             BeanItem bi = (BeanItem)item;
             BaseEntity entity = (BaseEntity)bi.getBean();
-            getEntityManager().refresh(entity);
+            EntityManager em = getEntityManager();
+            if(em!=null){
+                em.refresh(entity);
+            }
         }
 
         // if the item is not present, then it is a new record.

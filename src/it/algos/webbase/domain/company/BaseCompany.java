@@ -6,7 +6,6 @@ import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.query.EntityQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import java.util.Date;
 

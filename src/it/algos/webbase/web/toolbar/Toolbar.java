@@ -1,13 +1,11 @@
 package it.algos.webbase.web.toolbar;
 
 import com.vaadin.server.Resource;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.component.Spacer;
 
 /**
  * Base toolbar composed by:<br>
@@ -24,9 +22,9 @@ public abstract class Toolbar extends VerticalLayout {
     protected static final boolean DEBUG_GUI = false;
     public static int ALTEZZA_BOTTONI = 32;
     public static int LARGHEZZA_BOTTONI = 100;
-//    public static int ALTEZZA_BOTTONI = 40;
+    //    public static int ALTEZZA_BOTTONI = 40;
 //    public static int LARGHEZZA_BOTTONI = 120;
-    protected HorizontalLayout commandLayout = new HorizontalLayout();
+    public HorizontalLayout commandLayout = new HorizontalLayout();
     protected HorizontalLayout helperLayout = new HorizontalLayout();
 
     public Toolbar() {

@@ -1080,7 +1080,7 @@ public abstract class ATable extends Table {
 
     public interface SelectionChangeListener {
         void selectionChanged(SelectionChangeEvent e);
-    }
+    }// end of method
 
     /**
      * Table high-level events

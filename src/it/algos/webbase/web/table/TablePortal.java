@@ -7,11 +7,13 @@ import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 
+import java.util.ArrayList;
+
 /**
  * Portal hosting a table and a toolbar
  */
 @SuppressWarnings("serial")
-public class TablePortal extends VerticalLayout {
+public class TablePortal extends VerticalLayout implements ATable.SelectionChangeListener{
 
     protected ATable table;
     protected TableToolbar toolbar;
@@ -67,7 +69,11 @@ public class TablePortal extends VerticalLayout {
         // The toolbar listens to table selection changes
         getTable().addSelectionChangeListener(this.getToolbar());
 
-    }
+        // The portal listens to table selection changes
+        //@todo aggiunto da gac - 7.5.16
+        getTable().addSelectionChangeListener(this);
+
+    }// end of method
 
     public TableToolbar createToolbar() {
         TableToolbar toolbar = new TableToolbar();
@@ -97,6 +103,8 @@ public class TablePortal extends VerticalLayout {
         }
     }
 
+
+
     public ATable getTable() {
         return table;
     }
@@ -108,4 +116,10 @@ public class TablePortal extends VerticalLayout {
     public ModulePop getModule() {
         return module;
     }
+
+    @Override
+    public void selectionChanged(ATable.SelectionChangeEvent e) {
+    }// end of method
+
+
 }// end of class

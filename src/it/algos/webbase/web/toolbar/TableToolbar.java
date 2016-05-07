@@ -136,7 +136,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
 
     public void addToolbarListener(TableToolbarListener listener) {
         this.listeners.add(listener);
-    }
+    }// end of method
 
     private void fire(Bottoni bottone) {
         for (TableToolbarListener l : listeners) {

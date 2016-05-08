@@ -11,10 +11,13 @@ import javax.persistence.metamodel.Attribute;
 @SuppressWarnings("serial")
 public class @NAME@Mod extends ModulePop {
 
-    // indirizzo interno del modulo (serve nei menu)
+    // indirizzo interno del modulo - etichetta del menu
     public static String MENU_ADDRESS = "@NAME@";
 
-    /**
+    // icona (eventuale) del modulo
+    public static Resource ICON = FontAwesome.GEAR;
+
+   /**
      * Costruttore senza parametri
      * <p/>
      * Invoca la superclasse passando i parametri:
@@ -23,7 +26,7 @@ public class @NAME@Mod extends ModulePop {
      * (facoltativo) icona del menu (se manca usa un'icona standard)
      */
     public @NAME@Mod() {
-        super(@NAME@.class, MENU_ADDRESS, FontAwesome.GEAR);
+        super(@NAME@.class, MENU_ADDRESS, ICON);
     }// end of constructor
 
 }// end of class

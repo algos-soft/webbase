@@ -1,6 +1,7 @@
 package it.algos.webbase.web.toolbar;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -12,6 +13,12 @@ import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class TableToolbar extends Toolbar implements ATable.SelectionChangeListener {
+
+    public static final String CMD_NEW = "Nuovo";
+    public static final String CMD_EDIT = "Modifica";
+    public static final String CMD_DELETE = "Elimina";
+    public static final String CMD_SEARCH = "Ricerca";
+    public static final String CMD_SELECTION = "Selezione";
 
     protected HashMap<Bottoni, MenuItem> bottoni = new HashMap<>();
     private ArrayList<TableToolbarListener> listeners = new ArrayList<TableToolbarListener>();
@@ -40,7 +47,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      */
     protected void addCreate() {
         MenuBar.MenuItem item;
-        item = addButton("Nuovo", FontAwesome.PLUS, new MenuBar.Command() {
+        item = addButton(CMD_NEW, FontAwesome.PLUS, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.create);
             }
@@ -54,7 +61,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      */
     protected void addEdit() {
         MenuBar.MenuItem item;
-        item = addButton("Modifica", FontAwesome.PENCIL, new MenuBar.Command() {
+        item = addButton(CMD_EDIT, FontAwesome.PENCIL, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.edit);
             }
@@ -68,7 +75,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      */
     protected void addDelete() {
         MenuBar.MenuItem item;
-        item = addButton("Elimina", FontAwesome.TRASH_O, new MenuBar.Command() {
+        item = addButton(CMD_DELETE, FontAwesome.TRASH_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.delete);
             }
@@ -82,7 +89,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
      */
     protected void addSearch() {
         MenuBar.MenuItem item;
-        item = addButton("Ricerca", FontAwesome.SEARCH, new MenuBar.Command() {
+        item = addButton(CMD_SEARCH, FontAwesome.SEARCH, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.search);
             }
@@ -98,7 +105,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
 //        MenuBar.MenuItem itemSeleziona = null;
         MenuBar.MenuItem item;
 
-        itemSeleziona = addButton("Seleziona", FontAwesome.LIST_UL, null);
+        itemSeleziona = addButton(CMD_SELECTION, FontAwesome.LIST_UL, null);
 
 
         item = itemSeleziona.addItem("Solo selezionati", FontAwesome.FILE_TEXT, new MenuBar.Command() {
@@ -185,12 +192,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
     /**
      * Cambiata la selezione delle righe.
      * Possibilità di modificare l'aspetto (e la funzionalità) dei bottoni, eventualmente disabilitandoli
-     * <p/>
+     * <p>
      * Nuovo: sempre acceso
      * Modifica: acceso se è selezionata una ed una sola riga
      * Elimina: acceso se è selezionata una riga o più di una riga
      * Ricerca: sempre acceso
-     * <p/>
+     * <p>
      * Solo selezionati: acceso se è selezionata una riga o più di una riga
      * Rimuovi selezionati: acceso se è selezionata una riga o più di una riga
      * Mostra tutti: sempre acceso
@@ -203,13 +210,13 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
 
     /**
      * Sync the buttons state
-     * <p/>
+     * <p>
      *
      * @param singleSelected if a single row is selected in the table
      * @param multiSelected  if multiple rows (1+) are selected in the table
      */
     public void syncButtons(boolean singleSelected, boolean multiSelected) {
-        
+
         if (bottoni.get(Bottoni.edit) != null) {
             bottoni.get(Bottoni.edit).setEnabled(singleSelected);
         }
@@ -251,6 +258,50 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
         itemSeleziona.setEnabled(enabled);
     }
 
+
+    /*
+     * Elimina un comando dalla GUI.
+     */
+    public void delCmd(String label) {
+        Component comp;
+
+        comp = getComp(label);
+        if (comp != null) {
+            commandLayout.removeComponent(comp);
+        }// end of if cycle
+    }// end of method
+
+    /**
+     * Recupera il componente grafico corrispondente al comando indicato.
+     */
+    public Component getComp(MenuBar.MenuItem item) {
+        return getComp(item.getText());
+    }// end of method
+
+    /**
+     * Recupera il componente grafico corrispondente al comando indicato.
+     */
+    public Component getComp(String label) {
+        Component comp = null;
+        int max = commandLayout.getComponentCount();
+        MenuBar cmd;
+        MenuBar.MenuItem itemTmp;
+        String labelTmp;
+
+        for (int k = 0; k < max; k++) {
+            comp = commandLayout.getComponent(k);
+            if (comp instanceof MenuBar) {
+                cmd = (MenuBar) comp;
+                itemTmp = cmd.getItems().get(0);
+                labelTmp = itemTmp.getText();
+                if (labelTmp.equals(label)) {
+                    return comp;
+                }// end of if cycle
+            }// end of if cycle
+        }// end of for cycle
+
+        return comp;
+    }// end of method
 
     public enum Bottoni {
         create, edit, delete, search, selectedonly, removeselected, showall, deselectall;

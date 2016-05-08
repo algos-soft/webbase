@@ -2,18 +2,18 @@ package it.algos.webbase.web.table;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.VerticalLayout;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 
-import java.util.ArrayList;
-
 /**
  * Portal hosting a table and a toolbar
  */
 @SuppressWarnings("serial")
-public class TablePortal extends VerticalLayout implements ATable.SelectionChangeListener{
+public class TablePortal extends VerticalLayout implements ATable.SelectionChangeListener {
 
     protected ATable table;
     protected TableToolbar toolbar;
@@ -98,11 +98,10 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
 
     public void addToolbarListener(TableToolbarListener listener) {
         TableToolbar tb = getToolbar();
-        if(tb!=null){
+        if (tb != null) {
             tb.addToolbarListener(listener);
         }
     }
-
 
 
     public ATable getTable() {
@@ -121,5 +120,26 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
     public void selectionChanged(ATable.SelectionChangeEvent e) {
     }// end of method
 
+
+    /*
+     * Elimina un comando dalla GUI.
+     */
+    public void delCmd(String label) {
+        toolbar.delCmd(label);
+    }// end of method
+
+    /**
+     * Recupera il componente grafico corrispondente al comando indicato.
+     */
+    public Component getComp(MenuBar.MenuItem item) {
+        return getComp(item.getText());
+    }// end of method
+
+    /**
+     * Recupera il componente grafico corrispondente al comando indicato.
+     */
+    public Component getComp(String label) {
+        return toolbar.getComp(label);
+    }// end of method
 
 }// end of class

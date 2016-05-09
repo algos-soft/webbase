@@ -1,0 +1,44 @@
+package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
+
+import com.vaadin.data.Item;
+import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.form.ModuleForm;
+
+/**
+ * Created by webbase templates.
+ */
+public class @NAME@Form extends ModuleForm {
+
+    /**
+     * The form used to edit an item.
+     * <p>
+     * Invoca la superclasse passando i parametri:
+     *
+     * @param item   (facoltativo) singola istanza della classe
+     * @param module (obbligatorio) di riferimento
+     */
+    public @NAME@Form(Item item, ModulePop module) {
+        super(item, module);
+    }// end of constructor
+
+
+    /**
+     * Populate the map to bind item properties to fields.
+     * Create and add a field for each property declared for this form
+     * <p>
+     * Implementazione di default nella superclasse.<br>
+     * I campi vengono recuperati dal Modello.<br>
+     * I campi vengono creati del tipo grafico previsto nella Entity.<br>
+     * Se si vuole aggiungere un campo (solo nel form e non nel Modello),<br>
+     * usare il metodo sovrascritto nella sottoclasse
+     * invocando prima (o dopo) il metodo della superclasse.
+     * Se si vuole un layout completamente diverso sovrascrivere
+     * senza invocare il metodo della superclasse
+     */
+    @Override
+    public void createFields() {
+        super.createFields();
+    }// end of method
+
+
+}// end of form class

@@ -5,10 +5,12 @@
     <property name="srcEntityTag" value="Entity"/>
     <property name="persistenceTag" value="persistence"/>
     <property name="uiTag" value="UI"/>
+    <property name="srcFormTag" value="Form"/>
 
     <property name="destDomainTag" value=""/>
     <property name="destEntityTag" value="_"/>
     <property name="destModuloTag" value="Mod"/>
+    <property name="destFormTag" value="Form"/>
 
     <property name="risalita" value="/../../.."/>
     <property name="preClasse" value="&lt;class&gt;"/>
@@ -24,6 +26,7 @@
     <property name="destSufXml" value=".xml"/>
     <property name="srcDomain" value="${srcDir}/${srcDomainTag}${srcSuffix}"/>
     <property name="srcEntity" value="${srcDir}/${srcEntityTag}${srcSuffix}"/>
+    <property name="srcForm" value="${srcDir}/${srcFormTag}${srcSuffix}"/>
 
     <property name="baseDest" value="${basedir}${risalita}"/>
     <property name="tagLastPer" value="${preClasse}it.algos.webbase.web.entity.BaseEntity${postClasse}"/>
@@ -35,7 +38,8 @@
         <input addproperty="progetto" message="Nome (maiuscolo) del progetto di riferimento:" defaultvalue="Prova"/>
         <input addproperty="modulo" message="Nome (maiuscolo) del nuovo modulo:" defaultvalue="Bolla"/>
         <lower string="${progetto}" to="lowerProgetto"/>
-        <lower string="${modulo}" to="lowerModulo"/>
+        <lower string="${modulo}" to="lowerModuloOld"/>
+        <property name="lowerModulo" value="entity/${lowerModuloOld}"/>
 
         <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerModulo}"/>
         <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
@@ -44,6 +48,7 @@
         <property name="destDomain" value="${destDir}/${modulo}${destDomainTag}${destSuffix}"/>
         <property name="destEntity" value="${destDir}/${modulo}${destEntityTag}${destSuffix}"/>
         <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
+        <property name="destForm" value="${destDir}/${modulo}${destFormTag}${destSuffix}"/>
         <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
         <property name="destUI" value="${destDirBase}/${progetto}${uiTag}${destSuffix}"/>
         <property name="destMod" value="${pathClasse}${lowerProgetto}.${lowerModulo}.${modulo}"/>
@@ -69,7 +74,7 @@
         <copy file="${sourceFile}" tofile="${destFile}" overwrite="false">
             <filterset>
                 <filter token="LOWERPROGETTO" value="${lowerProgetto}"/>
-                <filter token="LOWERNAME" value="${lowerModulo}"/>
+                <filter token="LOWERNAME" value="entity.${lowerModuloOld}"/>
                 <filter token="NAME" value="${modulo}"/>
             </filterset>
         </copy>
@@ -223,6 +228,14 @@
 
     <target name="debug" depends="messaggi" description="Controllo parametri">
         <antcall target="input"></antcall>
+    </target>
+
+    <target name="form" depends="messaggi" description="Crea una classe Form">
+        <antcall target="input"></antcall>
+        <antcall target="sovrascriveSingoloFile">
+            <param name="sourceFile" value="${srcForm}"/>
+            <param name="destFile" value="${destForm}"/>
+        </antcall>
     </target>
 
 

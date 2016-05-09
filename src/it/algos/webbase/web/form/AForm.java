@@ -106,6 +106,7 @@ public abstract class AForm extends VerticalLayout {
     }
 
     /**
+     * Populate the map to bind item properties to fields.
      * Create and add a field for each property declared for this form
      */
     public abstract void createFields();
@@ -271,7 +272,6 @@ public abstract class AForm extends VerticalLayout {
     /**
      * Create the detail component (the upper part containing the fields).
      * <p>
-     * Retrieve the fields from the binder and place them in the UI.
      *
      * @return the detail component containing the fields
      */
@@ -279,12 +279,22 @@ public abstract class AForm extends VerticalLayout {
         FormLayout layout = new AFormLayout();
         layout.setMargin(true);
         Collection<Field<?>> fields = binder.getFields();
+
         for (Field<?> field : fields) {
             layout.addComponent(field);
-        }
-        return layout;
-    }
+        }// end of for cycle
 
+        return layout;
+    }// end of method
+
+    /**
+     * Crea il componente che visualizza il dettaglio
+     * Retrieve the fields from the binder and place them in the UI.
+     *
+     * @return il componente dettagli
+     */
+    protected Component creaCompDetail() {
+    }// end of method
 
     /**
      * Create the toolbar.

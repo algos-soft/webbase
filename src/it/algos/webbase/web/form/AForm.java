@@ -3,7 +3,6 @@ package it.algos.webbase.web.form;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
@@ -14,9 +13,10 @@ import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.lib.LibBean;
 import it.algos.webbase.web.toolbar.FormToolbar;
-import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 
-import javax.persistence.metamodel.*;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,16 +25,16 @@ import java.util.Date;
 
 /**
  * A generic form to edit one Item.
- *
+ * <p>
  * Usage:
- *
+ * <p>
  * - make a subclass, then:
  * - create and add the fields in the createFields() method
  * - add a constructor
  * - call super() with some kind of Item
  * - call the init() method
  * - eventually modify other stuff like toolbar etc
- *
+ * <p>
  * To read field values use getFieldValue()
  * To listen for confirm or cancel buttons, add a FormListener.
  * To change the button's text use setCancelText() and setConfirmText().
@@ -129,16 +129,16 @@ public abstract class AForm extends VerticalLayout {
                 if (attr.isAssociation()) { // questo può fallire!!
 
                     // relazione OneToMany - usiamo un campo lista (?)
-                    if(attr instanceof PluralAttribute){
-                        PluralAttribute pa = (PluralAttribute)attr;
+                    if (attr instanceof PluralAttribute) {
+                        PluralAttribute pa = (PluralAttribute) attr;
                         Class clazz = pa.getElementType().getJavaType();
                         //field = new RelatedComboField(clazz);
                         //field=null;// todo qui ci vuole una lista
                     }
 
                     // relazione ManyToOne - usiamo un campo combo
-                    if(attr instanceof SingularAttribute){
-                        SingularAttribute sa = (SingularAttribute)attr;
+                    if (attr instanceof SingularAttribute) {
+                        SingularAttribute sa = (SingularAttribute) attr;
                         Class clazz = sa.getJavaType();
                         field = new RelatedComboField(clazz);
                     }
@@ -189,16 +189,14 @@ public abstract class AForm extends VerticalLayout {
                 }
 
                 // create and assign the caption
-                if(field!=null){
+                if (field != null) {
                     String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
                     field.setCaption(caption);
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
 
 
         }
@@ -272,19 +270,17 @@ public abstract class AForm extends VerticalLayout {
     /**
      * Create the detail component (the upper part containing the fields).
      * <p>
+     * Usa il FormLayout che ha le label a sinsitra dei campi (standard)
+     * Se si vogliono le label sopra i campi, sovrascivere questo metodo e usare un VerticalLayout
      *
      * @return the detail component containing the fields
      */
     protected Component createComponent() {
         FormLayout layout = new AFormLayout();
         layout.setMargin(true);
-        Collection<Field<?>> fields = binder.getFields();
+        layout.setSpacing(true);
 
-        for (Field<?> field : fields) {
-            layout.addComponent(field);
-        }// end of for cycle
-
-        return layout;
+        return creaCompDetail(layout);
     }// end of method
 
     /**
@@ -293,7 +289,14 @@ public abstract class AForm extends VerticalLayout {
      *
      * @return il componente dettagli
      */
-    protected Component creaCompDetail() {
+    protected Component creaCompDetail(FormLayout layout) {
+        Collection<Field<?>> fields = binder.getFields();
+
+        for (Field<?> field : fields) {
+            layout.addComponent(field);
+        }// end of for cycle
+
+        return layout;
     }// end of method
 
     /**
@@ -503,30 +506,12 @@ public abstract class AForm extends VerticalLayout {
         return id;
     }
 
-
-    /**
-     * Enum of supported Form events
-     */
-    public enum FormEvent {
-        cancel, commit;
-    }
-
-    /**
-     * Form event
-     */
-    public interface FormListener {
-        public void cancel_();
-
-        public void commit_();
-    }
-
     /**
      * Add a form listener to the form
      */
     public void addFormListener(FormListener listener) {
         listeners.add(listener);
     }
-
 
     /**
      * Fires a form event to the registered listeners
@@ -568,17 +553,32 @@ public abstract class AForm extends VerticalLayout {
 //        return entity;
     }
 
-
     public FormToolbar getToolbar() {
         return toolbar;
     }
 
-    public void setConfirmText(String text){
+    public void setConfirmText(String text) {
         getToolbar().getConfirmItem().setText(text);
     }
 
-    public void setCancelText(String text){
+    public void setCancelText(String text) {
         getToolbar().getCancelItem().setText(text);
+    }
+
+    /**
+     * Enum of supported Form events
+     */
+    public enum FormEvent {
+        cancel, commit;
+    }
+
+    /**
+     * Form event
+     */
+    public interface FormListener {
+        public void cancel_();
+
+        public void commit_();
     }
 
 

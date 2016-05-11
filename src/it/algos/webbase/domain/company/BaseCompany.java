@@ -6,6 +6,7 @@ import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.query.EntityQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -20,26 +21,26 @@ public class BaseCompany extends BaseEntity {
 
     @Column(unique = true)
     @NotEmpty
-    private String companyCode;
+    private String companyCode= "";
 
     @NotEmpty
     private String name = "";
 
     @Email
     @NotEmpty
-    private String email;
+    private String email= "";
 
-    private String username;
+    private String username= "";
 
-    private String password;
+    private String password= "";
 
-    private String address1;
+    private String address1= "";
 
-    private String address2;
+    private String address2= "";
 
-    private String contact;
+    private String contact= "";
 
-    private String contractType;
+    private String contractType= "";
 
     @Temporal(TemporalType.DATE)
     private Date contractStart;

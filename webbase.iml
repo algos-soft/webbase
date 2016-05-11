@@ -225,7 +225,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.6.4-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.6.4-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.6.4-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/mysql/mysql-connector-java/sources/mysql-connector-java-5.1.31-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

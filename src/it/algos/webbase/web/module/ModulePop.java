@@ -11,6 +11,7 @@ import com.vaadin.data.util.filter.And;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
+import com.vaadin.event.Action;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
@@ -204,11 +205,22 @@ public abstract class ModulePop extends Module {
                 }// end of inner method
             });// end of anonymous inner class
 
+            // Registers a new action handler for this container
+            ATable tavola = getTable();
+            addActionHandler(tavola);
+
             setCompositionRoot(tablePortal);
         }
 
     }// end of constructor
 
+    /**
+     * Registers a new action handler for this container
+     * Sovrascritto
+     * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
+     */
+    protected void addActionHandler(ATable tavola) {
+    }// end of method
 
     /**
      * Crea i campi visibili nella lista (table)

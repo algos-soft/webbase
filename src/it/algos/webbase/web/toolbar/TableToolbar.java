@@ -300,7 +300,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangeListe
             }// end of if cycle
         }// end of for cycle
 
-        return comp;
+        return null;
     }// end of method
 
     public enum Bottoni {

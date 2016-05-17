@@ -1,6 +1,5 @@
 package it.algos.webbase.web.module;
 
-import com.vaadin.addon.jpacontainer.EntityContainer;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
@@ -29,19 +28,20 @@ import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
-import it.algos.webbase.web.table.ATable.TableListener;
 import it.algos.webbase.web.table.ModuleTable;
 import it.algos.webbase.web.table.TablePortal;
 import it.algos.webbase.web.toolbar.TableToolbar;
 import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
+import org.apache.commons.beanutils.BeanUtils;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
-import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.Set;
 
 /**
@@ -73,6 +73,9 @@ public abstract class ModulePop extends Module {
     private Resource menuIcon = null;
     // entity manager del modulo
     public EntityManager entityManager;
+
+    private ArrayList<RecordSavedListener> recordSavedListeners = new ArrayList<>();
+    private ArrayList<RecordDeletedListener> recordDeletedListeners = new ArrayList<>();
 
     /**
      * Costruttore minimo
@@ -188,22 +191,30 @@ public abstract class ModulePop extends Module {
 
             });// end of anonymous inner class
 
-            // add listener to table events
-            tablePortal.getTable().addTableListener(new TableListener() {
-
+            // add a listener to container changed events of the table
+            tablePortal.getTable().addContainerChangedListener(new ATable.ContainerChangedListener() {
                 @Override
-                public void datachange_() {
+                public void containerChanged(Container.ItemSetChangeEvent e) {
                     tableDataChanged();
-                }// end of inner method
+                }
+            });
 
-                @Override
-                public void created_() {
-                }// end of inner method
-
-                @Override
-                public void attached_() {
-                }// end of inner method
-            });// end of anonymous inner class
+//            // add listener to table events
+//            tablePortal.getTable().addTableListener(new TableListener() {
+//
+//                @Override
+//                public void datachange_() {
+//                    tableDataChanged();
+//                }// end of inner method
+//
+//                @Override
+//                public void created_() {
+//                }// end of inner method
+//
+//                @Override
+//                public void attached_() {
+//                }// end of inner method
+//            });// end of anonymous inner class
 
             // Registers a new action handler for this container
             ATable tavola = getTable();
@@ -419,7 +430,8 @@ public abstract class ModulePop extends Module {
 
 
     /**
-     * Edit button pressed in table Display the item in a form
+     * Edit button pressed in table.
+     * Display the item in a form
      */
     @SuppressWarnings("rawtypes")
     public void edit() {
@@ -477,6 +489,10 @@ public abstract class ModulePop extends Module {
                 window.setModal(true);
             }
 
+            // make a copy of the original entity, in case it is modified
+            final BaseEntity origEntity=cloneEntity(form.getEntity());
+
+            // add the FormListener
             form.addFormListener(new FormListener() {
 
                 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -485,27 +501,36 @@ public abstract class ModulePop extends Module {
 
                     window.close();
 
-
                     // after successful editing, if was a new record display only
                     // the new record in the table, if was an edit refresh the row cache
-                    if(newRecord){
-                        Item item = form.getItem();
-                        if(item instanceof BeanItem){
-                            BeanItem bi = (BeanItem)item;
-                            BaseEntity entity = (BaseEntity)bi.getBean();
-                            long id = entity.getId();
+                    if (newRecord) {
+                        BaseEntity newEntity = form.getEntity();
+                        if (newEntity != null) {
+
+                            long id = newEntity.getId();
                             Container cont = getTable().getContainerDataSource();
-                            if(cont instanceof Container.Filterable){
-                                Container.Filterable filterable=(Container.Filterable)cont;
+                            if (cont instanceof Container.Filterable) {
+                                Container.Filterable filterable = (Container.Filterable) cont;
                                 filterable.removeAllContainerFilters();
                                 Filter filter = new Compare.Equal(BaseEntity_.id.getName(), id);
                                 filterable.addContainerFilter(filter);
                                 getTable().deselectAll();
                                 getTable().select(id);
                             }
+
+                            // fire the recordCreated listener in the Table
+                            ATable table = getTable();
+                            if (table != null) {
+                                RecordEvent e = new RecordEvent(newEntity);
+                                for(RecordSavedListener l : recordSavedListeners){
+                                    l.recordCreated(e); // created
+                                    l.recordSaved(e);   // and saved
+                                }
+                            }
+
                         }
 
-                    }else{
+                    } else {
 
                         // after editing, refresh the table's container
                         getTable().refresh();
@@ -514,6 +539,17 @@ public abstract class ModulePop extends Module {
                         // (standard columns which are bound to properties are updated
                         // automatically when the item changes)
                         getTable().refreshRowCache();
+
+                        // fire the recordSaved listener in the Table
+                        ATable table = getTable();
+                        if (table != null) {
+                            BaseEntity newEntity = form.getEntity();
+                            RecordEvent e = new RecordEvent(newEntity, origEntity);
+                            for(RecordSavedListener l : recordSavedListeners){
+                                l.recordSaved(e);
+                            }
+                        }
+
                     }
 
                     getTable().updateTotals();
@@ -528,6 +564,7 @@ public abstract class ModulePop extends Module {
 
             });
 
+
             form.setHeightUndefined();
 
             window.center();
@@ -537,6 +574,26 @@ public abstract class ModulePop extends Module {
         }// end of if cycle
 
     }// end of method
+
+
+    /**
+     * Make a clone of an Entity
+     */
+    private BaseEntity cloneEntity(BaseEntity origEntity){
+        BaseEntity entityCopy=null;
+        try {
+            entityCopy = (BaseEntity)BeanUtils.cloneBean(origEntity);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return entityCopy;
+    }
 
     /**
      * Invoked before any single deletion.
@@ -589,7 +646,13 @@ public abstract class ModulePop extends Module {
     public void delete(Object[] ids) {
         for (Object id : ids) {
             delete(id);
-        }// end of for cycle
+
+            for(RecordDeletedListener l : recordDeletedListeners){
+                long num = (long)id;
+                RecordEvent e = new RecordEvent(num);
+                l.recordDeleted(e);
+            }
+        }
         getTable().refreshRowCache();
     }
 
@@ -939,4 +1002,88 @@ public abstract class ModulePop extends Module {
     public EntityManager getEntityManager() {
         return entityManager;
     }
+
+
+    public void addRecordSavedListener(RecordSavedListener l) {
+        recordSavedListeners.add(l);
+    }
+
+    public void addRecordDeletedListener(RecordDeletedListener l) {
+        recordDeletedListeners.add(l);
+    }
+
+    /**
+     * A record (new or existing) has been saved.
+     * When a record is created, both methods are invoked
+     */
+    public interface RecordSavedListener {
+        void recordCreated(ModulePop.RecordEvent e);
+        void recordSaved(ModulePop.RecordEvent e);
+    }
+
+    /**
+     * A record has been deleted
+     */
+    public interface RecordDeletedListener {
+        void recordDeleted(ModulePop.RecordEvent e);
+    }
+
+
+    /**
+     * Record Event.
+     * Represents an action taken on a record.
+     */
+    public class RecordEvent extends EventObject {
+
+        private BaseEntity newEntity;
+        private BaseEntity oldEntity;
+        private long id;
+
+        public RecordEvent(BaseEntity newEntity, BaseEntity oldEntity) {
+            super(ModulePop.this);
+            this.newEntity=newEntity;
+            this.oldEntity=oldEntity;
+        }
+
+        public RecordEvent(BaseEntity newEntity) {
+            this(newEntity, null);
+        }
+
+
+        public RecordEvent(long id) {
+            this(null, null);
+            this.id=id;
+        }
+
+        public BaseEntity getNewEntity() {
+            return newEntity;
+        }
+
+        public BaseEntity getOldEntity() {
+            return oldEntity;
+        }
+
+        public long getId() {
+            if(isDeleted()){
+                return id;
+            }else{
+                if(isNewRecord()){
+                    return getNewEntity().getId();
+                }else{
+                    return getOldEntity().getId();
+                }
+            }
+        }
+
+        public boolean isNewRecord(){
+            return (newEntity!=null && oldEntity==null);
+        }
+
+        public boolean isDeleted(){
+            return (newEntity==null && oldEntity==null);
+        }
+
+
+    }
+
 }// end of class

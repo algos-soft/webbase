@@ -24,11 +24,10 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.Entities;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.lib.LibFilter;
+import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
-import org.eclipse.persistence.internal.jpa.metamodel.SingularAttributeImpl;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
-import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 import org.vaadin.addons.lazyquerycontainer.NestingBeanItem;
 
 import javax.persistence.EntityManager;
@@ -56,8 +55,10 @@ public abstract class ATable extends Table {
     private EntityManager entityManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
-    private ArrayList<TableListener> listeners = new ArrayList();
-    private ArrayList<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
+
+    private ArrayList<SelectionChangedListener> selectionChangedListeners = new ArrayList<>();
+    private ArrayList<ContainerChangedListener> containerChangedListeners = new ArrayList<>();
+
 
 
     /**
@@ -100,8 +101,10 @@ public abstract class ATable extends Table {
 
                     updateTotals();
 
-                    // fire table data changed
-                    fire(TableEvent.datachange);
+                    // fire table container changed
+                    for(ContainerChangedListener l : containerChangedListeners){
+                        l.containerChanged(event);
+                    }
 
                 }
             });
@@ -123,7 +126,12 @@ public abstract class ATable extends Table {
                 Property prop = event.getProperty();
                 Set<Long> rows = (Set<Long>) prop.getValue();
                 SelectionChangeEvent e = new SelectionChangeEvent(rows);
-                fireSelectionChanged(e);
+
+                // fires the listeners
+                for (SelectionChangedListener l : selectionChangedListeners) {
+                    l.selectionChanged(e);
+                }
+
                 selectionChanged(e);
             }
         });
@@ -157,8 +165,8 @@ public abstract class ATable extends Table {
             }
         });
 
-        // fire table created
-        fire(TableEvent.created);
+//        // fire table created
+//        fire(TableEvent.created);
 
     }
 
@@ -262,11 +270,20 @@ public abstract class ATable extends Table {
         // subsequently is called by the data change listener
         updateTotals();
 
-        // fire table attached to UI
-        fire(TableEvent.attached);
+//        // fire table attached to UI
+//        fire(TableEvent.attached);
 
-        // fire table data changed
-        fire(TableEvent.datachange);
+        // fire table container changed
+        // create a new ItemSetChangeEvent referencing this container
+        Container.ItemSetChangeEvent e = new Container.ItemSetChangeEvent() {
+            @Override
+            public Container getContainer() {
+                return getContainer();
+            }
+        };
+        for(ContainerChangedListener l : containerChangedListeners){
+            l.containerChanged(e);
+        }
 
     }
 
@@ -935,30 +952,24 @@ public abstract class ATable extends Table {
 
 
 
-    /**
-     * Add a form listener to the form
-     */
-    public void addTableListener(TableListener listener) {
-        listeners.add(listener);
-    }
 
-    protected void fire(TableEvent event) {
-        for (TableListener l : listeners) {
-            switch (event) {
-                case created:
-                    l.created_();
-                    break;
-                case attached:
-                    l.attached_();
-                    break;
-                case datachange:
-                    l.datachange_();
-                    break;
-                default:
-                    break;
-            }// end of switch cycle
-        }
-    }
+//    protected void fire(TableEvent event) {
+//        for (TableListener l : listeners) {
+//            switch (event) {
+//                case created:
+//                    l.created_();
+//                    break;
+//                case attached:
+//                    l.attached_();
+//                    break;
+//                case datachange:
+//                    l.datachange_();
+//                    break;
+//                default:
+//                    break;
+//            }// end of switch cycle
+//        }
+//    }
 
 
     /**
@@ -1052,15 +1063,6 @@ public abstract class ATable extends Table {
     }
 
 
-    public void addSelectionChangeListener(SelectionChangeListener l) {
-        selectionChangeListeners.add(l);
-    }
-
-    private void fireSelectionChanged(SelectionChangeEvent e) {
-        for (SelectionChangeListener l : selectionChangeListeners) {
-            l.selectionChanged(e);
-        }
-    }
 
     protected ATable getTable() {
         return this;
@@ -1071,27 +1073,25 @@ public abstract class ATable extends Table {
     }
 
 
-    /**
-     * Enum di eventi previsti.
-     */
-    public enum TableEvent {
-        created, attached, datachange
-    }
+//    /**
+//     * Enum di eventi previsti.
+//     */
+//    public enum TableEvent {
+//        created, attached, datachange
+//    }
 
-    public interface SelectionChangeListener {
-        void selectionChanged(SelectionChangeEvent e);
-    }// end of method
 
-    /**
-     * Table high-level events
-     */
-    public interface TableListener {
-        void created_(); // table created
+//    /**
+//     * Table high-level events
+//     */
+//    public interface TableListener {
+//        void created_(); // table created
+////
+//        void attached_(); // table attached to UI
+//
+//        void datachange_(); // table data changed
+//    }
 
-        void attached_(); // table attached to UI
-
-        void datachange_(); // table data changed
-    }
 
     public class SelectionChangeEvent extends EventObject {
         private Set<Long> rows;
@@ -1222,5 +1222,33 @@ public abstract class ATable extends Table {
         }
 
     }
+
+
+    public void addSelectionChangedListener(SelectionChangedListener l) {
+        selectionChangedListeners.add(l);
+    }
+
+    public void addContainerChangedListener(ContainerChangedListener l) {
+        containerChangedListeners.add(l);
+    }
+
+
+
+    /**
+     * Table selection has changed
+     */
+    public interface SelectionChangedListener {
+        void selectionChanged(SelectionChangeEvent e);
+    }// end of method
+
+    /**
+     * Underlying container data has changed
+     */
+    public interface ContainerChangedListener {
+        void containerChanged(Container.ItemSetChangeEvent e);
+    }
+
+
+
 
 }

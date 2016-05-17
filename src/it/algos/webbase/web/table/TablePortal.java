@@ -13,7 +13,7 @@ import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
  * Portal hosting a table and a toolbar
  */
 @SuppressWarnings("serial")
-public class TablePortal extends VerticalLayout implements ATable.SelectionChangeListener {
+public class TablePortal extends VerticalLayout implements ATable.SelectionChangedListener {
 
     protected ATable table;
     protected TableToolbar toolbar;
@@ -67,11 +67,11 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
         });
 
         // The toolbar listens to table selection changes
-        getTable().addSelectionChangeListener(this.getToolbar());
+        getTable().addSelectionChangedListener(this.getToolbar());
 
         // The portal listens to table selection changes
         //@todo aggiunto da gac - 7.5.16
-        getTable().addSelectionChangeListener(this);
+        getTable().addSelectionChangedListener(this);
 
     }// end of method
 
@@ -92,7 +92,7 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
 //    protected void regolaListenerTable() {
 //        ATable table = this.getTable();
 //        TableToolbar tableToolBar = this.getToolbar();
-//        table.addSelectionChangeListener(tableToolBar);
+//        table.addSelectionChangedListener(tableToolBar);
 //    }
 
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
-public class TableToolbar extends Toolbar implements ATable.SelectionChangeListener {
+public class TableToolbar extends Toolbar implements ATable.SelectionChangedListener {
 
     public static final String CMD_NEW = "Nuovo";
     public static final String CMD_EDIT = "Modifica";

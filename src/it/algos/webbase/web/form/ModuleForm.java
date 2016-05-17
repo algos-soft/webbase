@@ -3,6 +3,7 @@ package it.algos.webbase.web.form;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.UI;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.lib.LibBean;
 import it.algos.webbase.web.module.ModulePop;

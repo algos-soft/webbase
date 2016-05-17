@@ -3,6 +3,7 @@ package it.algos.webbase.web.navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
+import it.algos.webbase.web.module.ModulePop;
 
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class MenuCommand implements MenuBar.Command {
      * The viewCached parameter controls if the view will be instantiated only once
      * or each time is requested bu yhe Navigator.
      *
-     * @param mb         the MenuBar
-     * @param clazz      the class to instantiate (must implement View)
+     * @param mb     the MenuBar
+     * @param clazz  the class to instantiate (must implement View)
      * @param cached true to instantiated only once, false to instantiate each time
      */
     public MenuCommand(MenuBar mb, Class clazz, boolean cached) {

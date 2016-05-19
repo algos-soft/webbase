@@ -9,6 +9,7 @@ public class TableFooter extends HorizontalLayout {
 	public TableFooter() {
 		super();
 
+
 		this.setStyleName("v-table-header-wrap");
 
 		Label label = new Label("");

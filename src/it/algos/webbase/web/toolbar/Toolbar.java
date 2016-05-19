@@ -1,6 +1,7 @@
 package it.algos.webbase.web.toolbar;
 
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
@@ -28,9 +29,11 @@ public abstract class Toolbar extends VerticalLayout {
     protected HorizontalLayout helperLayout = new HorizontalLayout();
 
     public Toolbar() {
+
         addStyleName("toolbar");
-        setMargin(true);
         setSpacing(true);
+        setMargin(true);
+
 
         // set layout properties
         commandLayout.setSpacing(true);

@@ -567,9 +567,19 @@ public abstract class ModulePop extends Module {
 
             form.setHeightUndefined();
 
+//            // test
+//            form.setHeight("100%");
+//            form.setWidth("100%");
+//            window.setHeight("100%");
+//            window.setResizable(true);
+//            // end test
+
+
             window.center();
 
             this.getUI().addWindow(window);
+
+
 
         }// end of if cycle
 

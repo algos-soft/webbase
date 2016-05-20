@@ -21,10 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 public abstract class Toolbar extends VerticalLayout {
 
     protected static final boolean DEBUG_GUI = false;
-    public static int ALTEZZA_BOTTONI = 32;
-    public static int LARGHEZZA_BOTTONI = 100;
-    //    public static int ALTEZZA_BOTTONI = 40;
-//    public static int LARGHEZZA_BOTTONI = 120;
+//    public static int LARGHEZZA_BOTTONI = 100;
     public HorizontalLayout commandLayout = new HorizontalLayout();
     protected HorizontalLayout helperLayout = new HorizontalLayout();
 
@@ -63,19 +60,16 @@ public abstract class Toolbar extends VerticalLayout {
     }// end of method
 
     public MenuBar.MenuItem addButton(String caption, Resource icon, Command command) {
-        MenuBar.MenuItem item = addButton(caption, icon, LARGHEZZA_BOTTONI, command);
+        MenuBar.MenuItem item = addButton(caption, icon, 0, command);
         return item;
     }// end of method
 
     public MenuBar.MenuItem addButton(String caption, Resource icon, int wPixel, Command command) {
         MenuBar menubar = new MenuBar();
-        menubar.setWidth(wPixel, Unit.PIXELS);
-        menubar.setHeight(ALTEZZA_BOTTONI, Unit.PIXELS);
 
-//        // if no icon, use empty icon to keep the same vertical spacing
-//        if (icon == null) {
-//            icon = new ThemeResource("img/action_null.png");
-//        }// end of if cycle
+        if(wPixel!=0){
+            menubar.setWidth(wPixel, Unit.PIXELS);
+        }
 
         MenuBar.MenuItem item = menubar.addItem(caption, icon, command);
         addCommandComponent(menubar);

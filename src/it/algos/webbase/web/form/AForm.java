@@ -292,8 +292,17 @@ public abstract class AForm extends VerticalLayout {
     protected Component creaCompDetail(FormLayout layout) {
         Collection<Field<?>> fields = binder.getFields();
 
+        boolean focused=false;
         for (Field<?> field : fields) {
+
             layout.addComponent(field);
+
+            // focus to first field
+            if(!focused){
+                field.focus();
+                focused=true;
+            }
+
         }// end of for cycle
 
         return layout;

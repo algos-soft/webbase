@@ -1,5 +1,6 @@
 package it.algos.webbase.web.ui;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.MarginInfo;
@@ -56,7 +57,7 @@ import java.util.Map;
  * @since 7.0
  */
 @SuppressWarnings("serial")
-public class AlgosUI extends UI implements LoginListener, LogoutListener {
+public abstract class AlgosUI extends UI implements LoginListener, LogoutListener {
 
     public static boolean DEBUG_GUI = false;
 

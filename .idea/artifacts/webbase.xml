@@ -5,7 +5,7 @@
       <element id="library" level="module" name="IvyIDEA" module-name="webbase" />
       <element id="archive" name="webbase.jar">
         <element id="module-output" name="webbase" />
-        <element id="file-copy" path="$PROJECT_DIR$/../evento/evento/vaadin/themes/evento/algos.scss" />
+        <element id="dir-copy" path="$PROJECT_DIR$/vaadin/themes/algos" />
       </element>
     </root>
   </artifact>

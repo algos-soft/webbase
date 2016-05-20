@@ -56,7 +56,10 @@ public abstract class ATable extends Table {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Class<?> entityClass;
 
+    // modifiche nella parte ''visiva'' della lista: filtri, ordinamento e righe selezionate
     private ArrayList<SelectionChangedListener> selectionChangedListeners = new ArrayList<>();
+
+    // modifiche nella parte ''contenuti'': container e (di solito) il sottostante DB
     private ArrayList<ContainerChangedListener> containerChangedListeners = new ArrayList<>();
 
 

@@ -33,6 +33,7 @@ public class CompanyQuery {
     /**
      * Ritorna il numero di record presenti nella domain class specificata
      * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, restituisce il numero di TUTTI i records
      *
      * @param clazz   la domain class
      * @param company azienda da filtrare
@@ -43,8 +44,12 @@ public class CompanyQuery {
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
-        Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
-        cq.where(predicate);
+
+        if (company!=null) {
+            Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
+            cq.where(predicate);
+        }// end of if cycle
+
         CriteriaQuery<Long> select = cq.select(cb.count(root));
         TypedQuery<Long> typedQuery = manager.createQuery(select);
         Long count = typedQuery.getSingleResult();

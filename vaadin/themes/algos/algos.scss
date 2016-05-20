@@ -45,7 +45,7 @@ $v-font-weight: 400;
   }
   .toolbar {
     background: #D8D8D8;
-    margin: 1em;
+    padding: 1em;
   }
 
   .yellowBg {
@@ -72,9 +72,18 @@ $v-font-weight: 400;
     color: red;
   }
 
+  .grayBg {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
   .darkGrayBg {
     background: #5d5d5d;
   }
+
+  .lightGrayBg {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
 
   .v-textfield-align-left {
     text-align: left;
@@ -106,11 +115,17 @@ $v-font-weight: 400;
   .v-icon {
     color:blue;
   }
-  .v-iconred {
-    color:red;
+
+  .icon-red {
+    .v-icon {
+      color: red;
+    }
   }
-  .myiconred {
-    color:red;
+
+  .icon-green {
+    .v-icon {
+      color: green;
+    }
   }
 
 }

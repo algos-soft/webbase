@@ -485,6 +485,18 @@ public abstract class ModulePop extends Module {
             window.setContent(form);
             window.setResizable(false);
 
+
+            // fisso l'altezza della finestra perché se è undefined
+            // e contiene un FormLayout, a causa di un bug
+            // di FormLayout la barra di scorrimento verticale
+            // si comporta in modo incongruo (non appare al momento giusto).
+            // Se invece l'altezza è fissa (assoluta o percentuale, è uguale)
+            // allora la scroll bar si comporta correttamente
+            // anche quando il contenuto è un FormLayout.
+            // Alex 21-05-2016
+            window.setHeight("90%");
+
+
             if (this.isModale()) {
                 window.setModal(true);
             }
@@ -566,14 +578,6 @@ public abstract class ModulePop extends Module {
 
 
             form.setHeightUndefined();
-
-//            // test
-//            form.setHeight("100%");
-//            form.setWidth("100%");
-//            window.setHeight("100%");
-//            window.setResizable(true);
-//            // end test
-
 
             window.center();
 

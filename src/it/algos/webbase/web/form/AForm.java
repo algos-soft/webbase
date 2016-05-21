@@ -54,6 +54,9 @@ public abstract class AForm extends VerticalLayout {
      */
     public AForm(Item item) {
 
+        setHeight("100%");  // questa riga sembra che non serva - alex 23-05-2016
+        //addStyleName("yellowBg");
+
         this.item = item;
 
         // create the binder for binding the fields to the item.
@@ -72,6 +75,9 @@ public abstract class AForm extends VerticalLayout {
         // create and add the detail component
         Component detail = createComponent();
         this.addComponent(detail);
+
+        // queste due righe sembra che non servano - alex 23-05-2016
+        detail.setHeight("100%");
         this.setExpandRatio(detail, 1);
 
         // create and add the form toolbar

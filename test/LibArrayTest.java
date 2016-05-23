@@ -3,10 +3,7 @@ import it.algos.webbase.web.lib.LibArray;
 import it.algos.webbase.web.lib.LibTime;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -1075,51 +1072,61 @@ public class LibArrayTest {
 //        assert listaStr.size() == 6
 //        assert listaStr == richiestoStr
 //    }// fine tests
-//
-//    /**
-//     * Ordina una mappa secondo le chiavi
-//     *
-//     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
-//     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
-//     *
-//     * @param mappaIn ingresso da ordinare
-//     *
-//     * @return mappa ordinata
-//     */
-//    void testOrdina() {
-//        HashMap mappa = new HashMap()
-//        LinkedHashMap mappaOrdinata = new LinkedHashMap()
-//        LinkedHashMap ottenuta
-//        Set insieme
-//        List lista
-//        String strUno = 'alfa'
-//        String strDue = 'beta'
-//        String strTre = 'delta'
-//
-//        // mappa semplice non ordinata in creazione e che si ordina secondo le chiavi
-//        mappa.put(strTre, null)
-//        mappa.put(strDue, null)
-//        mappa.put(strUno, null)
-//
-//        ottenuta = Array.ordinaMappa(mappa)
-//        assert ottenuta.size() == 3
-//        insieme = ottenuta.keySet()
-//        lista = insieme.asList()
-//        assert lista.get(1) == strDue
-//
-//        // mappa  ordinata
-//        mappaOrdinata.put(strTre, null)
-//        mappaOrdinata.put(strDue, null)
-//        mappaOrdinata.put(strUno, null)
-//
-//        ottenuta = Array.ordinaMappa(mappa)
-//        assert ottenuta.size() == 3
-//        insieme = ottenuta.keySet()
-//        lista = insieme.asList()
-//        assert lista.get(1) == strDue
-//
-//    }// fine tests
-//
+
+    @Test
+    /**
+     * Ordina una mappa secondo le chiavi
+     *
+     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
+     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
+     *
+     * @param mappaIn ingresso da ordinare
+     *
+     * @return mappa ordinata
+     */
+    public void ordinaMappa() {
+        HashMap mappa ;
+        LinkedHashMap mappaOrdinata;
+        LinkedHashMap mappaOttenuta;
+        String strUno = "alfa";
+        String strDue = "beta";
+        String strTre = "delta";
+
+        // mappa semplice non ordinata in creazione e che si ordina secondo le chiavi
+        mappa = new HashMap();
+        mappa.put(strTre, strTre);
+        mappa.put(strDue, strDue);
+        mappa.put(strUno, strUno);
+
+        mappaOrdinata = new LinkedHashMap();
+        mappaOrdinata.put(strUno, strUno);
+        mappaOrdinata.put(strDue, strDue);
+        mappaOrdinata.put(strTre, strTre);
+
+        mappaOttenuta = LibArray.ordinaMappa(mappa);
+        assert mappaOttenuta.size() == 3;
+        for (Object key : mappaOttenuta.keySet()) {
+            assert mappaOttenuta.get(key) == mappaOrdinata.get(key);
+        }// end of for cycle
+
+        mappa = new HashMap();
+        mappa.put(3, strTre);
+        mappa.put(2, strDue);
+        mappa.put(1, strUno);
+
+        mappaOrdinata = new LinkedHashMap();
+        mappaOrdinata.put(1, strUno);
+        mappaOrdinata.put(2, strDue);
+        mappaOrdinata.put(3, strTre);
+
+        mappaOttenuta = LibArray.ordinaMappa(mappa);
+        assert mappaOttenuta.size() == 3;
+        for (Object key : mappaOttenuta.keySet()) {
+            assert mappaOttenuta.get(key) == mappaOrdinata.get(key);
+        }// end of for cycle
+
+    }// fine tests
+
 //    /**
 //     * Utility di conversione di una stringa.
 //     *

@@ -712,4 +712,38 @@ public abstract class LibArray {
         return sublista;
     }// end of static method
 
+
+    /**
+     * Ordina una mappa secondo le chiavi
+     *
+     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
+     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
+     *
+     * @param mappaIn ingresso da ordinare
+     *
+     * @return mappa ordinata
+     */
+    public static LinkedHashMap ordinaMappa(Map mappaIn) {
+        LinkedHashMap mappaOrdinata = new LinkedHashMap();
+        Set insieme;
+        Object[] matrice;
+        ArrayList listaChiavi;
+        Object valore;
+
+        try { // prova ad eseguire il codice
+            insieme = mappaIn.keySet();
+            matrice= insieme.toArray();
+            listaChiavi = new ArrayList(Arrays.asList(matrice));
+            Collections.sort(listaChiavi);
+
+            for (Object chiave : listaChiavi) {
+                valore = mappaIn.get(chiave);
+                mappaOrdinata.put(chiave, valore);
+            } // fine del ciclo for-each
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return mappaOrdinata;
+    }// end of static method
+
 }// end of abstract static class

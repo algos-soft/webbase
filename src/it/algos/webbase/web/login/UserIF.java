@@ -11,4 +11,17 @@ public interface UserIF {
      */
     String getNickname();
 
+    /**
+     * @return the password
+     */
+    String getPassword();
+
+    /**
+     * Validate a password for this current user.
+     *
+     * @param password the password
+     * @return true if valid
+     */
+    boolean validatePassword(String password);
+
 }

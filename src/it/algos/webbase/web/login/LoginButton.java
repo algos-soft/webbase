@@ -173,7 +173,7 @@ public class LoginButton extends MenuBar implements LoginListener {
      * Lancia il fire di questo evento, se l'utente è valido.
      */
     @Override
-    public void onUserLogin(Utente user, boolean remember) {
+    public void onUserLogin(UserIF user, boolean remember) {
         updateLoginUI();
     }// end of method
 

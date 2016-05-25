@@ -98,16 +98,33 @@ public class Utente extends BaseEntity implements UserIF {
                         if(clearPass!=null){
                             if (clearPass.equals(password)) {
                                 user = aUser;
-                            }// end of if cycle
+                            }
                         }
-                    }// end of if cycle
-                }// end of if cycle
-            }// end of if cycle
+                    }
+                }
+            }
         }
 
         return user;
-    }// end of method
+    }
 
+    @Override
+    /**
+     * @inheritDoc
+     */
+    public boolean validatePassword(String password) {
+        boolean valid=false;
+        if (isEnabled()) {
+            String encPassword=getPassword();
+            String clearPass= LibCrypto.decrypt(encPassword);
+            if(clearPass!=null){
+                if (clearPass.equals(password)) {
+                    valid = true;
+                }
+            }
+        }
+        return valid;
+    }
 
     @Override
     public String toString() {

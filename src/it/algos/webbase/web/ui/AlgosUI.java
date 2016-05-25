@@ -14,10 +14,7 @@ import it.algos.webbase.domain.vers.VersMod;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
-import it.algos.webbase.web.login.Login;
-import it.algos.webbase.web.login.LoginButton;
-import it.algos.webbase.web.login.LoginListener;
-import it.algos.webbase.web.login.LogoutListener;
+import it.algos.webbase.web.login.*;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.AlgosNavigator;
@@ -620,7 +617,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
      * Lancia il fire di questo evento, se l'utente è valido.
      */
     @Override
-    public void onUserLogin(Utente user, boolean remember) {
+    public void onUserLogin(UserIF user, boolean remember) {
         // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
     }// end of method
 

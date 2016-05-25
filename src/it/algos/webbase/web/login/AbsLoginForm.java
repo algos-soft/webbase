@@ -1,5 +1,6 @@
 package it.algos.webbase.web.login;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
@@ -12,11 +13,10 @@ import it.algos.webbase.web.form.AFormLayout;
 import it.algos.webbase.web.lib.LibCrypto;
 
 /**
- * Base Login form (UI).
+ * Abstract Login form.
  */
-public class BaseLoginForm extends ConfirmDialog  {
+public abstract class AbsLoginForm extends ConfirmDialog  {
 
-    private TextField nameField;
     private PasswordField passField;
     private CheckBoxField rememberField;
 
@@ -32,7 +32,7 @@ public class BaseLoginForm extends ConfirmDialog  {
     /**
      * Constructor
      */
-    public BaseLoginForm() {
+    public AbsLoginForm() {
         super(null);
         init();
     }// end of constructor
@@ -45,14 +45,13 @@ public class BaseLoginForm extends ConfirmDialog  {
         layout.setSpacing(true);
 
         // crea i campi
-        nameField = new TextField("Username");
-        nameField.setWidthUndefined();
+        Component nameCompo = createUsernameComponent();
         passField = new PasswordField("Password");
         passField.setWidthUndefined();
         rememberField = new CheckBoxField("Ricordami su questo computer");
 
         // aggiunge i campi al layout
-        layout.addComponent(nameField);
+        layout.addComponent(nameCompo);
         layout.addComponent(passField);
         layout.addComponent(rememberField);
 
@@ -60,30 +59,43 @@ public class BaseLoginForm extends ConfirmDialog  {
     }// end of method
 
 
+    /**
+     * Create the component to input the username.
+     * @return the username component
+     */
+    abstract Component createUsernameComponent();
+
+
     @Override
     protected void onConfirm() {
-        String nome = nameField.getValue();
-        String password = passField.getValue();
-        Utente utente = Utente.validate(nome, password);
-        if (utente != null) {
-            super.onConfirm();
-            utenteLoggato(utente);
-        } else {
-            Notification.show("Login fallito", Notification.Type.WARNING_MESSAGE);
-        }// end of if/else cycle
+        UserIF user = getSelectedUser();
+        if(user!=null){
+            String password = passField.getValue();
+            if(user.validatePassword(password)){
+                super.onConfirm();
+                utenteLoggato(user);
+            }else{
+                Notification.show("Login fallito", Notification.Type.WARNING_MESSAGE);
+            }
+        }
     }// end of method
 
+
+    /**
+     * @return the selected user
+     */
+    abstract UserIF getSelectedUser();
 
     /**
      * Evento generato quando si modifica l'utente loggato <br>
      * <p>
      * Informa (tramite listener) chi è interessato (solo la classe Login, che poi rilancia) <br>
      */
-    private void utenteLoggato(Utente utente) {
+    private void utenteLoggato(UserIF utente) {
         if (loginListener != null) {
             loginListener.onUserLogin(utente, rememberField.getValue());
-        }// end of if cycle
-    }// end of method
+        }
+    }
 
     public void setLoginListener(LoginListener listener) {
         this.loginListener = listener;
@@ -93,9 +105,7 @@ public class BaseLoginForm extends ConfirmDialog  {
         return this;
     }
 
-    public void setUsername(String name) {
-        nameField.setValue(name);
-    }
+    abstract void setUsername(String name);
 
     public void setPassword(String password) {
         passField.setValue(LibCrypto.decrypt(password));

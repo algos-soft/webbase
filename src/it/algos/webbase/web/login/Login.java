@@ -8,7 +8,6 @@ import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -71,7 +70,7 @@ public class Login implements LogformListener, LoginListener {
      */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
-    private BaseLoginForm loginForm;
+    private AbsLoginForm loginForm;
 
 
     private UserIF user;
@@ -82,7 +81,7 @@ public class Login implements LogformListener, LoginListener {
 
 
     public Login() {
-        loginForm = new BaseLoginForm();
+        loginForm = new DefaultLoginForm();
     }// end of constructor
 
     /**
@@ -160,7 +159,7 @@ public class Login implements LogformListener, LoginListener {
      * @param user     the logged user
      * @param remember the value for the Remember option
      */
-    protected void userLogin(Utente user, boolean remember) {
+    protected void userLogin(UserIF user, boolean remember) {
 
         // register user
         this.user = user;
@@ -325,7 +324,7 @@ public class Login implements LogformListener, LoginListener {
     }
 
 
-    public void setLoginForm(BaseLoginForm loginForm){
+    public void setLoginForm(AbsLoginForm loginForm){
         this.loginForm = loginForm;
     }
 
@@ -336,7 +335,7 @@ public class Login implements LogformListener, LoginListener {
      * Rilancia l'evento ed informa (tramite listener) chi è interessato e registrato presso questa classe <br>
      */
     @Override
-    public void onUserLogin(Utente user, boolean remember) {
+    public void onUserLogin(UserIF user, boolean remember) {
         userLogin(user, remember);
 
         // notify all the listeners

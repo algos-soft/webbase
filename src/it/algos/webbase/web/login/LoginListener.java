@@ -13,5 +13,5 @@ import it.algos.webbase.domain.utente.Utente;
  * I listeners verrano informati dell'evento tramite invocazione del metodo di questa interfaccia
  */
 public interface LoginListener {
-    public void onUserLogin(Utente user, boolean remember);
+    public void onUserLogin(UserIF user, boolean remember);
 }// end of interface

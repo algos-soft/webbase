@@ -5,6 +5,7 @@ import it.algos.webbase.domain.company.BaseCompany_;
 import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.Login;
+import it.algos.webbase.web.login.UserIF;
 
 /**
  * Utility class to manage session stuff specific to this application.
@@ -36,7 +37,7 @@ public class CompanySessionLib {
      * e la registra nella sessione corrente.
      * Se non è stata inviduata una Company ritorna false.
      */
-    public static boolean registerCompanyByUser(Utente user){
+    public static boolean registerCompanyByUser(UserIF user){
 
         boolean success=false;
 

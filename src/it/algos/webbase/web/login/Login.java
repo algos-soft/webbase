@@ -16,9 +16,8 @@ import java.util.ArrayList;
  * An instance of this object is created and stored in the current session
  * when getLogin() in invoked. Subsequent calls to getLogin() return the same object
  * from the session.
- */
-
-/**
+ *
+ *
  * Eventi inerenti il login.
  * <p>
  * LOGIN CLICK  -> Open Form
@@ -72,7 +71,10 @@ public class Login implements LogformListener, LoginListener {
      */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
-    private Utente user;
+    private BaseLoginForm loginForm;
+
+
+    private UserIF user;
 
     private String cookiePrefix = "";
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
@@ -80,6 +82,7 @@ public class Login implements LogformListener, LoginListener {
 
 
     public Login() {
+        loginForm = new BaseLoginForm();
     }// end of constructor
 
     /**
@@ -127,7 +130,7 @@ public class Login implements LogformListener, LoginListener {
      * Displays the Login form
      */
     public void showLoginForm() {
-        BaseLoginForm loginForm = new BaseLoginForm();
+        //BaseLoginForm loginForm = new BaseLoginForm();
         loginForm.setLoginListener(this);
 
         if (loginForm != null) {
@@ -148,6 +151,8 @@ public class Login implements LogformListener, LoginListener {
         }// end of if cycle
 
     }// end of method
+
+
 
     /**
      * Invoked after a successful login happened using the Login form.
@@ -311,13 +316,19 @@ public class Login implements LogformListener, LoginListener {
         return (getUser() != null);
     }// end of method
 
-    public Utente getUser() {
+    public UserIF getUser() {
         return user;
     }// end of method
 
     public void setUser(Utente user){
         this.user=user;
     }
+
+
+    public void setLoginForm(BaseLoginForm loginForm){
+        this.loginForm = loginForm;
+    }
+
     /**
      * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>
      * <p>

@@ -4,6 +4,7 @@ import it.algos.webbase.domain.ruolo.Ruolo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.lib.LibCrypto;
+import it.algos.webbase.web.login.UserIF;
 import it.algos.webbase.web.query.AQuery;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Utente extends BaseEntity {
+public class Utente extends BaseEntity implements UserIF {
 
     private static final long serialVersionUID = -8963424744780350658L;
 

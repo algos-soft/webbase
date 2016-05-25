@@ -1,6 +1,5 @@
 package it.algos.webbase.web.ui;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.MarginInfo;
@@ -16,7 +15,7 @@ import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.lib.Cost;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.Login;
-import it.algos.webbase.web.login.LoginBar;
+import it.algos.webbase.web.login.LoginButton;
 import it.algos.webbase.web.login.LoginListener;
 import it.algos.webbase.web.login.LogoutListener;
 import it.algos.webbase.web.menu.AMenuBar;
@@ -26,9 +25,7 @@ import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 
 import javax.servlet.http.Cookie;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -293,7 +290,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
      */
     protected void regolaListenerLog() {
         Login login = Login.getLogin();
-        LoginBar loginBar;
+        LoginButton loginBar;
 
         if (login != null) {
             loginBar = topLayout.getLoginBar();

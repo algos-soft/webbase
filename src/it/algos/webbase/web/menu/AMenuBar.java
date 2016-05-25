@@ -3,9 +3,8 @@ package it.algos.webbase.web.menu;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
-import it.algos.webbase.web.lib.LibPath;
 import it.algos.webbase.web.lib.LibSession;
-import it.algos.webbase.web.login.LoginBar;
+import it.algos.webbase.web.login.LoginButton;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
 import it.algos.webbase.web.ui.AlgosUI;
@@ -35,7 +34,7 @@ public class AMenuBar extends HorizontalLayout {
     public static String MENU_ABILITATO = "highlight";
     public static String MENU_DISABILITATO = "disabilitato";
     private MenuBar algosBar = new MenuBar();
-    private LoginBar loginBar;
+    private LoginButton loginBar;
 
     /**
      * Constructor senza security
@@ -144,12 +143,12 @@ public class AMenuBar extends HorizontalLayout {
      * Menu bar specifico della security
      * <p>
      */
-    private LoginBar createLoginMenuBar() {
+    private LoginButton createLoginMenuBar() {
         MenuBar menubar = new MenuBar();
         menubar.addStyleName("loginmenubar");
         menubar.addItem("Login", null, null);
 
-        return new LoginBar();
+        return new LoginButton();
 //		return menubar;
     }// end of method
 
@@ -205,11 +204,11 @@ public class AMenuBar extends HorizontalLayout {
         return algosBar.addItem(caption, null, command);
     }
 
-    public LoginBar getLoginBar() {
+    public LoginButton getLoginBar() {
         return loginBar;
     }// end of getter method
 
-    public void setLoginBar(LoginBar loginBar) {
+    public void setLoginBar(LoginButton loginBar) {
         this.loginBar = loginBar;
     }//end of setter method
 

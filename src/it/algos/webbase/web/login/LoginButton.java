@@ -3,6 +3,7 @@ package it.algos.webbase.web.login;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import it.algos.webbase.domain.utente.Utente;
@@ -16,12 +17,13 @@ import java.util.ArrayList;
  * Se si è loggati, mostra il nickname ed un popup per modificare/uscire <br>
  * Se non si è loggati, mostra un bottone per entrare <br>
  */
-public class LoginBar extends HorizontalLayout implements LoginListener {
+public class LoginButton extends MenuBar implements LoginListener {
 
     private static String TESTO_NON_LOGGATO = "Loggato come Anonymous";
     private static boolean USA_TESTO = false;
-    MenuBar menubar;
+//    MenuBar menubar;
     private MenuBar.MenuItem loginItem; // il menuItem di login
+
 
     /**
      * La classe LoginBar gestisce il bottone/menu per il login
@@ -40,32 +42,18 @@ public class LoginBar extends HorizontalLayout implements LoginListener {
     /**
      * Constructor
      */
-    public LoginBar() {
-        init();
-    }// end of constructor
-
-    /**
-     * Initialization
-     */
-    private void init() {
-        this.setMargin(false);
-        this.setSpacing(true);
-        this.setHeight("40px");
-        this.setWidth("100%");
-
-        menubar = new MenuBar();
-        loginItem = menubar.addItem("Login1", null, null);
-        this.addComponent(menubar);
-        this.setComponentAlignment(menubar, Alignment.MIDDLE_RIGHT);
-
+    public LoginButton() {
+        loginItem = addItem("Login1", null, null);
         updateLoginUI();
-    }// end of method
+    }
+
+
 
     /**
      * Aggiorna la UI di bottone/menu in base ai contenuti della session
      */
     private void updateLoginUI() {
-        Utente user = Login.getLogin().getUser();
+        UserIF user = Login.getLogin().getUser();
         Resource exitIcon;
 
         if (user == null) {

@@ -11,6 +11,7 @@ import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.event.Action;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
@@ -484,17 +485,18 @@ public abstract class ModulePop extends Module {
             window.setCaption(caption);
             window.setContent(form);
             window.setResizable(false);
+            window.setHeightUndefined();
 
 
-            // fisso l'altezza della finestra perché se è undefined
-            // e contiene un FormLayout, a causa di un bug
-            // di FormLayout la barra di scorrimento verticale
-            // si comporta in modo incongruo (non appare al momento giusto).
-            // Se invece l'altezza è fissa (assoluta o percentuale, è uguale)
-            // allora la scroll bar si comporta correttamente
-            // anche quando il contenuto è un FormLayout.
-            // Alex 21-05-2016
-            window.setHeight("90%");
+//            // fisso l'altezza della finestra perché se è undefined
+//            // e contiene un FormLayout, a causa di un bug
+//            // di FormLayout la barra di scorrimento verticale
+//            // si comporta in modo incongruo (non appare al momento giusto).
+//            // Se invece l'altezza è fissa (assoluta o percentuale, è uguale)
+//            // allora la scroll bar si comporta correttamente
+//            // anche quando il contenuto è un FormLayout.
+//            // Alex 21-05-2016
+//            window.setHeight("90%");
 
 
             if (this.isModale()) {
@@ -583,6 +585,19 @@ public abstract class ModulePop extends Module {
 
             this.getUI().addWindow(window);
 
+            // FocusListener and bringToFront() mark the window as dirty upon focus received.
+            // (needed if a FormLayout is contained in the window)
+            // Due to a FormLayout bug, the size of the FormLayout is not calculated correctly
+            // and the scroll bar in the window might not appear when close to the edge.
+            // Reattaching the window fixes the issue.
+            // Alex may-2016
+            window.addFocusListener(new FieldEvents.FocusListener() {
+                @Override
+                public void focus(FieldEvents.FocusEvent focusEvent) {
+                    window.markAsDirty();
+                }
+            });
+            window.bringToFront();
 
 
         }// end of if cycle

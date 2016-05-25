@@ -27,7 +27,6 @@ public class BaseCompany extends BaseEntity {
     private String name = "";
 
     @Email
-    @NotEmpty
     private String email= "";
 
     private String username= "";

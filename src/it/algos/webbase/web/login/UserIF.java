@@ -12,9 +12,14 @@ public interface UserIF {
     String getNickname();
 
     /**
-     * @return the password
+     * @return the password (in clear text)
      */
     String getPassword();
+
+    /**
+     * @return the password (encrypted)
+     */
+    String getEncryptedPassword();
 
     /**
      * Validate a password for this current user.
@@ -23,5 +28,6 @@ public interface UserIF {
      * @return true if valid
      */
     boolean validatePassword(String password);
+
 
 }

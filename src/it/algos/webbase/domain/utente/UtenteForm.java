@@ -37,13 +37,12 @@ public class UtenteForm extends ModuleForm {
     private void doInit() {
         setWidth("500px");
 
-        // decrypt the password for the UI
-        Property prop = getItem().getItemProperty(Utente_.password.getName());
-        String encryptedpass=Lib.getString(prop.getValue());
-        String plainpass=LibCrypto.decrypt(encryptedpass);
-        getItem().getItemProperty(Utente_.password.getName()).setValue(plainpass);
+//        // decrypt the password for the UI
+//        Property prop = getItem().getItemProperty(Utente_.password.getName());
+//        String plainpass=Lib.getString(prop.getValue());
+//        getItem().getItemProperty(Utente_.password.getName()).setValue(plainpass);
 
-    }// end of method
+    }
 
     /**
      * Populate the map to bind item properties to fields.

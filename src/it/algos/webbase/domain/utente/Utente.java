@@ -93,8 +93,7 @@ public class Utente extends BaseEntity implements UserIF {
                 Utente aUser = read(nickname);
                 if (aUser != null) {
                     if (aUser.isEnabled()) {
-                        String encPassword=aUser.getPassword();
-                        String clearPass= LibCrypto.decrypt(encPassword);
+                        String clearPass= aUser.getPassword();
                         if(clearPass!=null){
                             if (clearPass.equals(password)) {
                                 user = aUser;
@@ -115,8 +114,7 @@ public class Utente extends BaseEntity implements UserIF {
     public boolean validatePassword(String password) {
         boolean valid=false;
         if (isEnabled()) {
-            String encPassword=getPassword();
-            String clearPass= LibCrypto.decrypt(encPassword);
+            String clearPass=getPassword();
             if(clearPass!=null){
                 if (clearPass.equals(password)) {
                     valid = true;
@@ -140,12 +138,24 @@ public class Utente extends BaseEntity implements UserIF {
     }//end of setter method
 
     public String getPassword() {
-        return password;
-    }// end of getter method
+        String pass=null;
+        if(password!=null){
+            pass=LibCrypto.decrypt(password);
+        }
+        return pass;
+    }
 
     public void setPassword(String password) {
-        this.password = password;
-    }//end of setter method
+        String pass=null;
+        if(password!=null){
+            pass = LibCrypto.encrypt(password);
+        }
+        this.password=pass;
+    }
+
+    public String getEncryptedPassword(){
+        return password;
+    }
 
     public boolean isEnabled() {
         return enabled;

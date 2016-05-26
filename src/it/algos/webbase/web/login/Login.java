@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * An instance of this object is created and stored in the current session
  * when getLogin() in invoked. Subsequent calls to getLogin() return the same object
  * from the session.
- *
- *
+ * <p>
+ * <p>
  * Eventi inerenti il login.
  * <p>
  * LOGIN CLICK  -> Open Form
@@ -70,8 +70,8 @@ public class Login implements LogformListener, LoginListener {
      */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
-    private AbsLoginForm loginForm;
-
+    // listeners notificati al logout
+    private ArrayList<LogoutListener> logoutListeners = new ArrayList<>();
 
     private UserIF user;
 
@@ -80,77 +80,81 @@ public class Login implements LogformListener, LoginListener {
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
 
-    public Login() {
-        loginForm = new DefaultLoginForm();
-    }// end of constructor
-
     /**
      * Recupera l'oggetto Login dalla sessione.
      * Se manca lo crea ora e lo registra nella sessione.
      */
     public static Login getLogin() {
-        it.algos.webbase.web.login.Login login = null;
+        Login login = null;
         Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
         if (obj == null) {
-            login = new it.algos.webbase.web.login.Login();
+            login = new Login();
             LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, login);
         } else {
-
-            try { // prova ad eseguire il codice
-                login = (it.algos.webbase.web.login.Login) obj;
-            } catch (Exception unErrore) { // intercetta l'errore
-                int a=87;
-            }// fine del blocco try-catch
-//            if (obj instanceof Login) {
-//                login = (Login) obj;
-//            } else {
-//                Object clazze = obj.getClass();
-//                int a=87;
-//            }// end of if/else cycle
-
-
-
-        }// end of if/else cycle
+            try {
+                login = (Login) obj;
+            } catch (Exception e) {
+            }
+        }
 
         return login;
-    }// end of method
+    }
 
-    public static void invalidateUser() {
-        Login login = getLogin();
 
-        if (login != null) {
-            login.user = null;
-        }// end of if cycle
+    /**
+     * Registra un oggetto Login nella sessione.
+     */
+    public static void setLogin(Login login) {
+        LibSession.setAttribute(Login.LOGIN_KEY_IN_SESSION, login);
+    }
 
-    }// end of method
-
+    /**
+     * Retrieve the Login form
+     * @return the Login form to show
+     */
+    protected AbsLoginForm getLoginForm(){
+        return new DefaultLoginForm();
+    }
 
     /**
      * Displays the Login form
      */
     public void showLoginForm() {
-        //BaseLoginForm loginForm = new BaseLoginForm();
+
+        AbsLoginForm loginForm = getLoginForm();
         loginForm.setLoginListener(this);
 
         if (loginForm != null) {
 
             // retrieve login data from the cookies
             String username = LibCookie.getCookieValue(getLoginKey());
-            String password = LibCookie.getCookieValue(getPasswordKey());
+            String encPass = LibCookie.getCookieValue(getPasswordKey());
+            String clearPass = LibCrypto.decrypt(encPass);
             String rememberStr = LibCookie.getCookieValue(getRememberKey());
             boolean remember = (rememberStr.equalsIgnoreCase("true"));
 
             loginForm.setUsername(username);
-            loginForm.setPassword(password);
+            loginForm.setPassword(clearPass);
             loginForm.setRemember(remember);
 
             Window window = loginForm.getWindow();
             window.center();
             UI.getCurrent().addWindow(window);
-        }// end of if cycle
+        }
 
-    }// end of method
+    }
 
+
+    /**
+     * Logout the current user
+     */
+    public void logout() {
+        UserIF oldUser = user;
+        user = null;
+        for (LogoutListener l : logoutListeners) {
+            l.onUserLogout(oldUser);
+        }
+    }
 
 
     /**
@@ -165,62 +169,93 @@ public class Login implements LogformListener, LoginListener {
         this.user = user;
 
         if (remember) {
+
             // create/update the cookies
             LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
-            LibCookie.setCookie(getPasswordKey(), user.getPassword(), expiryTime);
+            LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
             LibCookie.setCookie(getRememberKey(), "true", expiryTime);
+
         } else {
             // delete the cookies
-            LibCookie.deleteCookie(getLoginKey());
-            LibCookie.deleteCookie(getPasswordKey());
-            LibCookie.deleteCookie(getRememberKey());
-        }// end of if/else cycle
+            deleteCookies();
+        }
 
-    }// end of method
+    }
+
 
     /**
-     * Attempts a login from the cookies.
+     * Renew the expiry time for all the cookies
+     */
+    private void renewCookies() {
+        Cookie cookie;
+        cookie = LibCookie.getCookie(getLoginKey());
+        LibCookie.setCookie(getLoginKey(), cookie.getValue(), expiryTime);
+        cookie = LibCookie.getCookie(getPasswordKey());
+        LibCookie.setCookie(getPasswordKey(), cookie.getValue(), expiryTime);
+        cookie = LibCookie.getCookie(getRememberKey());
+        LibCookie.setCookie(getRememberKey(), cookie.getValue(), expiryTime);
+    }
+
+    /**
+     * Delete all the cookies
+     */
+    private void deleteCookies() {
+        LibCookie.deleteCookie(getLoginKey());
+        LibCookie.deleteCookie(getPasswordKey());
+        LibCookie.deleteCookie(getRememberKey());
+    }
+
+
+    /**
+     * Attempts a login directly from the cookies without showing the login form.
      *
      * @return true if success
      */
     public boolean loginFromCookies() {
         boolean success = false;
         String username = LibCookie.getCookieValue(getLoginKey());
-        String password = LibCookie.getCookieValue(getPasswordKey());
-        String clearPass = LibCrypto.decrypt(password);
+        String encPassword = LibCookie.getCookieValue(getPasswordKey());
+        String clearPass = LibCrypto.decrypt(encPassword);
 
-        user = Utente.validate(username, clearPass);
-        if (user != null) {
-            success = true;
-        }// end of if cycle
+        UserIF user = userFromNick(username);
+
+        if(user!=null){
+            if(user.validatePassword(clearPass)){
+                this.user=user;
+                success = true;
+            }
+        }
 
         // if success, renew the cookies (if the option is on)
-        // if failed, delete the cookies (if existing)
+        // if failed, delete the cookies
         if (success) {
             if (renewCookiesOnLogin) {
-                Cookie cookie;
-                cookie = LibCookie.getCookie(getLoginKey());
-                LibCookie.setCookie(getLoginKey(), cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(getPasswordKey());
-                LibCookie.setCookie(getPasswordKey(), cookie.getValue(), expiryTime);
-                cookie = LibCookie.getCookie(getRememberKey());
-                LibCookie.setCookie(getRememberKey(), cookie.getValue(), expiryTime);
+                renewCookies();
             }
         } else {
-            LibCookie.deleteCookie(getLoginKey());
-            LibCookie.deleteCookie(getPasswordKey());
-            LibCookie.deleteCookie(getRememberKey());
-        }// end of if/else cycle
+            deleteCookies();
+        }
 
         return success;
-    }// end of method
+    }
+
+
+    /**
+     * Retrieves the user from a given username
+     * @return the user corresponding to a given username
+     */
+    protected UserIF userFromNick(String username){
+        Utente aUser = Utente.read(username);
+        return aUser;
+    }
+
 
     /**
      * @return the expiry time of the cookies in seconds
      */
     public int getExpiryTime() {
         return expiryTime;
-    }// end of method
+    }
 
     /**
      * Sets the expiry time for the cookies
@@ -229,7 +264,7 @@ public class Login implements LogformListener, LoginListener {
      */
     public void setExpiryTime(int expiryTime) {
         this.expiryTime = expiryTime;
-    }// end of method
+    }
 
     /**
      * Whether the cookies are renewed after a successful login.
@@ -301,31 +336,33 @@ public class Login implements LogformListener, LoginListener {
     }// end of method
 
     /**
+     * Adds a LogoutListener
+     */
+    public void addLogoutListener(LogoutListener l) {
+        logoutListeners.add(l);
+    }
+
+    /**
      * Evento ricevuto dalla classe LoginBar quando si clicca il bottone Login <br>
      */
     @Override
     public void onLogFormRequest() {
         showLoginForm();
-    }// end of method
+    }
 
     /**
      * @return true if a user is logged
      */
     public boolean isLogged() {
         return (getUser() != null);
-    }// end of method
+    }
 
     public UserIF getUser() {
         return user;
-    }// end of method
-
-    public void setUser(Utente user){
-        this.user=user;
     }
 
-
-    public void setLoginForm(AbsLoginForm loginForm){
-        this.loginForm = loginForm;
+    public void setUser(Utente user) {
+        this.user = user;
     }
 
     /**

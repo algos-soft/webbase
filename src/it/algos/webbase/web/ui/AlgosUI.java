@@ -294,10 +294,10 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
             if (loginBar != null) {
                 login.addLoginListener(this);
-                login.addLoginListener(loginBar);
+//                login.addLoginListener(loginBar);
 
-                loginBar.addLogformListener(login);
-                loginBar.addLogoutListener(this);
+//                loginBar.addLogformListener(login);
+                login.addLogoutListener(this);
             }// end of if cycle
         }// end of if cycle
     }// end of method
@@ -514,7 +514,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
-     * @param vista    da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param viewClass    da visualizzare nel placeholder alla pressione del bottone di menu
      * @param icon del menu
      * @return menuItem appena creato
      */
@@ -628,7 +628,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 //     * Lancia il fire di questo evento, se l'utente è valido.
 //     */
     @Override
-    public void onUserLogout() {
+    public void onUserLogout(UserIF user) {
         logout();
     }// end of method
 

@@ -24,7 +24,11 @@ public class LibCrypto {
      * Uses a default cipher with a standard key.
      */
     public static String encrypt(String in) {
-        return encrypter.encrypt(in);
+        String out = null;
+        if(in!=null){
+            out = encrypter.encrypt(in);
+        }
+        return out;
     }
 
 
@@ -32,8 +36,11 @@ public class LibCrypto {
      * Standard string decryption
      */
     public static String decrypt(String in) {
-        return encrypter.decrypt(in);
-
+        String out = null;
+        if(in!=null){
+            out=encrypter.decrypt(in);
+        }
+        return out;
     }
 
 

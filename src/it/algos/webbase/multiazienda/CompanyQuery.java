@@ -62,6 +62,20 @@ public class CompanyQuery {
 
 
     /**
+     * Search for all entities of the current company.
+     * <p>
+     *
+     * @param clazz the entity class
+     * @return a list of entities corresponding to the specified criteria
+     */
+    public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz) {
+        EntityManager manager = EM.createEntityManager();
+        List<? extends CompanyEntity> entities = queryList(clazz, null, null, manager);
+        manager.close();
+        return entities;
+    }
+
+    /**
      * Search for all entities with a specified attribute value.
      * Filtrato sulla azienda corrente.
      * Crea un EntityManager al volo
@@ -82,7 +96,7 @@ public class CompanyQuery {
         manager.close();
 
         return entities;
-    }// end of method
+    }
 
     /**
      * Search for all entities with a specified attribute value.
@@ -112,8 +126,8 @@ public class CompanyQuery {
      * <p>
      *
      * @param clazz   the entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
+     * @param attr    the searched attribute, null for no filter
+     * @param value   the value to search for, null for no filter
      * @param manager the EntityManager to use
      * @param company azienda da filtrare
      * @return a list of entities corresponding to the specified criteria
@@ -132,8 +146,10 @@ public class CompanyQuery {
         Predicate pred;
         List<Predicate> predicates = new ArrayList<Predicate>();
 
-        pred = cb.equal(root.get(attr), value);
-        predicates.add(pred);
+        if(attr!=null && value!=null){
+            pred = cb.equal(root.get(attr), value);
+            predicates.add(pred);
+        }
 
         pred = cb.equal(root.get(CompanyEntity_.company), company);
         predicates.add(pred);

@@ -108,7 +108,7 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
     abstract void setUsername(String name);
 
     public void setPassword(String password) {
-        passField.setValue(LibCrypto.decrypt(password));
+        passField.setValue(password);
     }
 
     public void setRemember(boolean remember) {

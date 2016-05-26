@@ -81,6 +81,7 @@ public abstract class ATable extends Table {
     /**
      * Initializes the table.
      * Must be called from the costructor in each subclass
+     * Chiamato dal costruttore di ModuleTable
      */
     protected void init() {
 

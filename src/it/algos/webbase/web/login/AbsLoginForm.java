@@ -4,13 +4,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
-import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.PasswordField;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AFormLayout;
-import it.algos.webbase.web.lib.LibCrypto;
 
 /**
  * Abstract Login form.
@@ -47,6 +45,7 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
         // crea i campi
         Component nameCompo = createUsernameComponent();
         passField = new PasswordField("Password");
+//        passField = new TextField("Password");
         passField.setWidthUndefined();
         rememberField = new CheckBoxField("Ricordami su questo computer");
 

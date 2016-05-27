@@ -617,7 +617,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
      * Lancia il fire di questo evento, se l'utente è valido.
      */
     @Override
-    public void onUserLogin(UserIF user, boolean remember) {
+    public void onUserLogin(LoginEvent e) {
         // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
     }// end of method
 
@@ -628,7 +628,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 //     * Lancia il fire di questo evento, se l'utente è valido.
 //     */
     @Override
-    public void onUserLogout(UserIF user) {
+    public void onUserLogout(LogoutEvent e) {
         logout();
     }// end of method
 

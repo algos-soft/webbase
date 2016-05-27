@@ -1,6 +1,7 @@
 package it.algos.webbase.domain.utente;
 
 import it.algos.webbase.domain.ruolo.Ruolo;
+import it.algos.webbase.domain.ruolo.TipoRuolo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuolo;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.lib.LibCrypto;
@@ -190,5 +191,15 @@ public class Utente extends BaseEntity implements UserIF {
         return found;
 
     }
+
+
+    /**
+     * @return true if this user is an admin
+     */
+    public boolean isAdmin(){
+        Ruolo adminRole = Ruolo.read(TipoRuolo.admin);
+        return hasRole(adminRole);
+    }
+
 
 }// end of entity class

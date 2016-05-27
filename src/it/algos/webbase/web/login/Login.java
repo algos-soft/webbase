@@ -151,24 +151,27 @@ public class Login implements LogformListener, LoginListener {
     public void logout() {
         UserIF oldUser = user;
         user = null;
+        LogoutEvent e = new LogoutEvent(this, oldUser);
         for (LogoutListener l : logoutListeners) {
-            l.onUserLogout(oldUser);
+            l.onUserLogout(e);
         }
+
+        deleteCookies();
+
     }
 
 
     /**
      * Invoked after a successful login happened using the Login form.
      *
-     * @param user     the logged user
-     * @param remember the value for the Remember option
+     * @param e the LoginEvent object
      */
-    protected void userLogin(UserIF user, boolean remember) {
+    protected void userLogin(LoginEvent e) {
 
         // register user
-        this.user = user;
+        this.user = e.getUser();
 
-        if (remember) {
+        if (e.isRememberOption()) {
 
             // create/update the cookies
             LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
@@ -232,9 +235,16 @@ public class Login implements LogformListener, LoginListener {
             if (renewCookiesOnLogin) {
                 renewCookies();
             }
+
+            LoginEvent e = new LoginEvent(this, user, LoginTypes.TYPE_COOKIES, false);
+            for(LoginListener l : loginListeners){
+                l.onUserLogin(e);
+            }
+
         } else {
             deleteCookies();
         }
+
 
         return success;
     }
@@ -372,15 +382,16 @@ public class Login implements LogformListener, LoginListener {
      * Rilancia l'evento ed informa (tramite listener) chi è interessato e registrato presso questa classe <br>
      */
     @Override
-    public void onUserLogin(UserIF user, boolean remember) {
-        userLogin(user, remember);
+    public void onUserLogin(LoginEvent e) {
+        userLogin(e);
 
         // notify all the listeners
         if (loginListeners != null) {
             for (LoginListener listener : loginListeners) {
-                listener.onUserLogin(user, remember);
-            }// end of for cycle
-        }// end of if cycle
-    }// end of method
+                listener.onUserLogin(e);
+            }
+        }
+    }
 
-}// end of class
+
+}

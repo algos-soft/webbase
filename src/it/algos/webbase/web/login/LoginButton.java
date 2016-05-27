@@ -2,14 +2,7 @@ package it.algos.webbase.web.login;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
-import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.web.AlgosApp;
-
-import java.util.ArrayList;
 
 /**
  * Menubar di gestione login
@@ -30,14 +23,14 @@ public class LoginButton extends MenuBar {
 
         login.addLoginListener(new LoginListener() {
             @Override
-            public void onUserLogin(UserIF user, boolean remember) {
+            public void onUserLogin(LoginEvent e) {
                 updateUI();
             }
         });
 
         login.addLogoutListener(new LogoutListener() {
             @Override
-            public void onUserLogout(UserIF user) {
+            public void onUserLogout(LogoutEvent e) {
                 updateUI();
             }
         });
@@ -56,6 +49,7 @@ public class LoginButton extends MenuBar {
         if (user == null) {
 
             loginItem.setText("Login");
+            loginItem.removeChildren();
             loginItem.setIcon(FontAwesome.SIGN_IN);
             loginItem.setCommand(new MenuBar.Command() {
                 @Override

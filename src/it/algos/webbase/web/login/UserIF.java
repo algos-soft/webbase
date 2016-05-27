@@ -12,6 +12,11 @@ public interface UserIF {
     String getNickname();
 
     /**
+     * @return true if this user is admin
+     */
+    boolean isAdmin();
+
+    /**
      * @return the password (in clear text)
      */
     String getPassword();

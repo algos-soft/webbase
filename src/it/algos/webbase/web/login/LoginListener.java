@@ -1,7 +1,5 @@
 package it.algos.webbase.web.login;
 
-import it.algos.webbase.domain.utente.Utente;
-
 /**
  * Listener invoked on a successful login.
  * <p>
@@ -13,5 +11,5 @@ import it.algos.webbase.domain.utente.Utente;
  * I listeners verrano informati dell'evento tramite invocazione del metodo di questa interfaccia
  */
 public interface LoginListener {
-    public void onUserLogin(UserIF user, boolean remember);
+    public void onUserLogin(LoginEvent e);
 }// end of interface

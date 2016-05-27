@@ -7,7 +7,6 @@ import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.field.CheckBoxField;
 import it.algos.webbase.web.field.PasswordField;
-import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AFormLayout;
 
 /**
@@ -92,7 +91,8 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
      */
     private void utenteLoggato(UserIF utente) {
         if (loginListener != null) {
-            loginListener.onUserLogin(utente, rememberField.getValue());
+            LoginEvent e = new LoginEvent(this, utente, LoginTypes.TYPE_FORM, rememberField.getValue());
+            loginListener.onUserLogin(e);
         }
     }
 

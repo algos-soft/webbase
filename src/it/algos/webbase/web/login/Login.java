@@ -9,6 +9,7 @@ import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Main Login object (Login logic).
@@ -237,9 +238,16 @@ public class Login implements LogformListener, LoginListener {
             }
 
             LoginEvent e = new LoginEvent(this, user, LoginTypes.TYPE_COOKIES, false);
-            for(LoginListener l : loginListeners){
+
+            // use Iterator instead foreach to avoid ConcurrentModificationException
+            for (Iterator<LoginListener> it = loginListeners.iterator(); it.hasNext(); ) {
+                LoginListener l = it.next();
                 l.onUserLogin(e);
             }
+
+//            for(LoginListener l : loginListeners){
+//                l.onUserLogin(e);
+//            }
 
         } else {
             deleteCookies();
@@ -386,11 +394,20 @@ public class Login implements LogformListener, LoginListener {
         userLogin(e);
 
         // notify all the listeners
+        // use Iterator instead of foreach to avoid ConcurrentModificationException
         if (loginListeners != null) {
-            for (LoginListener listener : loginListeners) {
-                listener.onUserLogin(e);
+            for (Iterator<LoginListener> it = loginListeners.iterator(); it.hasNext(); ) {
+                LoginListener l = it.next();
+                l.onUserLogin(e);
             }
         }
+
+//        if (loginListeners != null) {
+//            for (LoginListener listener : loginListeners) {
+//                listener.onUserLogin(e);
+//            }
+//        }
+
     }
 
 

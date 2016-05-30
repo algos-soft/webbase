@@ -15,7 +15,7 @@ import it.algos.webbase.web.toolbar.TableToolbar.TableToolbarListener;
 @SuppressWarnings("serial")
 public class TablePortal extends VerticalLayout implements ATable.SelectionChangedListener {
 
-    protected ATable table;
+    public ATable table;
     protected TableToolbar toolbar;
     protected TableFooter footer;
     private ModulePop module;

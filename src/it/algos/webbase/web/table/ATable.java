@@ -24,7 +24,7 @@ import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.Entities;
 import it.algos.webbase.web.entity.SortProperties;
 import it.algos.webbase.web.lib.LibFilter;
-import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.lib.LibText;
 import it.algos.webbase.web.query.AQuery;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 /**
  * Base Table to list BaseEntity(es)
+ * .
  */
 public abstract class ATable extends Table {
 
@@ -62,8 +63,6 @@ public abstract class ATable extends Table {
     // modifiche nella parte ''contenuti'': container e (di solito) il sottostante DB
     private ArrayList<ContainerChangedListener> containerChangedListeners = new ArrayList<>();
 
-
-
     /**
      * Creates a new table for a given module.
      *
@@ -77,7 +76,6 @@ public abstract class ATable extends Table {
 //        init();
     }
 
-
     /**
      * Initializes the table.
      * Must be called from the costructor in each subclass
@@ -90,7 +88,6 @@ public abstract class ATable extends Table {
         setContainerDataSource(container);
         addPropertiesToContainer();
         sortContainer();
-
 
         // adds a listener for data change to the container
         // (if supported by the container)
@@ -106,7 +103,7 @@ public abstract class ATable extends Table {
                     updateTotals();
 
                     // fire table container changed
-                    for(ContainerChangedListener l : containerChangedListeners){
+                    for (ContainerChangedListener l : containerChangedListeners) {
                         l.containerChanged(event);
                     }
 
@@ -191,7 +188,6 @@ public abstract class ATable extends Table {
     protected void handleAction(Action action, Object sender, Object target) {
     }
 
-
     /**
      * Action when a user click the table
      * Must be overridden on the subclass
@@ -200,7 +196,6 @@ public abstract class ATable extends Table {
      */
     public void itemClick(ItemClickEvent itemClickEvent) {
     }
-
 
     /**
      * Recupera l'istanza di una riga
@@ -215,7 +210,6 @@ public abstract class ATable extends Table {
         bean = (BaseEntity) beanItem.getBean();
         return bean;
     }// end of method
-
 
     /**
      * Recupera l'istanza della riga selezionata col click
@@ -235,7 +229,6 @@ public abstract class ATable extends Table {
 
         return bean;
     }// end of method
-
 
     /**
      * Recupera l'istanza della riga selezionata se il click è nella colonna indicata
@@ -285,12 +278,11 @@ public abstract class ATable extends Table {
                 return getContainer();
             }
         };
-        for(ContainerChangedListener l : containerChangedListeners){
+        for (ContainerChangedListener l : containerChangedListeners) {
             l.containerChanged(e);
         }
 
     }
-
 
     /**
      * Creates the container
@@ -311,7 +303,6 @@ public abstract class ATable extends Table {
         return 1000;
     }
 
-
     /**
      * Add the properties to the container.
      * By default, all the properties from the Entity class are added.
@@ -321,7 +312,6 @@ public abstract class ATable extends Table {
         Container cont = getContainerDataSource();
         Entities.addPropertiesToContainer(cont, getEntityClass());
     }
-
 
     /**
      * Sorts the container.
@@ -352,7 +342,6 @@ public abstract class ATable extends Table {
         }
     }
 
-
     /**
      * Create additional columns
      * (add generated columns, nested properties...)
@@ -379,7 +368,7 @@ public abstract class ATable extends Table {
         for (Object obj : columns) {
             String cName = "";
             if (obj instanceof Attribute) {
-                Attribute<?,?> attr = (Attribute<?, ?>)obj;
+                Attribute<?, ?> attr = (Attribute<?, ?>) obj;
                 String name = attr.getName();
                 cNames.add(name);
             }
@@ -441,7 +430,6 @@ public abstract class ATable extends Table {
         super.setColumnWidth(propertyId, width);
     }
 
-
     /**
      * Adds/removes a column to the list of totalizable columns
      * <p>
@@ -480,7 +468,6 @@ public abstract class ATable extends Table {
         setColumnUseTotals(propertyId, useTotals, -1);
     }
 
-
     /**
      * Returns an array of the visible columns ids. Ids might be of type String
      * or Attribute. This base implementations returns all the columns (no
@@ -502,6 +489,7 @@ public abstract class ATable extends Table {
      * Returns the alignment for a given column.
      *
      * @param columnId the column id
+     *
      * @return the alignment
      */
     protected Table.Align getAlignment(String columnId) {
@@ -533,7 +521,6 @@ public abstract class ATable extends Table {
         return align;
 
     }
-
 
     /**
      * Returns the ids of the single selected row
@@ -597,7 +584,6 @@ public abstract class ATable extends Table {
         return selected;
     }
 
-
     /**
      * Returns the id of the single selected row
      * <p>
@@ -626,7 +612,6 @@ public abstract class ATable extends Table {
         return (idKey != null && idKey > 0);
     }
 
-
     /**
      * Return the selected entity.
      *
@@ -641,7 +626,6 @@ public abstract class ATable extends Table {
         }
         return entity;
     }
-
 
     /**
      * Return the selected entities (multiple selection).
@@ -667,11 +651,11 @@ public abstract class ATable extends Table {
 
     }
 
-
     /**
      * Returns the entity given a row id.
      *
      * @param rowId the row id
+     *
      * @return the entity
      */
     public BaseEntity getEntity(Object rowId) {
@@ -696,7 +680,6 @@ public abstract class ATable extends Table {
         return entity;
     }
 
-
     /**
      * Refreshes the underlying container from the database
      */
@@ -706,8 +689,8 @@ public abstract class ATable extends Table {
         if (cont != null) {
             // refresh() is not in any interface, so we have
             // to cast to any specific classes
-            if(cont instanceof EntityContainer){
-                EntityContainer ec = (EntityContainer)cont;
+            if (cont instanceof EntityContainer) {
+                EntityContainer ec = (EntityContainer) cont;
                 ec.refresh();
             }
             if (cont instanceof LazyEntityContainer) {
@@ -720,7 +703,6 @@ public abstract class ATable extends Table {
     public Class<?> getEntityClass() {
         return entityClass;
     }
-
 
     /**
      * Returns the container as a Filterable container.
@@ -749,7 +731,6 @@ public abstract class ATable extends Table {
         }
         return sortable;
     }
-
 
     @Override
     protected String formatPropertyValue(Object rowId, Object colId, Property<?> property) {
@@ -791,7 +772,6 @@ public abstract class ATable extends Table {
         return string;
     }
 
-
     /**
      * Updates the totals in the footer
      * <p>
@@ -811,9 +791,7 @@ public abstract class ATable extends Table {
             setColumnFooter(propertyId, sTotal);
         }
 
-
     }
-
 
     /**
      * Calculates the total for a particular (numeric) column in the Container.
@@ -821,6 +799,7 @@ public abstract class ATable extends Table {
      * using the current filter.
      *
      * @param propertyId the property id
+     *
      * @return the total for the column
      */
     protected BigDecimal getTotalForColumn(Object propertyId) {
@@ -834,9 +813,9 @@ public abstract class ATable extends Table {
         return bd;
     }
 
-
     /**
      * @param name the name of the attribute
+     *
      * @return the Attribute from the metamodel
      */
     private Attribute getAttributeByName(String name) {
@@ -859,11 +838,11 @@ public abstract class ATable extends Table {
         return attr;
     }
 
-
     /**
      * Calculate the total for a single column.
      *
      * @param attr the attribute
+     *
      * @return the total for the currently displayed rows
      */
     private BigDecimal calcTotal(SingularAttribute attr) {
@@ -898,6 +877,7 @@ public abstract class ATable extends Table {
      * @param cb   the CriteriaBuilder
      * @param cq   the CriteriaQuery
      * @param root the Root
+     *
      * @return the Predicate, or null if no filters are present
      */
     protected Predicate getFiltersPredicate(final CriteriaBuilder cb, final CriteriaQuery<?> cq, final Root<?> root) {
@@ -918,8 +898,6 @@ public abstract class ATable extends Table {
                 singleFilter = new And(aFilters);
             }
 
-
-
             // create the Predicate
             pred = LibFilter.getPredicate(singleFilter, cb, cq, root);
 
@@ -929,13 +907,13 @@ public abstract class ATable extends Table {
 
     }
 
-
     /**
      * Return a collection of the current container filters.
      * Empty collection if no filters.
+     *
      * @return the current filters
      */
-    public Collection<Filter> getContainerFilters(){
+    public Collection<Filter> getContainerFilters() {
 
         Collection<Filter> filters = new ArrayList<Filter>();
 
@@ -953,9 +931,6 @@ public abstract class ATable extends Table {
         return filters;
 
     }
-
-
-
 
 //    protected void fire(TableEvent event) {
 //        for (TableListener l : listeners) {
@@ -975,7 +950,6 @@ public abstract class ATable extends Table {
 //        }
 //    }
 
-
     /**
      * Total number of rows in the table's domain database
      */
@@ -983,7 +957,6 @@ public abstract class ATable extends Table {
         Class<?> clazz = getEntityClass();
         return AQuery.getCount(clazz);
     }
-
 
     /**
      * Number of rows currently available in the table's container
@@ -1027,7 +1000,6 @@ public abstract class ATable extends Table {
 
     }
 
-
     /**
      * Displays all the records in the table
      */
@@ -1039,7 +1011,6 @@ public abstract class ATable extends Table {
             refresh();
         }
     }
-
 
     /**
      * Creates a filter corresponding to the currently selected rows in the table
@@ -1066,8 +1037,6 @@ public abstract class ATable extends Table {
         return filter;
     }
 
-
-
     protected ATable getTable() {
         return this;
     }
@@ -1076,14 +1045,12 @@ public abstract class ATable extends Table {
         return entityManager;
     }
 
-
 //    /**
 //     * Enum di eventi previsti.
 //     */
 //    public enum TableEvent {
 //        created, attached, datachange
 //    }
-
 
 //    /**
 //     * Table high-level events
@@ -1096,6 +1063,27 @@ public abstract class ATable extends Table {
 //        void datachange_(); // table data changed
 //    }
 
+    public void addSelectionChangedListener(SelectionChangedListener l) {
+        selectionChangedListeners.add(l);
+    }
+
+    public void addContainerChangedListener(ContainerChangedListener l) {
+        containerChangedListeners.add(l);
+    }
+
+    /**
+     * Table selection has changed
+     */
+    public interface SelectionChangedListener {
+        void selectionChanged(SelectionChangeEvent e);
+    }// end of method
+
+    /**
+     * Underlying container data has changed
+     */
+    public interface ContainerChangedListener {
+        void containerChanged(Container.ItemSetChangeEvent e);
+    }
 
     public class SelectionChangeEvent extends EventObject {
         private Set<Long> rows;
@@ -1178,13 +1166,13 @@ public abstract class ATable extends Table {
 
         }
 
-
         /**
          * Returns a default number of decimal places for a given property.<br>
          * 0 for integers (int, long), 2 for decimals (double, float, BigDecimal)
          * <p>
          *
          * @param propertyId the property id
+         *
          * @return the number of decimal places
          */
         protected int getDefaultDecimalPlacesForColumn(Object propertyId) {
@@ -1226,33 +1214,5 @@ public abstract class ATable extends Table {
         }
 
     }
-
-
-    public void addSelectionChangedListener(SelectionChangedListener l) {
-        selectionChangedListeners.add(l);
-    }
-
-    public void addContainerChangedListener(ContainerChangedListener l) {
-        containerChangedListeners.add(l);
-    }
-
-
-
-    /**
-     * Table selection has changed
-     */
-    public interface SelectionChangedListener {
-        void selectionChanged(SelectionChangeEvent e);
-    }// end of method
-
-    /**
-     * Underlying container data has changed
-     */
-    public interface ContainerChangedListener {
-        void containerChanged(Container.ItemSetChangeEvent e);
-    }
-
-
-
 
 }

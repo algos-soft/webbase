@@ -114,5 +114,6 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
         rememberField.setValue(remember);
     }
 
+
 }// end of class
 

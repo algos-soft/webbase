@@ -3,6 +3,7 @@ package it.algos.webbase.web.login;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
+import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.lib.LibCookie;
 import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
@@ -50,7 +51,7 @@ import java.util.Iterator;
  * 1.AlgosUI ascolta e riceve l'evento in onUserLogout()
  */
 
-public class Login implements LogformListener, LoginListener {
+public class Login {
 
     // key to store the Login object in the session
     public static final String LOGIN_KEY_IN_SESSION = "login";
@@ -123,25 +124,46 @@ public class Login implements LogformListener, LoginListener {
     public void showLoginForm() {
 
         AbsLoginForm loginForm = getLoginForm();
-        loginForm.setLoginListener(this);
 
-        if (loginForm != null) {
+        // set the login listener in the form
+        loginForm.setLoginListener(new LoginListener() {
+            @Override
+            public void onUserLogin(LoginEvent e) {
 
-            // retrieve login data from the cookies
-            String username = LibCookie.getCookieValue(getLoginKey());
-            String encPass = LibCookie.getCookieValue(getPasswordKey());
-            String clearPass = LibCrypto.decrypt(encPass);
-            String rememberStr = LibCookie.getCookieValue(getRememberKey());
-            boolean remember = (rememberStr.equalsIgnoreCase("true"));
+                // register user
+                Login.this.user = e.getUser();
 
-            loginForm.setUsername(username);
-            loginForm.setPassword(clearPass);
-            loginForm.setRemember(remember);
+                if (e.isRememberOption()) {
 
-            Window window = loginForm.getWindow();
-            window.center();
-            UI.getCurrent().addWindow(window);
-        }
+                    // create/update the cookies
+                    LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
+                    LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
+                    LibCookie.setCookie(getRememberKey(), "true", expiryTime);
+
+                } else {
+                    // delete the cookies
+                    deleteCookies();
+                }
+
+                fireLoginListeners(e);
+
+            }
+        });
+
+        // retrieve login data from the cookies
+        String username = LibCookie.getCookieValue(getLoginKey());
+        String encPass = LibCookie.getCookieValue(getPasswordKey());
+        String clearPass = LibCrypto.decrypt(encPass);
+        String rememberStr = LibCookie.getCookieValue(getRememberKey());
+        boolean remember = (rememberStr.equalsIgnoreCase("true"));
+
+        loginForm.setUsername(username);
+        loginForm.setPassword(clearPass);
+        loginForm.setRemember(remember);
+
+        Window window = loginForm.getWindow();
+        window.center();
+        UI.getCurrent().addWindow(window);
 
     }
 
@@ -162,29 +184,29 @@ public class Login implements LogformListener, LoginListener {
     }
 
 
-    /**
-     * Invoked after a successful login happened using the Login form.
-     *
-     * @param e the LoginEvent object
-     */
-    protected void userLogin(LoginEvent e) {
-
-        // register user
-        this.user = e.getUser();
-
-        if (e.isRememberOption()) {
-
-            // create/update the cookies
-            LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
-            LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
-            LibCookie.setCookie(getRememberKey(), "true", expiryTime);
-
-        } else {
-            // delete the cookies
-            deleteCookies();
-        }
-
-    }
+//    /**
+//     * Invoked after a successful login happened using the Login form.
+//     *
+//     * @param e the LoginEvent object
+//     */
+//    private void userLogin(LoginEvent e) {
+//
+//        // register user
+//        this.user = e.getUser();
+//
+//        if (e.isRememberOption()) {
+//
+//            // create/update the cookies
+//            LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
+//            LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
+//            LibCookie.setCookie(getRememberKey(), "true", expiryTime);
+//
+//        } else {
+//            // delete the cookies
+//            deleteCookies();
+//        }
+//
+//    }
 
 
     /**
@@ -236,18 +258,8 @@ public class Login implements LogformListener, LoginListener {
             if (renewCookiesOnLogin) {
                 renewCookies();
             }
-
             LoginEvent e = new LoginEvent(this, user, LoginTypes.TYPE_COOKIES, false);
-
-            // use Iterator instead foreach to avoid ConcurrentModificationException
-            for (Iterator<LoginListener> it = loginListeners.iterator(); it.hasNext(); ) {
-                LoginListener l = it.next();
-                l.onUserLogin(e);
-            }
-
-//            for(LoginListener l : loginListeners){
-//                l.onUserLogin(e);
-//            }
+            fireLoginListeners(e);
 
         } else {
             deleteCookies();
@@ -360,13 +372,13 @@ public class Login implements LogformListener, LoginListener {
         logoutListeners.add(l);
     }
 
-    /**
-     * Evento ricevuto dalla classe LoginBar quando si clicca il bottone Login <br>
-     */
-    @Override
-    public void onLogFormRequest() {
-        showLoginForm();
-    }
+//    /**
+//     * Evento ricevuto dalla classe LoginBar quando si clicca il bottone Login <br>
+//     */
+//    @Override
+//    public void onLogFormRequest() {
+//        showLoginForm();
+//    }
 
     /**
      * @return true if a user is logged
@@ -383,31 +395,57 @@ public class Login implements LogformListener, LoginListener {
         this.user = user;
     }
 
-    /**
-     * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>
-     * <p>
-     * Registra l'utente
-     * Rilancia l'evento ed informa (tramite listener) chi è interessato e registrato presso questa classe <br>
-     */
-    @Override
-    public void onUserLogin(LoginEvent e) {
-        userLogin(e);
+//    /**
+//     * Evento ricevuto dalla classe LoginForm quando si modifica l'utente loggato <br>
+//     * <p>
+//     * Registra l'utente
+//     * Rilancia l'evento ed informa (tramite listener) chi è interessato e registrato presso questa classe <br>
+//     */
+//    @Override
+//    public void onUserLogin(LoginEvent e) {
+//        userLogin(e);
+//        fireLoginListeners(e);
+//
+////        // notify all the listeners
+////        // use Iterator instead of foreach to avoid ConcurrentModificationException
+////        if (loginListeners != null) {
+////            for (Iterator<LoginListener> it = loginListeners.iterator(); it.hasNext(); ) {
+////                LoginListener l = it.next();
+////                l.onUserLogin(e);
+////            }
+////        }
+//
+////        if (loginListeners != null) {
+////            for (LoginListener listener : loginListeners) {
+////                listener.onUserLogin(e);
+////            }
+////        }
+//
+////        if (loginListeners != null) {
+////            ArrayList<LoginListener> listenersCopy = (ArrayList<LoginListener>)loginListeners.clone();
+////            for (LoginListener listener : listenersCopy) {
+////                listener.onUserLogin(e);
+////            }
+////        }
+//
+//
+//    }
 
-        // notify all the listeners
-        // use Iterator instead of foreach to avoid ConcurrentModificationException
+
+    /**
+     * Notifica i LoginListeners.
+     * Esegue l'iterazione su una copia della ArrayList.
+     * Inquesto modo chi viene notificato può aggiungere dei LoginListeners
+     * senza causare una ConcurrentModificationException
+     * @param e il LoginEvent
+     */
+    private void fireLoginListeners(LoginEvent e){
         if (loginListeners != null) {
-            for (Iterator<LoginListener> it = loginListeners.iterator(); it.hasNext(); ) {
-                LoginListener l = it.next();
-                l.onUserLogin(e);
+            ArrayList<LoginListener> listenersCopy = (ArrayList<LoginListener>)loginListeners.clone();
+            for (LoginListener listener : listenersCopy) {
+                listener.onUserLogin(e);
             }
         }
-
-//        if (loginListeners != null) {
-//            for (LoginListener listener : loginListeners) {
-//                listener.onUserLogin(e);
-//            }
-//        }
-
     }
 
 

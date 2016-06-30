@@ -41,6 +41,20 @@ public abstract class LibSession {
     }// end of static method
 
     /**
+     * Recupera dalla sessione l'attributo admin
+     */
+    public static boolean isAdmin() {
+        return isBool(Attribute.admin);
+    }// end of static method
+
+    /**
+     * Regola per la sessione corrente l'attributo admin
+     */
+    public static void setAdmin(boolean status) {
+        setBool(Attribute.admin, status);
+    }// end of static method
+
+    /**
      * Recupera dalla sessione l'attributo debug
      */
     public static boolean isDebug() {
@@ -219,7 +233,7 @@ public abstract class LibSession {
     }// end of static method
 
     public enum Attribute {
-        developer, debug, firstTime
+        developer, admin, debug, firstTime
     }// end of inner enumeration
 
 }// end of abstract static class

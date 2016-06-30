@@ -39,20 +39,22 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
         // this.table = createTable();
         this.table.setWidth("100%");
         this.table.setHeight("100%");
-
-        // creates the table footer
-        this.footer = createFooter();
-        this.footer.setWidth("100%");
+        addComponent(this.table);
+        setExpandRatio(this.table, 1f);
 
         // creates the toolbar
         this.toolbar = createToolbar();
-        this.toolbar.setWidth("100%");
+        if (toolbar != null) {
+            this.toolbar.setWidth("100%");
+            addComponent(this.toolbar);
+        }// fine del blocco if
 
-        // adds them to the portal
-        addComponent(this.table);
-        // addComponent(this.footer);
-        addComponent(this.toolbar);
-        setExpandRatio(this.table, 1f);
+        // creates the table footer
+        this.footer = createFooter();
+        if (footer != null) {
+            this.footer.setWidth("100%");
+            // addComponent(this.footer);
+        }// fine del blocco if
 
         // aggiunge un double click listener alla table.
         // Quando lo riceve, invoca un apposito metodo fireEdit()
@@ -61,7 +63,9 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
             @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
-                    getToolbar().fireEdit();
+                    if (getToolbar()!=null) {
+                        getToolbar().fireEdit();
+                    }// fine del blocco if
                 }
             }
         });
@@ -95,14 +99,12 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
 //        table.addSelectionChangedListener(tableToolBar);
 //    }
 
-
     public void addToolbarListener(TableToolbarListener listener) {
         TableToolbar tb = getToolbar();
         if (tb != null) {
             tb.addToolbarListener(listener);
         }
     }
-
 
     public ATable getTable() {
         return table;
@@ -120,12 +122,13 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
     public void selectionChanged(ATable.SelectionChangeEvent e) {
     }// end of method
 
-
     /*
      * Elimina un comando dalla GUI.
      */
     public void delCmd(String label) {
-        toolbar.delCmd(label);
+        if (toolbar != null) {
+            toolbar.delCmd(label);
+        }// fine del blocco if
     }// end of method
 
     /**
@@ -139,7 +142,11 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
      * Recupera il componente grafico corrispondente al comando indicato.
      */
     public Component getComp(String label) {
-        return toolbar.getComp(label);
+        if (toolbar != null) {
+            return toolbar.getComp(label);
+        } else {
+            return null;
+        }// fine del blocco if-else
     }// end of method
 
 }// end of class

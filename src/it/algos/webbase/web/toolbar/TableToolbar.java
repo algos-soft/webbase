@@ -107,14 +107,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
 
         itemSeleziona = addButton(CMD_SELECTION, FontAwesome.LIST_UL, null);
 
-
         item = itemSeleziona.addItem("Solo selezionati", FontAwesome.FILE_TEXT, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.selectedonly);
             }
         });
         bottoni.put(Bottoni.selectedonly, item);
-
 
         item = itemSeleziona.addItem("Rimuovi selezionati", FontAwesome.FILE_TEXT_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
@@ -123,14 +121,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
         });
         bottoni.put(Bottoni.removeselected, item);
 
-
         item = itemSeleziona.addItem("Mostra tutti", FontAwesome.FILE, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.showall);
             }
         });
         bottoni.put(Bottoni.showall, item);
-
 
         item = itemSeleziona.addItem("Deseleziona tutti", FontAwesome.FILE_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
@@ -184,10 +180,13 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
         fire(Bottoni.edit);
     }
 
+    public String getInfoText() {
+        return infoPanel.getInfoText();
+    }
+
     public void setInfoText(String text) {
         infoPanel.setInfoText(text);
     }
-
 
     /**
      * Cambiata la selezione delle righe.
@@ -257,7 +256,6 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
     public void setSelect(boolean enabled) {
         itemSeleziona.setEnabled(enabled);
     }
-
 
     /*
      * Elimina un comando dalla GUI.
@@ -334,6 +332,10 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
             super();
             // addStyleName("yellowBg");
             addComponent(infoLabel);
+        }
+
+        public String getInfoText() {
+            return infoLabel.getValue();
         }
 
         public void setInfoText(String text) {

@@ -63,7 +63,9 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
             @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
+                    if(getToolbar()!=null){
                         getToolbar().fireEdit();
+                    }
                 }
             }
         });

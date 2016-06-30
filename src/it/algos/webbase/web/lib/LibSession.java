@@ -3,6 +3,7 @@ package it.algos.webbase.web.lib;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import it.algos.webbase.web.login.Login;
+import it.algos.webbase.web.login.UserIF;
 
 /**
  * Created by gac on 26/05/15.
@@ -44,15 +45,26 @@ public abstract class LibSession {
      * Recupera dalla sessione l'attributo admin
      */
     public static boolean isAdmin() {
-        return isBool(Attribute.admin);
+        boolean admin = false;
+        Login login = Login.getLogin();
+        UserIF user = null;
+
+        if (login != null) {
+            user = login.getUser();
+            if (user != null) {
+                admin = user.isAdmin();
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return admin;
     }// end of static method
 
-    /**
-     * Regola per la sessione corrente l'attributo admin
-     */
-    public static void setAdmin(boolean status) {
-        setBool(Attribute.admin, status);
-    }// end of static method
+//    /**
+//     * Regola per la sessione corrente l'attributo admin
+//     */
+//    public static void setAdmin(boolean status) {
+//        setBool(Attribute.admin, status);
+//    }// end of static method
 
     /**
      * Recupera dalla sessione l'attributo debug

@@ -71,7 +71,9 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
         });
 
         // The toolbar listens to table selection changes
-        getTable().addSelectionChangedListener(this.getToolbar());
+        if(this.getToolbar()!=null){
+            getTable().addSelectionChangedListener(this.getToolbar());
+        }
 
         // The portal listens to table selection changes
         //@todo aggiunto da gac - 7.5.16

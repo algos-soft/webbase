@@ -1064,7 +1064,9 @@ public abstract class ATable extends Table {
 //    }
 
     public void addSelectionChangedListener(SelectionChangedListener l) {
-        selectionChangedListeners.add(l);
+        if(l!=null){
+            selectionChangedListeners.add(l);
+        }
     }
 
     public void addContainerChangedListener(ContainerChangedListener l) {

@@ -70,8 +70,8 @@ public class Ruolo extends BaseEntity {
 	 */
 	public static Ruolo read(String nome) {
 		Ruolo instance = null;
-		SingularAttribute pippo=Ruolo_.nome;
-		BaseEntity entity = AQuery.queryOne(Ruolo.class, pippo, nome);
+//		SingularAttribute pippo=Ruolo_.nome;
+		BaseEntity entity = AQuery.queryOne(Ruolo.class, Ruolo_.nome, nome);
 
 		if (entity != null) {
 			if (entity instanceof Ruolo) {

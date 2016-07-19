@@ -30,7 +30,6 @@ import java.util.Vector;
  * tipo serializzabile (putIndirizzo, getIndirizzo, putCertificato, getCertificato...)
  * <p>
  * I valori possono essere letti e scritti tramite i metodi statici della classe, passandogli la chiave.
- * .
  */
 @Entity
 public class Pref extends BaseEntity {

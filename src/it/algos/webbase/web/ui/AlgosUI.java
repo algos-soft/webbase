@@ -610,16 +610,6 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
         getPage().reload();
     }// end of method
 
-    /**
-     * Invoked after a successful login happened using the Login form.
-     * <p/>
-     * La classe Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
-     * Lancia il fire di questo evento, se l'utente è valido.
-     */
-    @Override
-    public void onUserLogin(LoginEvent e) {
-        // eventuali regolazioni della UI (oltre a quelle effettuate nella classe LoginBar che riceve anche lei questo evento)
-    }// end of method
 
     //    /**
 //     * Invoked after a successful login happened using the Login form.

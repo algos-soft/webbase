@@ -14,6 +14,7 @@ import it.algos.webbase.web.form.AFormLayout;
  */
 public abstract class AbsLoginForm extends ConfirmDialog  {
 
+    private Component usernameField;
     private PasswordField passField;
     private CheckBoxField rememberField;
 
@@ -42,14 +43,15 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
         layout.setSpacing(true);
 
         // crea i campi
-        Component nameCompo = createUsernameComponent();
+        usernameField = createUsernameComponent();
         passField = new PasswordField("Password");
+
 //        passField = new TextField("Password");
         passField.setWidthUndefined();
         rememberField = new CheckBoxField("Ricordami su questo computer");
 
         // aggiunge i campi al layout
-        layout.addComponent(nameCompo);
+        layout.addComponent(usernameField);
         layout.addComponent(passField);
         layout.addComponent(rememberField);
 
@@ -71,7 +73,7 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
             String password = passField.getValue();
             if(user.validatePassword(password)){
                 super.onConfirm();
-                utenteLoggato(user);
+                utenteLoggato();
             }else{
                 Notification.show("Login fallito", Notification.Type.WARNING_MESSAGE);
             }
@@ -89,10 +91,9 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
      * <p>
      * Informa (tramite listener) chi è interessato (solo la classe Login, che poi rilancia) <br>
      */
-    private void utenteLoggato(UserIF utente) {
+    private void utenteLoggato() {
         if (loginListener != null) {
-            LoginEvent e = new LoginEvent(this, utente, LoginTypes.TYPE_FORM, rememberField.getValue());
-            loginListener.onUserLogin(e);
+            loginListener.onUserLogin(null);
         }
     }
 
@@ -115,5 +116,16 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
     }
 
 
+    public Component getUsernameField() {
+        return usernameField;
+    }
+
+    public PasswordField getPassField() {
+        return passField;
+    }
+
+    public CheckBoxField getRememberField() {
+        return rememberField;
+    }
 }// end of class
 

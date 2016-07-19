@@ -3,14 +3,12 @@ package it.algos.webbase.web.login;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
-import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.lib.LibCookie;
 import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Main Login object (Login logic).
@@ -66,9 +64,8 @@ public class Login {
     private static final String COOKIENAME_REMEMBER = "login_remember";
 
     /**
-     * Login gestisce il form ed alla chiusura controlla la validità del nuovo utente
-     * Lancia il fire di questo evento, se l'utente è valido.
-     * Si registrano qui i listeners (istanze di classi che sono interessate all'evento)
+     * Evento lanciato quando viene tentato un login.
+     * I listeners ricevono un LoginEvent con i dettagli sull'evento.
      */
     private ArrayList<LoginListener> loginListeners = new ArrayList<>();
 
@@ -129,24 +126,7 @@ public class Login {
         loginForm.setLoginListener(new LoginListener() {
             @Override
             public void onUserLogin(LoginEvent e) {
-
-                // register user
-                Login.this.user = e.getUser();
-
-                if (e.isRememberOption()) {
-
-                    // create/update the cookies
-                    LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
-                    LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
-                    LibCookie.setCookie(getRememberKey(), "true", expiryTime);
-
-                } else {
-                    // delete the cookies
-                    deleteCookies();
-                }
-
-                fireLoginListeners(e);
-
+                attemptLogin();
             }
         });
 
@@ -165,6 +145,46 @@ public class Login {
         window.center();
         UI.getCurrent().addWindow(window);
 
+    }
+
+
+
+    /**
+     * Tenta il login con i dati presenti nela UI.
+     * Se riesce, notifica i LoginListener(s)
+     *
+     * @return true se riuscito
+     */
+    public boolean attemptLogin(){
+        boolean riuscito=false;
+        boolean remember=false;
+
+        UserIF user = getLoginForm().getSelectedUser();
+        if(user!=null){
+            String pass = getLoginForm().getPassField().getValue();
+            if(pass!=null && !pass.isEmpty()){
+                if(user.validatePassword(pass)) {
+
+                    setUser(user);
+                    remember = getLoginForm().getRememberField().getValue();
+
+                    // create/update the cookies
+                    if (remember) {
+                        LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
+                        LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
+                        LibCookie.setCookie(getRememberKey(), "true", expiryTime);
+                    }
+
+                    riuscito = true;
+                }
+
+            }
+        }
+
+        LoginEvent e = new LoginEvent(this, riuscito, user, null, remember);
+        fireLoginListeners(e);
+
+        return riuscito;
     }
 
 
@@ -258,7 +278,7 @@ public class Login {
             if (renewCookiesOnLogin) {
                 renewCookies();
             }
-            LoginEvent e = new LoginEvent(this, user, LoginTypes.TYPE_COOKIES, false);
+            LoginEvent e = new LoginEvent(this, true, user, LoginTypes.TYPE_COOKIES, false);
             fireLoginListeners(e);
 
         } else {
@@ -391,7 +411,7 @@ public class Login {
         return user;
     }
 
-    public void setUser(Utente user) {
+    public void setUser(UserIF user) {
         this.user = user;
     }
 

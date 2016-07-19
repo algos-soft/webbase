@@ -114,7 +114,7 @@ public class Login {
      * Retrieve the Login form
      * @return the Login form to show
      */
-    protected AbsLoginForm getLoginForm(){
+    public AbsLoginForm getLoginForm(){
         return new DefaultLoginForm();
     }
 

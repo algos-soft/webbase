@@ -45,7 +45,7 @@ public class CompanyQuery {
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
 
-        if (company!=null) {
+        if (company != null) {
             Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
             cq.where(predicate);
         }// end of if cycle
@@ -71,6 +71,22 @@ public class CompanyQuery {
     public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz) {
         EntityManager manager = EM.createEntityManager();
         List<? extends CompanyEntity> entities = queryList(clazz, null, null, manager);
+        manager.close();
+        return entities;
+    }
+
+    /**
+     * Search for all entities of the company.
+     * Filtrato sulla azienda passata come parametro.
+     * <p>
+     *
+     * @param clazz   the entity class
+     * @param company azienda da filtrare
+     * @return a list of entities corresponding to the specified criteria
+     */
+    public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz, BaseCompany company) {
+        EntityManager manager = EM.createEntityManager();
+        List<? extends CompanyEntity> entities = queryList(clazz, null, null, manager, company);
         manager.close();
         return entities;
     }
@@ -146,7 +162,7 @@ public class CompanyQuery {
         Predicate pred;
         List<Predicate> predicates = new ArrayList<Predicate>();
 
-        if(attr!=null && value!=null){
+        if (attr != null && value != null) {
             pred = cb.equal(root.get(attr), value);
             predicates.add(pred);
         }

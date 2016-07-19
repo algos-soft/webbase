@@ -9,6 +9,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
         <class>it.algos.webbase.web.entity.BaseEntity</class>
+        <class>it.algos.webbase.domain.company.BaseCompany</class>
         <class>it.algos.webbase.domain.ruolo.Ruolo</class>
         <class>it.algos.webbase.domain.utente.Utente</class>
         <class>it.algos.webbase.domain.utenteruolo.UtenteRuolo</class>
@@ -24,7 +25,7 @@
             <property name="javax.persistence.target-database" value="MySQL"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:mysql://localhost:3306/test?useUnicode=yes&amp;characterEncoding=UTF-8"/>
+                      value="jdbc:mysql://localhost:3306/webbase?useUnicode=yes&amp;characterEncoding=UTF-8"/>
 
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value=""/>

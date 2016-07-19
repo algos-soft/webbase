@@ -1,3 +1,5 @@
+import it.algos.webbase.domain.company.BaseCompany;
+
 import java.util.HashMap;
 
 /**
@@ -20,5 +22,6 @@ public abstract class BaseTest {
     protected HashMap mappaObj;
     protected HashMap mappaDB;
     protected String contenuto;
+    protected BaseCompany company;
 
 }// end of abstract class

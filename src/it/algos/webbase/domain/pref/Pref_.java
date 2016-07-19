@@ -4,6 +4,7 @@ package it.algos.webbase.domain.pref;
  * Using specific Templates (Entity, Domain, Modulo)
  */
 
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.entity.BaseEntity_;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -14,21 +15,39 @@ import java.util.Date;
 
 @StaticMetamodel(Pref.class)
 public class Pref_ extends BaseEntity_ {
-    public static volatile SingularAttribute<Pref, Integer> ordine;
-    public static volatile SingularAttribute<TypePref, String> type;
     public static volatile SingularAttribute<Pref, String> code;
+    public static volatile SingularAttribute<Pref, String> classe;
+    public static volatile SingularAttribute<Pref, byte[]> value;
+    public static volatile SingularAttribute<Pref, BaseCompany> company;
+
     public static volatile SingularAttribute<Pref, String> descrizione;
+    public static volatile SingularAttribute<Pref, Integer> ordine;
+
+    @Deprecated
+    public static volatile SingularAttribute<TypePref, String> type;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Date> dateCreated;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Date> lastUpdated;
+    @Deprecated
     public static volatile SingularAttribute<Pref, String> stringa;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Boolean> bool;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Integer> intero;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Long> lungo;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Float> reale;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Double> doppio;
+    @Deprecated
     public static volatile SingularAttribute<Pref, BigDecimal> decimale;
+    @Deprecated
     public static volatile SingularAttribute<Pref, Date> data;
+    @Deprecated
     public static volatile SingularAttribute<Pref, ArrayList> lista;
+    @Deprecated
     public static volatile SingularAttribute<Pref, String> testo;
 }// end of entity class
 

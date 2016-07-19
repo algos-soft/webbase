@@ -1,12 +1,19 @@
 package it.algos.webbase.domain.pref;
 
 import it.algos.webbase.domain.company.BaseCompany;
+import it.algos.webbase.multiazienda.CompanyEntity;
+import it.algos.webbase.multiazienda.CompanyQuery;
+import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.persistence.annotations.Index;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,22 +39,38 @@ import java.util.Vector;
  * I valori possono essere letti e scritti tramite i metodi statici della classe, passandogli la chiave.
  */
 @Entity
-public class Pref extends BaseEntity {
+public class Pref extends CompanyEntity {
 
+    // versione della classe per la serializzazione
+    private static final long serialVersionUID = 1L;
+
+    //--sigla di riferimento interna (obbligatoria)
+    @NotEmpty
+    @Column(length = 20)
+    @Index
+    private String code = "";
+
+    //--tipo di dato memorizzato, formata dal nome della classe (obbligatorio)
+    @NotEmpty
+    private String classe = "";
+
+    //--valore della preferenza (facoltativo)
+    private byte[] value;
+
+    //--company di riferimento (facoltativa)
+//    private BaseCompany company;
+
+
+    //--descrizione visibile nel tabellone (facoltativa)
+    @Column(length = 200)
+    private String descrizione = "";
+
+    //--ordine di presentazione (facoltativo)
+    @Index
     private int ordine;
 
     @Deprecated
     private TypePref type;
-
-    @NotEmpty
-    private String code = "";
-
-    @NotEmpty
-    private String classe = "";
-
-    private BaseCompany company;
-
-    private String descrizione = "";
 
     @Deprecated
     private Date dateCreated;
@@ -72,11 +95,109 @@ public class Pref extends BaseEntity {
     @Deprecated
     private String testo = "";// LONGTEXT
 
-//    private List<String> collection;;
 
+    /**
+     * Costruttore senza argomenti
+     * Obbligatorio per le specifiche JavaBean
+     */
     public Pref() {
         super();
     }// end of constructor
+
+
+    /**
+     * Recupera il totale dei records di Pref
+     * Filtrato sulla azienda corrente.
+     *
+     * @return numero totale di records di Pref
+     */
+    public static int count() {
+        return count(CompanySessionLib.getCompany());
+    }// end of method
+
+
+    /**
+     * Recupera il totale dei records di Pref
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param company company di appartenenza
+     * @return numero totale di records di Pref
+     */
+    public static int count(BaseCompany company) {
+        int totRec = 0;
+        long totTmp;
+
+        if (company != null) {
+            totTmp = CompanyQuery.getCount(Pref.class, company);
+        } else {
+            totTmp = AQuery.getCount(Pref.class);
+        }// end of if/else cycle
+
+        if (totTmp > 0) {
+            totRec = (int) totTmp;
+        }// fine del blocco if
+
+        return totRec;
+    }// end of method
+
+
+    /**
+     * Recupera il totale dei records di Pref
+     * Senza filtri.
+     *
+     * @return numero totale di records di Pref
+     */
+    public static int countAll() {
+        return count(null);
+    }// end of method
+
+
+    /**
+     * Recupera una lista di records di Pref
+     * Filtrato sulla azienda corrente.
+     *
+     * @return lista di Pref
+     */
+    public static ArrayList<Pref> getList() {
+        return getList(CompanySessionLib.getCompany());
+    }// end of method
+
+
+    /**
+     * Recupera una lista di records di Pref
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param company company di appartenenza
+     * @return lista di Pref
+     */
+    public static ArrayList<Pref> getList(BaseCompany company) {
+        ArrayList<Pref> lista = null;
+        Vector vettore = null;
+
+
+        if (company != null) {
+            vettore = (Vector) CompanyQuery.queryList(Pref.class,company);
+        } else {
+            vettore = (Vector) AQuery.getList(Pref.class);
+        }// end of if/else cycle
+
+        if (vettore != null) {
+            lista = new ArrayList<Pref>(vettore);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Recupera una lista di records di Pref
+     * Senza filtri.
+     *
+     * @return lista di Pref
+     */
+    public static ArrayList<Pref> getListAll() {
+        return getList(null);
+    }// end of method
 
 
     /**
@@ -97,37 +218,48 @@ public class Pref extends BaseEntity {
         return instance;
     }// end of method
 
-
-    public synchronized static int count() {
-        int totRec = 0;
-        long totTmp = AQuery.getCount(Pref.class);
-
-        if (totTmp > 0) {
-            totRec = (int) totTmp;
-        }// fine del blocco if
-
-        return totRec;
-    }// end of method
-
-    public synchronized static ArrayList<Pref> findAll() {
-        ArrayList<Pref> lista;
-        Vector vettore = (Vector) AQuery.getList(Pref.class);
-        lista = new ArrayList<Pref>(vettore);
-        return lista;
-
-    }// end of method
-
+    /**
+     * Recupera una istanza di Pref usando la query della property chiave
+     * Filtrato sulla azienda corrente.
+     *
+     * @param code sigla di riferimento interna (obbligatoria)
+     * @return istanza di Pref, null se non trovata
+     */
     public static Pref findByCode(String code) {
-        ArrayList<Pref> lista = findAll();
+        Pref instance = null;
+        BaseEntity bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code);
 
-        for (Pref pref : lista) {
-            if (pref.getCode().equals(code)) {
-                return pref;
-            }// fine del blocco if
-        } // fine del ciclo for-each
+        if (bean != null && bean instanceof Pref) {
+            instance = (Pref) bean;
+        }// end of if cycle
 
-        return null;
-    } // end of method
+        return instance;
+    }// end of method
+
+    /**
+     * Recupera una istanza di Pref usando la query della property chiave
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param company croce di appartenenza
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @return istanza di Pref, null se non trovata
+     */
+    @SuppressWarnings("unchecked")
+    public static Pref findByCode(BaseCompany company, String code) {
+        Pref instance = null;
+        BaseEntity bean;
+
+        EntityManager manager = EM.createEntityManager();
+        bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
+        manager.close();
+
+        if (bean != null && bean instanceof Pref) {
+            instance = (Pref) bean;
+        }// end of if cycle
+
+        return instance;
+    }// end of method
+
 
     public static Boolean getBool(String code) {
         return findByCode(code).getBool();

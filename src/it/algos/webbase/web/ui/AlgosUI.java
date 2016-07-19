@@ -595,7 +595,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
     private void creaPartenza() {
         AlgosNavigator nav = new AlgosNavigator(getUI(), bodyLayout);
         nav.configureFromMenubar(topLayout.getMenuBar());
-//        nav.navigateTo(menuAddressModuloPartenza);
+        nav.navigateTo(menuAddressModuloPartenza);
     }// end of method
 
     /**

@@ -3,6 +3,7 @@ package it.algos.webbase.domain.company;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
+import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.EntityQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -66,6 +67,24 @@ public class BaseCompany extends BaseEntity {
         this.setCompanyCode(companyCode);
         this.setName(name);
     }// end of constructor
+
+    /**
+     * Recupera una istanza di BaseCompany usando la query specifica
+     *
+     * @return istanza di BaseCompany, null se non trovata
+     */
+    public static BaseCompany find(long id) {
+        BaseCompany instance = null;
+        BaseEntity entity = AQuery.queryById(BaseCompany.class, id);
+
+        if (entity != null) {
+            if (entity instanceof BaseCompany) {
+                instance = (BaseCompany) entity;
+            }// end of if cycle
+        }// end of if cycle
+
+        return instance;
+    }// end of method
 
     /**
      * Ritorna la Company corrente.

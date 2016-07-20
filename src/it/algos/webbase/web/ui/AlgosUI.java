@@ -368,6 +368,16 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
 
     /**
+     * Aggiunge i moduli specifici
+     * <p/>
+     * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
+     */
+    protected void addModuli() {
+    }// end of method
+
+
+    /**
      * Adds a cached View to the UI
      * <p/>
      * the view will be instantiated only once
@@ -527,17 +537,6 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
         menuItem.setStyleName(AMenuBar.MENU_DISABILITATO);
 
         return menuItem;
-    }// end of method
-
-
-
-    /**
-     * Aggiunge i moduli specifici
-     * <p/>
-     * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
-     * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
-     */
-    protected void addModuli() {
     }// end of method
 
 

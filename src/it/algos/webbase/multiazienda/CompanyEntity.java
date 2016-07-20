@@ -5,7 +5,6 @@ import it.algos.webbase.web.entity.BaseEntity;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 @SuppressWarnings("serial")
@@ -17,7 +16,11 @@ public abstract class CompanyEntity extends BaseEntity {
     @ManyToOne
     // @NotNull - NotNull l'ho dovuto togliere, se no da' constraint violation
     // anche quando non è nullo (???) 28 nov 2014
-    @NotNull    //06-04-2016 lo rimetto e poi si vedrà.... alex
+//    @NotNull    //06-04-2016 lo rimetto e poi si vedrà.... alex
+    // lo ri-rilevo perché le preferenze usano questo parametro.
+    // la preferenza può essere specifica per ogni company (occorre il riferimento)
+    // oppure uguale per tutte le company (il valore deve essere nullo)
+    // 20-7-16 ... gac
     private BaseCompany company;
 
     /**

@@ -5,13 +5,11 @@ package it.algos.webbase.domain.pref;
  */
 
 
-import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Resource;
-import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.multiazienda.CompanyEntity_;
 import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 
@@ -72,7 +70,7 @@ public class PrefMod extends ModulePop {
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
     protected Attribute<?, ?>[] creaFieldsList() {
-        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.type, Pref_.bool, Pref_.stringa, Pref_.intero, Pref_.lungo, Pref_.decimale, Pref_.data};
+        return new Attribute[]{CompanyEntity_.company, Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.classe,Pref_.value};
     }// end of method
 
     /**
@@ -121,7 +119,7 @@ public class PrefMod extends ModulePop {
         if (property != null) {
             cont.sort(new String[]{sortField}, new boolean[]{false});
             Container container = getTable().getContainerDataSource();
-            idKey=container.getItem(0);
+            idKey = container.getItem(0);
 
 //            idKey = cont.getIdByIndex(0);
 

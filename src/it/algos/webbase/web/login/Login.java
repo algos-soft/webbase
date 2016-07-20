@@ -46,6 +46,11 @@ public class Login {
     private int expiryTime = DEFAULT_EXPIRY_TIME_SEC;
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
+    private AbsLoginForm loginForm;
+
+    public Login() {
+        loginForm=new DefaultLoginForm();
+    }
 
     /**
      * Recupera l'oggetto Login dalla sessione.
@@ -89,7 +94,7 @@ public class Login {
      * @return the Login form to show
      */
     public AbsLoginForm getLoginForm(){
-        return new DefaultLoginForm();
+        return loginForm;
     }
 
     /**

@@ -11,6 +11,11 @@ public class DefaultLoginForm extends AbsLoginForm {
 
     private TextField nameField;
 
+
+    public DefaultLoginForm() {
+        getPassField().setWidth("15em");
+    }
+
     /**
      * @return the selected user
      */
@@ -26,7 +31,9 @@ public class DefaultLoginForm extends AbsLoginForm {
      */
     public Component createUsernameComponent(){
         nameField = new TextField("Username");
-        nameField.setWidthUndefined();
+//        nameField.setWidthUndefined();
+        nameField.setWidth("15em");
+
         return nameField;
     }
 

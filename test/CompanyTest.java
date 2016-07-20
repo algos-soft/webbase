@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by gac on 19 lug 2016.
@@ -25,6 +24,7 @@ public class CompanyTest extends BaseTest {
         creaSetup();
     } // end of static setUp
 
+
     /**
      * Cancellazione iniziale di tutte i records
      * Usa un DB di prova NON in linea (webbase)
@@ -32,6 +32,7 @@ public class CompanyTest extends BaseTest {
     public static void deleteAll() {
         BaseCompany.deleteAll();
     }// end of static method
+
 
     /**
      * Creazione iniziale di uno o più record
@@ -68,11 +69,24 @@ public class CompanyTest extends BaseTest {
         ArrayList<BaseCompany> lista = BaseCompany.getList();
 
         assertNotNull(lista);
-        assertEquals(lista.size(), 1);
+        assertTrue(lista.size() > 0);
 
         company = lista.get(0);
         assertNotNull(company);
         assertEquals(company.getCompanyCode(), CompanyBootStrap.COMPANY_ALGOS);
+    }// end of single test
+
+
+    @Test
+    /**
+     * Controlla l'esistenza del record usando la property unica
+     *
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     * @return istanza della classe, null se non trovata
+     */
+    public void isEsiste() {
+        boolOttenuto = BaseCompany.isEsiste(CompanyBootStrap.COMPANY_ALGOS);
+        assertTrue(boolOttenuto);
     }// end of single test
 
 

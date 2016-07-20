@@ -5,6 +5,7 @@ import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.EntityQuery;
+import org.eclipse.persistence.annotations.Index;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -13,6 +14,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+/**
+ * Classe di tipo JavaBean
+ * 1) la classe deve avere un costruttore senza argomenti
+ * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolena al posto di get)
+ * 3) la classe deve implementare l'interfaccia Serializable (la fa nella superclasse)
+ * 4) la classe non deve contenere nessun metodo per la gestione degli eventi
+ */
 @Entity
 @MappedSuperclass
 @Table(name = "COMPANY")
@@ -22,10 +30,13 @@ public class BaseCompany extends BaseEntity {
     private static final long serialVersionUID = 8238775575826490450L;
     public static EntityQuery<BaseCompany> query = new EntityQuery(BaseCompany.class);
 
+    //--sigla di riferimento interna (obbligatoria ed unica)
     @Column(unique = true)
     @NotEmpty
+    @Index
     private String companyCode = "";
 
+    //--ragione sociale o descrizione della company (visibile - obbligatoria)
     @NotEmpty
     private String name = "";
 
@@ -40,6 +51,7 @@ public class BaseCompany extends BaseEntity {
 
     private String address2 = "";
 
+    // persona di riferimento (facoltativo)
     private String contact = "";
 
     private String contractType = "";
@@ -63,7 +75,7 @@ public class BaseCompany extends BaseEntity {
     /**
      * Costruttore minimo con tutte le properties obbligatorie
      *
-     * @param companyCode sigla di riferimento interna (obbligatoria)
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
      * @param companyName descrizione della company (obbligatoria)
      */
     public BaseCompany(String companyCode, String companyName) {
@@ -113,13 +125,42 @@ public class BaseCompany extends BaseEntity {
 
 
     /**
-     * Recupera una istanza della classe usando la primary key
+     * Controlla l'esistenza del record usando la property unica
      *
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
      * @return istanza della classe, null se non trovata
      */
-    public static BaseCompany find(long id) {
+    public static boolean isEsiste(String companyCode) {
+        boolean esiste = false;
+        BaseEntity entity = AQuery.queryOne(BaseCompany.class, BaseCompany_.companyCode, companyCode);
+
+        if (entity != null) {
+            esiste = true;
+        }// end of if cycle
+
+        return esiste;
+    }// end of static method
+
+
+    /**
+     * Controlla la non-esistenza del record usando la property unica
+     *
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     * @return istanza della classe, null se non trovata
+     */
+    public static boolean isNonEsiste(String companyCode) {
+        return !isEsiste(companyCode);
+    }// end of static method
+
+    /**
+     * Recupera una istanza della classe usando la primary key
+     *
+     * @param idKey primary key (automatica)
+     * @return istanza della classe, null se non trovata
+     */
+    public static BaseCompany find(long idKey) {
         BaseCompany instance = null;
-        BaseEntity entity = AQuery.queryById(BaseCompany.class, id);
+        BaseEntity entity = AQuery.queryById(BaseCompany.class, idKey);
 
         if (entity != null) {
             if (entity instanceof BaseCompany) {
@@ -134,11 +175,12 @@ public class BaseCompany extends BaseEntity {
     /**
      * Recupera una istanza della classe usando la query specifica
      *
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
      * @return istanza della classe, null se non trovata
      */
-    public static BaseCompany findByCode(String code) {
+    public static BaseCompany findByCode(String companyCode) {
         BaseCompany instance = null;
-        BaseEntity entity = AQuery.queryOne(BaseCompany.class, BaseCompany_.companyCode, code);
+        BaseEntity entity = AQuery.queryOne(BaseCompany.class, BaseCompany_.companyCode, companyCode);
 
         if (entity != null) {
             if (entity instanceof BaseCompany) {
@@ -159,10 +201,45 @@ public class BaseCompany extends BaseEntity {
      * @return istanza della classe
      */
     public static BaseCompany crea(String companyCode, String companyName) {
-        BaseCompany company = BaseCompany.findByCode(companyCode);
+        return crea(companyCode, companyName, "", "", "", "", null, null);
+    }// end of static method
 
-        if (company == null) {
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param companyCode   sigla di riferimento interna (obbligatoria)
+     * @param companyName   descrizione della company (obbligatoria)
+     * @param address1      principale della company (facoltativa)
+     * @param email         della company (facoltativa)
+     * @param contact       persona di riferimento della company (facoltativa)
+     * @param contractType  tipologia del contratto (eventuale)
+     * @param contractStart inizio del contratto (eventuale)
+     * @param contractEnd   fine del contratto (eventuale)
+     * @return istanza della classe
+     */
+    public static BaseCompany crea(
+            String companyCode,
+            String companyName,
+            String address1,
+            String email,
+            String contact,
+            String contractType,
+            Date contractStart,
+            Date contractEnd) {
+        BaseCompany company = null;
+
+        if (isNonEsiste(companyCode)) {
             company = new BaseCompany(companyCode, companyName);
+
+            company.setAddress1(address1);
+            company.setEmail(email);
+            company.setContact(contact);
+            company.setContractType(contractType);
+            company.setContractStart(contractStart);
+            company.setContractEnd(contractEnd);
+
             company.save();
         }// end of if cycle
 

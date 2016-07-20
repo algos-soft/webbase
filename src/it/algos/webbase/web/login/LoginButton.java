@@ -13,23 +13,20 @@ import com.vaadin.ui.MenuBar;
 public class LoginButton extends MenuBar {
 
     private MenuBar.MenuItem loginItem; // il menuItem di login
-    private Login login;
 
     /**
      * Constructor
-     * @param login l'oggetto Login da usare
      */
-    public LoginButton(Login login) {
-        this.login=login;
+    public LoginButton() {
 
-        this.login.addLoginListener(new LoginListener() {
+        getLogin().addLoginListener(new LoginListener() {
             @Override
             public void onUserLogin(LoginEvent e) {
                 updateUI();
             }
         });
 
-        this.login.addLogoutListener(new LogoutListener() {
+        getLogin().addLogoutListener(new LogoutListener() {
             @Override
             public void onUserLogout(LogoutEvent e) {
                 updateUI();
@@ -44,7 +41,7 @@ public class LoginButton extends MenuBar {
      * Updates the UI based on the current Login state
      */
     private void updateUI() {
-        UserIF user = login.getUser();
+        UserIF user = getLogin().getUser();
         Resource exitIcon;
 
         if (user == null) {
@@ -71,7 +68,7 @@ public class LoginButton extends MenuBar {
                 @Override
                 public void menuSelected(MenuBar.MenuItem selectedItem) {
                     logoutCommandSelected();
-                }// end of method
+                }
             });
 
         }
@@ -83,7 +80,7 @@ public class LoginButton extends MenuBar {
      * Login button pressed
      */
     protected void loginCommandSelected() {
-        login.showLoginForm();
+        getLogin().showLoginForm();
     }
 
 
@@ -91,12 +88,12 @@ public class LoginButton extends MenuBar {
      * Logout button pressed
      */
     private void logoutCommandSelected() {
-        login.logout();
+        getLogin().logout();
         updateUI();
     }
 
     public Login getLogin() {
-        return login;
+        return Login.getLogin();
     }
 
 }

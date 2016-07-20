@@ -149,7 +149,7 @@ public class AMenuBar extends HorizontalLayout {
         menubar.addStyleName("loginmenubar");
         menubar.addItem("Login", null, null);
 
-        return new LoginButton(Login.getLogin());
+        return new LoginButton();
 //		return menubar;
     }// end of method
 

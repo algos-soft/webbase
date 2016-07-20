@@ -1,6 +1,12 @@
 <component name="ArtifactManager">
   <artifact name="webbase">
     <output-path>$PROJECT_DIR$/out/artifacts/webbase</output-path>
+    <properties id="ant-postprocessing">
+      <options>
+        <file>file://$PROJECT_DIR$/templates/scripts/progetto.xml</file>
+        <target>debug</target>
+      </options>
+    </properties>
     <root id="root">
       <element id="library" level="module" name="IvyIDEA" module-name="webbase" />
       <element id="archive" name="webbase.jar">

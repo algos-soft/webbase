@@ -8,7 +8,6 @@ import it.algos.webbase.web.ui.TestUI;
 
 /**
  * Created by gac on 19 lug 2016.
- * .
  */
 @WebServlet(urlPatterns = { "/test", "/VAADIN/*" }, asyncSupported = true, displayName = "Test")
 @VaadinServletConfiguration(productionMode = false, ui = TestUI.class)

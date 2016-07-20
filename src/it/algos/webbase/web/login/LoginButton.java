@@ -13,22 +13,23 @@ import com.vaadin.ui.MenuBar;
 public class LoginButton extends MenuBar {
 
     private MenuBar.MenuItem loginItem; // il menuItem di login
+    private Login login;
 
     /**
      * Constructor
+     * @param login l'oggetto Login da usare
      */
-    public LoginButton() {
+    public LoginButton(Login login) {
+        this.login=login;
 
-        Login login = Login.getLogin();
-
-        login.addLoginListener(new LoginListener() {
+        this.login.addLoginListener(new LoginListener() {
             @Override
             public void onUserLogin(LoginEvent e) {
                 updateUI();
             }
         });
 
-        login.addLogoutListener(new LogoutListener() {
+        this.login.addLogoutListener(new LogoutListener() {
             @Override
             public void onUserLogout(LogoutEvent e) {
                 updateUI();
@@ -43,7 +44,7 @@ public class LoginButton extends MenuBar {
      * Updates the UI based on the current Login state
      */
     private void updateUI() {
-        UserIF user = Login.getLogin().getUser();
+        UserIF user = login.getUser();
         Resource exitIcon;
 
         if (user == null) {
@@ -82,7 +83,7 @@ public class LoginButton extends MenuBar {
      * Login button pressed
      */
     protected void loginCommandSelected() {
-        Login.getLogin().showLoginForm();
+        login.showLoginForm();
     }
 
 
@@ -90,10 +91,13 @@ public class LoginButton extends MenuBar {
      * Logout button pressed
      */
     private void logoutCommandSelected() {
-        Login.getLogin().logout();
+        login.logout();
         updateUI();
     }
 
+    public Login getLogin() {
+        return login;
+    }
 
 }
 

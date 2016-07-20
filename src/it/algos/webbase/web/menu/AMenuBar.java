@@ -4,6 +4,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 import it.algos.webbase.web.lib.LibSession;
+import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.login.LoginButton;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.navigator.NavPlaceholder;
@@ -148,7 +149,7 @@ public class AMenuBar extends HorizontalLayout {
         menubar.addStyleName("loginmenubar");
         menubar.addItem("Login", null, null);
 
-        return new LoginButton();
+        return new LoginButton(Login.getLogin());
 //		return menubar;
     }// end of method
 

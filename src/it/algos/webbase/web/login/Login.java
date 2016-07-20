@@ -131,6 +131,8 @@ public class Login {
                     // create/update the cookies
                     if (remember) {
                         writeCookies();
+                    }else{
+                        deleteCookies();
                     }
 
                     riuscito = true;

@@ -181,6 +181,22 @@ public abstract class LibSession {
         return value;
     }// end of static method
 
+
+    /**
+     * Verifica se un attributo esiste nella sessione.
+     */
+    public static boolean isAttribute(String name) {
+        Object value = null;
+        VaadinSession session = VaadinSession.getCurrent();
+
+        if (session != null) {
+            value = session.getAttribute(name);
+        }// fine del blocco if
+
+        return (value!=null);
+    }// end of static method
+
+
     /**
      * Recupera un attributo dalla sessione.
      */

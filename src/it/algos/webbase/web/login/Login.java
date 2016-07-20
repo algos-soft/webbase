@@ -76,6 +76,15 @@ public class Login {
     }
 
     /**
+     * Verifica se l'oggetto Login esiste nella sessione.
+     * @return true se esiste.
+     */
+    public static boolean isLogin() {
+        Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
+        return obj!=null;
+    }
+
+    /**
      * Retrieve the Login form
      * @return the Login form to show
      */
@@ -152,15 +161,12 @@ public class Login {
      * Logout the current user
      */
     public void logout() {
-        UserIF oldUser = user;
-        user = null;
+        UserIF oldUser = this.user;
+        this.user = null;
         LogoutEvent e = new LogoutEvent(this, oldUser);
         for (LogoutListener l : logoutListeners) {
             l.onUserLogout(e);
         }
-
-//        deleteCookies();
-
     }
 
 
@@ -372,6 +378,7 @@ public class Login {
     public boolean isLogged() {
         return (getUser() != null);
     }
+
 
     public UserIF getUser() {
         return user;

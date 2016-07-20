@@ -9,7 +9,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 @Entity
 @MappedSuperclass
@@ -22,25 +24,25 @@ public class BaseCompany extends BaseEntity {
 
     @Column(unique = true)
     @NotEmpty
-    private String companyCode= "";
+    private String companyCode = "";
 
     @NotEmpty
     private String name = "";
 
     @Email
-    private String email= "";
+    private String email = "";
 
-    private String username= "";
+    private String username = "";
 
-    private String password= "";
+    private String password = "";
 
-    private String address1= "";
+    private String address1 = "";
 
-    private String address2= "";
+    private String address2 = "";
 
-    private String contact= "";
+    private String contact = "";
 
-    private String contractType= "";
+    private String contractType = "";
 
     @Temporal(TemporalType.DATE)
     private Date contractStart;
@@ -48,30 +50,72 @@ public class BaseCompany extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date contractEnd;
 
+
     /**
      * Costruttore senza argomenti
-     * Necessario per le specifiche JavaBean
+     * Obbligatorio per le specifiche JavaBean
      */
     public BaseCompany() {
         this("", "");
-    }// end of constructor
+    }// end of null constructor
+
 
     /**
      * Costruttore minimo con tutte le properties obbligatorie
      *
      * @param companyCode sigla di riferimento interna (obbligatoria)
-     * @param name        descrizione della company (obbligatoria)
+     * @param companyName descrizione della company (obbligatoria)
      */
-    public BaseCompany(String companyCode, String name) {
+    public BaseCompany(String companyCode, String companyName) {
         super();
         this.setCompanyCode(companyCode);
-        this.setName(name);
+        this.setName(companyName);
     }// end of constructor
 
+
     /**
-     * Recupera una istanza di BaseCompany usando la query specifica
+     * Recupera il totale dei records di questa classe
+     * Senza filtri.
      *
-     * @return istanza di BaseCompany, null se non trovata
+     * @return numero totale di records
+     */
+    public static int count() {
+        int totRec = 0;
+        long totTmp;
+
+        totTmp = AQuery.getCount(BaseCompany.class);
+
+        if (totTmp > 0) {
+            totRec = (int) totTmp;
+        }// fine del blocco if
+
+        return totRec;
+    }// end of method
+
+
+    /**
+     * Recupera una lista di tutti i records
+     * Senza filtri.
+     *
+     * @return lista di istanze della classe
+     */
+    @SuppressWarnings("unchecked")
+    public static ArrayList<BaseCompany> getList() {
+        ArrayList<BaseCompany> lista = null;
+        Vector vettore = (Vector) AQuery.getList(BaseCompany.class);
+
+        if (vettore != null) {
+            lista = new ArrayList<BaseCompany>(vettore);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della classe usando la primary key
+     *
+     * @return istanza della classe, null se non trovata
      */
     public static BaseCompany find(long id) {
         BaseCompany instance = null;
@@ -84,7 +128,56 @@ public class BaseCompany extends BaseEntity {
         }// end of if cycle
 
         return instance;
-    }// end of method
+    }// end of static method
+
+
+    /**
+     * Recupera una istanza della classe usando la query specifica
+     *
+     * @return istanza della classe, null se non trovata
+     */
+    public static BaseCompany findByCode(String code) {
+        BaseCompany instance = null;
+        BaseEntity entity = AQuery.queryOne(BaseCompany.class, BaseCompany_.companyCode, code);
+
+        if (entity != null) {
+            if (entity instanceof BaseCompany) {
+                instance = (BaseCompany) entity;
+            }// end of if cycle
+        }// end of if cycle
+
+        return instance;
+    }// end of static method
+
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param companyCode sigla di riferimento interna (obbligatoria)
+     * @param companyName descrizione della company (obbligatoria)
+     * @return istanza della classe
+     */
+    public static BaseCompany crea(String companyCode, String companyName) {
+        BaseCompany company = BaseCompany.findByCode(companyCode);
+
+        if (company == null) {
+            company = new BaseCompany(companyCode, companyName);
+            company.save();
+        }// end of if cycle
+
+        return company;
+    }// end of static method
+
+
+    /**
+     * Cancellazione di tutti i records
+     */
+    public static void deleteAll() {
+        for (BaseCompany company : BaseCompany.getList()) {
+            company.delete();
+        }// end of for cycle
+    }// end of static method
 
     /**
      * Ritorna la Company corrente.

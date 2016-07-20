@@ -41,6 +41,7 @@ public class CompanyBootStrap implements ServletContextListener {
         this.creaRecords();
     }// end of method
 
+
     /**
      * Cancellazione iniziale di tutti i records
      * Usa un DB di prova NON in linea (webbase)
@@ -62,6 +63,7 @@ public class CompanyBootStrap implements ServletContextListener {
                 "via Soderini,17 - Milano",
                 "info@algos.it",
                 "alex",
+                "franchising",
                 LibDate.creaData(1, 1, 2016),
                 LibDate.creaData(31, 12, 2016)
         );
@@ -70,6 +72,7 @@ public class CompanyBootStrap implements ServletContextListener {
                 "Roma",
                 "gates@win.com",
                 "bob",
+                "franchising",
                 LibDate.creaData(21, 6, 2016),
                 LibDate.creaData(31, 12, 2016)
         );
@@ -99,6 +102,7 @@ public class CompanyBootStrap implements ServletContextListener {
      * @param address1      principale della company (facoltativa)
      * @param email         della company (facoltativa)
      * @param contact       persona di riferimento della company (facoltativa)
+     * @param contractType  tipologia del contratto (eventuale)
      * @param contractStart inizio del contratto (eventuale)
      * @param contractEnd   fine del contratto (eventuale)
      */
@@ -108,9 +112,10 @@ public class CompanyBootStrap implements ServletContextListener {
             String address1,
             String email,
             String contact,
+            String contractType,
             Date contractStart,
             Date contractEnd) {
-        BaseCompany.crea(companyCode, companyName, address1, email, contact, "", contractStart, contractEnd);
+        BaseCompany.crea(companyCode, companyName, address1, email, contact, contractType, contractStart, contractEnd);
     }// end of method
 
 

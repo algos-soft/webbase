@@ -9,9 +9,11 @@ import javax.persistence.metamodel.Attribute;
 @SuppressWarnings("serial")
 public class BaseCompanyModule extends ModulePop implements View {
 
+
     public BaseCompanyModule() {
         this(BaseCompany.class);
     }// end of constructor
+
 
     public BaseCompanyModule(Class entityClass) {
         super(entityClass);
@@ -37,6 +39,7 @@ public class BaseCompanyModule extends ModulePop implements View {
                 BaseCompany_.address1,
                 BaseCompany_.email,
                 BaseCompany_.contact,
+                BaseCompany_.contractType,
                 BaseCompany_.contractStart,
                 BaseCompany_.contractEnd,
         };
@@ -58,7 +61,7 @@ public class BaseCompanyModule extends ModulePop implements View {
         // poi cancella la company
         super.delete(id);
 
-    }
+    }// end of method
 
 
 }// end of class

@@ -1,5 +1,6 @@
 import it.algos.webbase.bootstrap.CompanyBootStrap;
 import it.algos.webbase.domain.company.BaseCompany;
+import it.algos.webbase.web.lib.LibDate;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class CompanyTest extends BaseTest {
      * Usa un DB di prova NON in linea (webbase)
      */
     public static void creaSetup() {
-        new BaseCompany(CompanyBootStrap.COMPANY_ALGOS, "Algos s.r.l.").save();
+        BaseCompany.crea(CompanyBootStrap.COMPANY_ALGOS, "Algos s.r.l.");
     }// end of static method
 
 
@@ -144,12 +145,27 @@ public class CompanyTest extends BaseTest {
         int totRecordsAnte = 0;
         int totRecordsPost = 0;
 
+        //--questo non lo crea, perché c'è già
         totRecordsAnte = BaseCompany.count();
         BaseCompany.crea(CompanyBootStrap.COMPANY_ALGOS, "nonServe");
         totRecordsPost = BaseCompany.count();
         assertEquals(totRecordsPost, totRecordsAnte);
 
+        //--questo lo crea, perché manca
         BaseCompany.crea(CompanyBootStrap.COMPANY_CIA, "nonServe");
+        totRecordsPost = BaseCompany.count();
+        assertEquals(totRecordsPost, totRecordsAnte + 1);
+
+        //--questo lo crea completo (con un companyCode diverso)
+        totRecordsAnte = BaseCompany.count();
+        BaseCompany.crea(CompanyBootStrap.COMPANY_ALGOS + "-bis",
+                "Algos s.r.l.",
+                "via Soderini,17 - Milano",
+                "info@algos.it",
+                "alex",
+                "franchising",
+                LibDate.creaData(1, 1, 2016),
+                LibDate.creaData(31, 12, 2016));
         totRecordsPost = BaseCompany.count();
         assertEquals(totRecordsPost, totRecordsAnte + 1);
     }// end of single test

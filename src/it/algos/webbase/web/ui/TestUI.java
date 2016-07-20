@@ -2,6 +2,7 @@ package it.algos.webbase.web.ui;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
+import it.algos.webbase.domain.company.BaseCompanyModule;
 import it.algos.webbase.domain.pref.PrefMod;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.login.LoginEvent;
@@ -32,11 +33,21 @@ public class TestUI extends AlgosUI {
         AlgosApp.USE_VERS = true;
         AlgosApp.USE_PREF = true;
         AlgosApp.USE_LOG = true;
-        menuAddressModuloPartenza = PrefMod.class.getName();
+        menuAddressModuloPartenza = BaseCompanyModule.class.getName();
 
         super.init(request);
     }// end of method
 
+    /**
+     * Aggiunge i moduli specifici
+     * <p/>
+     * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
+     * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
+     */
+    @Override
+    protected void addModuli() {
+        this.addModulo(new BaseCompanyModule());
+    }// end of method
 
     @Override
     public void onUserLogin(LoginEvent e) {

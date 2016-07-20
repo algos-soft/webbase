@@ -22,6 +22,12 @@ import java.util.Vector;
 /**
  * Entity per rappresentare una preferenza.
  * <p>
+ * Classe di tipo JavaBean
+ * 1) la classe deve avere un costruttore senza argomenti
+ * 2) le proprietà devono essere private e accessibili solo con get, set e is (usato per i boolena al posto di get)
+ * 3) la classe deve implementare l'interfaccia Serializable (la fa nella superclasse)
+ * 4) la classe non deve contenere nessun metodo per la gestione degli eventi
+ * <p>
  * Ha una chiave String e memorizza i valori nel database come byte[].
  * Ha una property per individuare il tipo di dato memorizzato, formata dal nome della classe
  * Mantiene la company a cui la preferenza si riferisce. Se l'applicazione non usa le company
@@ -59,7 +65,6 @@ public class Pref extends CompanyEntity {
 
     //--company di riferimento (facoltativa)
 //    private BaseCompany company;
-
 
     //--descrizione visibile nel tabellone (facoltativa)
     @Column(length = 200)
@@ -102,8 +107,20 @@ public class Pref extends CompanyEntity {
      */
     public Pref() {
         super();
-    }// end of constructor
+    }// end of null constructor
 
+
+    /**
+     * Costruttore minimo con tutte le properties obbligatorie
+     *
+     * @param code   sigla di riferimento interna (obbligatoria)
+     * @param classe nome della classe del tipo di dato (obbligatoria)
+     */
+    public Pref(String code, String classe) {
+        super();
+        this.setCode(code);
+        this.setClasse(classe);
+    }// end of constructor
 
     /**
      * Recupera il totale dei records di Pref
@@ -120,7 +137,7 @@ public class Pref extends CompanyEntity {
      * Recupera il totale dei records di Pref
      * Filtrato sulla azienda passata come parametro.
      *
-     * @param company company di appartenenza
+     * @param company di appartenenza
      * @return numero totale di records di Pref
      */
     public static int count(BaseCompany company) {
@@ -167,7 +184,7 @@ public class Pref extends CompanyEntity {
      * Recupera una lista di records di Pref
      * Filtrato sulla azienda passata come parametro.
      *
-     * @param company company di appartenenza
+     * @param company di appartenenza
      * @return lista di Pref
      */
     public static ArrayList<Pref> getList(BaseCompany company) {
@@ -176,7 +193,7 @@ public class Pref extends CompanyEntity {
 
 
         if (company != null) {
-            vettore = (Vector) CompanyQuery.queryList(Pref.class,company);
+            vettore = (Vector) CompanyQuery.queryList(Pref.class, company);
         } else {
             vettore = (Vector) AQuery.getList(Pref.class);
         }// end of if/else cycle
@@ -240,12 +257,12 @@ public class Pref extends CompanyEntity {
      * Recupera una istanza di Pref usando la query della property chiave
      * Filtrato sulla azienda passata come parametro.
      *
-     * @param company croce di appartenenza
      * @param code    sigla di riferimento interna (obbligatoria)
+     * @param company di appartenenza
      * @return istanza di Pref, null se non trovata
      */
     @SuppressWarnings("unchecked")
-    public static Pref findByCode(BaseCompany company, String code) {
+    public static Pref findByCode(String code, BaseCompany company) {
         Pref instance = null;
         BaseEntity bean;
 
@@ -259,6 +276,26 @@ public class Pref extends CompanyEntity {
 
         return instance;
     }// end of method
+
+
+    /**
+     * Creazione iniziale di una preferenza
+     * La crea SOLO se non esiste già
+     *
+     * @param code   sigla di riferimento interna (obbligatoria)
+     * @param classe nome della classe del tipo di dato (obbligatoria)
+     * @return istanza di Pref
+     */
+    public static Pref crea(String code, String classe) {
+        Pref pref = Pref.findByCode(code);
+
+        if (pref == null) {
+            pref = new Pref(code, classe);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
 
 
     public static Boolean getBool(String code) {
@@ -349,6 +386,14 @@ public class Pref extends CompanyEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
+    public String getClasse() {
+        return classe;
+    }// end of getter method
+
+    public void setClasse(String classe) {
+        this.classe = classe;
+    }//end of setter method
 
     public String getDescrizione() {
         return descrizione;

@@ -279,7 +279,7 @@ public class Pref extends CompanyEntity {
 
 
     /**
-     * Creazione iniziale di una preferenza
+     * Creazione iniziale di una istanza della classe
      * La crea SOLO se non esiste già
      *
      * @param code   sigla di riferimento interna (obbligatoria)

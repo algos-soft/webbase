@@ -8,9 +8,9 @@ import java.util.Date;
 
 @StaticMetamodel(BaseCompany.class)
 public class BaseCompany_ extends BaseEntity_ {
+	public static volatile SingularAttribute<BaseCompany, String> companyCode;
 	public static volatile SingularAttribute<BaseCompany, String> name;
 	public static volatile SingularAttribute<BaseCompany, String> email;
-	public static volatile SingularAttribute<BaseCompany, String> companyCode;
 	public static volatile SingularAttribute<BaseCompany, String> address1;
 	public static volatile SingularAttribute<BaseCompany, String> address2;
 	public static volatile SingularAttribute<BaseCompany, String> contact;

@@ -1,6 +1,7 @@
 package it.algos.webbase.bootstrap;
 
 import it.algos.webbase.domain.pref.Pref;
+import it.algos.webbase.multiazienda.CompanyEntity;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -25,42 +26,35 @@ public class PrefBootStrap implements ServletContextListener {
      * This method is called prior to the servlet context being
      * initialized (when the Web application is deployed).
      * You can initialize servlet context related data here.
-     * <p>
-     * Tutte le aggiunte, modifiche e patch vengono inserite con una versione <br>
-     * L'ordine di inserimento è FONDAMENTALE
      */
     @Override
     public void contextInitialized(ServletContextEvent contextEvent) {
 
-        // Cancellazione iniziale di tutte le preferenze
-        this.eliminaPreferenze();
+        // Cancellazione iniziale di tutte le (eventuali) company
+        this.eliminaRecords();
 
-        // Creazione iniziale di alcune preferenze di prova
-        this.creaPreferenze();
+        // Creazione iniziale di alcune company di prova
+        this.creaRecords();
     }// end of method
 
 
     /**
-     * Cancellazione iniziale di tutte le preferenze
+     * Cancellazione iniziale di tutti i records
      * Usa un DB di prova NON in linea (webbase)
      */
-    private void eliminaPreferenze() {
-        ArrayList<Pref> lista;
-
-        lista = Pref.getListAll();
-
-        for (Pref pref : lista) {
+    private void eliminaRecords() {
+        for (Pref pref : Pref.getListAll()) {
             pref.delete();
         }// end of for cycle
     }// end of method
 
     /**
-     * Creazione iniziale di alcune preferenze di prova
-     * Le crea SOLO se non esistono già
-     * Vengono create in un DB di prova NON in linea (webbase)
+     * Creazione iniziale di alcuni records di prova
+     * Li crea SOLO se non esistono già
+     * Vengono creati in un DB di prova NON in linea (webbase)
      * Servono per visualizzare una lista e per la classe di test
      */
-    private void creaPreferenze() {
+    private void creaRecords() {
         Pref.crea("alfa", "pippo");
         Pref.crea("beta", "pluto");
         Pref.crea("ret", "rot");

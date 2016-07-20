@@ -26,7 +26,7 @@ public class PrefTest extends BaseTest {
     } // end of static setUp
 
     /**
-     * Cancellazione iniziale di tutte le preferenze
+     * Cancellazione iniziale di tutte i records
      * Usa un DB di prova NON in linea (webbase)
      */
     public static void deleteAll() {
@@ -36,7 +36,7 @@ public class PrefTest extends BaseTest {
     }// end of static method
 
     /**
-     * Creazione iniziale di una preferenza
+     * Creazione iniziale di uno o più records
      * Usa un DB di prova NON in linea (webbase)
      */
     public static void creaSetup() {

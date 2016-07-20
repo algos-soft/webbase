@@ -1,6 +1,8 @@
 package it.algos.webbase.domain.company;
 
+import com.vaadin.data.Item;
 import com.vaadin.navigator.View;
+import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
@@ -20,10 +22,9 @@ public class BaseCompanyModule extends ModulePop implements View {
     }// end of constructor
 
 
-
     /**
      * Crea i campi visibili
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -45,6 +46,19 @@ public class BaseCompanyModule extends ModulePop implements View {
         };
     }// end of method
 
+    /**
+     * Returns the form used to edit an item. <br>
+     * The concrete subclass must override for a specific Form.
+     *
+     * @return the Form
+     */
+    public ModuleForm createForm(Item item) {
+        ModuleForm form = new ModuleForm(item, this);
+
+        form.setWidth("500px");
+
+        return form;
+    }// end of method
 
 //    @Override
 //    public ModuleForm createForm(Item item) {

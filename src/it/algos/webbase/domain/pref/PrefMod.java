@@ -92,7 +92,7 @@ public class PrefMod extends ModulePop {
      */
     public ModuleForm createForm(Item item) {
         return new PrefForm(item, this);
-    }
+    }// end of method
 
     /**
      * Post create / pre edit item.

@@ -7,18 +7,18 @@
 
     <display-name>Prova</display-name>
 
-    <!--<servlet>-->
-        <!--<servlet-name>VaadinApplicationServlet</servlet-name>-->
-        <!--<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>-->
-        <!--<init-param>-->
-            <!--<param-name>UI</param-name>-->
-            <!--<param-value>it.algos.webbase.web.ui.TestUI</param-value>-->
-        <!--</init-param>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>VaadinApplicationServlet</servlet-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <servlet>
+        <servlet-name>VaadinApplicationServlet</servlet-name>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+        <init-param>
+            <param-name>UI</param-name>
+            <param-value>it.algos.webbase.web.ui.TestUI</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VaadinApplicationServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>

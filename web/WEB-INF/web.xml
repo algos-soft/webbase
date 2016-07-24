@@ -31,11 +31,6 @@
 
     <listener>
         <listener-class>
-            it.algos.webbase.bootstrap.CompanyBootStrap
-        </listener-class>
-    </listener>
-    <listener>
-        <listener-class>
             it.algos.webbase.bootstrap.PrefBootStrap
         </listener-class>
     </listener>

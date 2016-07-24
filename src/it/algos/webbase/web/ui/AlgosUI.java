@@ -7,7 +7,6 @@ import com.vaadin.ui.*;
 import it.algos.webbase.domain.log.LogMod;
 import it.algos.webbase.domain.pref.PrefMod;
 import it.algos.webbase.domain.ruolo.RuoloModulo;
-import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.domain.utente.UtenteModulo;
 import it.algos.webbase.domain.utenteruolo.UtenteRuoloModulo;
 import it.algos.webbase.domain.vers.VersMod;
@@ -60,7 +59,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
     protected NavPlaceholder bodyLayout;       // body
     protected HorizontalLayout footerLayout;    // footer
 
-    protected String menuAddressModuloPartenza;
+    protected String menuAddressModuloPartenza = "";//@todo la stringa vuota serve per non far andare in errore il navigateTo
     protected ArrayList<ModulePop> moduli;
     protected LinkedHashMap<String, MenuBar.MenuItem> mappaItem;
 
@@ -98,7 +97,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Legge eventuali parametri passati nella request
-     * <p/>
+     * <p>
      */
     public void checkParams(VaadinRequest request) {
         // legge il parametro "developer" (se esiste) e regola la variabile nella sessione
@@ -111,7 +110,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Legge i cookies dalla request
-     * <p/>
+     * <p>
      */
     protected void checkCookies(VaadinRequest request) {
         // Fetch all cookies
@@ -145,7 +144,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Controlla il login della security
-     * <p/>
+     * <p>
      * Creazione del wrapper di informazioni mantenuto nella sessione <br>
      */
     protected void checkSecurity(VaadinRequest request) {
@@ -160,7 +159,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
      * Top      - una barra composita di menu e login
      * Body     - un placeholder per il portale della tavola/modulo
      * Footer   - un striscia per eventuali informazioni (Algo, copyright, ecc)
-     * <p/>
+     * <p>
      * Può essere sovrascritto per gestire la UI in maniera completamente diversa
      */
     protected void startUI() {
@@ -279,7 +278,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Sincronizzazione dei listener per il funzionamento del Login
-     * <p/>
+     * <p>
      * Dopo aver creato questa classe, registra nella Login (singleton nel servlet/sessione) l'istanza di questa classe per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella Login (singleton nel servlet/sessione) l'istanza di LoginBar per l'evento LoginListener
      * Dopo aver creato la LoginBar, registra nella LoginBar l'istanza di login (singleton nel servlet/sessione) per l'evento LogformListener
@@ -326,7 +325,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Aggiunge i moduli (standard e specifici)
-     * <p/>
+     * <p>
      * Mantiene un array di tutti i moduli
      * Alcuni moduli sono specifici di un collegamento come programmatore
      * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
@@ -369,7 +368,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Aggiunge i moduli specifici
-     * <p/>
+     * <p>
      * Deve (DEVE) essere sovrascritto dalla sottoclasse per aggiungere i moduli alla menubar dell'applicazione <br>
      * Chiama il metodo  addModulo(...) della superclasse per ogni modulo previsto nella barra menu
      */
@@ -379,10 +378,10 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Adds a cached View to the UI
-     * <p/>
+     * <p>
      * the view will be instantiated only once
      *
-     * @param viewClass  the view class to instantiate
+     * @param viewClass the view class to instantiate
      */
     protected void addModulo(Class<? extends View> viewClass) {
         String label = viewClass.getSimpleName();
@@ -392,12 +391,12 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Adds a View to the UI
-     * <p/>
+     * <p>
      * the view will be instantiated only once and then cached.
      *
-     * @param viewClass  the view class to instantiate
-     * @param label  the text for the menu item
-     * @param icon  the icon for the menu item
+     * @param viewClass the view class to instantiate
+     * @param label     the text for the menu item
+     * @param icon      the icon for the menu item
      */
     protected void addView(Class<? extends View> viewClass, String label, Resource icon) {
         addView(viewClass, true, label, icon);
@@ -405,18 +404,18 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Adds a View to the UI
-     * <p/>
+     * <p>
      * Will create a lazy (class-based) view provider
      * The view will be instantiated by the view provider from the provided class
      * The viewCached parameter controls if the view will be instantiated only once
      * or each time is requested by the Navigator.
-     * <p/>
+     * <p>
      * Invocato dalla sottoclasse
      *
      * @param viewClass  the view class to instantiate
      * @param viewCached true to instantiated only once, false to instantiate each time
-     * @param label  the text for the menu item
-     * @param icon  the icon for the menu item
+     * @param label      the text for the menu item
+     * @param icon       the icon for the menu item
      */
     protected void addView(Class<? extends View> viewClass, boolean viewCached, String label, Resource icon) {
 
@@ -433,10 +432,10 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Aggiunge un modulo alla UI
-     * <p/>
+     * <p>
      * Il modulo può essere aggiunto come istanza già creata
      * Tipicamente un ModulePop
-     * <p/>
+     * <p>
      * Invocato dalla sottoclasse
      *
      * @param modulo da visualizzare nel placeholder alla pressione del bottone di menu
@@ -460,10 +459,10 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Aggiunge un modulo alla UI
-     * <p/>
+     * <p>
      * Il modulo può essere aggiunto come istanza già creata
      * Qualunque oggetto grafico che implementi l'interfaccia View
-     * <p/>
+     * <p>
      * Invocato dalla sottoclasse
      *
      * @param vista     da visualizzare nel placeholder alla pressione del bottone di menu
@@ -498,7 +497,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Create the MenuBar Item for this module
-     * <p/>
+     * <p>
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
@@ -520,12 +519,12 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Create the MenuBar Item for this module
-     * <p/>
+     * <p>
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
-     * @param viewClass    da visualizzare nel placeholder alla pressione del bottone di menu
-     * @param icon del menu
+     * @param viewClass da visualizzare nel placeholder alla pressione del bottone di menu
+     * @param icon      del menu
      * @return menuItem appena creato
      */
     private MenuBar.MenuItem createMenuItem(Class<? extends View> viewClass, String label, boolean cached, Resource icon) {
@@ -542,7 +541,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
 
     /**
      * Crea i menu per la gestione dei moduli (standard e specifici)
-     * <p/>
+     * <p>
      * Spazzola l'array dei moduli per creare/recuperare il menuItem ed aggiungerlo alla UI
      * Aggiunge alla barra di menu principale il comando per lanciare il modulo indicato
      * Aggiunge il singolo menu (item) alla barra principale di menu

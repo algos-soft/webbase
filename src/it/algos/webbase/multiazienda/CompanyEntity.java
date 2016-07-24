@@ -1,10 +1,12 @@
 package it.algos.webbase.multiazienda;
 
 import it.algos.webbase.domain.company.BaseCompany;
+import it.algos.webbase.domain.vers.Versione;
 import it.algos.webbase.web.entity.BaseEntity;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import java.util.Vector;
 
 @MappedSuperclass
 @SuppressWarnings("serial")

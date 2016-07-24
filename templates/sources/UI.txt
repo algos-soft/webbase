@@ -52,5 +52,9 @@ public class @PROGETTO@UI extends AlgosUI {
         // this.addModulo(new BollaMod());
     }// end of method
 
+    @Override
+    public void onUserLogin(LoginEvent loginEvent) {
+    }// end of method
+
 }//end of UI class
 

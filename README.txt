@@ -24,14 +24,14 @@
     - successivamente il file web.index.jsp non verrà più utilizzato
 
 9. In Project Settings -> Libraries
-    - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase_jar
+    - aggiungere New Project Library (tipo java), selezionando ~/Documents/IdeaProjects/webbase/out/artifacts/webbase
+    - ATTENZIONE - selezionare l'intera cartella e NON il JAR
     - selezionando la CARTELLA, a destra apparirà il path per i Classes
     - se in Project Setting appare in basso a sinistra la scritte Problems, cliccare su Fix e selezionare Add webbase_jar to the artifact
 
 10. Aprire il plugin Webbase e lanciare (in Ant) lo script templates.script.progetto:
     - nel primo dialogo, inserire (obbligatorio) il nome (Maiuscolo) del nuovo progetto
-    - nel secondo dialogo, inserire (facoltativo, default 'MySqlUnit') il parametro di collegamento persistence-entity
-    - nel terzo dialogo, inserire (facoltativo, default 'test') il nome del database mysql
+    - nel secondo dialogo, inserire (facoltativo, default 'test') il nome del database mysql
 
 11. È stato creato il package minimo:
     - creata (sotto src) la directory base del progetto -> it.algos.nomeProgetto
@@ -48,17 +48,7 @@
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con già installato il modulo ereditato
         dal plugin Webbase: Versione
 
-12. In Project Settings -> Modules
-    - cliccare sul simbolo + per creare un nuovo modulo
-    - selezionare un framework di tipo iviIDEA
-    - nel dialogo che si apre a destra selezionare in alto la posizione del file ivy.xml appena creato
-    - cliccare nel box 'use module specific ivy settings' e selezionare la posizione del file ivysettings.xml appena creato
-
-
-// 12. In Project Settings -> Artifatcs in <output root> deve esserci webbase_war_exploded (come Project Library) per visualizzare le icone
-
-
-13. L'applicazione funziona usando il theme 'algos' (standard). L'eventuale selezione si effettua nella classe xxxUI
+12. L'applicazione funziona usando il theme 'algos' (standard). L'eventuale selezione si effettua nella classe xxxUI
     - in Project Settings -> Artifatcs selezionare l'artifact web:xxx exploded
     - a destra nel tab Output Layout selezionare l'icona della directory (a sinistra) e crearne una nuova directory
         dal titolo (obbligatorio) VAADIN
@@ -69,6 +59,13 @@
         È un BUG di IDEA che NON influenza la compilazione ed il corretto funzionamento dell'applicazione
     - senza necessità di ulteriori interventi, selezionando Run l'applicazione funziona con installato e funzionante il theme algos
 
+13. (facoltativo) In Project Settings -> Modules
+    - cliccare sul simbolo + per creare un nuovo modulo
+    - selezionare un framework di tipo iviIDEA
+    - nel dialogo che si apre a destra selezionare in alto la posizione del file ivy.xml appena creato
+    - cliccare nel box 'use module specific ivy settings' e selezionare la posizione del file ivysettings.xml appena creato
+
+// 13. In Project Settings -> Artifatcs in <output root> deve esserci webbase_war_exploded (come Project Library) per visualizzare le icone
 
 
 Creazione di un nuovo Modulo:

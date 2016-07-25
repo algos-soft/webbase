@@ -355,6 +355,16 @@ public class Pref extends CompanyEntity {
     } // end of method
 
 
+    /**
+     * Cancellazione di tutti i records
+     */
+    public static void deleteAll() {
+        for (Pref pref : Pref.getList()) {
+            pref.delete();
+        }// end of for cycle
+    }// end of static method
+
+    
     public Integer getInt() {
         if (type == TypePref.intero) {
             return intero;

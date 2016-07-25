@@ -63,6 +63,14 @@ public class LoginButton extends MenuBar {
             loginItem.setText(username);
             loginItem.setIcon(FontAwesome.USER);
             loginItem.removeChildren();
+
+            loginItem.addItem("Il mio profilo...", FontAwesome.USER, new MenuBar.Command() {
+                @Override
+                public void menuSelected(MenuBar.MenuItem selectedItem) {
+                    myProfileCommandSelected();
+                }
+            });
+
             exitIcon = FontAwesome.SIGN_OUT;
             loginItem.addItem("Logout", exitIcon, new MenuBar.Command() {
                 @Override
@@ -71,9 +79,12 @@ public class LoginButton extends MenuBar {
                 }
             });
 
+
+
         }
 
     }
+
 
 
     /**
@@ -91,6 +102,11 @@ public class LoginButton extends MenuBar {
         getLogin().logout();
         updateUI();
     }
+
+    private void myProfileCommandSelected() {
+    }
+
+
 
     public Login getLogin() {
         return Login.getLogin();

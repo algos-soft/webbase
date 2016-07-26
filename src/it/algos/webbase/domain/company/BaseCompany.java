@@ -1,5 +1,6 @@
 package it.algos.webbase.domain.company;
 
+import it.algos.webbase.domain.pref.Pref;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
@@ -12,6 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -29,6 +31,14 @@ public class BaseCompany extends BaseEntity {
 
     private static final long serialVersionUID = 8238775575826490450L;
     public static EntityQuery<BaseCompany> query = new EntityQuery(BaseCompany.class);
+
+    // CascadeType.ALL: quando chiamo persist sul padre, persiste automaticamente tutti i nuovi figli aggiunti
+    // alla lista e non ancora registrati (e così per tutte le operazioni dell'EntityManager)
+    // orphanRemoval = true: quando registro il padre, cancella tutti i figli eventualmente rimasti orfani.
+    // CascadeOnDelete: instaura l'integrità referenziale a livello di database (foreign key on delete cascade)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pref> preferenze;
+
 
     //--sigla di riferimento interna (obbligatoria ed unica)
     @Column(unique = true)
@@ -403,13 +413,21 @@ public class BaseCompany extends BaseEntity {
 
     @Override
     public String toString() {
-        return getName();
+        return getCompanyCode();
     }// end of method
 
     ;
 
     public void createDemoData() {
     }
+
+    public List<Pref> getPreferenze() {
+        return preferenze;
+    }// end of getter method
+
+    public void setPreferenze(List<Pref> preferenze) {
+        this.preferenze = preferenze;
+    }//end of setter method
 
     /**
      * Elimina tutti i dati di questa azienda.

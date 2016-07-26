@@ -84,7 +84,7 @@ public class Login {
      * Verifica se l'oggetto Login esiste nella sessione.
      * @return true se esiste.
      */
-    public static boolean isLogin() {
+    public static boolean isEsisteLoginInSessione() {
         Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
         return obj!=null;
     }

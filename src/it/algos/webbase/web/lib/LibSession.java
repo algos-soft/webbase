@@ -46,8 +46,14 @@ public abstract class LibSession {
      */
     public static boolean isAdmin() {
         boolean admin = false;
-        Login login = Login.getLogin();
+        Login login;
         UserIF user = null;
+
+        if (isDeveloper()) {
+            return true;
+        }// end of if cycle
+
+       login = Login.getLogin();
 
         if (login != null) {
             user = login.getUser();

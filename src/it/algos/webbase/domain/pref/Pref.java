@@ -50,11 +50,20 @@ public class Pref extends CompanyEntity {
     // versione della classe per la serializzazione
     private static final long serialVersionUID = 1L;
 
+    public static boolean usaCompany = true;
+
     //--sigla di riferimento interna (obbligatoria)
     @NotEmpty
     @Column(length = 20)
     @Index
     private String code = "";
+
+    //--sigla di riferimento interna (obbligatoria)
+//    @NotEmpty
+
+//    @Column(unique = true)
+//    @Index
+//    private String codeCompanyUnico = code + company.toString();
 
     //--tipo di dato memorizzato, formata dal nome della classe (obbligatorio)
     @NotEmpty
@@ -120,6 +129,21 @@ public class Pref extends CompanyEntity {
         super();
         this.setCode(code);
         this.setClasse(classe);
+    }// end of constructor
+
+
+    /**
+     * Costruttore completo con tutte le properties obbligatorie
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param classe  nome della classe del tipo di dato (obbligatoria)
+     * @param company di appartenenza
+     */
+    public Pref(String code, String classe, BaseCompany company) {
+        super();
+        this.setCode(code);
+        this.setClasse(classe);
+        super.setCompany(company);
     }// end of constructor
 
     /**
@@ -298,6 +322,27 @@ public class Pref extends CompanyEntity {
     }// end of static method
 
 
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param classe  nome della classe del tipo di dato (obbligatoria)
+     * @param company di appartenenza
+     * @return istanza di Pref
+     */
+    public static Pref crea(String code, String classe, BaseCompany company) {
+        Pref pref = Pref.findByCode(code);
+
+        if (pref == null) {
+            pref = new Pref(code, classe, company);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
+
+
     public static Boolean getBool(String code) {
         return findByCode(code).getBool();
     } // end of method
@@ -364,7 +409,7 @@ public class Pref extends CompanyEntity {
         }// end of for cycle
     }// end of static method
 
-    
+
     public Integer getInt() {
         if (type == TypePref.intero) {
             return intero;

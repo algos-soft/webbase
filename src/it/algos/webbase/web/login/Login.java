@@ -384,7 +384,6 @@ public class Login {
         return (getUser() != null);
     }
 
-
     public UserIF getUser() {
         return user;
     }

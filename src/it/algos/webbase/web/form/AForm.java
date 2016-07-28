@@ -229,17 +229,23 @@ public abstract class AForm extends VerticalLayout {
 
             Attribute attr = (Attribute) key;
 
-            // remove any existing validators
-            // (if you want more validators, add them after the field is added to the form)
-            // The reason to remove validators here, is that some fields (e.g. the Email field)
-            // can already have their pre-built validator, and in this case we would end up
-            // having multiple validators.
-            field.removeAllValidators();
 
-            // Add the bean validator
-            Class clazz = attr.getJavaMember().getDeclaringClass();
-            BeanValidator validator = new BeanValidator(clazz, attr.getName());
-            field.addValidator(validator);
+            // if this is an Association field, validate the associated bean
+            if(attr.isAssociation()){
+
+                // remove any existing validators
+                // (if you want more validators, add them after the field is added to the form)
+                // The reason to remove validators here, is that some fields (e.g. the Email field)
+                // can already have their pre-built validator, and in this case we would end up
+                // having multiple validators.
+                field.removeAllValidators();
+
+                // Add the bean validator
+                Class clazz = attr.getJavaMember().getDeclaringClass();
+                BeanValidator validator = new BeanValidator(clazz, attr.getName());
+                field.addValidator(validator);
+
+            }
 
             // reassign the the key as the member name
             key = attr.getName();

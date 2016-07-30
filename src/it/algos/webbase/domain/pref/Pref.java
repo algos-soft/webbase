@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.PrePersist;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,21 +53,27 @@ public class Pref extends CompanyEntity {
 
     public static boolean usaCompany = true;
 
-    //--sigla di riferimento interna (obbligatoria)
+    //--sigla di codifica interna (obbligatoria, non unica)
     @NotEmpty
     @Column(length = 20)
     @Index
     private String code = "";
 
-    //--sigla di riferimento interna (obbligatoria)
-//    @NotEmpty
 
-//    @Column(unique = true)
-//    @Index
-//    private String codeCompanyUnico = code + company.toString();
-
-    //--tipo di dato memorizzato, formata dal nome della classe (obbligatorio)
+    //--sigla di codifica interna specifica per company (obbligatoria, unica)
+    //--calcolata -> codeCompanyUnico = pref.code + company.companyCode);
     @NotEmpty
+    @Column(length = 40, unique = true)
+    @Index
+    private String codeCompanyUnico;
+
+    //--tipo di dato memorizzato (obbligatorio)
+    private PrefType tipo;
+
+
+    //--tipo di dato memorizzato (deprecato)
+//    @NotEmpty
+    @Deprecated
     private String classe = "";
 
     //--valore della preferenza (facoltativo)
@@ -75,7 +82,7 @@ public class Pref extends CompanyEntity {
     //--company di riferimento (facoltativa)
 //    private BaseCompany company;
 
-    //--descrizione visibile nel tabellone (facoltativa)
+    //--descrizione visibile (facoltativa)
     @Column(length = 200)
     private String descrizione = "";
 
@@ -124,11 +131,24 @@ public class Pref extends CompanyEntity {
      *
      * @param code   sigla di riferimento interna (obbligatoria)
      * @param classe nome della classe del tipo di dato (obbligatoria)
+     * @deprecated
      */
     public Pref(String code, String classe) {
         super();
         this.setCode(code);
         this.setClasse(classe);
+    }// end of constructor
+
+    /**
+     * Costruttore minimo con tutte le properties obbligatorie
+     *
+     * @param code sigla di riferimento interna (obbligatoria)
+     * @param tipo di dato (obbligatoria)
+     */
+    public Pref(String code, PrefType tipo) {
+        super();
+        this.setCode(code);
+        this.setTipo(tipo);
     }// end of constructor
 
 
@@ -138,12 +158,44 @@ public class Pref extends CompanyEntity {
      * @param code    sigla di riferimento interna (obbligatoria)
      * @param classe  nome della classe del tipo di dato (obbligatoria)
      * @param company di appartenenza
+     * @deprecated
      */
     public Pref(String code, String classe, BaseCompany company) {
         super();
         this.setCode(code);
         this.setClasse(classe);
         super.setCompany(company);
+    }// end of constructor
+
+    /**
+     * Costruttore completo con tutte le properties obbligatorie
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param tipo    di dato (obbligatoria)
+     * @param company di appartenenza
+     */
+    public Pref(String code, PrefType tipo, BaseCompany company) {
+        super();
+        this.setCode(code);
+        this.setTipo(tipo);
+        super.setCompany(company);
+    }// end of constructor
+
+
+    /**
+     * Costruttore completo con tutte le properties obbligatorie
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param tipo    di dato (obbligatoria)
+     * @param company di appartenenza
+     * @param value   della preferenza
+     */
+    public Pref(String code, PrefType tipo, BaseCompany company, Object value) {
+        super();
+        this.setCode(code);
+        this.setTipo(tipo);
+        super.setCompany(company);
+        this.setValore(value);
     }// end of constructor
 
     /**
@@ -309,6 +361,7 @@ public class Pref extends CompanyEntity {
      * @param code   sigla di riferimento interna (obbligatoria)
      * @param classe nome della classe del tipo di dato (obbligatoria)
      * @return istanza di Pref
+     * @deprecated
      */
     public static Pref crea(String code, String classe) {
         Pref pref = Pref.findByCode(code);
@@ -326,10 +379,31 @@ public class Pref extends CompanyEntity {
      * Creazione iniziale di una istanza della classe
      * La crea SOLO se non esiste già
      *
+     * @param code sigla di riferimento interna (obbligatoria)
+     * @param tipo di dato (obbligatoria)
+     * @return istanza di Pref
+     */
+    public static Pref crea(String code, PrefType tipo) {
+        Pref pref = Pref.findByCode(code);
+
+        if (pref == null) {
+            pref = new Pref(code, tipo);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
+
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
      * @param code    sigla di riferimento interna (obbligatoria)
      * @param classe  nome della classe del tipo di dato (obbligatoria)
      * @param company di appartenenza
      * @return istanza di Pref
+     * @deprecated
      */
     public static Pref crea(String code, String classe, BaseCompany company) {
         Pref pref = Pref.findByCode(code);
@@ -342,6 +416,48 @@ public class Pref extends CompanyEntity {
         return pref;
     }// end of static method
 
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param tipo    di dato (obbligatoria)
+     * @param company di appartenenza
+     * @return istanza di Prefm
+     */
+    public static Pref crea(String code, PrefType tipo, BaseCompany company) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref == null) {
+            pref = new Pref(code, tipo, company);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param code        sigla di riferimento interna (obbligatoria)
+     * @param tipo        di dato (obbligatoria)
+     * @param company     di appartenenza
+     * @param descrizione visibile
+     * @param value       della preferenza
+     * @return istanza di Prefm
+     */
+    public static Pref crea(String code, PrefType tipo, BaseCompany company, String descrizione, Object value) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref == null) {
+            pref = new Pref(code, tipo, company, value);
+            pref.setDescrizione(descrizione);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
 
     public static Boolean getBool(String code) {
         return findByCode(code).getBool();
@@ -399,7 +515,6 @@ public class Pref extends CompanyEntity {
         }// fine del blocco if-else
     } // end of method
 
-
     /**
      * Cancellazione di tutti i records
      */
@@ -409,6 +524,50 @@ public class Pref extends CompanyEntity {
         }// end of for cycle
     }// end of static method
 
+    public Object getValore() {
+        Object obj = null;
+        PrefType typo = getTipo();
+
+        if (typo != null) {
+            obj = typo.bytesToObject(value);
+        }// end of if cycle
+
+        return obj;
+    }// end of getter method
+
+
+    public void setValore(Object obj) {
+        PrefType typo = getTipo();
+
+        if (typo != null) {
+            value = typo.objectToBytes(obj);
+        }// end of if cycle
+    }//end of setter method
+
+
+    public byte[] getValue() {
+        return value;
+    }// end of getter method
+
+    public void setValue(byte[] value) {
+        this.value = value;
+    }//end of setter method
+
+    /**
+     * Controlla l'esistenza della chiave univoca, PRIMA di salvare il valore nel DB
+     * La crea se non esiste già
+     */
+    @PrePersist
+    public void checkChiave() {
+        if (getCode() == null || getCode().equals("")) {
+            codeCompanyUnico = "";
+        } else {
+            codeCompanyUnico = getCode();
+            if (getCompany() != null) {
+                codeCompanyUnico += getCompany().getCompanyCode();
+            }// end of if cycle
+        }// end of if/else cycle
+    } // end of method
 
     public Integer getInt() {
         if (type == TypePref.intero) {
@@ -434,6 +593,14 @@ public class Pref extends CompanyEntity {
         this.type = type;
     }
 
+    public PrefType getTipo() {
+        return tipo;
+    }// end of getter method
+
+    public void setTipo(PrefType tipo) {
+        this.tipo = tipo;
+    }//end of setter method
+
     public String getCode() {
         return code;
     }
@@ -441,6 +608,14 @@ public class Pref extends CompanyEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
+    public String getCodeCompanyUnico() {
+        return codeCompanyUnico;
+    }// end of getter method
+
+    public void setCodeCompanyUnico(String codeCompanyUnico) {
+        this.codeCompanyUnico = codeCompanyUnico;
+    }//end of setter method
 
     public String getClasse() {
         return classe;

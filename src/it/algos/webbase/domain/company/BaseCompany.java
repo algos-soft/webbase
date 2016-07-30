@@ -40,9 +40,9 @@ public class BaseCompany extends BaseEntity {
     private List<Pref> preferenze;
 
 
-    //--sigla di riferimento interna (obbligatoria ed unica)
-    @Column(unique = true)
+    //--sigla di riferimento interna (interna, obbligatoria ed unica)
     @NotEmpty
+    @Column(length = 20, unique = true)
     @Index
     private String companyCode = "";
 

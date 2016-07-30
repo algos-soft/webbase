@@ -12,6 +12,7 @@ import com.vaadin.server.FontAwesome;
 import it.algos.webbase.multiazienda.CompanyEntity_;
 import it.algos.webbase.web.form.ModuleForm;
 import it.algos.webbase.web.module.ModulePop;
+import it.algos.webbase.web.table.ATable;
 
 import javax.persistence.metamodel.Attribute;
 
@@ -69,8 +70,16 @@ public class PrefMod extends ModulePop {
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
      */
+    @Override
     protected Attribute<?, ?>[] creaFieldsList() {
-        return new Attribute[]{CompanyEntity_.company, Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.classe,Pref_.value};
+        return new Attribute[]{
+                CompanyEntity_.company,
+                Pref_.codeCompanyUnico,
+                Pref_.ordine,
+                Pref_.code,
+                Pref_.descrizione,
+                Pref_.tipo,
+                Pref_.value};
     }// end of method
 
     /**
@@ -80,6 +89,7 @@ public class PrefMod extends ModulePop {
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
      */
+    @Override
     protected Attribute<?, ?>[] creaFieldsForm() {
         return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.type,};
     }// end of method
@@ -90,8 +100,20 @@ public class PrefMod extends ModulePop {
      *
      * @return the Form
      */
+    @Override
     public ModuleForm createForm(Item item) {
         return new PrefForm(item, this);
+    }// end of method
+
+    /**
+     * Returns the table used to shows the list. <br>
+     * The concrete subclass must override for a specific Table.
+     *
+     * @return the Table
+     */
+    @Override
+    public ATable createTable() {
+        return new PrefTable(this);
     }// end of method
 
     /**

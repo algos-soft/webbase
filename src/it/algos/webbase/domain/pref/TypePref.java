@@ -63,4 +63,9 @@ public enum TypePref {
     void setNomeFormView(String nomeFormView) {
         this.nomeFormView = nomeFormView;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }// fine della classe Enumeration

@@ -327,7 +327,7 @@ public class Pref extends CompanyEntity {
 //            instance = (Pref) bean;
 //        }// end of if cycle
 //
-        return findByCode(code,CompanySessionLib.getCompany());
+        return findByCode(code, CompanySessionLib.getCompany());
     }// end of method
 
     /**

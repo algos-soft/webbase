@@ -40,7 +40,7 @@ public class LibArrayTest {
     @SuppressWarnings("all")
     private long altroLungo = 457L;
     @SuppressWarnings("all")
-    private String[] valoriDoppiTxt = {terzo, primoTxt, secondo, secondo, primoTxt, terzo, secondo};
+    private String[] valoriDoppiTxt = {terzo, primoTxt, secondo, primoTxt, terzo, secondo};
     @SuppressWarnings("all")
     private int[] valoriDoppiNum = {due, tre, primoInt, due, primoInt, due, primoInt};
     @SuppressWarnings("all")
@@ -396,18 +396,24 @@ public class LibArrayTest {
         int size = 9;
         ArrayList<String> arrayPrimo = LibArray.fromString(stringArray);
         ArrayList<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+        int sizePrimo = arrayPrimo.size();
+        int sizeSecondo = arraySecondo.size();
 
         ottenuto = LibArray.sommaDisordinata(null, null);
         assertNull(ottenuto);
 
-        ottenuto = LibArray.sommaDisordinata(null, arraySecondo);
-        assertEquals(ottenuto.size(), SIZE_UNICI);
-
         ottenuto = LibArray.sommaDisordinata(arrayPrimo, null);
         assertEquals(ottenuto.size(), SIZE);
+        assertEquals(arrayPrimo.size(), sizePrimo);
+
+        ottenuto = LibArray.sommaDisordinata(null, arraySecondo);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(arraySecondo.size(), sizeSecondo);
 
         ottenuto = LibArray.sommaDisordinata(arrayPrimo, arraySecondo);
         assertEquals(ottenuto.size(), size);
+        assertEquals(arrayPrimo.size(), sizePrimo);
+        assertEquals(arraySecondo.size(), sizeSecondo);
 
         System.out.println("");
         System.out.println("Somma");
@@ -464,18 +470,24 @@ public class LibArrayTest {
         int size = 9;
         ArrayList<String> arrayPrimo = LibArray.fromString(stringArray);
         ArrayList<String> arraySecondo = LibArray.fromString(valoriDoppiTxt);
+        int sizePrimo = arrayPrimo.size();
+        int sizeSecondo = arraySecondo.size();
 
         ottenuto = LibArray.somma(null, null);
         assertNull(ottenuto);
 
-        ottenuto = LibArray.somma(null, arraySecondo);
-        assertEquals(ottenuto.size(), SIZE_UNICI);
-
         ottenuto = LibArray.somma(arrayPrimo, null);
         assertEquals(ottenuto.size(), SIZE);
+        assertEquals(arrayPrimo.size(), sizePrimo);
+
+        ottenuto = LibArray.somma(null, arraySecondo);
+        assertEquals(ottenuto.size(), SIZE_UNICI);
+        assertEquals(arraySecondo.size(), sizeSecondo);
 
         ottenuto = LibArray.somma(arrayPrimo, arraySecondo);
         assertEquals(ottenuto.size(), size);
+        assertEquals(arrayPrimo.size(), sizePrimo);
+        assertEquals(arraySecondo.size(), sizeSecondo);
 
         System.out.println("");
         System.out.println("Somma ordinata");
@@ -1085,7 +1097,7 @@ public class LibArrayTest {
      * @return mappa ordinata
      */
     public void ordinaMappa() {
-        HashMap mappa ;
+        HashMap mappa;
         LinkedHashMap mappaOrdinata;
         LinkedHashMap mappaOttenuta;
         String strUno = "alfa";

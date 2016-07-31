@@ -1,5 +1,7 @@
 package it.algos.webbase.domain.pref;
 
+import it.algos.webbase.web.lib.LibByte;
+
 import java.nio.charset.Charset;
 
 /**
@@ -51,7 +53,23 @@ public enum PrefType {
         }// end of method
     },// end of single enumeration
 
-    integer("intero"),
+    integer("intero") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Integer) {
+                int num = (Integer)obj;
+                bytes = LibByte.intToByteArray(num);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return LibByte.byteArrayToInt(bytes);
+        }// end of method
+    },// end of single enumeration
+
     decimal("decimale"),
     date("data"),
     bytes("blog");

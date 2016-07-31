@@ -201,6 +201,7 @@ public class Pref extends CompanyEntity {
     /**
      * Recupera il totale dei records di Pref
      * Filtrato sulla azienda corrente.
+     * Se l'azienda corrente non è selezionata (null), conta senza filtri
      *
      * @return numero totale di records di Pref
      */
@@ -458,6 +459,11 @@ public class Pref extends CompanyEntity {
 
         return pref;
     }// end of static method
+
+    public static Object get(String code) {
+        return findByCode(code).getBool();
+    } // end of method
+
 
     public static Boolean getBool(String code) {
         return findByCode(code).getBool();

@@ -24,6 +24,16 @@ public class CheckBoxField extends CheckBox implements FieldInterface<Boolean> {
     }
 
     /**
+     * Creates a new checkbox and a set initial state.
+     *
+     * @param initialState the initial state of the checkbox
+     */
+    public CheckBoxField(boolean initialState) {
+        setValue(initialState);
+    }// end of constructor
+
+
+    /**
      * Creates a new checkbox with a caption and a set initial state.
      *
      * @param caption      the caption of the checkbox
@@ -32,7 +42,8 @@ public class CheckBoxField extends CheckBox implements FieldInterface<Boolean> {
     public CheckBoxField(String caption, boolean initialState) {
         this(caption);
         setValue(initialState);
-    }
+    }// end of constructor
+
 
     private void init() {
         initField();

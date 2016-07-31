@@ -308,11 +308,14 @@ public abstract class LibArray {
         ArrayList arraySomma = null;
 
         if (arrayPrimo != null && arraySecondo != null) {
-            for (Object ogg : arraySecondo) {
-                arrayPrimo.add(ogg);
+            arraySomma = new ArrayList();
+            for (Object ogg : arrayPrimo) {
+                arraySomma.add(ogg);
             } // fine del ciclo for-each
-            arrayPrimo = valoriUniciBase(arrayPrimo, false);
-            return arrayPrimo;
+            for (Object ogg : arraySecondo) {
+                arraySomma.add(ogg);
+            } // fine del ciclo for-each
+            arraySomma = valoriUniciBase(arraySomma, false);
         }// fine del blocco if
 
         if (arrayPrimo == null) {
@@ -715,12 +718,11 @@ public abstract class LibArray {
 
     /**
      * Ordina una mappa secondo le chiavi
-     *
+     * <p>
      * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
      * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
      *
      * @param mappaIn ingresso da ordinare
-     *
      * @return mappa ordinata
      */
     public static LinkedHashMap ordinaMappa(Map mappaIn) {
@@ -732,7 +734,7 @@ public abstract class LibArray {
 
         try { // prova ad eseguire il codice
             insieme = mappaIn.keySet();
-            matrice= insieme.toArray();
+            matrice = insieme.toArray();
             listaChiavi = new ArrayList(Arrays.asList(matrice));
             Collections.sort(listaChiavi);
 

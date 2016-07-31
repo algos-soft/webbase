@@ -57,6 +57,28 @@ public class AQuery {
         return entities;
     }// end of method
 
+
+    /**
+     * Search for all entities with a specified attribute value.
+     * <p>
+     *
+     * @param clazz the entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return a list of entities corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static List<? extends BaseEntity> queryList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value,EntityManager manager) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
+        Root<? extends BaseEntity> root = cq.from(clazz);
+        Predicate pred = cb.equal(root.get(attr), value);
+        cq.where(pred);
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+        List<? extends BaseEntity> entities = query.getResultList();
+        return entities;
+    }// end of method
+
     /**
      * Search for all entities with a specified attribute value.
      * <p>
@@ -85,17 +107,19 @@ public class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     * @returnthe first entity corresponding to the specified criteria
+     * @return the first entity corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes"})
     public static BaseEntity queryFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
         BaseEntity bean = null;
+
         List<? extends BaseEntity> entities = queryList(clazz, attr, value);
         if (entities.size() > 0) {
             bean = entities.get(0);
-        }
+        }// end of if cycle
+
         return bean;
-    }
+    }// end of method
 
     /**
      * Search for the only entities with a specified attribute value.
@@ -105,17 +129,42 @@ public class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     * @returnthe the only entity corresponding to the specified criteria, or null
+     * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
     public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
         BaseEntity bean = null;
-        List<? extends BaseEntity> entities = queryList(clazz, attr, value);
+
+        EntityManager manager = EM.createEntityManager();
+        bean = queryOne(clazz, attr, value, manager);
+        manager.close();
+
+        return bean;
+    }// end of method
+
+
+    /**
+     * Search for the only entities with a specified attribute value.
+     * <p>
+     * If multiple entities exist, null is returned.
+     *
+     * @param clazz   the entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        BaseEntity bean = null;
+
+        List<? extends BaseEntity> entities = queryList(clazz, attr, value, manager);
         if (entities.size() == 1) {
             bean = entities.get(0);
-        }
+        }// end of if cycle
+
         return bean;
-    }
+    }// end of method
 
 
     public static long getCount(Class<?> clazz) {

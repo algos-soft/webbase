@@ -320,14 +320,14 @@ public class Pref extends CompanyEntity {
      * @return istanza di Pref, null se non trovata
      */
     public static Pref findByCode(String code) {
-        Pref instance = null;
-        BaseEntity bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code);
-
-        if (bean != null && bean instanceof Pref) {
-            instance = (Pref) bean;
-        }// end of if cycle
-
-        return instance;
+//        Pref instance = null;
+//        BaseEntity bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code);
+//
+//        if (bean != null && bean instanceof Pref) {
+//            instance = (Pref) bean;
+//        }// end of if cycle
+//
+        return findByCode(code,CompanySessionLib.getCompany());
     }// end of method
 
     /**
@@ -344,7 +344,11 @@ public class Pref extends CompanyEntity {
         BaseEntity bean;
 
         EntityManager manager = EM.createEntityManager();
-        bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
+        if (company != null) {
+            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
+        } else {
+            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
+        }// end of if/else cycle
         manager.close();
 
         if (bean != null && bean instanceof Pref) {

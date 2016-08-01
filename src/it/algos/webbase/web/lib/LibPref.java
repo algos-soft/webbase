@@ -1,9 +1,13 @@
 package it.algos.webbase.web.lib;
 
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import it.algos.webbase.domain.pref.Pref;
 import it.algos.webbase.domain.pref.TypePref;
+import it.algos.webbase.web.pref.AbsPref;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -244,7 +248,7 @@ public abstract class LibPref {
             if (type == TypePref.data) {
                 try { // prova ad eseguire il codice
                     pref.setData((Date) value);
-                    strValue = LibDate.toStringDMYY((Date) value);
+                    strValue = LibDate.toStringDMYY((Date)value);
                 } catch (Exception unErrore) { // intercetta l'errore
                     Notification.show("La preferenza " + code + " non è di tipo data", Notification.Type.ERROR_MESSAGE);
                 }// fine del blocco try-catch
@@ -267,14 +271,7 @@ public abstract class LibPref {
 
     }// end of static method
 
-    /**
-     * Checks if the preference exists in the storage.
-     * <p>
-     *
-     * @return true if the preference exists
-     */
-    public static boolean exists(String code) {
-        return (Pref.findByCode(code) != null);
-    }// end of static method
+
+
 
 }// end of abstract static class

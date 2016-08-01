@@ -1,8 +1,11 @@
 package it.algos.webbase.domain.pref;
 
+import com.google.common.primitives.Longs;
 import it.algos.webbase.web.lib.LibByte;
 
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  * Created by gac on 30 lug 2016.
@@ -41,6 +44,7 @@ public enum PrefType {
         }// end of method
 
         @Override
+        @SuppressWarnings("all")
         public Object bytesToObject(byte[] bytes) {
             Object obj = null;
             if (bytes.length > 0) {
@@ -58,7 +62,7 @@ public enum PrefType {
         public byte[] objectToBytes(Object obj) {
             byte[] bytes = new byte[0];
             if (obj instanceof Integer) {
-                int num = (Integer)obj;
+                int num = (Integer) obj;
                 bytes = LibByte.intToByteArray(num);
             }// end of if cycle
             return bytes;
@@ -70,8 +74,41 @@ public enum PrefType {
         }// end of method
     },// end of single enumeration
 
-    decimal("decimale"),
-    date("data"),
+    decimal("decimale") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof BigDecimal) {
+                BigDecimal bd = (BigDecimal) obj;
+                bytes = LibByte.bigDecimalToByteArray(bd);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return LibByte.byteArrayToBigDecimal(bytes);
+        }// end of method
+    },// end of single enumeration
+
+    date("data") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Date) {
+                Date date = (Date) obj;
+                long millis = date.getTime();
+                bytes = Longs.toByteArray(millis);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return new Date(Longs.fromByteArray(bytes));
+        }// end of method
+    },// end of single enumeration
+
     bytes("blog");
 
     String nome;

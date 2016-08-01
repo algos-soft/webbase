@@ -320,13 +320,6 @@ public class Pref extends CompanyEntity {
      * @return istanza di Pref, null se non trovata
      */
     public static Pref findByCode(String code) {
-//        Pref instance = null;
-//        BaseEntity bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code);
-//
-//        if (bean != null && bean instanceof Pref) {
-//            instance = (Pref) bean;
-//        }// end of if cycle
-//
         return findByCode(code, CompanySessionLib.getCompany());
     }// end of method
 
@@ -343,12 +336,43 @@ public class Pref extends CompanyEntity {
         Pref instance = null;
         BaseEntity bean;
 
+//        EntityManager manager = EM.createEntityManager();
+//        if (company != null) {
+//            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
+//        } else {
+//            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
+//        }// end of if/else cycle
+//        manager.close();
+//
+//        if (bean != null && bean instanceof Pref) {
+//            instance = (Pref) bean;
+//        }// end of if cycle
+//
+//        if (instance == null) {
+//            instance = findByCodeUnico(code);
+//        }// end of if cycle
+
+        if (company!=null) {
+            code+=company.getCompanyCode();
+        }// end of if cycle
+
+        return findByCodeUnico(code);
+    }// end of method
+
+
+    /**
+     * Recupera una istanza di Pref usando la query della property chiave
+     *
+     * @param codeCompanyUnico sigla di codifica interna specifica per company
+     * @return istanza di Pref, null se non trovata
+     */
+    @SuppressWarnings("unchecked")
+    public static Pref findByCodeUnico(String codeCompanyUnico) {
+        Pref instance = null;
+        BaseEntity bean;
+
         EntityManager manager = EM.createEntityManager();
-        if (company != null) {
-            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
-        } else {
-            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
-        }// end of if/else cycle
+        bean = AQuery.queryOne(Pref.class, Pref_.codeCompanyUnico, codeCompanyUnico, manager);
         manager.close();
 
         if (bean != null && bean instanceof Pref) {

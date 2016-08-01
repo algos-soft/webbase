@@ -161,10 +161,6 @@ public abstract class AForm extends VerticalLayout {
                         field = new TextField();
                     }
 
-                    if (clazz.equals(String.class)) {
-                        field = new TextField();
-                    }
-
                     if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
                         field = new IntegerField();
                     }

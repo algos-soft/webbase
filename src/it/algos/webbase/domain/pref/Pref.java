@@ -705,11 +705,25 @@ public class Pref extends CompanyEntity {
     } // end of static method
 
 
-    public static void put(String code, Object valore) {
-        put(code, CompanySessionLib.getCompany(), valore);
+    public static void put(String code, Object valore, PrefType typo) {
+        put(code, CompanySessionLib.getCompany(), valore, typo);
     } // end of method
 
-    public static void put(String code, BaseCompany company, Object valore) {
+    public static void put(String code, BaseCompany company, Object valore, PrefType typo) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref == null) {
+            Pref.crea(code, typo, company);
+        }// end of if cycle
+
+        set(code, company, valore);
+    } // end of method
+
+    public static void set(String code, Object valore) {
+        set(code, CompanySessionLib.getCompany(), valore);
+    } // end of method
+
+    public static void set(String code, BaseCompany company, Object valore) {
         Pref pref = Pref.findByCode(code, company);
 
         if (pref != null) {

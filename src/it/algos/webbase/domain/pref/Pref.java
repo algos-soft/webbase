@@ -710,12 +710,7 @@ public class Pref extends CompanyEntity {
     } // end of method
 
     public static void put(String code, BaseCompany company, Object valore, PrefType typo) {
-        Pref pref = Pref.findByCode(code, company);
-
-        if (pref == null) {
-            Pref.crea(code, typo, company);
-        }// end of if cycle
-
+        Pref.crea(code, typo, company); // crea solo se non esiste
         set(code, company, valore);
     } // end of method
 
@@ -728,6 +723,7 @@ public class Pref extends CompanyEntity {
 
         if (pref != null) {
             pref.setValore(valore);
+            pref.save();
         }// end of if cycle
 
     } // end of method

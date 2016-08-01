@@ -82,7 +82,7 @@ public class Pref extends CompanyEntity {
     private byte[] value;
 
     //--company di riferimento (facoltativa)
-//    private BaseCompany company;
+    //--la property BaseCompany è nella superclasse CompanyEntity
 
     //--descrizione visibile (facoltativa)
     @Column(length = 200)
@@ -266,6 +266,7 @@ public class Pref extends CompanyEntity {
      * @param company di appartenenza
      * @return lista di Pref
      */
+    @SuppressWarnings("unchecked")
     public static ArrayList<Pref> getList(BaseCompany company) {
         ArrayList<Pref> lista = null;
         Vector vettore = null;

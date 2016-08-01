@@ -705,24 +705,75 @@ public class Pref extends CompanyEntity {
     } // end of static method
 
 
-    public static void put(String code, Object valore, PrefType typo) {
-        put(code, CompanySessionLib.getCompany(), valore, typo);
+    /**
+     * Inserimento del valore della preferenza
+     * Se non esiste, la crea
+     * Filtrato sulla azienda corrente.
+     *
+     * @param code  sigla di riferimento interna (obbligatoria)
+     * @param typo  di dato (obbligatoria)
+     * @param value della preferenza
+     */
+    public static void put(String code, PrefType typo, Object value) {
+        put(code, CompanySessionLib.getCompany(), typo, value);
     } // end of method
 
-    public static void put(String code, BaseCompany company, Object valore, PrefType typo) {
+    /**
+     * Inserimento del valore della preferenza
+     * Se non esiste, la crea
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param company di appartenenza
+     * @param typo    di dato (obbligatoria)
+     * @param value   della preferenza
+     */
+    public static void put(String code, BaseCompany company, PrefType typo, Object value) {
         Pref.crea(code, typo, company); // crea solo se non esiste
-        set(code, company, valore);
+        set(code, company, value);
     } // end of method
 
-    public static void set(String code, Object valore) {
-        set(code, CompanySessionLib.getCompany(), valore);
+    /**
+     * Inserimento del valore della preferenza
+     * Se non esiste, la crea
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param code        sigla di riferimento interna (obbligatoria)
+     * @param company     di appartenenza
+     * @param typo        di dato (obbligatoria)
+     * @param value       della preferenza
+     * @param descrizione visibile
+     */
+    public static void put(String code, BaseCompany company, PrefType typo, Object value, String descrizione) {
+        Pref.crea(code, typo, company); // La crea SOLO se non esiste già
+        set(code, company, value);  // chiama il metodo per inserire il valore
     } // end of method
 
-    public static void set(String code, BaseCompany company, Object valore) {
+    /**
+     * Inserimento del valore della preferenza
+     * Assume che la preferenza esista già
+     * Filtrato sulla azienda corrente.
+     *
+     * @param code  sigla di riferimento interna (obbligatoria)
+     * @param value della preferenza
+     */
+    public static void set(String code, Object value) {
+        set(code, CompanySessionLib.getCompany(), value);
+    } // end of method
+
+    /**
+     * Inserimento del valore della preferenza
+     * Assume che la preferenza esista già
+     * Filtrato sulla azienda passata come parametro.
+     *
+     * @param code  sigla di riferimento interna (obbligatoria)
+     * @param value della preferenza
+     */
+    public static void set(String code, BaseCompany company, Object value) {
         Pref pref = Pref.findByCode(code, company);
 
         if (pref != null) {
-            pref.setValore(valore);
+            pref.setValore(value);
             pref.save();
         }// end of if cycle
 

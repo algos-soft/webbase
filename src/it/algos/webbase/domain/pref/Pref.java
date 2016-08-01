@@ -733,6 +733,18 @@ public class Pref extends CompanyEntity {
     } // end of method
 
 
+    public static void remove(String code) {
+        remove(code, CompanySessionLib.getCompany());
+    } // end of method
+
+    public static void remove(String code, BaseCompany company) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            pref.delete();
+        }// end of if cycle
+    } // end of method
+
     /**
      * @deprecated
      */

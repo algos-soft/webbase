@@ -57,7 +57,7 @@ public class Pref extends CompanyEntity {
 
     //--sigla di codifica interna (obbligatoria, non unica)
     @NotEmpty
-    @Column(length = 20)
+    @Column(length = 40)
     @Index
     private String code = "";
 
@@ -65,7 +65,7 @@ public class Pref extends CompanyEntity {
     //--sigla di codifica interna specifica per company (obbligatoria, unica)
     //--calcolata -> codeCompanyUnico = pref.code + company.companyCode);
     @NotEmpty
-    @Column(length = 40, unique = true)
+    @Column(length = 80, unique = true)
     @Index
     private String codeCompanyUnico;
 

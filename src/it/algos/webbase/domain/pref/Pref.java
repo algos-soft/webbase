@@ -8,7 +8,6 @@ import it.algos.webbase.multiazienda.CompanyQuery;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
-import it.algos.webbase.web.pref.PrefIF;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.persistence.annotations.Index;
@@ -319,11 +318,12 @@ public class Pref extends CompanyEntity {
     /**
      * Checks if this preference exists in the storage.
      * <p>
+     *
      * @param code sigla di riferimento interna (obbligatoria)
      * @return true if the preference exists
      */
-    public static boolean exists(String code){
-        return (findByCode(code)!=null);
+    public static boolean exists(String code) {
+        return (findByCode(code) != null);
     }// end of method
 
     /**
@@ -705,6 +705,18 @@ public class Pref extends CompanyEntity {
     } // end of static method
 
 
+    public static void put(String code, Object valore) {
+        put(code, CompanySessionLib.getCompany(), valore);
+    } // end of method
+
+    public static void put(String code, BaseCompany company, Object valore) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            pref.setValore(valore);
+        }// end of if cycle
+
+    } // end of method
 
 
     /**

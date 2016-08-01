@@ -352,8 +352,8 @@ public class Pref extends CompanyEntity {
 //            instance = findByCodeUnico(code);
 //        }// end of if cycle
 
-        if (company!=null) {
-            code+=company.getCompanyCode();
+        if (company != null) {
+            code += company.getCompanyCode();
         }// end of if cycle
 
         return findByCodeUnico(code);

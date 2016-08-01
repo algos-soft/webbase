@@ -1,7 +1,10 @@
 package it.algos.webbase.domain.pref;
 
 import com.google.common.primitives.Longs;
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Image;
 import it.algos.webbase.web.lib.LibByte;
+import it.algos.webbase.web.lib.LibImage;
 
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -106,6 +109,48 @@ public enum PrefType {
         @Override
         public Object bytesToObject(byte[] bytes) {
             return new Date(Longs.fromByteArray(bytes));
+        }// end of method
+    },// end of single enumeration
+
+    image("blog") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Image) {
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            Image img = null;
+            if (bytes.length > 0) {
+                img = LibImage.getImage(bytes);
+            }
+            return img;
+        }// end of method
+    },// end of single enumeration
+
+    resource("blog") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Resource) {
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            Resource res = null;
+            Image img = null;
+            if (bytes.length > 0) {
+                img = LibImage.getImage(bytes);
+            }// end of if cycle
+            if (img != null) {
+                res = img.getSource();
+            }// end of if cycle
+            return res;
         }// end of method
     },// end of single enumeration
 

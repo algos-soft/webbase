@@ -1,5 +1,7 @@
 package it.algos.webbase.domain.pref;
 
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Image;
 import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.multiazienda.CompanyEntity;
 import it.algos.webbase.multiazienda.CompanyQuery;
@@ -39,7 +41,7 @@ import java.util.Vector;
  * Si possono creare quante enum si desidera enum (preferenze generali, preferenze dell'azienda,
  * preferenze dell'utente...)
  * La enum contengono i metodi per inserire e recuperare i tipi più comuni
- * (getString, getInt, getDecimal, getResource, getImage...). Il supporto per i tipi comuni è disponibile nella
+ * (getString, getInteger, getDecimal, getResource, getImage...). Il supporto per i tipi comuni è disponibile nella
  * classe AbsPref, ma è anche possibile creare metodi specifici nella enum per memorizzare qualsiasi
  * tipo serializzabile (putIndirizzo, getIndirizzo, putCertificato, getCertificato...)
  * <p>
@@ -333,24 +335,6 @@ public class Pref extends CompanyEntity {
      */
     @SuppressWarnings("unchecked")
     public static Pref findByCode(String code, BaseCompany company) {
-        Pref instance = null;
-        BaseEntity bean;
-
-//        EntityManager manager = EM.createEntityManager();
-//        if (company != null) {
-//            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
-//        } else {
-//            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
-//        }// end of if/else cycle
-//        manager.close();
-//
-//        if (bean != null && bean instanceof Pref) {
-//            instance = (Pref) bean;
-//        }// end of if cycle
-//
-//        if (instance == null) {
-//            instance = findByCodeUnico(code);
-//        }// end of if cycle
 
         if (company != null) {
             code += company.getCompanyCode();
@@ -489,28 +473,258 @@ public class Pref extends CompanyEntity {
     }// end of static method
 
     public static Object get(String code) {
-        return findByCode(code).getBool();
-    } // end of method
+        return findByCode(code).getBoolean();
+    } // end of static method
+
+
+    public static String getString(String code) {
+        return getString(code, "");
+    } // end of static method
+
+    public static String getString(String code, Object defaultValue) {
+        return getString(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static String getString(String code, BaseCompany company) {
+        return getString(code, company, "");
+    } // end of static method
+
+    public static String getString(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (String) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof String) {
+            return (String) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
 
 
     public static Boolean getBool(String code) {
-        return findByCode(code).getBool();
+        return getBool(code, "");
+    } // end of static method
+
+    public static Boolean getBool(String code, Object defaultValue) {
+        return getBool(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static Boolean getBool(String code, BaseCompany company) {
+        return getBool(code, company, "");
+    } // end of static method
+
+    public static Boolean getBool(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (boolean) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof Boolean) {
+            return (boolean) defaultValue;
+        }// end of if cycle
+
+        return false;
+    } // end of static method
+
+
+    public static int getInt(String code) {
+        return getInt(code, "");
+    } // end of static method
+
+    public static int getInt(String code, Object defaultValue) {
+        return getInt(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static int getInt(String code, BaseCompany company) {
+        return getInt(code, company, "");
+    } // end of static method
+
+    public static int getInt(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (int) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof Integer) {
+            return (int) defaultValue;
+        }// end of if cycle
+
+        return 0;
+    } // end of static method
+
+
+    public static BigDecimal getDecimal(String code) {
+        return getDecimal(code, "");
+    } // end of static method
+
+    public static BigDecimal getDecimal(String code, Object defaultValue) {
+        return getDecimal(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static BigDecimal getDecimal(String code, BaseCompany company) {
+        return getDecimal(code, company, "");
+    } // end of static method
+
+    public static BigDecimal getDecimal(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (BigDecimal) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof BigDecimal) {
+            return (BigDecimal) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
+
+
+    public static Date getDate(String code) {
+        return getDate(code, "");
+    } // end of static method
+
+    public static Date getDate(String code, Object defaultValue) {
+        return getDate(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static Date getDate(String code, BaseCompany company) {
+        return getDate(code, company, "");
+    } // end of static method
+
+    public static Date getDate(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (Date) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof Date) {
+            return (Date) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
+
+
+    public static Image getImage(String code) {
+        return getImage(code, "");
+    } // end of static method
+
+    public static Image getImage(String code, Object defaultValue) {
+        return getImage(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static Image getImage(String code, BaseCompany company) {
+        return getImage(code, company, "");
+    } // end of static method
+
+    public static Image getImage(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (Image) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof Image) {
+            return (Image) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
+
+
+    public static Resource getResource(String code) {
+        return getResource(code, "");
+    } // end of static method
+
+    public static Resource getResource(String code, Object defaultValue) {
+        return getResource(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static Resource getResource(String code, BaseCompany company) {
+        return getResource(code, company, "");
+    } // end of static method
+
+    public static Resource getResource(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (Resource) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof Resource) {
+            return (Resource) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
+
+
+    public static byte[] getBytes(String code) {
+        return getBytes(code, "");
+    } // end of static method
+
+    public static byte[] getBytes(String code, Object defaultValue) {
+        return getBytes(code, CompanySessionLib.getCompany(), defaultValue);
+    } // end of static method
+
+    public static byte[] getBytes(String code, BaseCompany company) {
+        return getBytes(code, company, "");
+    } // end of static method
+
+    public static byte[] getBytes(String code, BaseCompany company, Object defaultValue) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref != null) {
+            return (byte[]) pref.getValore();
+        }// end of if cycle
+
+        if (defaultValue != null && defaultValue instanceof byte[]) {
+            return (byte[]) defaultValue;
+        }// end of if cycle
+
+        return null;
+    } // end of static method
+
+
+
+
+    /**
+     * @deprecated
+     */
+    public static Boolean getBoolean(String code) {
+        return findByCode(code).getBoolean();
     } // end of method
 
-    public static Boolean getBool(String code, boolean suggerito) {
+    /**
+     * @deprecated
+     */
+    public static Boolean getBoolean(String code, boolean suggerito) {
         Pref pref = findByCode(code);
 
         if (pref != null && pref.type == TypePref.booleano) {
-            return pref.getBool();
+            return pref.getBoolean();
         } else {
             return suggerito;
         }// fine del blocco if-else
     } // end of method
 
+    /**
+     * @deprecated
+     */
     public static String getStr(String code) {
         return findByCode(code).getStringa();
     } // end of method
 
+    /**
+     * @deprecated
+     */
     public static String getStr(String code, String suggerito) {
         Pref pref = findByCode(code);
 
@@ -521,29 +735,41 @@ public class Pref extends CompanyEntity {
         }// fine del blocco if-else
     } // end of method
 
-    public static Integer getInt(String code) {
-        return findByCode(code).getInt();
+    /**
+     * @deprecated
+     */
+    public static Integer getInteger(String code) {
+        return findByCode(code).getInteger();
     } // end of method
 
-    public static Integer getInt(String code, int suggerito) {
+    /**
+     * @deprecated
+     */
+    public static Integer getInteger(String code, int suggerito) {
         Pref pref = findByCode(code);
 
         if (pref != null && pref.type == TypePref.intero) {
-            return pref.getInt();
+            return pref.getInteger();
         } else {
             return suggerito;
         }// fine del blocco if-else
     } // end of method
 
-    public static Date getData(String code) {
-        return findByCode(code).getData();
+    /**
+     * @deprecated
+     */
+    public static Date getDataOld(String code) {
+        return findByCode(code).getDataOld();
     } // end of method
 
-    public static Date getData(String code, Date suggerito) {
+    /**
+     * @deprecated
+     */
+    public static Date getDataOld(String code, Date suggerito) {
         Pref pref = findByCode(code);
 
         if (pref != null && pref.type == TypePref.data) {
-            return pref.getData();
+            return pref.getDataOld();
         } else {
             return suggerito;
         }// fine del blocco if-else
@@ -603,7 +829,7 @@ public class Pref extends CompanyEntity {
         }// end of if/else cycle
     } // end of method
 
-    public Integer getInt() {
+    public Integer getInteger() {
         if (type == TypePref.intero) {
             return intero;
         } else {
@@ -731,7 +957,7 @@ public class Pref extends CompanyEntity {
         this.decimale = decimale;
     }
 
-    public Date getData() {
+    public Date getDataOld() {
         return data;
     }
 
@@ -748,7 +974,7 @@ public class Pref extends CompanyEntity {
         this.testo = testo;
     }
 
-    public Boolean getBool() {
+    public Boolean getBoolean() {
         if (type == TypePref.booleano) {
             return bool;
         } else {

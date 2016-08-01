@@ -112,15 +112,7 @@ public enum PrefType {
         }// end of method
     },// end of single enumeration
 
-    image("blog") {
-        @Override
-        public byte[] objectToBytes(Object obj) {
-            byte[] bytes = new byte[0];
-            if (obj instanceof Image) {
-            }// end of if cycle
-            return bytes;
-        }// end of method
-
+    image("image") {
         @Override
         public Object bytesToObject(byte[] bytes) {
             Image img = null;
@@ -131,15 +123,7 @@ public enum PrefType {
         }// end of method
     },// end of single enumeration
 
-    resource("blog") {
-        @Override
-        public byte[] objectToBytes(Object obj) {
-            byte[] bytes = new byte[0];
-            if (obj instanceof Resource) {
-            }// end of if cycle
-            return bytes;
-        }// end of method
-
+    resource("resource") {
         @Override
         public Object bytesToObject(byte[] bytes) {
             Resource res = null;

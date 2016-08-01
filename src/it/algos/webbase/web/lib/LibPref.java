@@ -1,9 +1,13 @@
 package it.algos.webbase.web.lib;
 
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import it.algos.webbase.domain.pref.Pref;
 import it.algos.webbase.domain.pref.TypePref;
+import it.algos.webbase.web.pref.AbsPref;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -266,5 +270,63 @@ public abstract class LibPref {
         }// end of if/else cycle
 
     }// end of static method
+
+
+
+    /**
+     * Retrieves a preference's value as boolean
+     */
+    public static boolean getBool(String code){
+        return Pref.findByCode(code).getBool();
+    }
+
+    /**
+     * Retrieves a preference's value as byte[]
+     */
+    public static byte[] getBytes(String code){
+        return Pref.findByCode(code).getBytes();
+    }
+
+    /**
+     * Retrieves a preference's value as Date
+     */
+    public static Date getDate(String code){
+        return Pref.findByCode(code).getDate();
+    }
+
+    /**
+     * Retrieves this preference's value as BigDecimal
+     */
+    public static BigDecimal getDecimal(String code){
+        return Pref.findByCode(code).getDecimale();
+    }
+
+    /**
+     * Retrieves a preference's value as int
+     */
+    public static int getInt(String code){
+        return Pref.findByCode(code).getInt();
+    }
+
+    /**
+     * Retrieves a preference's value as String
+     */
+    public static String getString(String code){
+        return Pref.findByCode(code).getStringa();
+    }
+
+    /**
+     * Retrieves a preference's value as Image
+     */
+    public static Image getImage(String code){
+        return Pref.findByCode(code).getImage();
+    }
+
+    /**
+     * Retrieves a preference's value as Resource
+     */
+    public Resource getResource(String code) {
+        return Pref.findByCode(code).getResource();
+    }
 
 }// end of abstract static class

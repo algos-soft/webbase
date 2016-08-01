@@ -68,4 +68,5 @@ public enum TypePref {
     public String toString() {
         return super.toString();
     }
+
 }// fine della classe Enumeration

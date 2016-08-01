@@ -446,11 +446,11 @@ public class Pref extends CompanyEntity {
      * La crea SOLO se non esiste già
      *
      * @param code    sigla di riferimento interna (obbligatoria)
-     * @param tipo    di dato (obbligatoria)
      * @param company di appartenenza
+     * @param tipo    di dato (obbligatoria)
      * @return istanza di Prefm
      */
-    public static Pref crea(String code, PrefType tipo, BaseCompany company) {
+    public static Pref crea(String code, BaseCompany company, PrefType tipo) {
         Pref pref = Pref.findByCode(code, company);
 
         if (pref == null) {
@@ -466,13 +466,35 @@ public class Pref extends CompanyEntity {
      * La crea SOLO se non esiste già
      *
      * @param code        sigla di riferimento interna (obbligatoria)
-     * @param tipo        di dato (obbligatoria)
      * @param company     di appartenenza
+     * @param tipo        di dato (obbligatoria)
+     * @param descrizione visibile
+     * @return istanza di Prefm
+     */
+    public static Pref crea(String code, BaseCompany company, PrefType tipo, String descrizione) {
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref == null) {
+            pref = new Pref(code, tipo, company);
+            pref.setDescrizione(descrizione);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param code        sigla di riferimento interna (obbligatoria)
+     * @param company     di appartenenza
+     * @param tipo        di dato (obbligatoria)
      * @param descrizione visibile
      * @param value       della preferenza
      * @return istanza di Prefm
      */
-    public static Pref crea(String code, PrefType tipo, BaseCompany company, String descrizione, Object value) {
+    public static Pref crea(String code, BaseCompany company, PrefType tipo, String descrizione, Object value) {
         Pref pref = Pref.findByCode(code, company);
 
         if (pref == null) {
@@ -729,8 +751,7 @@ public class Pref extends CompanyEntity {
      * @param value   della preferenza
      */
     public static void put(String code, BaseCompany company, PrefType typo, Object value) {
-        Pref.crea(code, typo, company); // crea solo se non esiste
-        set(code, company, value);
+        put(code, company, typo, value, "");
     } // end of method
 
     /**
@@ -745,7 +766,7 @@ public class Pref extends CompanyEntity {
      * @param descrizione visibile
      */
     public static void put(String code, BaseCompany company, PrefType typo, Object value, String descrizione) {
-        Pref.crea(code, typo, company); // La crea SOLO se non esiste già
+        Pref.crea(code, company, typo, descrizione); // La crea SOLO se non esiste già
         set(code, company, value);  // chiama il metodo per inserire il valore
     } // end of method
 

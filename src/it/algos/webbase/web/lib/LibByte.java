@@ -42,4 +42,4 @@ public class LibByte {
         return new BigDecimal(dbl);
     }// end of static method
 
-}// end of static class
+}// end of abstract static class

@@ -336,23 +336,27 @@ public class Pref extends CompanyEntity {
         Pref instance = null;
         BaseEntity bean;
 
-        EntityManager manager = EM.createEntityManager();
-        if (company != null) {
-            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
-        } else {
-            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
-        }// end of if/else cycle
-        manager.close();
+//        EntityManager manager = EM.createEntityManager();
+//        if (company != null) {
+//            bean = CompanyQuery.queryOne(Pref.class, Pref_.code, code, manager, company);
+//        } else {
+//            bean = AQuery.queryOne(Pref.class, Pref_.code, code);
+//        }// end of if/else cycle
+//        manager.close();
+//
+//        if (bean != null && bean instanceof Pref) {
+//            instance = (Pref) bean;
+//        }// end of if cycle
+//
+//        if (instance == null) {
+//            instance = findByCodeUnico(code);
+//        }// end of if cycle
 
-        if (bean != null && bean instanceof Pref) {
-            instance = (Pref) bean;
+        if (company!=null) {
+            code+=company.getCompanyCode();
         }// end of if cycle
 
-        if (instance == null) {
-            instance = findByCodeUnico(code);
-        }// end of if cycle
-
-        return instance;
+        return findByCodeUnico(code);
     }// end of method
 
 

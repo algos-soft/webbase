@@ -3,12 +3,14 @@ package it.algos.webbase.web.pref;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.lib.LibImage;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 
 import com.google.common.primitives.Longs;
@@ -337,6 +339,5 @@ public abstract class AbsPref {
 		string, bool, integer, decimal, date, bytes;
 	}// end of internal enumeration
 
-	
 
 }

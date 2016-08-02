@@ -89,33 +89,33 @@ public class Log extends BaseEntity {
     }// end of method
 
     //--registra un avviso
-    public static void setDebug(String code, String descrizione) {
-        setBase(Livello.debug, code, descrizione);
+    public static void debug(String code, String descrizione) {
+        createBase(Livello.debug, code, descrizione);
     }// fine del metodo
 
     //--registra un avviso
-    public static void setInfo(String code, String descrizione) {
-        setBase(Livello.info, code, descrizione);
+    public static void info(String code, String descrizione) {
+        createBase(Livello.info, code, descrizione);
     }// fine del metodo
 
     //--registra un avviso
-    public static void setWarn(String code, String descrizione) {
-        setBase(Livello.warn, code, descrizione);
+    public static void warning(String code, String descrizione) {
+        createBase(Livello.warn, code, descrizione);
     }// fine del metodo
 
     //--registra un avviso
-    public static void setError(String code, String descrizione) {
-        setBase(Livello.error, code, descrizione);
+    public static void error(String code, String descrizione) {
+        createBase(Livello.error, code, descrizione);
     }// fine del metodo
 
     //--registra un evento generico
-    private static void setBase(Livello livello, String code, String descrizione) {
+    private static void createBase(Livello livello, String code, String descrizione) {
         Log logo = new Log(livello, code, descrizione, LibTime.current());
         logo.save();
     }// fine del metodo statico
 
     //--registra un evento generico
-    private static void setBase(Livello livello, String code, String descrizione, Timestamp time) {
+    private static void createBase(Livello livello, String code, String descrizione, Timestamp time) {
         Log logo = new Log(livello, code, descrizione, time);
         logo.save();
     }// fine del metodo statico

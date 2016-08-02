@@ -139,7 +139,7 @@ public class PrefTable extends ETable {
          * Componente specifico.
          */
         private Component generateDate(Object value) {
-            return new Label(LibDate.toStringDDMMYYHHMMSS((Date)value));
+            return new Label(LibDate.toStringDDMMYYYYHHMM((Date)value));
         }// end of method
 
         /**

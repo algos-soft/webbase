@@ -6,7 +6,10 @@ import com.vaadin.ui.Table;
 import it.algos.webbase.multiazienda.CompanyEntity_;
 import it.algos.webbase.multiazienda.ETable;
 import it.algos.webbase.web.field.CheckBoxField;
+import it.algos.webbase.web.lib.LibDate;
 import it.algos.webbase.web.module.ModulePop;
+
+import java.util.Date;
 
 /**
  * Created by gac on 30 lug 2016.
@@ -136,7 +139,7 @@ public class PrefTable extends ETable {
          * Componente specifico.
          */
         private Component generateDate(Object value) {
-            return new Label(value.toString());
+            return new Label(LibDate.toStringDDMMYYHHMMSS((Date)value));
         }// end of method
 
         /**

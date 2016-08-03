@@ -1,6 +1,7 @@
 package it.algos.webbase.domain.log;
 
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.lib.LibTime;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
+@DefaultSort({"timestamp"})
 public class Log extends BaseEntity {
 
     @NotNull

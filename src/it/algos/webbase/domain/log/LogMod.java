@@ -59,7 +59,7 @@ public class LogMod extends ModulePop {
      */
     @Override
     protected Attribute<?, ?>[] creaFieldsList() {
-        return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione, Log_.timestamp};
+        return new Attribute[]{Log_.livello, Log_.code, Log_.timestamp, Log_.descrizione};
     }// end of method
 
     /**

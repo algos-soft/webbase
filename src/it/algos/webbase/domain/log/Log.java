@@ -22,11 +22,12 @@ public class Log extends BaseEntity {
     @NotEmpty
     private String code = "";
 
+    @NotNull
+    private Timestamp timestamp = LibTime.adesso();
+
     @NotEmpty
     private String descrizione = "";
 
-    @NotNull
-    private Timestamp timestamp = LibTime.adesso();
 
 
     public Log() {

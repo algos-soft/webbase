@@ -3,6 +3,7 @@ package it.algos.webbase.web.login;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
+import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.lib.LibCookie;
 import it.algos.webbase.web.lib.LibCrypto;
 import it.algos.webbase.web.lib.LibSession;
@@ -40,6 +41,9 @@ public class Login {
     // listeners notificati al logout
     private ArrayList<LogoutListener> logoutListeners = new ArrayList<>();
 
+    // listeners notificati quando si modifica il profilo utente
+    private ArrayList<ProfileChangeListener> profileListeners = new ArrayList<>();
+
     private UserIF user;
 
     private String cookiePrefix = "";
@@ -47,9 +51,11 @@ public class Login {
     private boolean renewCookiesOnLogin = DEFAULT_RENEW_COOKIES_ON_LOGIN;
 
     private AbsLoginForm loginForm;
+    private AbsUserProfileForm profileForm;
 
     public Login() {
         loginForm=new DefaultLoginForm();
+        profileForm=new DefaultUserProfileForm();
     }
 
     /**
@@ -98,6 +104,15 @@ public class Login {
     }
 
     /**
+     * Retrieve the User Profile form
+     * @return the User Profile form to show
+     */
+    public AbsUserProfileForm getUserProfileForm(){
+        return profileForm;
+    }
+
+
+    /**
      * Displays the Login form
      */
     public void showLoginForm() {
@@ -120,6 +135,30 @@ public class Login {
         UI.getCurrent().addWindow(window);
 
     }
+
+    /**
+     * Displays the user profile
+     */
+    public void showUserProfile() {
+
+        AbsUserProfileForm profileForm = getUserProfileForm();
+        profileForm.setUser(Login.getLogin().getUser());
+
+        // add a confirm listener in the form
+        profileForm.addConfirmListener(new ConfirmDialog.ConfirmListener() {
+            @Override
+            public void confirmed(ConfirmDialog dialog) {
+                int a = 87;
+                int b=1;
+            }
+        });
+
+        Window window = profileForm.getWindow();
+        window.center();
+        UI.getCurrent().addWindow(window);
+
+    }
+
 
 
 
@@ -376,6 +415,12 @@ public class Login {
         logoutListeners.add(l);
     }
 
+    /**
+     * Adds a ProfileChangeListener
+     */
+    public void addProfileListener(ProfileChangeListener l) {
+        profileListeners.add(l);
+    }
 
     /**
      * @return true if a user is logged

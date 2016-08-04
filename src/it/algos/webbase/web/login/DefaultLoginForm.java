@@ -33,7 +33,6 @@ public class DefaultLoginForm extends AbsLoginForm {
         nameField = new TextField("Username");
 //        nameField.setWidthUndefined();
         nameField.setWidth("15em");
-
         return nameField;
     }
 

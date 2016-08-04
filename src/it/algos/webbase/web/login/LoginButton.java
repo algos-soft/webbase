@@ -33,6 +33,14 @@ public class LoginButton extends MenuBar {
             }
         });
 
+        getLogin().addProfileListener(new ProfileChangeListener() {
+            @Override
+            public void profileChanged(ProfileChangeEvent e) {
+                updateUI();
+            }
+        });
+
+
         loginItem = addItem("", null, null);
         updateUI();
     }
@@ -104,6 +112,7 @@ public class LoginButton extends MenuBar {
     }
 
     private void myProfileCommandSelected() {
+        getLogin().showUserProfile();
     }
 
 

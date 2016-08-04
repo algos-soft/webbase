@@ -70,6 +70,7 @@ public class UtenteForm extends ModuleForm {
 
         field = new CheckBoxField(FIELD_ABILITATO_LABEL);
         addField(Utente_.enabled, field);
+
     }// end of method
 
 

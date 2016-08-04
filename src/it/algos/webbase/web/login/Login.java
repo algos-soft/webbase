@@ -144,12 +144,14 @@ public class Login {
         AbsUserProfileForm profileForm = getUserProfileForm();
         profileForm.setUser(Login.getLogin().getUser());
 
-        // add a confirm listener in the form
-        profileForm.addConfirmListener(new ConfirmDialog.ConfirmListener() {
+        // sets the confirm listener in the form
+        profileForm.setConfirmListener(new ConfirmDialog.ConfirmListener() {
             @Override
             public void confirmed(ConfirmDialog dialog) {
-                int a = 87;
-                int b=1;
+                ProfileChangeEvent e = new ProfileChangeEvent(Login.this, user);
+                for(ProfileChangeListener listener : profileListeners){
+                    listener.profileChanged(e);
+                }
             }
         });
 
@@ -417,9 +419,18 @@ public class Login {
 
     /**
      * Adds a ProfileChangeListener
+     * Warning! Login is static - avoid leaving listeners attached!
      */
     public void addProfileListener(ProfileChangeListener l) {
         profileListeners.add(l);
+    }
+
+    /**
+     * Sets the ProfileChangeListener
+     */
+    public void setProfileListener(ProfileChangeListener l) {
+        profileListeners.clear();
+        addProfileListener(l);
     }
 
     /**

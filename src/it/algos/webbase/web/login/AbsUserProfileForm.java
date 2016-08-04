@@ -9,6 +9,8 @@ import it.algos.webbase.web.dialog.ConfirmDialog;
  */
 public abstract class AbsUserProfileForm extends ConfirmDialog {
 
+    private UserIF user;
+
     public AbsUserProfileForm() {
         super(null);
     }
@@ -19,10 +21,16 @@ public abstract class AbsUserProfileForm extends ConfirmDialog {
      */
     public abstract void setUser(UserIF user);
 
+    public UserIF getUser() {
+        return user;
+    }
+
     public Window getWindow() {
         return this;
     }
 
-
-
+    @Override
+    protected void onConfirm() {
+        super.onConfirm();
+    }
 }

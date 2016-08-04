@@ -33,7 +33,7 @@ public class LoginButton extends MenuBar {
             }
         });
 
-        getLogin().addProfileListener(new ProfileChangeListener() {
+        getLogin().setProfileListener(new ProfileChangeListener() {
             @Override
             public void profileChanged(ProfileChangeEvent e) {
                 updateUI();

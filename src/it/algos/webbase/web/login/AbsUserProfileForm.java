@@ -1,5 +1,6 @@
 package it.algos.webbase.web.login;
 
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 
@@ -47,8 +48,10 @@ public abstract class AbsUserProfileForm extends ConfirmDialog {
                 String newPass = changeDial.getNewPassword();
                 getUser().setPassword(newPass);
                 getUser().save();
+                Notification.show("Password modificata");
             }
         });
+        changeDial.show();
 
 
     }

@@ -18,6 +18,7 @@ public class ChangePasswordDialog extends ConfirmDialog{
 
     public ChangePasswordDialog(String originalPassword) {
         super(null);
+        this.originalPassword=originalPassword;
 
         oldPassword=new PasswordField("Vecchia password");
         oldPassword.setRequired(true);
@@ -28,6 +29,8 @@ public class ChangePasswordDialog extends ConfirmDialog{
         addComponent(oldPassword);
         addComponent(newPassword);
         addComponent(repeatPassword);
+
+        oldPassword.focus();
 
 
     }

@@ -17,6 +17,7 @@ public abstract class AbsUserProfileForm extends ConfirmDialog {
 
     /**
      * Fills the fields in the form with the data from a user
+     *
      * @param user the user
      */
     public abstract void setUser(UserIF user);
@@ -32,5 +33,23 @@ public abstract class AbsUserProfileForm extends ConfirmDialog {
     @Override
     protected void onConfirm() {
         super.onConfirm();
+    }
+
+    /**
+     * Starts the procedure to change the password
+     */
+    public void changePassword() {
+        String password = getUser().getPassword();
+        ChangePasswordDialog changeDial = new ChangePasswordDialog(password);
+        changeDial.setConfirmListener(new ConfirmListener() {
+            @Override
+            public void confirmed(ConfirmDialog dialog) {
+                String newPass = changeDial.getNewPassword();
+                getUser().setPassword(newPass);
+                getUser().save();
+            }
+        });
+
+
     }
 }

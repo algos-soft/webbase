@@ -1,5 +1,7 @@
 package it.algos.webbase.web.login;
 
+import it.algos.webbase.web.entity.BaseEntity;
+
 /**
  * Interface to a User entity
  * Created by alex on 25-05-2016.
@@ -22,6 +24,12 @@ public interface UserIF {
     String getPassword();
 
     /**
+     * Sets a new password
+     * @param password the password (in clear text)
+     */
+    void setPassword(String password);
+
+    /**
      * @return the password (encrypted)
      */
     String getEncryptedPassword();
@@ -34,5 +42,9 @@ public interface UserIF {
      */
     boolean validatePassword(String password);
 
+    /**
+     * Persist the user in the storage
+     */
+    BaseEntity save();
 
 }

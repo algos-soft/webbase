@@ -1,6 +1,7 @@
 package it.algos.webbase.web.login;
 
 import com.vaadin.ui.Button;
+import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.field.TextField;
 
 
@@ -20,7 +21,7 @@ public class DefaultUserProfileForm extends AbsUserProfileForm {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                new ChangePasswordDialog().show();
+                changePassword();
             }
         });
         addComponent(button);

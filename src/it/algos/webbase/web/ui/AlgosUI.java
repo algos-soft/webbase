@@ -271,7 +271,7 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
             footer.addStyleName("redBg");
         }// fine del blocco if
 
-//        footer.addComponent(new Label("Algos s.r.l."));
+        footer.addComponent(new Label("Algos s.r.l."));
 
         return footer;
     }// end of method

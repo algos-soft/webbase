@@ -91,7 +91,7 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
      * <p>
      * Informa (tramite listener) chi è interessato (solo la classe Login, che poi rilancia) <br>
      */
-    private void utenteLoggato() {
+    protected void utenteLoggato() {
         if (loginListener != null) {
             loginListener.onUserLogin(null);
         }

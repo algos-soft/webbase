@@ -1,6 +1,7 @@
 package it.algos.webbase.domain.company;
 
 import it.algos.webbase.domain.pref.Pref;
+import it.algos.webbase.multiazienda.CompanyEntity_;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
@@ -430,6 +431,14 @@ public class BaseCompany extends BaseEntity {
     }//end of setter method
 
     /**
+     * Elimina l'azienda.
+     */
+    public void delete() {
+        deleteAllData();
+        super.delete();
+    }// end of method
+
+    /**
      * Elimina tutti i dati di questa azienda.
      * <p>
      * L'ordine di cancellazione è critico per l'integrità referenziale
@@ -441,8 +450,10 @@ public class BaseCompany extends BaseEntity {
         // elimina gli utenti
 
         // elimina le preferenze
+        AQuery.delete(Pref.class, CompanyEntity_.company, this);
 
-    }
+    }// end of method
+
 
 }// end of entity class
 

@@ -63,7 +63,7 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
             @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
-                    if(getToolbar()!=null){
+                    if (getToolbar() != null) {
                         getToolbar().fireEdit();
                     }
                 }
@@ -71,7 +71,7 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
         });
 
         // The toolbar listens to table selection changes
-        if(this.getToolbar()!=null){
+        if (this.getToolbar() != null) {
             getTable().addSelectionChangedListener(this.getToolbar());
         }
 
@@ -81,10 +81,16 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
 
     }// end of method
 
+
+    /**
+     * Creates the toolbar
+     * Barra standard con 5 bottoni (nuovo, modifica, elimina, cerca, selezione)
+     * Sovrascrivibile, per aggiungere/modificare bottoni
+     */
     public TableToolbar createToolbar() {
-        TableToolbar toolbar = new TableToolbar();
-        return toolbar;
-    }
+        return new TableToolbar();
+    }// end of method
+
 
     public TableFooter createFooter() {
         return new TableFooter();

@@ -29,7 +29,7 @@ public class PrefMod extends ModulePop {
      * (facoltativo) icona del menu (se manca usa un'icona standard)
      */
     public PrefMod() {
-        super(Pref.class, FontAwesome.BARS);
+        super(Pref.class, FontAwesome.WRENCH);
     }// end of constructor
 
 

@@ -26,7 +26,7 @@ public class LogMod extends ModulePop {
      * (facoltativo) icona del menu (se manca usa un'icona standard)
      */
     public LogMod() {
-        super(Log.class, "Logo", FontAwesome.BARS);
+        super(Log.class, "Log", FontAwesome.CLOCK_O);
     }// end of constructor
 
 

@@ -68,7 +68,7 @@ public class AQuery {
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static List<? extends BaseEntity> queryList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value,EntityManager manager) {
+    public static List<? extends BaseEntity> queryList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
         Root<? extends BaseEntity> root = cq.from(clazz);
@@ -214,17 +214,33 @@ public class AQuery {
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass) {
         List<? extends BaseEntity> entities;
+
+        EntityManager manager = EM.createEntityManager();
+        entities = getList(entityClass, manager);
+        manager.close();
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Search for the all entities
+     *
+     * @param entityClass the entity class
+     * @param manager     the EntityManager to use
+     * @return a list of entities
+     */
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass,EntityManager manager) {
+        List<? extends BaseEntity> entities;
         CriteriaBuilder builder;
         CriteriaQuery<? extends BaseEntity> criteria;
         TypedQuery<? extends BaseEntity> query;
-
-        EntityManager manager = EM.createEntityManager();
 
         builder = manager.getCriteriaBuilder();
         criteria = builder.createQuery(entityClass);
         query = manager.createQuery(criteria);
         entities = query.getResultList();
-        manager.close();
+
         return entities;
     }// end of method
 
@@ -235,6 +251,24 @@ public class AQuery {
      * @return an ArrayList of entities
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass) {
+        ArrayList<? extends BaseEntity> lista = null;
+
+        EntityManager manager = EM.createEntityManager();
+        lista = getLista(entityClass, manager);
+        manager.close();
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Search for the all entities
+     *
+     * @param entityClass the entity class
+     * @param manager     the EntityManager to use
+     * @return an ArrayList of entities
+     */
+    public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, EntityManager manager) {
         ArrayList<? extends BaseEntity> lista = null;
         List<? extends BaseEntity> entities = getList(entityClass);
 

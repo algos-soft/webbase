@@ -16,23 +16,307 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility methods for for queries
+ * Utility methods for queries
  */
 public class AQuery {
 
+
     /**
-     * Searches a entity by id
-     * <p>
+     * Searches for a single entity by id
      *
      * @param clazz the Entity class
      * @param id    the item id
+     * @deprecated
      */
     public static BaseEntity queryById(Class<? extends BaseEntity> clazz, Object id) {
         EntityManager manager = EM.createEntityManager();
         BaseEntity entity = (BaseEntity) manager.find(clazz, id);
         manager.close();
         return entity;
+    }// end of static method
+
+
+    /**
+     * Searches for a single entity by standard Primary Key (all Algos primary key are long)
+     * Multiple entities cannot exist, the primary key is unique.
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param id    the long id
+     * @return the entity corresponding to the key, or null
+     */
+    public static BaseEntity find(Class<? extends BaseEntity> clazz, long id) {
+        BaseEntity entity = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entity = find(clazz, id, manager);
+        manager.close();
+
+        return entity;
+    }// end of static method
+
+
+    /**
+     * Searches for a single entity by standard Primary Key (all Algos primary key are long)
+     * Multiple entities cannot exist, the primary key is unique.
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param id      the item id
+     * @param manager the EntityManager to use
+     * @return the entity corresponding to the key, or null
+     */
+    public static BaseEntity find(Class<? extends BaseEntity> clazz, long id, EntityManager manager) {
+        return manager.find(clazz, id);
+    }// end of static method
+
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * <p>
+     * If multiple entities exist, null is returned.
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        BaseEntity entity = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entity = findOne(clazz, attr, value, manager);
+        manager.close();
+
+        return entity;
+    }// end of static method
+
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * <p>
+     * If multiple entities exist, null is returned.
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        BaseEntity entity = null;
+
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
+        Root<? extends BaseEntity> root = cq.from(clazz);
+        Predicate pred = cb.equal(root.get(attr), value);
+        cq.where(pred);
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+
+        try { // prova ad eseguire il codice
+            entity = query.getSingleResult();
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return entity;
+    }// end of static method
+
+
+    /**
+     * Search for the first entity with a specified attribute value.
+     * <p>
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the first entity corresponding to the specified criteria
+     */
+    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        BaseEntity entity = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entity = findFirst(clazz, attr, value, manager);
+        manager.close();
+
+        return entity;
     }// end of method
+
+
+    /**
+     * Search for the first entity with a specified attribute value.
+     * <p>
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the first entity corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        BaseEntity entity = null;
+
+        List<? extends BaseEntity> entities = queryList(clazz, attr, value);
+        if (entities.size() > 0) {
+            entity = entities.get(0);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Return a list of entities for a given domain class and filters.
+     * <p>
+     * Use a standard manager (and close it)
+     *
+     * @param clazz   the Entity class
+     * @param sorts   an array of sort wrapper
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the list of founded entities
+     */
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
+        List<? extends BaseEntity> entities = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entities = findAll(clazz, sorts, manager, filters);
+        manager.close();
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Return a list of entities for a given domain class and filters.
+     * <p>
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param sorts   an array of sort wrapper
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the list of founded entities
+     */
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
+        List<BaseEntity> entities = new ArrayList<BaseEntity>();
+        EntityItem<BaseEntity> item;
+        JPAContainer<BaseEntity> container = getContainer(clazz, manager, filters);
+
+        if (sorts != null) {
+            for (String stringa : sorts.getProperties()) {
+                if (stringa.contains(".")) {
+                    container.addNestedContainerProperty(stringa.substring(0, stringa.lastIndexOf(".")) + ".*");
+                }// end of if cycle
+            }// end of for cycle
+
+            container.sort(sorts.getProperties(), sorts.getOrdinamenti());
+
+        }// end of if cycle
+
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            entities.add(item.getEntity());
+        }// end of for cycle
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Search for all entities with a specified attribute value.
+     * <p>
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the list of founded entities
+     */
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        List<? extends BaseEntity> entities = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entities = findAll(clazz, attr, value, manager);
+        manager.close();
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Search for all entities with a specified attribute value.
+     * <p>
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the list of founded entities
+     */
+    @SuppressWarnings("unchecked")
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        List<? extends BaseEntity> entities;
+
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
+        Root<? extends BaseEntity> root = cq.from(clazz);
+        Predicate pred = cb.equal(root.get(attr), value);
+        cq.where(pred);
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+        entities = query.getResultList();
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Create a read-only JPA container for a given domain class and filters.
+     * <p>
+     * Use a standard manager (and close it)
+     *
+     * @param clazz   the Entity class
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the JPA container
+     */
+    @SuppressWarnings("unchecked")
+    private static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, Filter... filters) {
+        JPAContainer<BaseEntity> container = null;
+
+        EntityManager manager = EM.createEntityManager();
+        container = getContainer(clazz, manager, filters);
+        manager.close();
+
+        return container;
+    }// end of method
+
+
+    /**
+     * Create a read-only JPA container for a given domain class and filters.
+     * <p>
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the JPA container
+     */
+    @SuppressWarnings("unchecked")
+    private static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        JPAContainer<BaseEntity> container = (JPAContainer<BaseEntity>) JPAContainerFactory.makeNonCachedReadOnly(clazz, manager);
+
+        for (Filter filter : filters) {
+            container.addContainerFilter(filter);
+        }// end of for cycle
+
+        return container;
+    }// end of method
+
 
     /**
      * Search for all entities with a specified attribute value.
@@ -42,6 +326,7 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return a list of entities corresponding to the specified criteria
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static List<? extends BaseEntity> queryList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -66,6 +351,7 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return a list of entities corresponding to the specified criteria
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static List<? extends BaseEntity> queryList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
@@ -87,6 +373,7 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return a list of entities corresponding to the specified criteria
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static ArrayList<? extends BaseEntity> queryLista(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -108,6 +395,7 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return the first entity corresponding to the specified criteria
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
     public static BaseEntity queryFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -130,6 +418,7 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return the only entity corresponding to the specified criteria, or null
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
     public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -153,6 +442,7 @@ public class AQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @return the only entity corresponding to the specified criteria, or null
+     * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
     public static BaseEntity queryOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
@@ -211,6 +501,7 @@ public class AQuery {
      *
      * @param entityClass the entity class
      * @return a list of entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass) {
         List<? extends BaseEntity> entities;
@@ -229,8 +520,9 @@ public class AQuery {
      * @param entityClass the entity class
      * @param manager     the EntityManager to use
      * @return a list of entities
+     * @deprecated
      */
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass,EntityManager manager) {
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass, EntityManager manager) {
         List<? extends BaseEntity> entities;
         CriteriaBuilder builder;
         CriteriaQuery<? extends BaseEntity> criteria;
@@ -249,6 +541,7 @@ public class AQuery {
      *
      * @param entityClass the entity class
      * @return an ArrayList of entities
+     * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass) {
         ArrayList<? extends BaseEntity> lista = null;
@@ -267,10 +560,11 @@ public class AQuery {
      * @param entityClass the entity class
      * @param manager     the EntityManager to use
      * @return an ArrayList of entities
+     * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, EntityManager manager) {
         ArrayList<? extends BaseEntity> lista = null;
-        List<? extends BaseEntity> entities = getList(entityClass);
+        List<? extends BaseEntity> entities = getList(entityClass, manager);
 
         if (entities != null) {
             lista = new ArrayList<BaseEntity>(entities);
@@ -288,6 +582,7 @@ public class AQuery {
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
      * @return the list with the entities found
+     * @deprecated
      */
     public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, Filter... filters) {
         return getList(entityClass, null, filters);
@@ -301,6 +596,7 @@ public class AQuery {
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
      * @return an ArrayList of entities
+     * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, Filter... filters) {
         ArrayList<? extends BaseEntity> lista = null;
@@ -323,6 +619,7 @@ public class AQuery {
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
      * @return the list with the entities found
+     * @deprecated
      */
     public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, SortProperty sorts, Filter... filters) {
         EntityItem<BaseEntity> item;
@@ -356,6 +653,7 @@ public class AQuery {
      * @param arguments   - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
      * @return the single (or first) entity found
+     * @deprecated
      */
     public static BaseEntity getEntity(Class<? extends BaseEntity> entityClass, Filter... arguments) {
         BaseEntity entity = null;
@@ -366,24 +664,6 @@ public class AQuery {
         return entity;
     }
 
-    /**
-     * Create a read-only JPA container for a given domain class and filters.
-     * <p>
-     *
-     * @param entityClass - the entity class
-     * @param filters     - an array of filters (you can use FilterFactory to build
-     *                    filters, or create them as Compare....)
-     * @return the JPA container
-     */
-    @SuppressWarnings("unchecked")
-    public static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> entityClass, Filter... filters) {
-        EntityManager manager = EM.createEntityManager();
-        JPAContainer<BaseEntity> container = (JPAContainer<BaseEntity>) JPAContainerFactory.makeNonCachedReadOnly(entityClass, manager);
-        for (Filter filter : filters) {
-            container.addContainerFilter(filter);
-        }
-        return container;
-    }
 
     /**
      * Delete all the records for a given domain class

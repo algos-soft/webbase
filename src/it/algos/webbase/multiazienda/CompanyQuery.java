@@ -24,6 +24,7 @@ public class CompanyQuery {
      * Filtrato sulla azienda corrente.
      *
      * @param clazz la domain class
+     *
      * @return il numero di record
      */
     public static long getCount(Class<? extends CompanyEntity> clazz) {
@@ -37,6 +38,7 @@ public class CompanyQuery {
      *
      * @param clazz   la domain class
      * @param company azienda da filtrare
+     *
      * @return il numero di record
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company) {
@@ -60,12 +62,12 @@ public class CompanyQuery {
         return count;
     }// end of method
 
-
     /**
      * Search for all entities of the current company.
      * <p>
      *
      * @param clazz the entity class
+     *
      * @return a list of entities corresponding to the specified criteria
      */
     public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz) {
@@ -82,6 +84,7 @@ public class CompanyQuery {
      *
      * @param clazz   the entity class
      * @param company azienda da filtrare
+     *
      * @return a list of entities corresponding to the specified criteria
      */
     public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz, BaseCompany company) {
@@ -100,6 +103,7 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
+     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -123,6 +127,7 @@ public class CompanyQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
+     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -135,7 +140,6 @@ public class CompanyQuery {
         return queryList(clazz, attr, value, manager, CompanySessionLib.getCompany());
     }// end of method
 
-
     /**
      * Search for all entities with a specified attribute value.
      * Filtrato sulla azienda passata come parametro.
@@ -146,6 +150,7 @@ public class CompanyQuery {
      * @param value   the value to search for, null for no filter
      * @param manager the EntityManager to use
      * @param company azienda da filtrare
+     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -178,7 +183,6 @@ public class CompanyQuery {
         return entities;
     }// end of method
 
-
     /**
      * Search for the only entity with a specified attribute value.
      * Filtrato sulla azienda corrente.
@@ -189,6 +193,7 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
+     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -212,6 +217,7 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
+     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -227,6 +233,32 @@ public class CompanyQuery {
     /**
      * Search for the only entity with a specified attribute value.
      * Filtrato sulla azienda passata come parametro.
+     * Crea un EntityManager al volo
+     * <p>
+     * If multiple entities exist, null is returned.
+     *
+     * @param clazz   the entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param company azienda da filtrare
+     *
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity queryOne(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr,
+            Object value,
+            BaseCompany company) {
+        EntityManager manager = EM.createEntityManager();
+        BaseEntity bean = queryOne(clazz, attr, value, manager, company);
+        manager.close();
+        return bean;
+    }// end of method
+
+    /**
+     * Search for the only entity with a specified attribute value.
+     * Filtrato sulla azienda passata come parametro.
      * <p>
      * If multiple entities exist, null is returned.
      *
@@ -235,6 +267,7 @@ public class CompanyQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @param company azienda da filtrare
+     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -260,6 +293,7 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
+     *
      * @return the first entity corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes"})
@@ -272,11 +306,11 @@ public class CompanyQuery {
         return bean;
     }
 
-
     /**
      * Search for the all entities
      *
      * @param clazz the entity class
+     *
      * @return a list of entities
      */
     @SuppressWarnings("unchecked")
@@ -291,6 +325,7 @@ public class CompanyQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory
      *                    to build filters, or create them as Compare....)
+     *
      * @return the list with the entities found
      */
     public static List<? extends CompanyEntity> getList(Class<? extends CompanyEntity> entityClass, Filter... filters) {
@@ -327,6 +362,7 @@ public class CompanyQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory
      *                    to build filters, or create them as Compare....)
+     *
      * @return the single (or first) entity found
      */
 
@@ -338,7 +374,6 @@ public class CompanyQuery {
         }
         return entity;
     }
-
 
     /**
      * Bulk delete records with CriteriaDelete
@@ -374,7 +409,6 @@ public class CompanyQuery {
 
     }
 
-
     /**
      * Crea un filtro sulla company corrente a una query.
      */
@@ -382,7 +416,6 @@ public class CompanyQuery {
         BaseCompany company = CompanySessionLib.getCompany();
         return cb.equal(root.get(CompanyEntity_.company), company);
     }
-
 
 }
 

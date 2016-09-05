@@ -171,6 +171,47 @@ public class AQuery {
 
 
     /**
+     * Search for the all entities of a given domain class
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @return a list of entities
+     */
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz) {
+        List<? extends BaseEntity> entities;
+
+        EntityManager manager = EM.createEntityManager();
+        entities = findAll(clazz, manager);
+        manager.close();
+
+        return entities;
+    }// end of method
+
+
+    /**
+     * Search for the all entities of a given domain class
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @return a list of entities
+     */
+    public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        List<? extends BaseEntity> entities;
+        CriteriaBuilder builder;
+        CriteriaQuery<? extends BaseEntity> criteria;
+        TypedQuery<? extends BaseEntity> query;
+
+        builder = manager.getCriteriaBuilder();
+        criteria = builder.createQuery(clazz);
+        query = manager.createQuery(criteria);
+        entities = query.getResultList();
+
+        return entities;
+    }// end of method
+
+
+    /**
      * Return a list of entities for a given domain class and filters.
      * <p>
      * Use a standard manager (and close it)

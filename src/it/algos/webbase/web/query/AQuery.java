@@ -278,7 +278,7 @@ public class AQuery {
     /**
      * Create a read-only JPA container for a given domain class and filters.
      * <p>
-     * Use a standard manager (and close it)
+     * Use a standard manager
      *
      * @param clazz   the Entity class
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
@@ -290,7 +290,7 @@ public class AQuery {
 
         EntityManager manager = EM.createEntityManager();
         container = getContainer(clazz, manager, filters);
-        manager.close();
+//        manager.close();
 
         return container;
     }// end of method
@@ -640,6 +640,9 @@ public class AQuery {
             item = container.getItem(id);
             list.add(item.getEntity());
         }// end of for cycle
+
+        // close the EntityManager
+        container.getEntityProvider().getEntityManager().close();
 
         return list;
     }// end of method

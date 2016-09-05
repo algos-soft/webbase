@@ -37,10 +37,10 @@ public class UtenteForm extends ModuleForm {
     private void doInit() {
         setWidth("500px");
 
-//        // decrypt the password for the UI
-//        Property prop = getItem().getItemProperty(Utente_.password.getName());
-//        String plainpass=Lib.getString(prop.getValue());
-//        getItem().getItemProperty(Utente_.password.getName()).setValue(plainpass);
+        // decrypt the password for the UI
+        Property prop = getItem().getItemProperty(Utente_.password.getName());
+        String plainpass=Lib.getString(prop.getValue());
+        getItem().getItemProperty(Utente_.password.getName()).setValue(plainpass);
 
     }
 
@@ -65,6 +65,7 @@ public class UtenteForm extends ModuleForm {
         addField(Utente_.nickname, field);
 
         //@todo Questo form viene visto solo dal developer - se l'utente gli chiede la password dimenticata, come fa a leggerla?
+        //@todo l'admin non sa le password degli utenti, se l'utente la dimentica se la cambia da solo o chiede all'admin di resettarla - alex
         field = new TextField(FIELD_PASSWORD_LABEL);
         addField(Utente_.password, field);
 
@@ -76,13 +77,13 @@ public class UtenteForm extends ModuleForm {
 
 
 
-    @Override
-    protected boolean onPreSave(FieldGroup fields) {
-        Field pField = fields.getField(Utente_.password.getName());
-        String pass = Lib.getString(pField.getValue());
-        pass= LibCrypto.encrypt(pass);
-        pField.setValue(pass);
-        return super.onPreSave(fields);
-    }
+//    @Override
+//    protected boolean onPreSave(FieldGroup fields) {
+//        Field pField = fields.getField(Utente_.password.getName());
+//        String pass = Lib.getString(pField.getValue());
+//        pass= LibCrypto.encrypt(pass);
+//        pField.setValue(pass);
+//        return super.onPreSave(fields);
+//    }
 
 }// end of class

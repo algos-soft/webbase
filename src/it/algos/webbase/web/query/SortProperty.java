@@ -25,7 +25,7 @@ public class SortProperty {
     /**
      * Costruttore
      *
-     * @param properties nomi (quantità variabile) delle property
+     * @param properties nomi delle property (quantità variabile)
      */
     public SortProperty(String... properties) {
         doInit(properties);
@@ -35,7 +35,18 @@ public class SortProperty {
     /**
      * Costruttore
      *
-     * @param attributes (quantità variabile) delle property
+     * @param attribute   singola property
+     * @param ordinamento booleano per (true) ordinamento ascendente (ASC) o (false) discendente (DESC)
+     */
+    public SortProperty(SingularAttribute attribute, boolean ordinamento) {
+        this.add(attribute.getName(), ordinamento);
+    }// fine del metodo costruttore
+
+
+    /**
+     * Costruttore
+     *
+     * @param attributes property (quantità variabile)
      */
     public SortProperty(SingularAttribute... attributes) {
         String[] properties;

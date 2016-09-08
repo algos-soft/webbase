@@ -18,6 +18,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
@@ -55,7 +56,7 @@ public abstract class ATable extends Table {
     protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList();
     private EntityManager entityManager;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    private Class<?> entityClass;
+    private Class<? extends BaseEntity> entityClass;
 
     // modifiche nella parte ''visiva'' della lista: filtri, ordinamento e righe selezionate
     private ArrayList<SelectionChangedListener> selectionChangedListeners = new ArrayList<>();
@@ -700,7 +701,7 @@ public abstract class ATable extends Table {
         }
     }
 
-    public Class<?> getEntityClass() {
+    public Class<? extends BaseEntity> getEntityClass() {
         return entityClass;
     }
 
@@ -954,7 +955,7 @@ public abstract class ATable extends Table {
      * Total number of rows in the table's domain database
      */
     public long getTotalRows() {
-        Class<?> clazz = getEntityClass();
+        Class<? extends BaseEntity> clazz = getEntityClass();
         return AQuery.getCount(clazz);
     }
 

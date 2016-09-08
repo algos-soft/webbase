@@ -30,24 +30,9 @@ public abstract class BaseEntity implements Serializable {
     private static ArrayList<PrePersistListener> prePersistListeners = new ArrayList();
     private static ArrayList<PostPersistListener> postPersistListeners = new ArrayList();
     private static ArrayList<PostUpdateListener> postUpdateListeners = new ArrayList();
-
-    protected void prePersist(Class<?> entityClass) {
-        for (PrePersistListener l : prePersistListeners) {
-            l.prePersist(entityClass);
-        }// end of for cycle
-    }// end of method
-
-    protected void postPersist(Class<?> entityClass, long id) {
-        for (PostPersistListener l : postPersistListeners) {
-            l.postPersist(entityClass, id);
-        }// end of for cycle
-    }// end of method
-
-    protected void postUpdate(Class<?> entityClass, long id) {
-        for (PostUpdateListener l : postUpdateListeners) {
-            l.postUpdate(entityClass, id);
-        }// end of for cycle
-    }// end of method
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * Adds a listener invoked when the entity is persisted.
@@ -77,206 +62,6 @@ public abstract class BaseEntity implements Serializable {
         postUpdateListeners.remove(l);
     }// end of method
 
-
-    protected void preRemove(Class<?> entityClass, long id) {
-    }// end of method
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }// end of method
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }// end of method
-
-
-//	/**
-//	 * Persists this entity to the database.
-//	 * <p>
-//	 */
-//	@SuppressWarnings("rawtypes")
-//	public void save() {
-//
-//		EntityManager manager = EM.createEntityManager();
-//
-//		try {
-//
-//			manager.getTransaction().begin();
-//			if ((getId() != null) && (getId()!=0)) {
-//				manager.merge(this);
-//			} else {
-//				manager.persist(this);
-//			}
-//
-//			manager.getTransaction().commit();
-//
-//		} catch (ConstraintViolationException e) {
-//			// rollback transaction and log
-//			manager.getTransaction().rollback();
-//			String violations = "";
-//			for (ConstraintViolation v : e.getConstraintViolations()) {
-//				if (!violations.equals("")) {
-//					violations += "\n";
-//				}
-//				violations += "- " + v.toString();
-//			}
-//			logger.log(Level.WARNING, "The record cannot be saved due to the following constraint violations:\n"
-//					+ violations, e);
-//
-//		} catch (Exception e) {
-//			manager.getTransaction().rollback();
-//			logger.log(Level.WARNING, "The record cannot be saved ", e);
-//			e.printStackTrace();
-//		}
-//
-//		manager.close();
-//
-//	}// end of method
-
-
-    /**
-     * Saves this entity to the database using a local EntityManager
-     * <p>
-     *
-     * @return the merged Entity (new entity, unmanaged, has the id)
-     */
-    public BaseEntity save() {
-        return save(null);
-    }
-
-
-    /**
-     * Saves this entity to the database.
-     * <p>
-     * If the provided EntityManager has an active transaction, the operation is performed
-     * inside the transaction.<br>
-     * Otherwise, a new transaction is used to save this single entity.
-     *
-     * @param manager the entity manager to use (if null, a new one is created on the fly)
-     * @return the merged Entity (new entity, unmanaged, has the id)
-     */
-    @SuppressWarnings("rawtypes")
-    public BaseEntity save(EntityManager manager) {
-        BaseEntity mergedEntity = null;
-        boolean localEm = false;
-
-        if (manager == null) {
-            manager = EM.createEntityManager();
-            localEm = true;
-        }
-
-        boolean createTransaction = !manager.isJoinedToTransaction();
-
-        try {
-
-            if (createTransaction) {
-                manager.getTransaction().begin();
-            }
-
-            mergedEntity = manager.merge(this);
-
-            if (createTransaction) {
-                manager.getTransaction().commit();
-            }
-
-            // assign the new id to this entity
-            if (this.id == null) {
-                this.setId(mergedEntity.getId());
-            }
-
-        } catch (ConstraintViolationException e) {
-
-            // rollback transaction
-            if (createTransaction) {
-                manager.getTransaction().rollback();
-            }
-
-            // log the error
-            String violations = "";
-            for (ConstraintViolation v : e.getConstraintViolations()) {
-                if (!violations.equals("")) {
-                    violations += "\n";
-                }
-                violations += "- " + v.toString();
-            }
-            logger.log(Level.SEVERE, "The record cannot be saved due to the following constraint violations:\n"
-                    + violations, e);
-
-        } catch (Exception e) {
-            // log the error
-            manager.getTransaction().rollback();
-            logger.log(Level.SEVERE, "The record cannot be saved ", e);
-        }
-
-        if (localEm) {
-            manager.close();
-        }
-
-        return mergedEntity;
-
-    }// end of method
-
-
-    /**
-     * Removes this entity from the database.
-     * <p>
-     * If the provided EntityManager has an active transaction, the operation is performed
-     * inside the transaction.<br>
-     * Otherwise, a new transaction is used to delete this single entity.
-     *
-     * @param the EntityManager
-     */
-    public void delete(EntityManager manager) {
-
-        boolean createTransaction = !manager.isJoinedToTransaction();
-
-        try {
-
-            if (createTransaction) {
-                manager.getTransaction().begin();
-            }
-
-            BaseEntity entityToBeRemoved = manager.getReference(this.getClass(), this.getId());
-            manager.remove(entityToBeRemoved);
-
-            if (createTransaction) {
-                manager.getTransaction().commit();
-            }
-
-        } catch (Exception e) {
-
-            // rollback transaction
-            if (createTransaction) {
-                manager.getTransaction().rollback();
-            }
-
-            logger.log(Level.WARNING, "The record cannot be deleted ", e);
-        }
-
-    }
-
-
-    /**
-     * Removes this entity from the database using a local EntityManager
-     * <p>
-     */
-    public void delete() {
-        EntityManager manager = EM.createEntityManager();
-        delete(manager);
-        manager.close();
-    }
-
-
     public static Object createBean(Class<?> clazz) {
         Object bean = null;
         try {
@@ -287,31 +72,6 @@ public abstract class BaseEntity implements Serializable {
 
         return bean;
     }// end of method
-
-
-//	/**
-//	 * Refreshes the contents from the database
-//	 */
-//	public void refresh(){
-//		EntityManager manager = EM.createEntityManager();
-//		manager.merge(this);
-//		//BaseEntity entity = manager.find(this.getClass(), this.getId());
-//		manager.refresh(this);
-//		manager.close();
-//	}
-
-    public interface PrePersistListener {
-        public void prePersist(Class<?> entityClass);
-    }
-
-    public interface PostPersistListener {
-        public void postPersist(Class<?> entityClass, long id);
-    }
-
-    public interface PostUpdateListener {
-        public void postUpdate(Class<?> entityClass, long id);
-    }
-
 
     /**
      * @returns the default sort properties of a given
@@ -405,6 +165,228 @@ public abstract class BaseEntity implements Serializable {
         return tableName;
     }
 
+    protected void prePersist(Class<?> entityClass) {
+        for (PrePersistListener l : prePersistListeners) {
+            l.prePersist(entityClass);
+        }// end of for cycle
+    }// end of method
+
+    protected void postPersist(Class<?> entityClass, long id) {
+        for (PostPersistListener l : postPersistListeners) {
+            l.postPersist(entityClass, id);
+        }// end of for cycle
+    }// end of method
+
+    protected void postUpdate(Class<?> entityClass, long id) {
+        for (PostUpdateListener l : postUpdateListeners) {
+            l.postUpdate(entityClass, id);
+        }// end of for cycle
+    }// end of method
+
+
+//	/**
+//	 * Persists this entity to the database.
+//	 * <p>
+//	 */
+//	@SuppressWarnings("rawtypes")
+//	public void save() {
+//
+//		EntityManager manager = EM.createEntityManager();
+//
+//		try {
+//
+//			manager.getTransaction().begin();
+//			if ((getId() != null) && (getId()!=0)) {
+//				manager.merge(this);
+//			} else {
+//				manager.persist(this);
+//			}
+//
+//			manager.getTransaction().commit();
+//
+//		} catch (ConstraintViolationException e) {
+//			// rollback transaction and log
+//			manager.getTransaction().rollback();
+//			String violations = "";
+//			for (ConstraintViolation v : e.getConstraintViolations()) {
+//				if (!violations.equals("")) {
+//					violations += "\n";
+//				}
+//				violations += "- " + v.toString();
+//			}
+//			logger.log(Level.WARNING, "The record cannot be saved due to the following constraint violations:\n"
+//					+ violations, e);
+//
+//		} catch (Exception e) {
+//			manager.getTransaction().rollback();
+//			logger.log(Level.WARNING, "The record cannot be saved ", e);
+//			e.printStackTrace();
+//		}
+//
+//		manager.close();
+//
+//	}// end of method
+
+    protected void preRemove(Class<?> entityClass, long id) {
+    }// end of method
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }// end of method
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }// end of method
+
+    /**
+     * Saves this entity to the database using a local EntityManager
+     * <p>
+     *
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    public BaseEntity save() {
+        return save(null);
+    }
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    @SuppressWarnings("rawtypes")
+    public BaseEntity save(EntityManager manager) {
+        BaseEntity mergedEntity = null;
+        boolean localEm = false;
+
+        if (manager == null) {
+            manager = EM.createEntityManager();
+            localEm = true;
+        }
+
+        boolean createTransaction = !manager.isJoinedToTransaction();
+
+        try {
+
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }
+
+            mergedEntity = manager.merge(this);
+
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }
+
+            // assign the new id to this entity
+            if (this.id == null) {
+                this.setId(mergedEntity.getId());
+            }
+
+        } catch (ConstraintViolationException e) {
+
+            // rollback transaction
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }
+
+            // log the error
+            String violations = "";
+            for (ConstraintViolation v : e.getConstraintViolations()) {
+                if (!violations.equals("")) {
+                    violations += "\n";
+                }
+                violations += "- " + v.toString();
+            }
+            logger.log(Level.SEVERE, "The record cannot be saved due to the following constraint violations:\n"
+                    + violations, e);
+
+        } catch (Exception e) {
+            // log the error
+            manager.getTransaction().rollback();
+            logger.log(Level.SEVERE, "The record cannot be saved ", e);
+        }
+
+        if (localEm) {
+            manager.close();
+        }
+
+        return mergedEntity;
+
+    }// end of method
+
+
+//	/**
+//	 * Refreshes the contents from the database
+//	 */
+//	public void refresh(){
+//		EntityManager manager = EM.createEntityManager();
+//		manager.merge(this);
+//		//BaseEntity entity = manager.find(this.getClass(), this.getId());
+//		manager.refresh(this);
+//		manager.close();
+//	}
+
+    /**
+     * Removes this entity from the database using a local EntityManager
+     * <p>
+     */
+    public void delete() {
+        EntityManager manager = EM.createEntityManager();
+        delete(manager);
+        manager.close();
+    }// end of method
+
+
+    /**
+     * Removes this entity from the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to delete this single entity.
+     *
+     * @param manager the EntityManager
+     */
+    public void delete(EntityManager manager) {
+
+        boolean createTransaction = !manager.isJoinedToTransaction();
+
+        try {
+
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }
+
+            BaseEntity entityToBeRemoved = manager.getReference(this.getClass(), this.getId());
+            manager.remove(entityToBeRemoved);
+
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }
+
+        } catch (Exception e) {
+
+            // rollback transaction
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }
+
+            logger.log(Level.WARNING, "The record cannot be deleted ", e);
+        }
+
+    }// end of method
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -419,5 +401,17 @@ public abstract class BaseEntity implements Serializable {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public interface PrePersistListener {
+        public void prePersist(Class<?> entityClass);
+    }
+
+    public interface PostPersistListener {
+        public void postPersist(Class<?> entityClass, long id);
+    }
+
+    public interface PostUpdateListener {
+        public void postUpdate(Class<?> entityClass, long id);
     }
 }

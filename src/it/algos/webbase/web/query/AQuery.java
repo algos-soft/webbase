@@ -488,6 +488,124 @@ public class AQuery {
     }// end of method
 
 
+    //------------------------------------------------------------------------------------------------------------------------
+    // Delete
+    //------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Delete all the records for a given domain class
+     *
+     * @param clazz the entity class
+     */
+    public static void deleteAll(Class<? extends BaseEntity> clazz) {
+        EntityManager manager = EM.createEntityManager();
+        deleteAll(clazz, manager);
+        manager.close();
+    }// end of method
+
+
+    /**
+     * Delete all the records for a given domain class
+     *
+     * @param clazz   the entity class
+     * @param manager the EntityManager to use
+     */
+    public static void deleteAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        delete(clazz, null, null, manager);
+    }// end of method
+
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     *
+     * @param clazz the domain class
+     * @param attr  the attribute to filter - null for no filtering
+     * @param value the value to search for
+     */
+    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        EntityManager manager = EM.createEntityManager();
+        delete(clazz, attr, value, manager);
+        manager.close();
+    }// end of method
+
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     *
+     * @param clazz   the domain class
+     * @param attr    the attribute to filter - null for no filtering
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     */
+    @SuppressWarnings("unchecked")
+    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+
+        // create delete
+        CriteriaDelete delete = cb.createCriteriaDelete(clazz);
+
+        // set the root class
+        Root root = delete.from(clazz);
+
+        // set where clause
+        if (attr != null) {
+            Predicate pred = cb.equal(root.get(attr), value);
+            delete.where(pred);
+        }// end of if cycle
+
+        // perform update
+        try {
+            manager.getTransaction().begin();
+            manager.createQuery(delete).executeUpdate();
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+        }// fine del blocco try-catch
+
+    }// end of method
+
+    /**
+     * Delete all the records for a given domain class
+     * <p>
+     *
+     * @param entityClass the domain class
+     * @param filter      the Filter for the records to delete (null for all records)
+     */
+    @SuppressWarnings("unchecked")
+    public static void delete(Class<? extends BaseEntity> entityClass, Filter filter) {
+
+        EntityManager manager = EM.createEntityManager();
+        JPAContainer<BaseEntity> cont = (JPAContainer<BaseEntity>) JPAContainerFactory.make(
+                entityClass, manager);
+        if (filter != null) {
+            cont.addContainerFilter(filter);
+        }
+
+        try {
+
+            manager.getTransaction().begin();
+
+            for (Object id : cont.getItemIds()) {
+                BaseEntity entity = cont.getItem(id).getEntity();
+                entity = manager.merge(entity);
+                manager.remove(entity);
+            }
+
+            manager.getTransaction().commit();
+
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+        }
+        manager.close();
+
+    }// end of method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // deprecated
+    //------------------------------------------------------------------------------------------------------------------------
     /**
      * Search for all entities with a specified attribute value.
      * <p>
@@ -799,115 +917,6 @@ public class AQuery {
     }
 
 
-    /**
-     * Delete all the records for a given domain class
-     *
-     * @param clazz the entity class
-     */
-    public static void deleteAll(Class<? extends BaseEntity> clazz) {
-        EntityManager manager = EM.createEntityManager();
-        deleteAll(clazz, manager);
-        manager.close();
-    }// end of method
-
-
-    /**
-     * Delete all the records for a given domain class
-     *
-     * @param clazz   the entity class
-     * @param manager the EntityManager to use
-     */
-    public static void deleteAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
-        delete(clazz, null, null, manager);
-    }// end of method
-
-
-    /**
-     * Bulk delete records with CriteriaDelete
-     * <p>
-     *
-     * @param clazz the domain class
-     * @param attr  the attribute to filter - null for no filtering
-     * @param value the value to search for
-     */
-    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
-        EntityManager manager = EM.createEntityManager();
-        delete(clazz, attr, value, manager);
-        manager.close();
-    }// end of method
-
-
-    /**
-     * Bulk delete records with CriteriaDelete
-     * <p>
-     *
-     * @param clazz   the domain class
-     * @param attr    the attribute to filter - null for no filtering
-     * @param value   the value to search for
-     * @param manager the EntityManager to use
-     */
-    @SuppressWarnings("unchecked")
-    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
-        CriteriaBuilder cb = manager.getCriteriaBuilder();
-
-        // create delete
-        CriteriaDelete delete = cb.createCriteriaDelete(clazz);
-
-        // set the root class
-        Root root = delete.from(clazz);
-
-        // set where clause
-        if (attr != null) {
-            Predicate pred = cb.equal(root.get(attr), value);
-            delete.where(pred);
-        }// end of if cycle
-
-        // perform update
-        try {
-            manager.getTransaction().begin();
-            manager.createQuery(delete).executeUpdate();
-            manager.getTransaction().commit();
-        } catch (Exception e) {
-            manager.getTransaction().rollback();
-        }// fine del blocco try-catch
-
-    }// end of method
-
-    /**
-     * Delete all the records for a given domain class
-     * <p>
-     *
-     * @param entityClass the domain class
-     * @param filter      the Filter for the records to delete (null for all records)
-     */
-    @SuppressWarnings("unchecked")
-    public static void delete(Class<? extends BaseEntity> entityClass, Filter filter) {
-
-        EntityManager manager = EM.createEntityManager();
-        JPAContainer<BaseEntity> cont = (JPAContainer<BaseEntity>) JPAContainerFactory.make(
-                entityClass, manager);
-        if (filter != null) {
-            cont.addContainerFilter(filter);
-        }
-
-        try {
-
-            manager.getTransaction().begin();
-
-            for (Object id : cont.getItemIds()) {
-                BaseEntity entity = cont.getItem(id).getEntity();
-                entity = manager.merge(entity);
-                manager.remove(entity);
-            }
-
-            manager.getTransaction().commit();
-
-        } catch (Exception e) {
-            manager.getTransaction().rollback();
-        }
-        manager.close();
-
-    }// end of method
 
     /**
      * Searches for a single entity by id

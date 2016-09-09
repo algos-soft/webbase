@@ -627,7 +627,7 @@ public class AQuery {
      */
     public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, Filter... filters) {
         return getList(entityClass, null, filters);
-    }// end of method
+    }
 
     /**
      * Return a list of entities for a given domain class and filters.

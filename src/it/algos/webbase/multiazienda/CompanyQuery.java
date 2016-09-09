@@ -20,29 +20,64 @@ import java.util.List;
 public class CompanyQuery {
 
     /**
-     * Ritorna il numero di record presenti nella domain class specificata
+     * Ritorna il numero di record della entity specificata
      * Filtrato sulla azienda corrente.
      *
-     * @param clazz la domain class
-     *
+     * @param clazz the Entity class
      * @return il numero di record
      */
     public static long getCount(Class<? extends CompanyEntity> clazz) {
-        return getCount(clazz, CompanySessionLib.getCompany());
+        return getCount(clazz, CompanySessionLib.getCompany(), null);
+    }// end of method
+
+
+    /**
+     * Ritorna il numero di record della entity specificata
+     * Filtrato sulla azienda corrente.
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @return il numero di record
+     */
+    public static long getCount(Class<? extends CompanyEntity> clazz, EntityManager manager) {
+        return getCount(clazz, CompanySessionLib.getCompany(), manager);
     }// end of method
 
     /**
-     * Ritorna il numero di record presenti nella domain class specificata
+     * Ritorna il numero di record della entity specificata
      * Filtrato sulla azienda passata come parametro.
      * Se la company è nulla, restituisce il numero di TUTTI i records
      *
-     * @param clazz   la domain class
+     * @param clazz   the Entity class
      * @param company azienda da filtrare
-     *
      * @return il numero di record
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company) {
-        EntityManager manager = EM.createEntityManager();
+        return getCount(clazz, company, null);
+    }// end of method
+
+
+    /**
+     * Ritorna il numero di record della entity specificata
+     * Filtrato sulla azienda passata come parametro.
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     * Se la company è nulla, restituisce il numero di TUTTI i records
+     *
+     * @param clazz   the Entity class
+     * @param company azienda da filtrare
+     * @param manager the EntityManager to use
+     * @return il numero di record
+     */
+    @SuppressWarnings({"unchecked"})
+    public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company, EntityManager manager) {
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
@@ -57,8 +92,12 @@ public class CompanyQuery {
         Long count = typedQuery.getSingleResult();
         if (count == null) {
             count = 0l;
-        }
-        manager.close();
+        }// end of if cycle
+
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
         return count;
     }// end of method
 
@@ -67,7 +106,6 @@ public class CompanyQuery {
      * <p>
      *
      * @param clazz the entity class
-     *
      * @return a list of entities corresponding to the specified criteria
      */
     public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz) {
@@ -84,7 +122,6 @@ public class CompanyQuery {
      *
      * @param clazz   the entity class
      * @param company azienda da filtrare
-     *
      * @return a list of entities corresponding to the specified criteria
      */
     public static List<? extends CompanyEntity> queryList(Class<? extends CompanyEntity> clazz, BaseCompany company) {
@@ -103,7 +140,6 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -127,7 +163,6 @@ public class CompanyQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -150,7 +185,6 @@ public class CompanyQuery {
      * @param value   the value to search for, null for no filter
      * @param manager the EntityManager to use
      * @param company azienda da filtrare
-     *
      * @return a list of entities corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -193,7 +227,6 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -217,7 +250,6 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -241,7 +273,6 @@ public class CompanyQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param company azienda da filtrare
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -267,7 +298,6 @@ public class CompanyQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @param company azienda da filtrare
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"rawtypes"})
@@ -293,7 +323,6 @@ public class CompanyQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the first entity corresponding to the specified criteria
      */
     @SuppressWarnings({"rawtypes"})
@@ -310,7 +339,6 @@ public class CompanyQuery {
      * Search for the all entities
      *
      * @param clazz the entity class
-     *
      * @return a list of entities
      */
     @SuppressWarnings("unchecked")
@@ -325,7 +353,6 @@ public class CompanyQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory
      *                    to build filters, or create them as Compare....)
-     *
      * @return the list with the entities found
      */
     public static List<? extends CompanyEntity> getList(Class<? extends CompanyEntity> entityClass, Filter... filters) {
@@ -362,7 +389,6 @@ public class CompanyQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory
      *                    to build filters, or create them as Compare....)
-     *
      * @return the single (or first) entity found
      */
 

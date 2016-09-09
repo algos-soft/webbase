@@ -29,8 +29,10 @@ public class CompanyModule extends ModulePop {
     }
 
     /**
-     * Crea una Table già filtrata sulla company corrente
-     * <p>
+     * Returns the table used to shows the list of items. <br>
+     * The concrete subclass must override for a specific Table.
+     * La table è già filtrata sulla company corrente
+     *
      * @return the Table
      */
     public ATable createTable() {

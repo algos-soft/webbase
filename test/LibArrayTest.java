@@ -483,7 +483,6 @@ public class LibArrayTest {
         ottenuto = LibArray.somma(null, arraySecondo);
         assertEquals(ottenuto.size(), SIZE_UNICI);
         assertEquals(arraySecondo.size(), sizeSecondo);
-
         ottenuto = LibArray.somma(arrayPrimo, arraySecondo);
         assertEquals(ottenuto.size(), size);
         assertEquals(arrayPrimo.size(), sizePrimo);

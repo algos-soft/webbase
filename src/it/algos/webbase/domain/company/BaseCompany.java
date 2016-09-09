@@ -5,6 +5,7 @@ import it.algos.webbase.multiazienda.CompanyEntity_;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
+import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.EntityQuery;
 import org.eclipse.persistence.annotations.Index;
@@ -434,24 +435,47 @@ public class BaseCompany extends BaseEntity {
      * Elimina l'azienda.
      */
     public void delete() {
-        deleteAllData();
-        super.delete();
+        EntityManager manager = EM.createEntityManager();
+        delete(manager);
+        manager.close();
     }// end of method
+
+
+    /**
+     * Elimina l'azienda.
+     *
+     * @param manager the EntityManager to use
+     */
+    public void delete(EntityManager manager) {
+        deleteAllData(manager);
+        super.delete(manager);
+    }// end of method
+
+    /**
+     * Elimina tutti i dati di questa azienda.
+     */
+    public void deleteAllData() {
+        EntityManager manager = EM.createEntityManager();
+        deleteAllData(manager);
+        manager.close();
+    }// end of method
+
 
     /**
      * Elimina tutti i dati di questa azienda.
      * <p>
      * L'ordine di cancellazione è critico per l'integrità referenziale
+     *
+     * @param manager the EntityManager to use
      */
-    public void deleteAllData() {
+    public void deleteAllData(EntityManager manager) {
 
         // elimina le tabelle
 
         // elimina gli utenti
 
         // elimina le preferenze
-        AQuery.delete(Pref.class, CompanyEntity_.company, this);
-
+        AQuery.delete(Pref.class, CompanyEntity_.company, this, manager);
     }// end of method
 
 

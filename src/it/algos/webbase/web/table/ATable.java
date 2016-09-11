@@ -637,7 +637,8 @@ public abstract class ATable extends Table {
     /**
      * Returns an array of the visible columns ids. Ids might be of type String
      * or Attribute. This base implementations returns all the columns (no
-     * order) Override for a custom implementation.
+     * order)<br>
+     * Override for a custom implementation.
      *
      * @return the list
      */

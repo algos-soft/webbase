@@ -34,7 +34,7 @@ public class FormToolbar extends Toolbar {
         removeComponent(helperLayout);
 
         // regola il layout: aggiunge per primo un componente espandibile in modo che
-        // i bottoni vadano ad allinearsi a destra
+        // i menuitems vadano ad allinearsi a destra
         Spacer spc = new Spacer();
         spc.setWidth("100%");
         commandLayout.setWidth("100%");

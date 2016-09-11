@@ -182,15 +182,26 @@ public abstract class ModulePop extends Module {
                 @Override
                 public void showall_() {
                     getTable().showAll();
-                }// end of inner method
+                }
 
                 @Override
                 public void deselectall_() {
                     getTable().deselectAll();
-                }// end of inner method
+                }
 
+                @Override
+                public void remembercollapsed_() {
+                    boolean state = getTable().isRememberColumnCollapsedStateCookie();
+                    getTable().setRememberColumnCollapsedState(!state);
+                }
 
-            });// end of anonymous inner class
+                @Override
+                public void rememberwidth_() {
+                    boolean state = getTable().isRememberColumnWidthCookie();
+                    getTable().setRememberColumnWidth(!state);
+                }
+
+            });
 
             // add a listener to container changed events of the table
             tablePortal.getTable().addContainerChangedListener(new ATable.ContainerChangedListener() {

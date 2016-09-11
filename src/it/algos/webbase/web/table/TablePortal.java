@@ -84,12 +84,12 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
 
     /**
      * Creates the toolbar
-     * Barra standard con 5 bottoni (nuovo, modifica, elimina, cerca, selezione)
-     * Sovrascrivibile, per aggiungere/modificare bottoni
+     * Barra standard con 6 menuitems (nuovo, modifica, elimina, cerca, selezione, opzioni)
+     * Sovrascrivibile, per aggiungere/modificare menuitems
      */
     public TableToolbar createToolbar() {
-        return new TableToolbar();
-    }// end of method
+        return new TableToolbar(this);
+    }
 
 
     public TableFooter createFooter() {

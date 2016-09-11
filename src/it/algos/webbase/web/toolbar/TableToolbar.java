@@ -7,6 +7,7 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import it.algos.webbase.web.table.ATable;
+import it.algos.webbase.web.table.TablePortal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,20 +20,40 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
     public static final String CMD_DELETE = "Elimina";
     public static final String CMD_SEARCH = "Ricerca";
     public static final String CMD_SELECTION = "Selezione";
+    public static final String CMD_TABLE_OPTIONS = "Opzioni";
 
-    protected HashMap<Bottoni, MenuItem> bottoni = new HashMap<>();
+    private TablePortal tablePortal;
+    protected HashMap<Bottoni, MenuItem> menuitems = new HashMap<>();
     private ArrayList<TableToolbarListener> listeners = new ArrayList<TableToolbarListener>();
     private InfoPanel infoPanel = new InfoPanel();
-    private MenuBar.MenuItem itemSeleziona;
 
-    public TableToolbar() {
+    // main buttons in the toolbar
+    private MenuBar.MenuItem itemCreate;
+    private MenuBar.MenuItem itemEdit;
+    private MenuBar.MenuItem itemDelete;
+    private MenuBar.MenuItem itemSearch;
+    private MenuBar.MenuItem itemSelect;
+    private MenuBar.MenuItem itemOptions;
+
+    public TableToolbar(TablePortal tablePortal) {
         super();
+
+        this.tablePortal=tablePortal;
 
         addCreate();
         addEdit();
         addDelete();
         addSearch();
         addSelect();
+        addTableOptions();
+
+        // default button visibility
+        setCreateButtonVisible(true);
+        setEditButtonVisible(true);
+        setDeleteButtonVisible(true);
+        setSearchButtonVisible(true);
+        setSelectButtonVisible(true);
+        setOptionsButtonVisible(false);
 
         addHelperComponent(infoPanel);
 
@@ -41,18 +62,52 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
 
     }
 
+
+    public void setCreateButtonVisible(boolean visible){
+        setButtonVisible(itemSelect, visible);
+    }
+
+    public void setEditButtonVisible(boolean visible){
+        setButtonVisible(itemEdit, visible);
+    }
+
+    public void setDeleteButtonVisible(boolean visible){
+        setButtonVisible(itemDelete, visible);
+    }
+
+    public void setSearchButtonVisible(boolean visible){
+        setButtonVisible(itemSearch, visible);
+    }
+
+    public void setSelectButtonVisible(boolean visible){
+        setButtonVisible(itemSelect, visible);
+    }
+
+    public void setOptionsButtonVisible(boolean visible){
+        setButtonVisible(itemOptions, visible);
+    }
+
+
+
+    private void setButtonVisible(MenuBar.MenuItem item, boolean visible){
+        Component comp = getComp(item);
+        if(comp!=null){
+            comp.setVisible(visible);
+        }
+    }
+
+
     /**
      * Bottone new.
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addCreate() {
-        MenuBar.MenuItem item;
-        item = addButton(CMD_NEW, FontAwesome.PLUS, new MenuBar.Command() {
+        itemCreate = addButton(CMD_NEW, FontAwesome.PLUS, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.create);
             }
         });
-        bottoni.put(Bottoni.create, item);
+        menuitems.put(Bottoni.create, itemCreate);
     }
 
     /**
@@ -60,13 +115,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addEdit() {
-        MenuBar.MenuItem item;
-        item = addButton(CMD_EDIT, FontAwesome.PENCIL, new MenuBar.Command() {
+        itemEdit = addButton(CMD_EDIT, FontAwesome.PENCIL, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.edit);
             }
         });
-        bottoni.put(Bottoni.edit, item);
+        menuitems.put(Bottoni.edit, itemEdit);
     }
 
     /**
@@ -74,13 +128,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addDelete() {
-        MenuBar.MenuItem item;
-        item = addButton(CMD_DELETE, FontAwesome.TRASH_O, new MenuBar.Command() {
+        itemDelete = addButton(CMD_DELETE, FontAwesome.TRASH_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.delete);
             }
         });
-        bottoni.put(Bottoni.delete, item);
+        menuitems.put(Bottoni.delete, itemDelete);
     }
 
     /**
@@ -88,13 +141,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addSearch() {
-        MenuBar.MenuItem item;
-        item = addButton(CMD_SEARCH, FontAwesome.SEARCH, new MenuBar.Command() {
+        itemSearch = addButton(CMD_SEARCH, FontAwesome.SEARCH, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.search);
             }
         });
-        bottoni.put(Bottoni.search, item);
+        menuitems.put(Bottoni.search, itemSearch);
     }
 
     /**
@@ -102,40 +154,67 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
      * Usa il Font Awesome; deprecato l'uso dell'icona del Theme corrente
      */
     protected void addSelect() {
-//        MenuBar.MenuItem itemSeleziona = null;
         MenuBar.MenuItem item;
 
-        itemSeleziona = addButton(CMD_SELECTION, FontAwesome.LIST_UL, null);
+        itemSelect = addButton(CMD_SELECTION, FontAwesome.LIST_UL, null);
 
-        item = itemSeleziona.addItem("Solo selezionati", FontAwesome.FILE_TEXT, new MenuBar.Command() {
+        item = itemSelect.addItem("Solo selezionati", FontAwesome.FILE_TEXT, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.selectedonly);
             }
         });
-        bottoni.put(Bottoni.selectedonly, item);
+        menuitems.put(Bottoni.selectedonly, item);
 
-        item = itemSeleziona.addItem("Rimuovi selezionati", FontAwesome.FILE_TEXT_O, new MenuBar.Command() {
+        item = itemSelect.addItem("Rimuovi selezionati", FontAwesome.FILE_TEXT_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.removeselected);
             }
         });
-        bottoni.put(Bottoni.removeselected, item);
+        menuitems.put(Bottoni.removeselected, item);
 
-        item = itemSeleziona.addItem("Mostra tutti", FontAwesome.FILE, new MenuBar.Command() {
+        item = itemSelect.addItem("Mostra tutti", FontAwesome.FILE, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.showall);
             }
         });
-        bottoni.put(Bottoni.showall, item);
+        menuitems.put(Bottoni.showall, item);
 
-        item = itemSeleziona.addItem("Deseleziona tutti", FontAwesome.FILE_O, new MenuBar.Command() {
+        item = itemSelect.addItem("Deseleziona tutti", FontAwesome.FILE_O, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.deselectall);
             }
         });
-        bottoni.put(Bottoni.deselectall, item);
+        menuitems.put(Bottoni.deselectall, item);
 
     }
+
+
+    /**
+     * Table options button.
+     */
+    protected void addTableOptions() {
+        MenuBar.MenuItem item;
+
+        itemOptions = addButton(CMD_TABLE_OPTIONS, FontAwesome.COG, null);
+
+        item = itemOptions.addItem("Ricorda colonne visibili", FontAwesome.COLUMNS, new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                fire(Bottoni.remembercollapsed);
+            }
+        });
+        item.setCheckable(true);
+        menuitems.put(Bottoni.remembercollapsed, item);
+
+        item = itemOptions.addItem("Ricorda larghezza colonne", FontAwesome.TEXT_WIDTH, new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                fire(Bottoni.rememberwidth);
+            }
+        });
+        item.setCheckable(true);
+        menuitems.put(Bottoni.rememberwidth, item);
+
+    }
+
 
     public void addToolbarListener(TableToolbarListener listener) {
         this.listeners.add(listener);
@@ -168,6 +247,14 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
                 case deselectall:
                     l.deselectall_();
                     break;
+                case remembercollapsed:
+                    l.remembercollapsed_();
+                    break;
+                case rememberwidth:
+                    l.rememberwidth_();
+                    break;
+
+
 
                 default:
                     break;
@@ -190,7 +277,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
 
     /**
      * Cambiata la selezione delle righe.
-     * Possibilità di modificare l'aspetto (e la funzionalità) dei bottoni, eventualmente disabilitandoli
+     * Possibilità di modificare l'aspetto (e la funzionalità) dei menuitems, eventualmente disabilitandoli
      * <p>
      * Nuovo: sempre acceso
      * Modifica: acceso se è selezionata una ed una sola riga
@@ -215,47 +302,70 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
      * @param multiSelected  if multiple rows (1+) are selected in the table
      */
     public void syncButtons(boolean singleSelected, boolean multiSelected) {
+        MenuItem item;
 
-        if (bottoni.get(Bottoni.edit) != null) {
-            bottoni.get(Bottoni.edit).setEnabled(singleSelected);
+        item=menuitems.get(Bottoni.edit);
+        if (item != null) {
+            item.setEnabled(singleSelected);
         }
 
-        if (bottoni.get(Bottoni.delete) != null) {
-            bottoni.get(Bottoni.delete).setEnabled(multiSelected);
+        item=menuitems.get(Bottoni.delete);
+        if (item != null) {
+            item.setEnabled(multiSelected);
         }
 
-        if (bottoni.get(Bottoni.selectedonly) != null) {
-            bottoni.get(Bottoni.selectedonly).setEnabled(multiSelected);
+        item=menuitems.get(Bottoni.selectedonly);
+        if (item != null) {
+            item.setEnabled(multiSelected);
         }
 
-        if (bottoni.get(Bottoni.removeselected) != null) {
-            bottoni.get(Bottoni.removeselected).setEnabled(multiSelected);
+        item=menuitems.get(Bottoni.removeselected);
+        if (item != null) {
+            item.setEnabled(multiSelected);
         }
 
-        if (bottoni.get(Bottoni.deselectall) != null) {
-            bottoni.get(Bottoni.deselectall).setEnabled(multiSelected);
+        item=menuitems.get(Bottoni.deselectall);
+        if (item != null) {
+            item.setEnabled(multiSelected);
         }
+
+        item = menuitems.get(Bottoni.remembercollapsed);
+        if (item != null) {
+            item.setChecked(getTable().isRememberColumnCollapsedStateCookie());
+        }
+
+        item = menuitems.get(Bottoni.rememberwidth);
+        if (item != null) {
+            item.setChecked(getTable().isRememberColumnWidthCookie());
+        }
+
+
     }
 
     public void setCreate(boolean enabled) {
-        bottoni.get(Bottoni.create).setEnabled(enabled);
+        menuitems.get(Bottoni.create).setEnabled(enabled);
     }
 
     public void setEdit(boolean enabled) {
-        bottoni.get(Bottoni.edit).setEnabled(enabled);
+        menuitems.get(Bottoni.edit).setEnabled(enabled);
     }
 
     public void setDelete(boolean enabled) {
-        bottoni.get(Bottoni.delete).setEnabled(enabled);
+        menuitems.get(Bottoni.delete).setEnabled(enabled);
     }
 
     public void setSearch(boolean enabled) {
-        bottoni.get(Bottoni.search).setEnabled(enabled);
+        menuitems.get(Bottoni.search).setEnabled(enabled);
     }
 
     public void setSelect(boolean enabled) {
-        itemSeleziona.setEnabled(enabled);
+        itemSelect.setEnabled(enabled);
     }
+
+    public void setOptionsEnabled(boolean enabled) {
+        itemOptions.setEnabled(enabled);
+    }
+
 
     /*
      * Elimina un comando dalla GUI.
@@ -301,8 +411,17 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
         return null;
     }// end of method
 
+
+    public TablePortal getTablePortal() {
+        return tablePortal;
+    }
+
+    private ATable getTable(){
+        return tablePortal.getTable();
+    }
+
     public enum Bottoni {
-        create, edit, delete, search, selectedonly, removeselected, showall, deselectall;
+        create, edit, delete, search, selectedonly, removeselected, showall, deselectall, remembercollapsed, rememberwidth;
     }
 
     public interface TableToolbarListener {
@@ -321,6 +440,12 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
         void showall_();
 
         void deselectall_();
+
+        void remembercollapsed_();
+
+        void rememberwidth_();
+
+
 
     }
 

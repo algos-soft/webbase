@@ -18,14 +18,13 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
-import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.Entities;
 import it.algos.webbase.web.entity.SortProperties;
+import it.algos.webbase.web.lib.LibCookie;
 import it.algos.webbase.web.lib.LibFilter;
-import it.algos.webbase.web.lib.LibText;
 import it.algos.webbase.web.query.AQuery;
 import org.vaadin.addons.lazyquerycontainer.CompositeItem;
 import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
@@ -37,6 +36,7 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
+import javax.servlet.http.Cookie;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -63,6 +63,10 @@ public abstract class ATable extends Table {
 
     // modifiche nella parte ''contenuti'': container e (di solito) il sottostante DB
     private ArrayList<ContainerChangedListener> containerChangedListeners = new ArrayList<>();
+
+    // acceso quando inizia l'operazione di regolazione delle colonne dai cookies e spento quando termina.
+    // durante questa fase le colonne vengono modificate e i listener non devono reagire.
+    private boolean columnsAreSetting;
 
     /**
      * Creates a new table for a given module.
@@ -167,9 +171,25 @@ public abstract class ATable extends Table {
             }
         });
 
-//        // fire table created
-//        fire(TableEvent.created);
+        // listener per il collapse delle colonne
+        addColumnCollapseListener(new ColumnCollapseListener() {
+            @Override
+            public void columnCollapseStateChange(ColumnCollapseEvent columnCollapseEvent) {
+                if ((isRememberColumnCollapsedStateCookie() || isRememberColumnWidthCookie()) & !columnsAreSetting) {
+                    writeColumnStateCookie();
+                }
+            }
+        });
 
+        // listener per il resize delle colonne
+        addColumnResizeListener(new ColumnResizeListener() {
+            @Override
+            public void columnResize(ColumnResizeEvent columnResizeEvent) {
+                if ((isRememberColumnCollapsedStateCookie() || isRememberColumnWidthCookie()) & !columnsAreSetting) {
+                    writeColumnStateCookie();
+                }
+            }
+        });
     }
 
     /**
@@ -261,6 +281,14 @@ public abstract class ATable extends Table {
     public void attach() {
         super.attach();
 
+
+
+        // legge lo stato delle colonne dal cookie e le regola
+        // deve essere fatto in attach() perché ci devono già essere tutte le colonne
+        if (isRememberColumnCollapsedStateCookie() || isRememberColumnWidthCookie()) {
+            readColumnStateCookie();
+        }
+
         // refresh the table (underlying data might have changed)
         refresh();
 
@@ -284,6 +312,143 @@ public abstract class ATable extends Table {
         }
 
     }
+
+
+    /**
+     * Name of the cookie holding the columns state
+     */
+    private String getColumnsCookieKey() {
+        return getClass().getName() + "#columnstate";
+    }
+
+    /**
+     * Name of the cookie holding the "remember columns collapsed state" option
+     */
+    private String getRememberColumnCollapsedStateCookieKey() {
+        return getClass().getName() + "#columnCollapsedStateOption";
+    }
+
+    /**
+     * Name of the cookie holding the "remember columns width" option
+     */
+    private String getRememberColumnWidthCookieKey() {
+        return getClass().getName() + "#columnWidthOption";
+    }
+
+
+    /**
+     * Writes the current columns state in a cookie
+     */
+    private void writeColumnStateCookie() {
+        Object[] columns = getVisibleColumns();
+        StringBuilder stateString = new StringBuilder();
+        for (Object column : columns) {
+
+            int collapsed = -1;
+            if (isRememberColumnCollapsedStateCookie()) {
+                if (isColumnCollapsed(column)) {
+                    collapsed = 1;
+                } else {
+                    collapsed = 0;
+                }
+            }
+
+            int width = -1;
+            if (isRememberColumnWidthCookie()) {
+                width = getColumnWidth(column);
+            }
+
+            ColumnState state = new ColumnState(column.toString(), collapsed, width);
+            stateString.append(state.toString() + ";");
+        }
+        String cookieval = stateString.toString();
+        if (cookieval.substring(cookieval.length()).equals(";")) ;
+        {
+            cookieval = cookieval.substring(0, cookieval.length() - 1);
+        }
+        int cookietime = 10 * 365 * 24 * 60 * 60;    // 10 years
+        LibCookie.setCookie(getColumnsCookieKey(), cookieval, cookietime);
+    }
+
+    /**
+     * Reads the current columns state from the cookie
+     * and sets the columns state accordingly
+     */
+    private void readColumnStateCookie() {
+
+        String cookieval = LibCookie.getCookieValue(getColumnsCookieKey());
+        if (cookieval == null) {
+            return;
+        }
+
+        // create a hashmap with column states from the cookie
+        HashMap<String, ColumnState> statesmap = new HashMap<>();
+        String[] columnInfos = cookieval.split(";");
+        for (String info : columnInfos) {
+            String[] parts = info.split(",");
+            if (parts.length > 0) {
+                String columnId = parts[0];
+                int columnCollapsed = -1;    // unspecified
+                int columnWidth = -1;    // unspecified
+                if (parts.length > 1) {
+                    try {
+                        columnCollapsed = Integer.parseInt(parts[1]);
+                    } catch (Exception e) {
+                    }
+                }
+                if (parts.length > 2) {
+                    try {
+                        columnWidth = Integer.parseInt(parts[2]);
+                    } catch (Exception e) {
+                    }
+                }
+                ColumnState state = new ColumnState(columnId, columnCollapsed, columnWidth);
+                statesmap.put(columnId, state);
+            }
+        }
+
+        // iterate all the columns and set accordingly
+        columnsAreSetting = true;
+        Object[] columns = getVisibleColumns();
+        for (Object column : columns) {
+            String columnId = column.toString();
+            ColumnState state = statesmap.get(columnId);
+            if (state != null) {
+
+                // collapsed state
+                if (isRememberColumnCollapsedStateCookie()) {
+                    int collapsedCode = state.getCollapsed();
+                    if (collapsedCode != -1) {
+                        boolean collapsed = (collapsedCode == 1);
+                        try {
+                            setColumnCollapsed(columnId, collapsed);
+                        } catch (IllegalArgumentException e) {
+                            int a = 87;  // ignore if column not found
+                        }
+                    }
+                }
+
+                // column width
+                if (isRememberColumnWidthCookie()) {
+                    int width = state.getWitdh();
+                    if (width != -1) {
+                        try {
+                            setColumnWidth(columnId, width);
+                        } catch (IllegalArgumentException e) {
+                            int a = 87;  // ignore if column not found
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        columnsAreSetting = false;
+
+
+    }
+
 
     /**
      * Creates the container
@@ -490,7 +655,6 @@ public abstract class ATable extends Table {
      * Returns the alignment for a given column.
      *
      * @param columnId the column id
-     *
      * @return the alignment
      */
     protected Table.Align getAlignment(String columnId) {
@@ -656,7 +820,6 @@ public abstract class ATable extends Table {
      * Returns the entity given a row id.
      *
      * @param rowId the row id
-     *
      * @return the entity
      */
     public BaseEntity getEntity(Object rowId) {
@@ -800,7 +963,6 @@ public abstract class ATable extends Table {
      * using the current filter.
      *
      * @param propertyId the property id
-     *
      * @return the total for the column
      */
     protected BigDecimal getTotalForColumn(Object propertyId) {
@@ -816,7 +978,6 @@ public abstract class ATable extends Table {
 
     /**
      * @param name the name of the attribute
-     *
      * @return the Attribute from the metamodel
      */
     private Attribute getAttributeByName(String name) {
@@ -843,7 +1004,6 @@ public abstract class ATable extends Table {
      * Calculate the total for a single column.
      *
      * @param attr the attribute
-     *
      * @return the total for the currently displayed rows
      */
     private BigDecimal calcTotal(SingularAttribute attr) {
@@ -878,7 +1038,6 @@ public abstract class ATable extends Table {
      * @param cb   the CriteriaBuilder
      * @param cq   the CriteriaQuery
      * @param root the Root
-     *
      * @return the Predicate, or null if no filters are present
      */
     protected Predicate getFiltersPredicate(final CriteriaBuilder cb, final CriteriaQuery<?> cq, final Root<?> root) {
@@ -1038,6 +1197,59 @@ public abstract class ATable extends Table {
         return filter;
     }
 
+    /**
+     * Remember the collapsed state of the columns using a cookie.
+     * This method enables the feature and stores the option in a cookie.
+     * @param remember true to have the table remember the column's collapsed state
+     */
+    public void setRememberColumnCollapsedState(boolean remember) {
+        String name = getRememberColumnCollapsedStateCookieKey();
+        if (remember) {
+            LibCookie.setCookie(name, "true");
+        } else {
+            LibCookie.deleteCookie(name);
+        }
+    }
+
+    /**
+     * If this table remembers the column's collapsed states
+     * by saving and restoring them in a cookie.
+     *
+     * @return true if the cookie exists
+     */
+    public boolean isRememberColumnCollapsedStateCookie() {
+        String name = getRememberColumnCollapsedStateCookieKey();
+        Cookie cookie = LibCookie.getCookie(name);
+        return cookie != null;
+    }
+
+    /**
+     * Remember the width of the columns using a cookie.
+     * This method enables the feature and stores the option in a cookie.
+     * @param remember true to have the table remember the column widths
+     */
+    public void setRememberColumnWidth(boolean remember) {
+        String name = getRememberColumnWidthCookieKey();
+        if (remember) {
+            LibCookie.setCookie(name, "true");
+        } else {
+            LibCookie.deleteCookie(name);
+        }
+    }
+
+    /**
+     * If this table remembers the column's widths
+     * by saving and restoring them in a cookie.
+     *
+     * @return true if the cookie exists
+     */
+    public boolean isRememberColumnWidthCookie() {
+        String name = getRememberColumnWidthCookieKey();
+        Cookie cookie = LibCookie.getCookie(name);
+        return cookie != null;
+    }
+
+
     protected ATable getTable() {
         return this;
     }
@@ -1065,7 +1277,7 @@ public abstract class ATable extends Table {
 //    }
 
     public void addSelectionChangedListener(SelectionChangedListener l) {
-        if(l!=null){
+        if (l != null) {
             selectionChangedListeners.add(l);
         }
     }
@@ -1073,6 +1285,7 @@ public abstract class ATable extends Table {
     public void addContainerChangedListener(ContainerChangedListener l) {
         containerChangedListeners.add(l);
     }
+
 
     /**
      * Table selection has changed
@@ -1175,7 +1388,6 @@ public abstract class ATable extends Table {
          * <p>
          *
          * @param propertyId the property id
-         *
          * @return the number of decimal places
          */
         protected int getDefaultDecimalPlacesForColumn(Object propertyId) {
@@ -1217,5 +1429,45 @@ public abstract class ATable extends Table {
         }
 
     }
+
+
+    /**
+     * Represents a table columns state
+     */
+    private class ColumnState {
+        private String columnId;
+        private int collapsed;  //0 = not collapsed, 1 = collapsed, -1 = unspecified
+        private int witdh;// -1 = unspecified
+
+        public ColumnState(String columnId, int collapsed, int witdh) {
+            this.columnId = columnId;
+            this.collapsed = collapsed;
+            this.witdh = witdh;
+        }
+
+        public int getCollapsed() {
+            return collapsed;
+        }
+
+        public void setCollapsed(int collapsed) {
+            this.collapsed = collapsed;
+        }
+
+        public int getWitdh() {
+            return witdh;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(columnId + ",");
+            builder.append(collapsed + ",");
+            builder.append(witdh);
+            return builder.toString();
+        }
+
+
+    }
+
 
 }

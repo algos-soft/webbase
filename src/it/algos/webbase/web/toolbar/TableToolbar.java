@@ -205,7 +205,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
         item.setCheckable(true);
         menuitems.put(Bottoni.remembercollapsed, item);
 
-        item = itemOptions.addItem("Ricorda larghezza colonne", FontAwesome.TEXT_WIDTH, new MenuBar.Command() {
+        item = itemOptions.addItem("Ricorda larghezza colonne", FontAwesome.ARROWS_H, new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 fire(Bottoni.rememberwidth);
             }

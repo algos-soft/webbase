@@ -90,9 +90,11 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
 
 
     private void setButtonVisible(MenuBar.MenuItem item, boolean visible){
-        Component comp = getComp(item);
-        if(comp!=null){
-            comp.setVisible(visible);
+        if(item!=null){
+            Component comp = getComp(item);
+            if(comp!=null){
+                comp.setVisible(visible);
+            }
         }
     }
 

@@ -193,12 +193,18 @@ public abstract class ModulePop extends Module {
                 public void remembercollapsed_() {
                     boolean state = getTable().isRememberColumnCollapsedStateCookie();
                     getTable().setRememberColumnCollapsedState(!state);
+                    if(!state){
+                        getTable().writeColumnStateCookie(true, false);    // remember immediately on activation
+                    }
                 }
 
                 @Override
                 public void rememberwidth_() {
                     boolean state = getTable().isRememberColumnWidthCookie();
                     getTable().setRememberColumnWidth(!state);
+                    if(!state){
+                        getTable().writeColumnStateCookie(false, true);    // remember immediately on activation
+                    }
                 }
 
             });

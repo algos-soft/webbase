@@ -282,7 +282,6 @@ public abstract class ATable extends Table {
         super.attach();
 
 
-
         // legge lo stato delle colonne dal cookie e le regola
         // deve essere fatto in attach() perché ci devono già essere tutte le colonne
         if (isRememberColumnCollapsedStateCookie() || isRememberColumnWidthCookie()) {
@@ -339,13 +338,22 @@ public abstract class ATable extends Table {
     /**
      * Writes the current columns state in a cookie
      */
-    private void writeColumnStateCookie() {
+    public void writeColumnStateCookie() {
+        writeColumnStateCookie(false, false);
+    }
+
+    /**
+     * Writes the current columns state in a cookie
+     * @param forceState true to force write the collapsed state even if the corresponding option is off
+     * @param forceState true to force write the width even if the corresponding option is off
+     */
+    public void writeColumnStateCookie(boolean forceState, boolean forceWidth) {
         Object[] columns = getVisibleColumns();
         StringBuilder stateString = new StringBuilder();
         for (Object column : columns) {
 
             int collapsed = -1;
-            if (isRememberColumnCollapsedStateCookie()) {
+            if (isRememberColumnCollapsedStateCookie() || forceState) {
                 if (isColumnCollapsed(column)) {
                     collapsed = 1;
                 } else {
@@ -354,7 +362,7 @@ public abstract class ATable extends Table {
             }
 
             int width = -1;
-            if (isRememberColumnWidthCookie()) {
+            if (isRememberColumnWidthCookie() || forceWidth) {
                 width = getColumnWidth(column);
             }
 
@@ -1201,6 +1209,7 @@ public abstract class ATable extends Table {
     /**
      * Remember the collapsed state of the columns using a cookie.
      * This method enables the feature and stores the option in a cookie.
+     *
      * @param remember true to have the table remember the column's collapsed state
      */
     public void setRememberColumnCollapsedState(boolean remember) {
@@ -1227,6 +1236,7 @@ public abstract class ATable extends Table {
     /**
      * Remember the width of the columns using a cookie.
      * This method enables the feature and stores the option in a cookie.
+     *
      * @param remember true to have the table remember the column widths
      */
     public void setRememberColumnWidth(boolean remember) {

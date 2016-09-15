@@ -176,7 +176,22 @@ public abstract class AQuery {
      * @return il numero filtrato di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
-        Long count ;
+        Long count;
+
+        // @todo NON funziona con Attribute. Usa la lista
+        if (attr != null) {
+            List lista = null;
+            if (attr instanceof SingularAttribute) {
+                lista = findAll(clazz, (SingularAttribute) attr, value, manager);
+            }// end of if cycle
+            if (lista != null) {
+                return lista.size();
+            } else {
+                return 0;
+            }// end of if/else cycle
+        }// end of if cycle
+        // end of @todo del codice sostitutivo provvisorio. Praticamente una PATCH :-)
+
         String propertyName = "";
 
         // se non specificato l'EntityManager, ne crea uno locale

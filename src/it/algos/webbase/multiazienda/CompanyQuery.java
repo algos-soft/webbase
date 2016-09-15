@@ -8,16 +8,29 @@ import it.algos.webbase.web.entity.EM;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Utility methods for FILTERED queries.
+ * Libreria da usare per tutte le query, quando l'applicazione USA la multiazienda (company)
+ * Altrimenti si usa AQuery
  * <p>
- * The results of these methods are always filtered on the current Company.
+ * The results of these methods are filtered on the current Company
+ * or
+ * The results of these methods are filtered on the Company passed as parameter
+ * <p>
+ * I metodi sono con o senza EntityManager
  */
-public class CompanyQuery {
+public abstract class CompanyQuery {
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Count records
+    // @Deprecated -> return long
+    //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Ritorna il numero di record della entity specificata
@@ -25,10 +38,11 @@ public class CompanyQuery {
      *
      * @param clazz the Entity class
      * @return il numero di record
+     * @deprecated
      */
     public static long getCount(Class<? extends CompanyEntity> clazz) {
         return getCount(clazz, CompanySessionLib.getCompany(), null);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -39,10 +53,11 @@ public class CompanyQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @return il numero di record
+     * @deprecated
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, EntityManager manager) {
         return getCount(clazz, CompanySessionLib.getCompany(), manager);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero di record della entity specificata
@@ -52,10 +67,11 @@ public class CompanyQuery {
      * @param clazz   the Entity class
      * @param company azienda da filtrare
      * @return il numero di record
+     * @deprecated
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company) {
         return getCount(clazz, company, null);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -69,6 +85,7 @@ public class CompanyQuery {
      * @param company azienda da filtrare
      * @param manager the EntityManager to use
      * @return il numero di record
+     * @deprecated
      */
     @SuppressWarnings({"unchecked"})
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company, EntityManager manager) {
@@ -99,7 +116,134 @@ public class CompanyQuery {
         }// end of if cycle
 
         return count;
-    }// end of method
+    }// end of static method
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Count records
+    // Con e senza EntityManager
+    // Con EntityManager And Property
+    // Return int
+    //------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Numero totale di records della Entity specificata
+     * Filtrato sulla azienda corrente.
+     * Usa l'EntityManager di default
+     *
+     * @param clazz the Entity class
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends CompanyEntity> clazz) {
+        return count(clazz, CompanySessionLib.getCompany(), null, null, null);
+    }// end of static method
+
+
+    /**
+     * Numero totale di records della Entity specificata
+     * Filtrato sulla azienda corrente.
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends CompanyEntity> clazz, EntityManager manager) {
+        return count(clazz, CompanySessionLib.getCompany(), null, null, manager);
+    }// end of static method
+
+    /**
+     * Numero totale di records della Entity specificata
+     * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, restituisce il numero di TUTTI i records
+     * Usa l'EntityManager di default
+     *
+     * @param clazz   the Entity class
+     * @param company da filtrare
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends CompanyEntity> clazz, BaseCompany company) {
+        return count(clazz, company, null, null, null);
+    }// end of static method
+
+    /**
+     * Numero totale di records della Entity specificata
+     * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, restituisce il numero di TUTTI i records
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param company da filtrare
+     * @param manager the EntityManager to use
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends CompanyEntity> clazz, BaseCompany company, EntityManager manager) {
+        return count(clazz, company, null, null, manager);
+    }// end of static method
+
+    /**
+     * Numero di records della Entity, filtrato sul valore della property indicata
+     * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, restituisce il numero di TUTTI i records
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param company da filtrare
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return il numero filtrato di records nella Entity
+     */
+    @SuppressWarnings({"unchecked"})
+    public static int count(Class<? extends CompanyEntity> clazz, BaseCompany company, Attribute attr, Object value, EntityManager manager) {
+        long count = 0;
+
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // se arriva anche un filtro su una property, rimando alla lista e ne calcola la dimensione
+        if (attr != null && attr instanceof SingularAttribute && value != null) {
+            List lista = queryList(clazz, (SingularAttribute) attr, value, manager, company);
+
+            if (usaManagerLocale) {
+                manager.close();
+            }// end of if cycle
+
+            if (lista != null && lista.size() > 0) {
+                count = lista.size();
+            }// end of if cycle
+
+            return (int) count;
+        }// end of if cycle
+
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
+
+        if (company != null) {
+            Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
+            cq.where(predicate);
+        }// end of if cycle
+
+        CriteriaQuery<Long> select = cq.select(cb.count(root));
+        TypedQuery<Long> typedQuery = manager.createQuery(select);
+        count = typedQuery.getSingleResult();
+        if (count == 0) {
+            count = 0l;
+        }// end of if cycle
+
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return (int) count;
+    }// end of static method
+
 
     /**
      * Search for all entities of the current company.
@@ -443,5 +587,5 @@ public class CompanyQuery {
         return cb.equal(root.get(CompanyEntity_.company), company);
     }
 
-}
+}// end of abstract class
 

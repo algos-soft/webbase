@@ -259,14 +259,38 @@ public class BaseCompany extends BaseEntity {
     }// end of static method
 
 
+//    /**
+//     * Cancellazione di tutti i records
+//     */
+//    public static void deleteAll() {
+//        for (BaseCompany company : BaseCompany.getList()) {
+//            company.delete();
+//        }// end of for cycle
+//    }// end of static method
+
+
     /**
-     * Cancellazione di tutti i records
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
      */
     public static void deleteAll() {
-        for (BaseCompany company : BaseCompany.getList()) {
-            company.delete();
-        }// end of for cycle
+        EntityManager manager = EM.createEntityManager();
+        deleteAll(manager);
+        manager.close();
     }// end of static method
+
+    /**
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
+     *
+     * @param manager the EntityManager to use
+     */
+    public static void deleteAll(EntityManager manager) {
+        AQuery.deleteAll(BaseCompany.class, manager);
+    }// end of static method
+
+
+
 
     /**
      * Ritorna la Company corrente.

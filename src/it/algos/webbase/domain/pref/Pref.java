@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.PrePersist;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -894,14 +893,36 @@ public class Pref extends CompanyEntity {
         }// fine del blocco if-else
     } // end of method
 
+//    /**
+//     * Cancellazione di tutti i records
+//     */
+//    public static void deleteAll() {
+//        for (Pref pref : Pref.getList()) {
+//            pref.delete();
+//        }// end of for cycle
+//    }// end of static method
+
+
     /**
-     * Cancellazione di tutti i records
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
      */
     public static void deleteAll() {
-        for (Pref pref : Pref.getList()) {
-            pref.delete();
-        }// end of for cycle
+        EntityManager manager = EM.createEntityManager();
+        deleteAll(manager);
+        manager.close();
     }// end of static method
+
+    /**
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
+     *
+     * @param manager the EntityManager to use
+     */
+    public static void deleteAll(EntityManager manager) {
+        AQuery.deleteAll(Pref.class, manager);
+    }// end of static method
+
 
     public Object getValore() {
         Object obj = null;
@@ -933,19 +954,75 @@ public class Pref extends CompanyEntity {
     }//end of setter method
 
     /**
+     * Saves this entity to the database using a local EntityManager
+     * <p>
+     *
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    @Override
+    public BaseEntity save() {
+        return this.save(null);
+    }// end of method
+
+    /**
+     * Saves this entity to the database using a local EntityManager
+     * <p>
+     *
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    @Override
+    public BaseEntity save(EntityManager manager) {
+        return this.save(CompanySessionLib.getCompany(), manager);
+    }// end of method
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param company azienda da filtrare
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    public Pref save(BaseCompany company, EntityManager manager) {
+        boolean valido;
+
+        valido = checkChiave(company);
+
+        if (valido) {
+            return (Pref) super.save(manager);
+        } else {
+            return null;
+        }// end of if/else cycle
+
+    }// end of method
+
+
+    /**
      * Controlla l'esistenza della chiave univoca, PRIMA di salvare il valore nel DB
      * La crea se non esiste già
+     *
+     * @param company azienda da filtrare
      */
-    @PrePersist
-    public void checkChiave() {
+    private boolean checkChiave(BaseCompany company) {
+        boolean valido = false;
+
         if (getCode() == null || getCode().equals("")) {
             codeCompanyUnico = "";
         } else {
-            codeCompanyUnico = getCode();
-            if (getCompany() != null) {
-                codeCompanyUnico += getCompany().getCompanyCode();
+            if (company == null) {
+                company = getCompany();
             }// end of if cycle
+            if (company != null) {
+                codeCompanyUnico = company.getCompanyCode();
+            }// end of if cycle
+            codeCompanyUnico += getCode();
+            valido = true;
         }// end of if/else cycle
+
+        return valido;
     } // end of method
 
     public Integer getInteger() {

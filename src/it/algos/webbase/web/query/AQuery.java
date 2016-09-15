@@ -16,13 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility methods for queries
+ * Utility methods for queries.
+ * Libreria da usare per tutte le query, quando l'applicazione NON USA la multiazienda (company)
+ * Altrimenti si usa CompanyQuery
+ * <p>
+ * I metodi sono con o senza EntityManager
  */
-public class AQuery {
+public abstract class AQuery {
 
 
     //------------------------------------------------------------------------------------------------------------------------
     // Count records
+    // @Deprecated -> return long
     //------------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -31,10 +36,11 @@ public class AQuery {
      *
      * @param clazz the Entity class
      * @return il numero totale di record nella Entity
+     * @deprecated
      */
     public static long getCount(Class<? extends BaseEntity> clazz) {
         return getCount(clazz, null, null, null);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -43,10 +49,11 @@ public class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @return il numero totale di record nella Entity
+     * @deprecated
      */
     public static long getCount(Class<? extends BaseEntity> clazz, EntityManager manager) {
         return getCount(clazz, null, null, manager);
-    }// end of method
+    }// end of static method
 
     /**
      * Ritorna il numero di record filtrati della entity specificata
@@ -56,10 +63,11 @@ public class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return il numero di record filtrati nella Entity
+     * @deprecated
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
         return getCount(clazz, attr, value, null);
-    }// end of method
+    }// end of static method
 
 
     /**
@@ -73,6 +81,7 @@ public class AQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @return il numero di record filtrati nella Entity
+     * @deprecated
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
         String propertyName = "";
@@ -107,7 +116,100 @@ public class AQuery {
         }// end of if cycle
 
         return count;
-    }// end of method
+    }// end of static method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Count records
+    // Con e senza EntityManager
+    // Con EntityManager And Property
+    // Return int
+    //------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Ritorna il numero totale di records della Entity specificata
+     * Senza filtri.
+     *
+     * @param clazz the Entity class
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz) {
+        return count(clazz, null, null, null);
+    }// end of static method
+
+
+    /**
+     * Ritorna il numero totale di records della Entity specificata
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @return il numero totale di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        return count(clazz, null, null, manager);
+    }// end of static method
+
+    /**
+     * Recupera il numero di records della Entity, filtrato sul valore della property indicata
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return il numero filtrato di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
+        return count(clazz, attr, value, null);
+    }// end of static method
+
+
+    /**
+     * Recupera il numero di records della Entity, filtrato sul valore della property indicata
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return il numero filtrato di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
+        Long count ;
+        String propertyName = "";
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        if (attr != null) {
+            propertyName = attr.getName();
+        }// end of if cycle
+
+        CriteriaBuilder qb = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+        cq.select(qb.count(cq.from(clazz)));
+
+        if (!propertyName.equals("")) {
+            Root root = cq.from(clazz);
+            Expression exp = root.get(propertyName);
+            Predicate restrictions = qb.equal(exp, value);
+            cq.where(restrictions);
+        }// end of if cycle
+
+        count = manager.createQuery(cq).getSingleResult();
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return count.intValue();
+    }// end of static method
 
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -606,6 +708,7 @@ public class AQuery {
     //------------------------------------------------------------------------------------------------------------------------
     // deprecated
     //------------------------------------------------------------------------------------------------------------------------
+
     /**
      * Search for all entities with a specified attribute value.
      * <p>
@@ -917,7 +1020,6 @@ public class AQuery {
     }
 
 
-
     /**
      * Searches for a single entity by id
      *
@@ -932,4 +1034,4 @@ public class AQuery {
         return entity;
     }// end of static method
 
-}// end of class
+}// end of abstract class

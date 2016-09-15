@@ -4,6 +4,7 @@ import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.data.Container.Filter;
+import it.algos.webbase.multiazienda.CompanyEntity;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
 
@@ -123,6 +124,8 @@ public abstract class AQuery {
     // Count records
     // Con e senza EntityManager
     // Con EntityManager And Property
+    // Rimanda ad un unico metodo
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
     // Return int
     //------------------------------------------------------------------------------------------------------------------------
 
@@ -140,6 +143,7 @@ public abstract class AQuery {
 
     /**
      * Ritorna il numero totale di records della Entity specificata
+     * Senza filtri.
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -152,7 +156,8 @@ public abstract class AQuery {
     }// end of static method
 
     /**
-     * Recupera il numero di records della Entity, filtrato sul valore della property indicata
+     * Recupera il numero di records della Entity
+     * Filtrato sul valore della property indicata
      *
      * @param clazz the Entity class
      * @param attr  the searched attribute
@@ -165,7 +170,8 @@ public abstract class AQuery {
 
 
     /**
-     * Recupera il numero di records della Entity, filtrato sul valore della property indicata
+     * Recupera il numero di records della Entity
+     * Filtrato sul valore della property indicata
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -175,50 +181,32 @@ public abstract class AQuery {
      * @param manager the EntityManager to use
      * @return il numero filtrato di records nella Entity
      */
+    @SuppressWarnings({"unchecked"})
     public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
         Long count;
 
-        // @todo NON funziona con Attribute. Usa la lista
-        if (attr != null) {
-            List lista = null;
-            if (attr instanceof SingularAttribute) {
-                lista = findAll(clazz, (SingularAttribute) attr, value, manager);
-            }// end of if cycle
-            if (lista != null) {
-                return lista.size();
-            } else {
-                return 0;
-            }// end of if/else cycle
-        }// end of if cycle
-        // end of @todo del codice sostitutivo provvisorio. Praticamente una PATCH :-)
-
-        String propertyName = "";
-
-        // se non specificato l'EntityManager, ne crea uno locale
         boolean usaManagerLocale = false;
         if (manager == null) {
             usaManagerLocale = true;
             manager = EM.createEntityManager();
         }// end of if cycle
 
-        if (attr != null) {
-            propertyName = attr.getName();
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<CompanyEntity> root = (Root<CompanyEntity>) criteria.from(clazz);
+
+        if (attr != null && attr instanceof SingularAttribute) {
+            Predicate predicate = builder.equal(root.get((SingularAttribute) attr), value);
+            criteria.where(predicate);
         }// end of if cycle
 
-        CriteriaBuilder qb = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-        cq.select(qb.count(cq.from(clazz)));
-
-        if (!propertyName.equals("")) {
-            Root root = cq.from(clazz);
-            Expression exp = root.get(propertyName);
-            Predicate restrictions = qb.equal(exp, value);
-            cq.where(restrictions);
+        CriteriaQuery<Long> select = criteria.select(builder.count(root));
+        TypedQuery<Long> typedQuery = manager.createQuery(select);
+        count = typedQuery.getSingleResult();
+        if (count == 0) {
+            count = 0L;
         }// end of if cycle
 
-        count = manager.createQuery(cq).getSingleResult();
-
-        // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle

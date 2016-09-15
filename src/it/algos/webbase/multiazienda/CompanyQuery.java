@@ -221,16 +221,16 @@ public abstract class CompanyQuery {
             return (int) count;
         }// end of if cycle
 
-        CriteriaBuilder cb = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<CompanyEntity> root = (Root<CompanyEntity>) cq.from(clazz);
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<CompanyEntity> root = (Root<CompanyEntity>) criteria.from(clazz);
 
         if (company != null) {
-            Predicate predicate = cb.equal(root.get(CompanyEntity_.company), company);
-            cq.where(predicate);
+            Predicate predicate = builder.equal(root.get(CompanyEntity_.company), company);
+            criteria.where(predicate);
         }// end of if cycle
 
-        CriteriaQuery<Long> select = cq.select(cb.count(root));
+        CriteriaQuery<Long> select = criteria.select(builder.count(root));
         TypedQuery<Long> typedQuery = manager.createQuery(select);
         count = typedQuery.getSingleResult();
         if (count == 0) {

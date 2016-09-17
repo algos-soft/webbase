@@ -88,7 +88,7 @@ public class Versione extends BaseEntity {
     }// end of method
 
     public synchronized static List<Versione> findAll() {
-        return (List<Versione>) AQuery.getList(Versione.class);
+        return (List<Versione>) AQuery.getListOld(Versione.class);
     }// end of method
 
     @Override

@@ -3,8 +3,11 @@ package it.algos.webbase.web.query;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
-import it.algos.webbase.multiazienda.CompanyEntity;
+import com.vaadin.data.util.filter.Compare;
+import it.algos.webbase.domain.company.BaseCompany;
+import it.algos.webbase.multiazienda.ELazyContainer;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
 
@@ -14,6 +17,7 @@ import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,110 +32,17 @@ public abstract class AQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Count records
-    // @Deprecated -> return long
-    //------------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Ritorna il numero totale di record della Entity specificata
-     * Senza filtri.
-     *
-     * @param clazz the Entity class
-     * @return il numero totale di record nella Entity
-     * @deprecated
-     */
-    public static long getCount(Class<? extends BaseEntity> clazz) {
-        return getCount(clazz, null, null, null);
-    }// end of static method
-
-
-    /**
-     * Ritorna il numero totale di record della entity specificata
-     *
-     * @param clazz   the Entity class
-     * @param manager the EntityManager to use
-     * @return il numero totale di record nella Entity
-     * @deprecated
-     */
-    public static long getCount(Class<? extends BaseEntity> clazz, EntityManager manager) {
-        return getCount(clazz, null, null, manager);
-    }// end of static method
-
-    /**
-     * Ritorna il numero di record filtrati della entity specificata
-     * Filtrato sul valore della property indicata.
-     *
-     * @param clazz the Entity class
-     * @param attr  the searched attribute
-     * @param value the value to search for
-     * @return il numero di record filtrati nella Entity
-     * @deprecated
-     */
-    public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
-        return getCount(clazz, attr, value, null);
-    }// end of static method
-
-
-    /**
-     * Ritorna il numero di record filtrati della entity specificata
-     * Filtrato sul valore della property indicata.
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
-     *
-     * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
-     * @param manager the EntityManager to use
-     * @return il numero di record filtrati nella Entity
-     * @deprecated
-     */
-    public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
-        String propertyName = "";
-
-        // se non specificato l'EntityManager, ne crea uno locale
-        boolean usaManagerLocale = false;
-        if (manager == null) {
-            usaManagerLocale = true;
-            manager = EM.createEntityManager();
-        }// end of if cycle
-
-        if (attr != null) {
-            propertyName = attr.getName();
-        }// end of if cycle
-
-        CriteriaBuilder qb = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-        cq.select(qb.count(cq.from(clazz)));
-
-        if (!propertyName.equals("")) {
-            Root root = cq.from(clazz);
-            Expression exp = root.get(propertyName);
-            Predicate restrictions = qb.equal(exp, value);
-            cq.where(restrictions);
-        }// end of if cycle
-
-        long count = manager.createQuery(cq).getSingleResult();
-
-        // eventualmente chiude l'EntityManager locale
-        if (usaManagerLocale) {
-            manager.close();
-        }// end of if cycle
-
-        return count;
-    }// end of static method
-
-
-    //------------------------------------------------------------------------------------------------------------------------
-    // Count records
+    // Con e senza Property
     // Con e senza EntityManager
-    // Con EntityManager And Property
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
-    // Return int
+    // Return int (non c'è motivo di usare un long come valore di ritorno)
     //------------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Ritorna il numero totale di records della Entity specificata
+     * Numero totale di records della Entity specificata
      * Senza filtri.
+     * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
      * @return il numero totale di records nella Entity
@@ -142,7 +53,7 @@ public abstract class AQuery {
 
 
     /**
-     * Ritorna il numero totale di records della Entity specificata
+     * Numero totale di records della Entity specificata
      * Senza filtri.
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
@@ -156,22 +67,25 @@ public abstract class AQuery {
     }// end of static method
 
     /**
-     * Recupera il numero di records della Entity
+     * Numero di records della Entity
      * Filtrato sul valore della property indicata
+     * Se la property è nulla, restituisce il numero di tutti i records
+     * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return il numero filtrato di records nella Entity
      */
-    public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
+    public static int count(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
         return count(clazz, attr, value, null);
     }// end of static method
 
 
     /**
-     * Recupera il numero di records della Entity
+     * Numero di records della Entity
      * Filtrato sul valore della property indicata
+     * Se la property è nulla, restituisce il numero di tutti i records
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -182,9 +96,10 @@ public abstract class AQuery {
      * @return il numero filtrato di records nella Entity
      */
     @SuppressWarnings({"unchecked"})
-    public static int count(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
-        Long count;
+    public static int count(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        Long count = 0L;
 
+        // se non specificato l'EntityManager, ne crea uno locale
         boolean usaManagerLocale = false;
         if (manager == null) {
             usaManagerLocale = true;
@@ -193,20 +108,24 @@ public abstract class AQuery {
 
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<CompanyEntity> root = (Root<CompanyEntity>) criteria.from(clazz);
+        Root<? extends BaseEntity> root = criteria.from(clazz);
 
-        if (attr != null && attr instanceof SingularAttribute) {
-            Predicate predicate = builder.equal(root.get((SingularAttribute) attr), value);
+        // aggiunge eventualmente un filtro sul valore della property indicata
+        // Se la property è nulla, restituisce il numero di tutti i records
+        if (attr != null) {
+            Predicate predicate = builder.equal(root.get(attr), value);
             criteria.where(predicate);
         }// end of if cycle
 
         CriteriaQuery<Long> select = criteria.select(builder.count(root));
         TypedQuery<Long> typedQuery = manager.createQuery(select);
-        count = typedQuery.getSingleResult();
-        if (count == 0) {
-            count = 0L;
-        }// end of if cycle
 
+        try { // prova ad eseguire il codice
+            count = typedQuery.getSingleResult();
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        // se usato, chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
@@ -217,14 +136,19 @@ public abstract class AQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Find entity by primary key
+    // Con e senza EntityManager
+    // Rimanda ad un unico metodo
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    // Parametro in ingresso di tipo long (all Algos primary key are long)
     //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Searches for a single entity by standard Primary Key (all Algos primary key are long)
      * Multiple entities cannot exist, the primary key is unique.
+     * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
-     * @param id    the long id
+     * @param id    the item long id
      * @return the entity corresponding to the key, or null
      */
     public static BaseEntity find(Class<? extends BaseEntity> clazz, long id) {
@@ -239,7 +163,7 @@ public abstract class AQuery {
      * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz   the Entity class
-     * @param id      the item id
+     * @param id      the item long id
      * @param manager the EntityManager to use
      * @return the entity corresponding to the key, or null
      */
@@ -255,7 +179,7 @@ public abstract class AQuery {
 
         entity = manager.find(clazz, id);
 
-        // eventualmente chiude l'EntityManager locale
+        // se usato, chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
@@ -266,35 +190,31 @@ public abstract class AQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Find entity by SingularAttribute
+    // Con e senza EntityManager
+    // Rimanda ad un unico metodo
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    // Return una entity di classe BaseEntity (casting specifico nel metodo chiamante)
     //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Search for a single entity with a specified attribute value.
-     * <p>
      * If multiple entities exist, null is returned.
-     * Use a standard manager (and close it)
+     * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return the only entity corresponding to the specified criteria, or null
      */
-    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
-        BaseEntity entity = null;
-
-        EntityManager manager = EM.createEntityManager();
-        entity = findOne(clazz, attr, value, manager);
-        manager.close();
-
-        return entity;
+    public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        return getEntity(clazz, attr, value, null);
     }// end of static method
-
 
     /**
      * Search for a single entity with a specified attribute value.
-     * <p>
      * If multiple entities exist, null is returned.
-     * Use a specific manager (must be close by caller method)
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz   the Entity class
      * @param attr    the searched attribute
@@ -302,74 +222,222 @@ public abstract class AQuery {
      * @param manager the EntityManager to use
      * @return the only entity corresponding to the specified criteria, or null
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+    @SuppressWarnings({"unchecked"})
+    public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         BaseEntity entity = null;
 
-        CriteriaBuilder cb = manager.getCriteriaBuilder();
-        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
-        Root<? extends BaseEntity> root = cq.from(clazz);
-        Predicate pred = cb.equal(root.get(attr), value);
-        cq.where(pred);
-        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+        // the specified attribute is mandatory
+        if (attr == null) {
+            return null;
+        }// end of if cycle
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> criteria = builder.createQuery(clazz);
+        Root<? extends BaseEntity> root = criteria.from(clazz);
+        Predicate pred = builder.equal(root.get(attr), value);
+        criteria.where(pred);
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(criteria);
 
         try { // prova ad eseguire il codice
             entity = query.getSingleResult();
         } catch (Exception unErrore) { // intercetta l'errore
         }// fine del blocco try-catch
 
+        // se usato, chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
         return entity;
     }// end of static method
 
 
+    //------------------------------------------------------------------------------------------------------------------------
+    // Find entities (list) by SingularAttribute
+    // Con e senza Property
+    // Con e senza Sort
+    // Con e senza EntityManager
+    // Rimanda ad un unico metodo
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    // Return una List di oggetti BaseEntity (casting specifico nel metodo chiamante)
+    //------------------------------------------------------------------------------------------------------------------------
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz) {
+        return getList(clazz, null, null, null, null);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        return getList(clazz, null, null, null, manager);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        return getList(clazz, attr, value, null, null);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, Filter... filters) {
+        return getList(clazz, null, null, null, null, filters);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts) {
+        return getList(clazz, null, null, sorts, null);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        return getList(clazz, null, null, null, manager, filters);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        return getList(clazz, attr, value, null, manager);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
+        return getList(clazz, null, null, sorts, null, filters);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
+        return getList(clazz, null, null, sorts, manager, filters);
+    }// end of method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
+        return getList(clazz, attr, value, sorts, manager, (Filter) null);
+    }// end of method
+
     /**
-     * Search for the first entity with a specified attribute value.
-     * <p>
-     * Use a standard manager (and close it)
+     * Search for the entities of a given Entity class
+     * Filtrate sul valore (eventuale) della property indicata
+     * Filtrate sui filtri (eventuali) passati come parametro
+     * Se manca sia la property sia i filtri, restituisce tutte le entities della Entity
+     * Ordinate secondo il filtro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     * @return the first entity corresponding to the specified criteria
-     */
-    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
-        BaseEntity entity = null;
-
-        EntityManager manager = EM.createEntityManager();
-        entity = findFirst(clazz, attr, value, manager);
-        manager.close();
-
-        return entity;
-    }// end of method
-
-
-    /**
-     * Search for the first entity with a specified attribute value.
-     * <p>
-     * Use a specific manager (must be close by caller method)
-     *
-     * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
+     * @param sorts ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
-     * @return the first entity corresponding to the specified criteria
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return a list of founded entities
      */
-    @SuppressWarnings({"rawtypes"})
-    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
-        BaseEntity entity = null;
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager, Filter... filters) {
+        ArrayList<BaseEntity> entities = new ArrayList<>();
+        ArrayList<Container.Filter> filtroArray = null;
+        Container.Filter filter;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
 
-        List<? extends BaseEntity> entities = queryList(clazz, attr, value);
-        if (entities.size() > 0) {
-            entity = entities.get(0);
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
         }// end of if cycle
 
-        return entity;
+        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
+        if (filters != null && filters.length > 0 && filters[0] != null) {
+            filtroArray = new ArrayList<>(Arrays.asList(filters));
+        }// end of if cycle
+
+        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        if (attr != null) {
+            filter = new Compare.Equal(attr.getName(), value);
+            if (filtroArray == null) {
+                filtroArray = new ArrayList<>();
+            }// end of if cycle
+            filtroArray.add(filter);
+        }// end of if cycle
+
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters
+        container = getContainer(clazz, sorts, manager, filtroArray);
+
+        // costruisce la lista, spazzolando il container
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            entities.add(item.getEntity());
+        }// end of for cycle
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return entities;
     }// end of method
 
+    /**
+     * Create a read-only JPA container for a given domain class and filters.
+     * <p>
+     * Il manager NON può essere nullo
+     * Il manager DEVE essere valido (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param sorts ordinamento (ascendente o discendente)
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the JPA container
+     */
+    @SuppressWarnings("unchecked")
+    public static ELazyContainer getLazyContainer(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
+        ELazyContainer container = new ELazyContainer(manager, clazz);
+
+        if (filters != null) {
+            for (Filter filter : filters) {
+                container.addContainerFilter(filter);
+            }// end of for cycle
+        }// end of if cycle
+
+        if (sorts != null) {
+            container.sort(sorts.getProperties(), sorts.getOrdinamenti());
+        }// end of if cycle
+
+        return container;
+    }// end of method
+
+    /**
+     * Create a read-only JPA container for a given domain class and filters.
+     * <p>
+     * Il manager NON può essere nullo
+     * Il manager DEVE essere valido (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param sorts ordinamento (ascendente o discendente)
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the JPA container
+     */
+    @SuppressWarnings("unchecked")
+    public static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, SortProperty sorts,EntityManager manager, ArrayList<Filter> filters) {
+        JPAContainer<BaseEntity> container = (JPAContainer<BaseEntity>) JPAContainerFactory.makeNonCachedReadOnly(clazz, manager);
+
+        if (filters != null) {
+            for (Filter filter : filters) {
+                container.addContainerFilter(filter);
+            }// end of for cycle
+        }// end of if cycle
+
+        if (sorts != null) {
+            for (String stringa : sorts.getProperties()) {
+                if (stringa.contains(".")) {
+                    container.addNestedContainerProperty(stringa.substring(0, stringa.lastIndexOf(".")) + ".*");
+                }// end of if cycle
+            }// end of for cycle
+            container.sort(sorts.getProperties(), sorts.getOrdinamenti());
+        }// end of if cycle
+
+        return container;
+    }// end of method
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Find entities (list)
+    // deprecated
     //------------------------------------------------------------------------------------------------------------------------
+
 
     /**
      * Search for the all entities of a given Entity class
@@ -858,11 +926,11 @@ public abstract class AQuery {
      * @return a list of entities
      * @deprecated
      */
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass) {
+    public static List<? extends BaseEntity> getListOld(Class<? extends BaseEntity> entityClass) {
         List<? extends BaseEntity> entities;
 
         EntityManager manager = EM.createEntityManager();
-        entities = getList(entityClass, manager);
+        entities = getListOld(entityClass, manager);
         manager.close();
 
         return entities;
@@ -877,7 +945,7 @@ public abstract class AQuery {
      * @return a list of entities
      * @deprecated
      */
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> entityClass, EntityManager manager) {
+    public static List<? extends BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, EntityManager manager) {
         List<? extends BaseEntity> entities;
         CriteriaBuilder builder;
         CriteriaQuery<? extends BaseEntity> criteria;
@@ -919,7 +987,7 @@ public abstract class AQuery {
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, EntityManager manager) {
         ArrayList<? extends BaseEntity> lista = null;
-        List<? extends BaseEntity> entities = getList(entityClass, manager);
+        List<? extends BaseEntity> entities = getListOld(entityClass, manager);
 
         if (entities != null) {
             lista = new ArrayList<BaseEntity>(entities);
@@ -939,8 +1007,8 @@ public abstract class AQuery {
      * @return the list with the entities found
      * @deprecated
      */
-    public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, Filter... filters) {
-        return getList(entityClass, null, filters);
+    public static ArrayList<BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, Filter... filters) {
+        return getListOld(entityClass, null, filters);
     }
 
     /**
@@ -955,7 +1023,7 @@ public abstract class AQuery {
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, Filter... filters) {
         ArrayList<? extends BaseEntity> lista = null;
-        List<? extends BaseEntity> entities = getList(entityClass, filters);
+        List<? extends BaseEntity> entities = getListOld(entityClass, filters);
 
         if (entities != null) {
             lista = new ArrayList<BaseEntity>(entities);
@@ -976,7 +1044,7 @@ public abstract class AQuery {
      * @return the list with the entities found
      * @deprecated
      */
-    public static ArrayList<BaseEntity> getList(Class<? extends BaseEntity> entityClass, SortProperty sorts, Filter... filters) {
+    public static ArrayList<BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, SortProperty sorts, Filter... filters) {
         EntityItem<BaseEntity> item;
         ArrayList<BaseEntity> list = new ArrayList<BaseEntity>();
         JPAContainer<BaseEntity> container = getContainer(entityClass, filters);
@@ -1015,7 +1083,7 @@ public abstract class AQuery {
      */
     public static BaseEntity getEntity(Class<? extends BaseEntity> entityClass, Filter... arguments) {
         BaseEntity entity = null;
-        ArrayList<BaseEntity> list = getList(entityClass, arguments);
+        ArrayList<BaseEntity> list = getListOld(entityClass, arguments);
         if (list.size() > 0) {
             entity = list.get(0);
         }
@@ -1036,5 +1104,203 @@ public abstract class AQuery {
         manager.close();
         return entity;
     }// end of static method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Count records
+    // @Deprecated -> return long
+    // @Deprecated -> use count(), instead
+    //------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Ritorna il numero totale di record della Entity specificata
+     * Senza filtri.
+     *
+     * @param clazz the Entity class
+     * @return il numero totale di record nella Entity
+     * @deprecated use count(), instead
+     */
+    public static long getCount(Class<? extends BaseEntity> clazz) {
+        return getCount(clazz, null, null, null);
+    }// end of static method
+
+
+    /**
+     * Ritorna il numero totale di record della entity specificata
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @return il numero totale di record nella Entity
+     * @deprecated use count(), instead
+     */
+    public static long getCount(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        return getCount(clazz, null, null, manager);
+    }// end of static method
+
+    /**
+     * Ritorna il numero di record filtrati della entity specificata
+     * Filtrato sul valore della property indicata.
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return il numero di record filtrati nella Entity
+     * @deprecated use count(), instead
+     */
+    public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
+        return getCount(clazz, attr, value, null);
+    }// end of static method
+
+
+    /**
+     * Ritorna il numero di record filtrati della entity specificata
+     * Filtrato sul valore della property indicata.
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return il numero di record filtrati nella Entity
+     * @deprecated use count(), instead
+     */
+    public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
+        String propertyName = "";
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        if (attr != null) {
+            propertyName = attr.getName();
+        }// end of if cycle
+
+        CriteriaBuilder qb = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+        cq.select(qb.count(cq.from(clazz)));
+
+        if (!propertyName.equals("")) {
+            Root root = cq.from(clazz);
+            Expression exp = root.get(propertyName);
+            Predicate restrictions = qb.equal(exp, value);
+            cq.where(restrictions);
+        }// end of if cycle
+
+        long count = manager.createQuery(cq).getSingleResult();
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return count;
+    }// end of static method
+
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * <p>
+     * If multiple entities exist, null is returned.
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the only entity corresponding to the specified criteria, or null
+     * @deprecated
+     */
+    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        BaseEntity entity = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entity = findOne(clazz, attr, value, manager);
+        manager.close();
+
+        return entity;
+    }// end of static method
+
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * <p>
+     * If multiple entities exist, null is returned.
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the only entity corresponding to the specified criteria, or null
+     * @deprecated
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        BaseEntity entity = null;
+
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<? extends BaseEntity> cq = cb.createQuery(clazz);
+        Root<? extends BaseEntity> root = cq.from(clazz);
+        Predicate pred = cb.equal(root.get(attr), value);
+        cq.where(pred);
+        TypedQuery<? extends BaseEntity> query = manager.createQuery(cq);
+
+        try { // prova ad eseguire il codice
+            entity = query.getSingleResult();
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return entity;
+    }// end of static method
+
+
+    /**
+     * Search for the first entity with a specified attribute value.
+     * <p>
+     * Use a standard manager (and close it)
+     *
+     * @param clazz the Entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the first entity corresponding to the specified criteria
+     * @deprecated
+     */
+    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        BaseEntity entity = null;
+
+        EntityManager manager = EM.createEntityManager();
+        entity = findFirst(clazz, attr, value, manager);
+        manager.close();
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Search for the first entity with a specified attribute value.
+     * <p>
+     * Use a specific manager (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return the first entity corresponding to the specified criteria
+     * @deprecated
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        BaseEntity entity = null;
+
+        List<? extends BaseEntity> entities = queryList(clazz, attr, value);
+        if (entities.size() > 0) {
+            entity = entities.get(0);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
 
 }// end of abstract class

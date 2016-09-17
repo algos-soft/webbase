@@ -44,11 +44,11 @@ public class EntityQuery<T extends BaseEntity> {
 	}
 
 	public List<T> getList() {
-		return (List<T>) AQuery.getList(type);
+		return (List<T>) AQuery.getListOld(type);
 	}
 
 	public List<T> getList(Filter... filters) {
-		return (List<T>) AQuery.getList(type, filters);
+		return (List<T>) AQuery.getListOld(type, filters);
 	}
 
 	public T getEntity(Filter... filters) {

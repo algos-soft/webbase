@@ -274,7 +274,7 @@ public class Pref extends CompanyEntity {
         if (company != null) {
             vettore = (Vector) CompanyQuery.queryList(Pref.class, company);
         } else {
-            vettore = (Vector) AQuery.getList(Pref.class);
+            vettore = (Vector) AQuery.getListOld(Pref.class);
         }// end of if/else cycle
 
         if (vettore != null) {
@@ -897,7 +897,7 @@ public class Pref extends CompanyEntity {
 //     * Cancellazione di tutti i records
 //     */
 //    public static void deleteAll() {
-//        for (Pref pref : Pref.getList()) {
+//        for (Pref pref : Pref.getListOld()) {
 //            pref.delete();
 //        }// end of for cycle
 //    }// end of static method

@@ -126,7 +126,7 @@ public class BaseCompany extends BaseEntity {
     @SuppressWarnings("unchecked")
     public static ArrayList<BaseCompany> getList() {
         ArrayList<BaseCompany> lista = null;
-        Vector vettore = (Vector) AQuery.getList(BaseCompany.class);
+        Vector vettore = (Vector) AQuery.getListOld(BaseCompany.class);
 
         if (vettore != null) {
             lista = new ArrayList<BaseCompany>(vettore);
@@ -263,7 +263,7 @@ public class BaseCompany extends BaseEntity {
 //     * Cancellazione di tutti i records
 //     */
 //    public static void deleteAll() {
-//        for (BaseCompany company : BaseCompany.getList()) {
+//        for (BaseCompany company : BaseCompany.getListOld()) {
 //            company.delete();
 //        }// end of for cycle
 //    }// end of static method

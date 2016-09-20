@@ -5,12 +5,14 @@ package it.algos.webbase.domain.vers;
  */
 
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.lib.LibTime;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
@@ -86,7 +88,7 @@ public class Versione extends BaseEntity {
     }// end of method
 
     public synchronized static List<Versione> findAll() {
-        return (List<Versione>) AQuery.getList(Versione.class);
+        return (List<Versione>) AQuery.getListOld(Versione.class);
     }// end of method
 
     @Override
@@ -125,6 +127,26 @@ public class Versione extends BaseEntity {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+
+    /**
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
+     */
+    public static void deleteAll() {
+        EntityManager manager = EM.createEntityManager();
+        deleteAll(manager);
+        manager.close();
+    }// end of static method
+
+    /**
+     * Delete all the records for the Entity class
+     * Bulk delete records with CriteriaDelete
+     *
+     * @param manager the EntityManager to use
+     */
+    public static void deleteAll(EntityManager manager) {
+        AQuery.deleteAll(Versione.class, manager);
+    }// end of static method
 
     @Override
     public Versione clone() throws CloneNotSupportedException {

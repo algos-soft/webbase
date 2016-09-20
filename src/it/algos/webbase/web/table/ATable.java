@@ -51,6 +51,8 @@ import java.util.logging.Logger;
 public abstract class ATable extends Table {
 
     private final static Logger logger = Logger.getLogger(ATable.class.getName());
+    private final static int TEN_YEARS= 10 * 365 * 24 * 60 * 60;    // 10 years, cookie expiry time
+
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
     protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
     protected ArrayList<TotalizableColumn> totalizableColumns = new ArrayList();
@@ -374,8 +376,7 @@ public abstract class ATable extends Table {
         {
             cookieval = cookieval.substring(0, cookieval.length() - 1);
         }
-        int cookietime = 10 * 365 * 24 * 60 * 60;    // 10 years
-        LibCookie.setCookie(getColumnsCookieKey(), cookieval, cookietime);
+        LibCookie.setCookie(getColumnsCookieKey(), cookieval, TEN_YEARS);
     }
 
     /**
@@ -1215,7 +1216,7 @@ public abstract class ATable extends Table {
     public void setRememberColumnCollapsedState(boolean remember) {
         String name = getRememberColumnCollapsedStateCookieKey();
         if (remember) {
-            LibCookie.setCookie(name, "true");
+            LibCookie.setCookie(name, "true",TEN_YEARS);
         } else {
             LibCookie.deleteCookie(name);
         }
@@ -1242,7 +1243,7 @@ public abstract class ATable extends Table {
     public void setRememberColumnWidth(boolean remember) {
         String name = getRememberColumnWidthCookieKey();
         if (remember) {
-            LibCookie.setCookie(name, "true");
+            LibCookie.setCookie(name, "true",TEN_YEARS);
         } else {
             LibCookie.deleteCookie(name);
         }

@@ -13,6 +13,12 @@ public class ETable extends ModuleTable{
 
 	public ETable(ModulePop module) {
 		super(module);
+
+		// if there is a current company set the cookie prefix for the company
+		BaseCompany company = CompanySessionLib.getCompany();
+		if(company!=null){
+			setCookiePrefix(company.getName());
+		}
 	}
 	
 //	public ETable(Class<?> entityClass) {

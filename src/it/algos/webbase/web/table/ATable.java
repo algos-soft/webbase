@@ -70,6 +70,9 @@ public abstract class ATable extends Table {
     // durante questa fase le colonne vengono modificate e i listener non devono reagire.
     private boolean columnsAreSetting;
 
+    // prefix to eventually add to the table cookies
+    private String cookiePrefix="";
+
     /**
      * Creates a new table for a given module.
      *
@@ -314,26 +317,33 @@ public abstract class ATable extends Table {
 
     }
 
+    public String getCookiePrefix() {
+        return cookiePrefix;
+    }
+
+    public void setCookiePrefix(String cookiePrefix) {
+        this.cookiePrefix = cookiePrefix;
+    }
 
     /**
      * Name of the cookie holding the columns state
      */
     private String getColumnsCookieKey() {
-        return getClass().getName() + "#columnstate";
+        return getCookiePrefix()+"#"+getClass().getName() + "#columnstate";
     }
 
     /**
      * Name of the cookie holding the "remember columns collapsed state" option
      */
     private String getRememberColumnCollapsedStateCookieKey() {
-        return getClass().getName() + "#columnCollapsedStateOption";
+        return getCookiePrefix()+"#"+getClass().getName() + "#columnCollapsedStateOption";
     }
 
     /**
      * Name of the cookie holding the "remember columns width" option
      */
     private String getRememberColumnWidthCookieKey() {
-        return getClass().getName() + "#columnWidthOption";
+        return getCookiePrefix()+"#"+getClass().getName() + "#columnWidthOption";
     }
 
 

@@ -3,12 +3,14 @@
 
     <property name="srcDomainTag" value="Domain"/>
     <property name="srcEntityTag" value="Entity"/>
+    <property name="srcEntityTestTag" value="EntityTest"/>
     <property name="persistenceTag" value="persistence"/>
     <property name="uiTag" value="UI"/>
     <property name="srcFormTag" value="Form"/>
 
     <property name="destDomainTag" value=""/>
     <property name="destEntityTag" value="_"/>
+    <property name="destEntityTestTag" value="Test"/>
     <property name="destModuloTag" value="Mod"/>
     <property name="destFormTag" value="Form"/>
 
@@ -18,6 +20,7 @@
     <property name="pathClasse" value="it.algos."/>
     <property name="discesa" value="/src/it/algos/"/>
     <property name="discesaMeta" value="/src/META-INF/"/>
+    <property name="discesaTest" value="/test/"/>
 
     <property name="baseSrc" value="${basedir}/.."/>
     <property name="srcDir" value="${baseSrc}/sources"/>
@@ -26,6 +29,7 @@
     <property name="destSufXml" value=".xml"/>
     <property name="srcDomain" value="${srcDir}/${srcDomainTag}${srcSuffix}"/>
     <property name="srcEntity" value="${srcDir}/${srcEntityTag}${srcSuffix}"/>
+    <property name="srcEntityTest" value="${srcDir}/${srcEntityTestTag}${srcSuffix}"/>
     <property name="srcForm" value="${srcDir}/${srcFormTag}${srcSuffix}"/>
 
     <property name="baseDest" value="${basedir}${risalita}"/>
@@ -42,11 +46,13 @@
         <property name="lowerModulo" value="entity/${lowerModuloOld}"/>
 
         <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerModulo}"/>
-        <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
         <property name="destDirBase" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}"/>
+        <property name="destDirMeta" value="${baseDest}/${lowerProgetto}${discesaMeta}"/>
+        <property name="destDirTest" value="${baseDest}/${lowerProgetto}${discesaTest}"/>
 
         <property name="destDomain" value="${destDir}/${modulo}${destDomainTag}${destSuffix}"/>
         <property name="destEntity" value="${destDir}/${modulo}${destEntityTag}${destSuffix}"/>
+        <property name="destEntityTest" value="${destDirTest}/${modulo}${destEntityTestTag}${destSuffix}"/>
         <property name="destModulo" value="${destDir}/${modulo}${destModuloTag}${destSuffix}"/>
         <property name="destForm" value="${destDir}/${modulo}${destFormTag}${destSuffix}"/>
         <property name="destPersistence" value="${destDirMeta}/${persistenceTag}${destSufXml}"/>
@@ -101,6 +107,10 @@
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcDomain}"/>
             <param name="destFile" value="${destDomain}"/>
+        </antcall>
+        <antcall target="creaSingoloFile">
+            <param name="sourceFile" value="${srcEntityTest}"/>
+            <param name="destFile" value="${destEntityTest}"/>
         </antcall>
         <antcall target="creaSingoloFile">
             <param name="sourceFile" value="${srcEntity}"/>

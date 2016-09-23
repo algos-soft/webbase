@@ -1,0 +1,170 @@
+import org.junit.*;
+
+/**
+ * Created by gac on 22 set 2016.
+ * Test per la Entity @NAME@
+ * I test vengono eseguiti su un DB di prova, usando un apposito EntityManager
+ * <p>
+ * La Entity non usa la multiazienda (company) e quindi estende BaseEntity e non CompanyEntity
+ * Il funzionamento viene testato nel progetto MultyCompany.VersioneTest,
+ * perché WebBase non ha il file persistence.xml e non può usare il DB
+ */
+public class @NAME@Test extends QueryTest {
+
+
+    /**
+     * SetUp iniziale eseguito solo una volta alla creazione della classe
+     */
+    @BeforeClass
+    public static void setUpInizialeStaticoEseguitoSoloUnaVoltaAllaCreazioneDellaClasse() {
+        // creazione del MANAGER statico per questa singola classe di test
+        creaManager();
+
+        // Prima di inizare a creare e modificare i records, cancello tutti i precedenti
+        cancellaRecords();
+    } // end of setup statico iniziale della classe
+
+    /**
+     * CleanUp finale eseguito solo una volta alla chiusura della classe
+     */
+    @AfterClass
+    public static void cleanUpFinaleStaticoEseguitoSoloUnaVoltaAllaChiusuraDellaClasse() {
+        // chiusura finale del MANAGER statico per questa singola classe di test
+        closeManager();
+    } // end of cleaup statico finale della classe
+
+    /**
+     * Prima di inizare a creare e modificare i records, cancello tutti i precedenti
+     */
+    private static void cancellaRecords() {
+        @NAME@.deleteAll();
+        @NAME@.deleteAll(MANAGER);
+    }// end of static method
+
+    /**
+     * SetUp eseguito prima dell'esecuzione di ogni metodo
+     */
+    @Before
+    public void setUp() {
+        reset();
+        creaRecords();
+    } // end of setup prima di ogni metodo di test
+
+    /**
+     * CleanUp eseguito dopo l'esecuzione di ogni metodo
+     */
+    @After
+    public void cleanUp() {
+        cancellaRecords();
+        reset();
+    } // end of cleaup dopo ogni metodo di test
+
+    /**
+     * Crea alcuni records temporanei per effettuare le prove delle query
+     * Uso la Entity
+     * Creo alcuni nuovi records nel DB di default (WEBBASE)
+     * Creo alcuni nuovi records nel DB alternativo (WEBTEST)
+     */
+    private void creaRecords() {
+    }// end of method
+
+    /**
+     * Azzera le variabili d'istanza
+     */
+    private void reset() {
+    }// end of method
+
+    @Test
+    /**
+     * Costruttore minimo con tutte le properties obbligatorie
+     */
+    public void costruttoreMinimo() {
+    }// end of single test
+
+    @Test
+    /**
+     * Costruttore completo
+     */
+    public void costruttoreCompleto() {
+    }// end of single test
+
+    @Test
+    /**
+     * Numero totale di records della Entity
+     * Senza filtri.
+     *
+     * @return il numero totale di records nella Entity
+     */
+    public void count() {
+    }// end of single test
+
+    @Test
+    /**
+     * Searches for a single entity by standard Primary Key
+     * (all Algos primary key are long)
+     * Multiple entities cannot exist, the primary key is unique.
+     * Usa l'EntityManager di default
+     *
+     * @param id valore (unico) della Primary Key
+     * @return istanza della Entity, null se non trovata
+     */
+    public void find() {
+    }// end of single test
+
+    @Test
+    /**
+     * Recupera una lista (array) di tutti i records della Entity
+     *
+     * @return lista di tutte le entities
+     */
+    public void getList() {
+    }// end of single test
+
+    @Test
+    /**
+     * Creazione iniziale di una istanza della Entity
+     *
+     * @return nuova istanza della Entity
+     */
+    public void crea() {
+    }// end of single test
+
+    @Test
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     * Usa una Property (SingularAttribute)
+     */
+    public void deleteBulk() {
+    }// end of single test
+
+    @Test
+    /**
+     * Delete the records of the Entity
+     * <p>
+     * Usa una Property (SingularAttribute)
+     * Usa i Filters
+     * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
+     */
+     public void delete() {
+     }// end of single test
+
+    @Test
+    /**
+     * Saves this entity to the database.
+     * Usa l'EntityManager di default
+     * @return the merged Entity (new entity, unmanaged, has the id), uncasted
+     */
+    public void save() {
+    }// end of single test
+
+    @Test
+    /**
+     * Saves this entity to the database.
+     *
+     * @return the merged Entity (new entity, unmanaged, has the id), casted as Entity
+     */
+    public void saveSafe() {
+    }// end of single test
+
+}// end of test class

@@ -499,7 +499,7 @@ public class BaseCompany extends BaseEntity {
         // elimina gli utenti
 
         // elimina le preferenze
-        AQuery.delete(Pref.class, CompanyEntity_.company, this, manager);
+        AQuery.deleteOld(Pref.class, CompanyEntity_.company, this, manager);
     }// end of method
 
 

@@ -1,13 +1,12 @@
 package it.algos.webbase.web.query;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.addon.jpacontainer.EntityItemProperty;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Compare;
-import it.algos.webbase.domain.company.BaseCompany;
-import it.algos.webbase.multiazienda.ELazyContainer;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
 
@@ -55,6 +54,7 @@ public abstract class AQuery {
     /**
      * Numero totale di records della Entity specificata
      * Senza filtri.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -86,6 +86,7 @@ public abstract class AQuery {
      * Numero di records della Entity
      * Filtrato sul valore della property indicata
      * Se la property è nulla, restituisce il numero di tutti i records
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -135,7 +136,7 @@ public abstract class AQuery {
 
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Find entity by primary key
+    // Find single entity by primary key
     // Con e senza EntityManager
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
@@ -148,7 +149,7 @@ public abstract class AQuery {
      * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
-     * @param id    the item long id
+     * @param id    the item long id (unico) della Primary Key
      * @return the entity corresponding to the key, or null
      */
     public static BaseEntity find(Class<? extends BaseEntity> clazz, long id) {
@@ -159,11 +160,12 @@ public abstract class AQuery {
     /**
      * Searches for a single entity by standard Primary Key (all Algos primary key are long)
      * Multiple entities cannot exist, the primary key is unique.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz   the Entity class
-     * @param id      the item long id
+     * @param id      the item long id (unico) della Primary Key
      * @param manager the EntityManager to use
      * @return the entity corresponding to the key, or null
      */
@@ -189,7 +191,7 @@ public abstract class AQuery {
 
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Find entity by SingularAttribute
+    // Find single entity by SingularAttribute
     // Con e senza EntityManager
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
@@ -213,6 +215,7 @@ public abstract class AQuery {
     /**
      * Search for a single entity with a specified attribute value.
      * If multiple entities exist, null is returned.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -260,9 +263,10 @@ public abstract class AQuery {
 
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Find entities (list) by SingularAttribute
-    // Con e senza Property
+    // Find entities (list)
+    // Con e senza Property (SingularAttribute)
     // Con e senza Sort
+    // Con e senza Filters
     // Con e senza EntityManager
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
@@ -271,57 +275,59 @@ public abstract class AQuery {
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz) {
         return getList(clazz, null, null, null, null);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager) {
         return getList(clazz, null, null, null, manager);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
         return getList(clazz, attr, value, null, null);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, Filter... filters) {
         return getList(clazz, null, null, null, null, filters);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts) {
         return getList(clazz, null, null, sorts, null);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
         return getList(clazz, null, null, null, manager, filters);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         return getList(clazz, attr, value, null, manager);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
         return getList(clazz, null, null, sorts, null, filters);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
         return getList(clazz, null, null, sorts, manager, filters);
-    }// end of method
+    }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
         return getList(clazz, attr, value, sorts, manager, (Filter) null);
-    }// end of method
+    }// end of static method
 
     /**
      * Search for the entities of a given Entity class
      * Filtrate sul valore (eventuale) della property indicata
      * Filtrate sui filtri (eventuali) passati come parametro
+     * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
      * Se manca sia la property sia i filtri, restituisce tutte le entities della Entity
      * Ordinate secondo il filtro
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
-     * @param clazz the Entity class
-     * @param attr  the searched attribute
-     * @param value the value to search for
-     * @param sorts ordinamento (ascendente o discendente)
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return a list of founded entities
@@ -355,7 +361,7 @@ public abstract class AQuery {
         }// end of if cycle
 
         // create a read-only JPA container for a given domain class (eventually sorted) and filters
-        container = getContainer(clazz, sorts, manager, filtroArray);
+        container = getContainerRead(clazz, sorts, manager, filtroArray);
 
         // costruisce la lista, spazzolando il container
         for (Object id : container.getItemIds()) {
@@ -369,36 +375,324 @@ public abstract class AQuery {
         }// end of if cycle
 
         return entities;
-    }// end of method
+    }// end of static method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Find properties (list)
+    // Con e senza EntityManager
+    // Rimanda ad un unico metodo
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    // Return una List di oggetti del tipo specificato (str, int, ecc)
+    //------------------------------------------------------------------------------------------------------------------------
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return getListStr(clazz, attr, null, true);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
+        return getListStr(clazz, attr, null, asc);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return getListStr(clazz, attr, manager, true);
+    }// end of static method
 
     /**
-     * Create a read-only JPA container for a given domain class and filters.
-     * <p>
-     * Il manager NON può essere nullo
-     * Il manager DEVE essere valido (must be close by caller method)
+     * Search for the values of a given property of the given Entity class
+     * Ordinate sul valore della property indicata
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz   the Entity class
-     * @param sorts ordinamento (ascendente o discendente)
+     * @param attr    the searched attribute
+     * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
-     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     * @return the JPA container
+     * @return a list of founded values of the specified type
+     */
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager, boolean asc) {
+        ArrayList<String> lista = new ArrayList<>();
+        String value;
+        SortProperty sort;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
+        EntityItemProperty property;
+        Object objValue;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // ordinamento
+        sort = new SortProperty(attr, asc);
+
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters
+        container = AQuery.getContainerRead(clazz, sort, manager, null);
+
+        // costruisce la lista, spazzolando il container
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
+
+            if (objValue instanceof String) {
+                value = (String) objValue;
+                lista.add(value);
+            }// end of if cycle
+        }// end of for cycle
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return lista;
+    }// end of static method
+
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return getListInt(clazz, attr, null, true);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
+        return getListInt(clazz, attr, null, asc);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return getListInt(clazz, attr, manager, true);
+    }// end of static method
+
+    /**
+     * Search for the values of a given property of the given Entity class
+     * Ordinate sul valore della property indicata
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param asc     ordinamento (ascendente o discendente)
+     * @param manager the EntityManager to use
+     * @return a list of founded values of the specified type
+     */
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager, boolean asc) {
+        ArrayList<Integer> lista = new ArrayList<>();
+        int value;
+        SortProperty sort;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
+        EntityItemProperty property;
+        Object objValue;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // ordinamento
+        sort = new SortProperty(attr, asc);
+
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters
+        container = AQuery.getContainerRead(clazz, sort, manager, null);
+
+        // costruisce la lista, spazzolando il container
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
+
+            if (objValue instanceof Integer) {
+                value = (Integer) objValue;
+                lista.add(value);
+            }// end of if cycle
+        }// end of for cycle
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return lista;
+    }// end of static method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Delete entities
+    // Con e senza Property (SingularAttribute)
+    // Con e senza Filters
+    // Con e senza EntityManager
+    // Rimanda a DUE metodi: Filters e CriteriaDelete
+    // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    //------------------------------------------------------------------------------------------------------------------------
+    public static int delete(Class<? extends BaseEntity> clazz) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, manager);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        return deleteBulk(clazz, attr, value, (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        return deleteBulk(clazz, attr, value, manager);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, Filter... filters) {
+        return delete(clazz, null, null, (EntityManager) null, filters);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        return delete(clazz, null, null, manager, filters);
+    }// end of static method
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     * Usa una Property (SingularAttribute)
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
-    public static ELazyContainer getLazyContainer(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
-        ELazyContainer container = new ELazyContainer(manager, clazz);
+    public static int deleteBulk(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        int deleted = 0;
+        CriteriaBuilder builder;
 
-        if (filters != null) {
-            for (Filter filter : filters) {
-                container.addContainerFilter(filter);
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // create delete
+        builder = manager.getCriteriaBuilder();
+        CriteriaDelete delete = builder.createCriteriaDelete(clazz);
+
+        // set the root class
+        Root root = delete.from(clazz);
+
+        // set where clause
+        if (attr != null) {
+            Predicate pred = builder.equal(root.get(attr), value);
+            delete.where(pred);
+        }// end of if cycle
+
+        // perform update
+        try {
+            manager.getTransaction().begin();
+            deleted = manager.createQuery(delete).executeUpdate();
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            deleted = 0;
+        }// fine del blocco try-catch
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return deleted;
+    }// end of method
+
+
+    /**
+     * Delete the records for a given domain class
+     * <p>
+     * Usa una Property (SingularAttribute)
+     * Usa i Filters
+     * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return il numero di records cancellati
+     */
+    @SuppressWarnings("unchecked")
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager, Filter... filters) {
+        int deleted = 0;
+        ArrayList<Container.Filter> filtroArray = null;
+        Container.Filter filter;
+        JPAContainer<BaseEntity> container;
+        BaseEntity entity;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
+        if (filters != null && filters.length > 0 && filters[0] != null) {
+            filtroArray = new ArrayList<>(Arrays.asList(filters));
+        }// end of if cycle
+
+        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        if (attr != null) {
+            filter = new Compare.Equal(attr.getName(), value);
+            if (filtroArray == null) {
+                filtroArray = new ArrayList<>();
+            }// end of if cycle
+            filtroArray.add(filter);
+        }// end of if cycle
+
+        // create a write JPA container for a given domain class and filters
+        container = getContainerWrite(clazz, manager, filtroArray);
+
+        try {
+
+            manager.getTransaction().begin();
+
+            for (Object id : container.getItemIds()) {
+                entity = container.getItem(id).getEntity();
+                entity = manager.merge(entity);
+                manager.remove(entity);
+                deleted++;
             }// end of for cycle
+
+            manager.getTransaction().commit();
+
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            deleted = 0;
+        }// fine del blocco try-catch
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
         }// end of if cycle
 
-        if (sorts != null) {
-            container.sort(sorts.getProperties(), sorts.getOrdinamenti());
-        }// end of if cycle
+        return deleted;
+    }// end of static method
 
-        return container;
-    }// end of method
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
+    // utilities
+    //------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Create a read-only JPA container for a given domain class and filters.
@@ -407,13 +701,13 @@ public abstract class AQuery {
      * Il manager DEVE essere valido (must be close by caller method)
      *
      * @param clazz   the Entity class
-     * @param sorts ordinamento (ascendente o discendente)
+     * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return the JPA container
      */
     @SuppressWarnings("unchecked")
-    public static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, SortProperty sorts,EntityManager manager, ArrayList<Filter> filters) {
+    public static JPAContainer<BaseEntity> getContainerRead(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
         JPAContainer<BaseEntity> container = (JPAContainer<BaseEntity>) JPAContainerFactory.makeNonCachedReadOnly(clazz, manager);
 
         if (filters != null) {
@@ -432,10 +726,79 @@ public abstract class AQuery {
         }// end of if cycle
 
         return container;
+    }// end of static method
+
+    /**
+     * Create a write JPA container for a given domain class and filters.
+     * <p>
+     * Il manager NON può essere nullo
+     * Il manager DEVE essere valido (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the JPA container
+     */
+    @SuppressWarnings("unchecked")
+    public static JPAContainer<BaseEntity> getContainerWrite(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Container.Filter> filters) {
+        JPAContainer<BaseEntity> container = (JPAContainer<BaseEntity>) JPAContainerFactory.make(clazz, manager);
+
+        if (filters != null) {
+            for (Container.Filter filter : filters) {
+                container.addContainerFilter(filter);
+            }// end of for cycle
+        }// end of if cycle
+
+        return container;
+    }// end of static method
+
+
+    /**
+     * Recupera il massimo valore intero di una property di una Entity
+     * Lista ordinata discendente
+     * Recupera il primo valore
+     * Usa l'EntityManager di default
+     *
+     * @param clazz the Entity class
+     * @return il massimo numero della property, 0 se non ce ne sono
+     */
+    @SuppressWarnings("unchecked")
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return maxInt(clazz, attr, null);
     }// end of method
 
+    /**
+     * Recupera il massimo valore intero di una property di una Entity
+     * Lista ordinata discendente
+     * Recupera il primo valore
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param manager the EntityManager to use
+     * @return il massimo numero della property, 0 se non ce ne sono
+     */
+    @SuppressWarnings("unchecked")
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        int max = 0;
+        List<Integer> lista;
+
+        lista = AQuery.getListInt(clazz, attr, manager, false);
+
+        if (lista != null && lista.size() > 0) {
+            max = lista.get(0);
+        }// end of if cycle
+
+        return max;
+    }// end of method
+
+
+    //------------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
     // deprecated
+    //------------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
 
 
@@ -445,6 +808,7 @@ public abstract class AQuery {
      *
      * @param clazz the Entity class
      * @return a list of all entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz) {
         List<? extends BaseEntity> entities;
@@ -456,7 +820,6 @@ public abstract class AQuery {
         return entities;
     }// end of method
 
-
     /**
      * Search for the all entities of a given Entity class
      * Senza filtri.
@@ -466,6 +829,7 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @return a list of all entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
         List<? extends BaseEntity> entities;
@@ -494,7 +858,6 @@ public abstract class AQuery {
         return entities;
     }// end of method
 
-
     /**
      * Return a list of entities for a given domain class and filters.
      * Filtrato coi filtri indicati
@@ -503,11 +866,123 @@ public abstract class AQuery {
      * @param sorts   an array of sort wrapper
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return the list of founded entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
         return findAll(clazz, sorts, filters);
     }// end of method
 
+
+    /**
+     * Delete all the records for a given domain class
+     *
+     * @param clazz the entity class
+     * @deprecated
+     */
+    public static void deleteAll(Class<? extends BaseEntity> clazz) {
+        EntityManager manager = EM.createEntityManager();
+        deleteAll(clazz, manager);
+        manager.close();
+    }// end of method
+
+    /**
+     * Delete all the records for a given domain class
+     *
+     * @param clazz   the entity class
+     * @param manager the EntityManager to use
+     * @deprecated
+     */
+    public static void deleteAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        deleteOld(clazz, null, null, manager);
+    }// end of method
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     *
+     * @param clazz the domain class
+     * @param attr  the attribute to filter - null for no filtering
+     * @param value the value to search for
+     * @deprecated
+     */
+    public static void deleteOld(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        EntityManager manager = EM.createEntityManager();
+        deleteOld(clazz, attr, value, manager);
+        manager.close();
+    }// end of method
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     *
+     * @param clazz   the domain class
+     * @param attr    the attribute to filter - null for no filtering
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @deprecated
+     */
+    @SuppressWarnings("unchecked")
+    public static void deleteOld(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+
+        // create delete
+        CriteriaDelete delete = cb.createCriteriaDelete(clazz);
+
+        // set the root class
+        Root root = delete.from(clazz);
+
+        // set where clause
+        if (attr != null) {
+            Predicate pred = cb.equal(root.get(attr), value);
+            delete.where(pred);
+        }// end of if cycle
+
+        // perform update
+        try {
+            manager.getTransaction().begin();
+            manager.createQuery(delete).executeUpdate();
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+        }// fine del blocco try-catch
+
+    }// end of method
+
+    /**
+     * Delete all the records for a given domain class
+     * <p>
+     *
+     * @param entityClass the domain class
+     * @param filter      the Filter for the records to delete (null for all records)
+     * @deprecated
+     */
+    @SuppressWarnings("unchecked")
+    public static void deleteOld(Class<? extends BaseEntity> entityClass, Filter filter) {
+
+        EntityManager manager = EM.createEntityManager();
+        JPAContainer<BaseEntity> cont = (JPAContainer<BaseEntity>) JPAContainerFactory.make(entityClass, manager);
+        if (filter != null) {
+            cont.addContainerFilter(filter);
+        }
+
+        try {
+
+            manager.getTransaction().begin();
+
+            for (Object id : cont.getItemIds()) {
+                BaseEntity entity = cont.getItem(id).getEntity();
+                entity = manager.merge(entity);
+                manager.remove(entity);
+            }
+
+            manager.getTransaction().commit();
+
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+        }
+        manager.close();
+
+    }// end of method
 
     /**
      * Return a list of entities for a given domain class and filters.
@@ -521,6 +996,7 @@ public abstract class AQuery {
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return the list of founded entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
         List<BaseEntity> entities = new ArrayList<BaseEntity>();
@@ -559,7 +1035,6 @@ public abstract class AQuery {
         return entities;
     }// end of method
 
-
     /**
      * Search for all entities with a specified attribute value.
      * Filtrato sul valore della property indicata.
@@ -568,11 +1043,11 @@ public abstract class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return the list of founded entities
+     * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
         return findAll(clazz, attr, value, null);
     }// end of method
-
 
     /**
      * Search for all entities with a specified attribute value.
@@ -586,6 +1061,7 @@ public abstract class AQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @return the list of founded entities
+     * @deprecated
      */
     @SuppressWarnings("unchecked")
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
@@ -614,10 +1090,6 @@ public abstract class AQuery {
         return entities;
     }// end of method
 
-    //------------------------------------------------------------------------------------------------------------------------
-    // Utilities
-    //------------------------------------------------------------------------------------------------------------------------
-
     /**
      * Create a read-only JPA container for a given domain class and filters.
      * <p>
@@ -626,6 +1098,7 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return the JPA container
+     * @deprecated
      */
     @SuppressWarnings("unchecked")
     private static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, Filter... filters) {
@@ -638,7 +1111,6 @@ public abstract class AQuery {
         return container;
     }// end of method
 
-
     /**
      * Create a read-only JPA container for a given domain class and filters.
      * <p>
@@ -648,6 +1120,7 @@ public abstract class AQuery {
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return the JPA container
+     * @deprecated
      */
     @SuppressWarnings("unchecked")
     private static JPAContainer<BaseEntity> getContainer(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
@@ -659,126 +1132,6 @@ public abstract class AQuery {
 
         return container;
     }// end of method
-
-
-    //------------------------------------------------------------------------------------------------------------------------
-    // Delete
-    //------------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Delete all the records for a given domain class
-     *
-     * @param clazz the entity class
-     */
-    public static void deleteAll(Class<? extends BaseEntity> clazz) {
-        EntityManager manager = EM.createEntityManager();
-        deleteAll(clazz, manager);
-        manager.close();
-    }// end of method
-
-
-    /**
-     * Delete all the records for a given domain class
-     *
-     * @param clazz   the entity class
-     * @param manager the EntityManager to use
-     */
-    public static void deleteAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
-        delete(clazz, null, null, manager);
-    }// end of method
-
-
-    /**
-     * Bulk delete records with CriteriaDelete
-     * <p>
-     *
-     * @param clazz the domain class
-     * @param attr  the attribute to filter - null for no filtering
-     * @param value the value to search for
-     */
-    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
-        EntityManager manager = EM.createEntityManager();
-        delete(clazz, attr, value, manager);
-        manager.close();
-    }// end of method
-
-
-    /**
-     * Bulk delete records with CriteriaDelete
-     * <p>
-     *
-     * @param clazz   the domain class
-     * @param attr    the attribute to filter - null for no filtering
-     * @param value   the value to search for
-     * @param manager the EntityManager to use
-     */
-    @SuppressWarnings("unchecked")
-    public static void delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
-        CriteriaBuilder cb = manager.getCriteriaBuilder();
-
-        // create delete
-        CriteriaDelete delete = cb.createCriteriaDelete(clazz);
-
-        // set the root class
-        Root root = delete.from(clazz);
-
-        // set where clause
-        if (attr != null) {
-            Predicate pred = cb.equal(root.get(attr), value);
-            delete.where(pred);
-        }// end of if cycle
-
-        // perform update
-        try {
-            manager.getTransaction().begin();
-            manager.createQuery(delete).executeUpdate();
-            manager.getTransaction().commit();
-        } catch (Exception e) {
-            manager.getTransaction().rollback();
-        }// fine del blocco try-catch
-
-    }// end of method
-
-    /**
-     * Delete all the records for a given domain class
-     * <p>
-     *
-     * @param entityClass the domain class
-     * @param filter      the Filter for the records to delete (null for all records)
-     */
-    @SuppressWarnings("unchecked")
-    public static void delete(Class<? extends BaseEntity> entityClass, Filter filter) {
-
-        EntityManager manager = EM.createEntityManager();
-        JPAContainer<BaseEntity> cont = (JPAContainer<BaseEntity>) JPAContainerFactory.make(
-                entityClass, manager);
-        if (filter != null) {
-            cont.addContainerFilter(filter);
-        }
-
-        try {
-
-            manager.getTransaction().begin();
-
-            for (Object id : cont.getItemIds()) {
-                BaseEntity entity = cont.getItem(id).getEntity();
-                entity = manager.merge(entity);
-                manager.remove(entity);
-            }
-
-            manager.getTransaction().commit();
-
-        } catch (Exception e) {
-            manager.getTransaction().rollback();
-        }
-        manager.close();
-
-    }// end of method
-
-
-    //------------------------------------------------------------------------------------------------------------------------
-    // deprecated
-    //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Search for all entities with a specified attribute value.
@@ -803,7 +1156,6 @@ public abstract class AQuery {
         manager.close();
         return entities;
     }// end of method
-
 
     /**
      * Search for all entities with a specified attribute value.
@@ -893,7 +1245,6 @@ public abstract class AQuery {
         return bean;
     }// end of method
 
-
     /**
      * Search for the only entities with a specified attribute value.
      * <p>
@@ -918,7 +1269,6 @@ public abstract class AQuery {
         return bean;
     }// end of method
 
-
     /**
      * Search for the all entities
      *
@@ -935,7 +1285,6 @@ public abstract class AQuery {
 
         return entities;
     }// end of method
-
 
     /**
      * Search for the all entities
@@ -976,7 +1325,6 @@ public abstract class AQuery {
         return lista;
     }// end of method
 
-
     /**
      * Search for the all entities
      *
@@ -995,7 +1343,6 @@ public abstract class AQuery {
 
         return lista;
     }// end of method
-
 
     /**
      * Return a list of entities for a given domain class and filters.
@@ -1031,7 +1378,6 @@ public abstract class AQuery {
 
         return lista;
     }// end of method
-
 
     /**
      * Return a list of entities for a given domain class and filters.
@@ -1070,7 +1416,6 @@ public abstract class AQuery {
         return list;
     }// end of method
 
-
     /**
      * Return a single entity for a given domain class and filters.
      * <p>
@@ -1090,7 +1435,6 @@ public abstract class AQuery {
         return entity;
     }
 
-
     /**
      * Searches for a single entity by id
      *
@@ -1105,25 +1449,17 @@ public abstract class AQuery {
         return entity;
     }// end of static method
 
-
-    //------------------------------------------------------------------------------------------------------------------------
-    // Count records
-    // @Deprecated -> return long
-    // @Deprecated -> use count(), instead
-    //------------------------------------------------------------------------------------------------------------------------
-
     /**
      * Ritorna il numero totale di record della Entity specificata
      * Senza filtri.
      *
      * @param clazz the Entity class
      * @return il numero totale di record nella Entity
-     * @deprecated use count(), instead
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz) {
         return getCount(clazz, null, null, null);
     }// end of static method
-
 
     /**
      * Ritorna il numero totale di record della entity specificata
@@ -1131,7 +1467,7 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @return il numero totale di record nella Entity
-     * @deprecated use count(), instead
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, EntityManager manager) {
         return getCount(clazz, null, null, manager);
@@ -1145,12 +1481,11 @@ public abstract class AQuery {
      * @param attr  the searched attribute
      * @param value the value to search for
      * @return il numero di record filtrati nella Entity
-     * @deprecated use count(), instead
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
         return getCount(clazz, attr, value, null);
     }// end of static method
-
 
     /**
      * Ritorna il numero di record filtrati della entity specificata
@@ -1163,7 +1498,7 @@ public abstract class AQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @return il numero di record filtrati nella Entity
-     * @deprecated use count(), instead
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
         String propertyName = "";
@@ -1200,7 +1535,6 @@ public abstract class AQuery {
         return count;
     }// end of static method
 
-
     /**
      * Search for a single entity with a specified attribute value.
      * <p>
@@ -1222,7 +1556,6 @@ public abstract class AQuery {
 
         return entity;
     }// end of static method
-
 
     /**
      * Search for a single entity with a specified attribute value.
@@ -1256,7 +1589,6 @@ public abstract class AQuery {
         return entity;
     }// end of static method
 
-
     /**
      * Search for the first entity with a specified attribute value.
      * <p>
@@ -1277,7 +1609,6 @@ public abstract class AQuery {
 
         return entity;
     }// end of method
-
 
     /**
      * Search for the first entity with a specified attribute value.
@@ -1302,5 +1633,6 @@ public abstract class AQuery {
 
         return entity;
     }// end of method
+
 
 }// end of abstract class

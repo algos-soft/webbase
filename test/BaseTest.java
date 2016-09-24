@@ -1,5 +1,6 @@
 import it.algos.webbase.domain.company.BaseCompany;
 
+import javax.persistence.EntityManager;
 import java.util.HashMap;
 
 /**

@@ -90,6 +90,7 @@ public abstract class CompanyQuery {
     /**
      * Numero di records della Entity specificata
      * Filtrato sulla company corrente.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -106,6 +107,7 @@ public abstract class CompanyQuery {
      * Numero di records della Entity specificata
      * Filtrato sulla company passata come parametro.
      * Se la company è nulla, restituisce il numero di TUTTI i records
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -125,6 +127,7 @@ public abstract class CompanyQuery {
      * Se la property è nulla, restituisce il numero di tutti i records della company
      * Filtrato sulla company passata come parametro.
      * Se la company è nulla, restituisce il numero dei records di tutte le company, filtrati sulla property
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -209,6 +212,7 @@ public abstract class CompanyQuery {
     /**
      * Searches for a single entity by standard Primary Key (all Algos primary key are long)
      * Multiple entities cannot exist, the primary key is unique.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -251,6 +255,7 @@ public abstract class CompanyQuery {
      * Search for a single entity with a specified attribute value.
      * If multiple entities exist, null is returned.
      * Filtrato sulla azienda corrente.
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -287,6 +292,7 @@ public abstract class CompanyQuery {
      * If multiple entities exist, null is returned.
      * Filtrato sulla azienda passata come parametro.
      * Se la company è nulla, cerca per tutte le companies
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -445,6 +451,7 @@ public abstract class CompanyQuery {
      * Filtrate sui filtri (eventuali) passati come parametro
      * Se manca sia la property sia i filtri, restituisce tutte le entities della Entity
      * Ordinate secondo il filtro
+     * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
      *
@@ -907,11 +914,6 @@ public abstract class CompanyQuery {
     }
 
 
-    //------------------------------------------------------------------------------------------------------------------------
-    // Count records
-    // @Deprecated -> return long
-    // @Deprecated -> use count(), instead
-    //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Ritorna il numero di record della entity specificata
@@ -919,7 +921,7 @@ public abstract class CompanyQuery {
      *
      * @param clazz the Entity class
      * @return il numero di record
-     * @deprecated
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends CompanyEntity> clazz) {
         return getCount(clazz, CompanySessionLib.getCompany(), null);
@@ -934,7 +936,7 @@ public abstract class CompanyQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @return il numero di record
-     * @deprecated
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, EntityManager manager) {
         return getCount(clazz, CompanySessionLib.getCompany(), manager);
@@ -948,7 +950,7 @@ public abstract class CompanyQuery {
      * @param clazz   the Entity class
      * @param company azienda da filtrare
      * @return il numero di record
-     * @deprecated
+     * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company) {
         return getCount(clazz, company, null);
@@ -966,7 +968,7 @@ public abstract class CompanyQuery {
      * @param company azienda da filtrare
      * @param manager the EntityManager to use
      * @return il numero di record
-     * @deprecated
+     * @deprecated -> return long, use count() instead
      */
     @SuppressWarnings({"unchecked"})
     public static long getCount(Class<? extends CompanyEntity> clazz, BaseCompany company, EntityManager manager) {

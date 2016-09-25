@@ -513,6 +513,7 @@ public abstract class CompanyQuery {
      * @param clazz   the Entity class
      * @param attr    the searched attribute
      * @param value   the value to search for
+     * @param company da filtrare
      * @param manager the EntityManager to use
      * @return il numero di records cancellati
      */
@@ -569,6 +570,46 @@ public abstract class CompanyQuery {
 
         return deleted;
     }// end of method
+
+
+    public static int delete(Class<? extends BaseEntity> clazz, Filter... filters) {
+        return delete(clazz, (SingularAttribute) null, null, CompanySessionLib.getCompany(), (EntityManager) null, filters);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, BaseCompany company, Filter... filters) {
+        return delete(clazz, (SingularAttribute) null, null, company, (EntityManager) null, filters);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        return delete(clazz, (SingularAttribute) null, null, CompanySessionLib.getCompany(), manager, filters);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, BaseCompany company, EntityManager manager, Filter... filters) {
+        return delete(clazz, (SingularAttribute) null, null, company, manager, filters);
+    }// end of static method
+
+    /**
+     * Delete the records for a given domain class
+     * <p>
+     * Usa una Property (SingularAttribute)
+     * Usa i Filters
+     * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @param company da filtrare
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return il numero di records cancellati
+     */
+    @SuppressWarnings("unchecked")
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager, Filter... filters) {
+        return deleted;
+    }// end of static method
 
     //------------------------------------------------------------------------------------------------------------------------
     // utilities

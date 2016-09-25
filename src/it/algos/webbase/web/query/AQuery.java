@@ -415,15 +415,19 @@ public abstract class AQuery {
     //------------------------------------------------------------------------------------------------------------------------
 
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
-        return getListStr(clazz, attr, null, true);
+        return getListStr(clazz, attr, true, (EntityManager) null, (Filter) null);
     }// end of static method
 
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
-        return getListStr(clazz, attr, null, asc);
+        return getListStr(clazz, attr, asc, (EntityManager) null, (Filter) null);
     }// end of static method
 
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
-        return getListStr(clazz, attr, manager, true);
+        return getListStr(clazz, attr, true, manager, (Filter) null);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, Filter... filters) {
+        return getListStr(clazz, attr, asc, manager, new ArrayList<>(Arrays.asList(filters)));
     }// end of static method
 
     /**
@@ -437,9 +441,10 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return a list of founded values of the specified type
      */
-    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager, boolean asc) {
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
         ArrayList<String> lista = new ArrayList<>();
         String value;
         SortProperty sort;
@@ -459,7 +464,7 @@ public abstract class AQuery {
         sort = new SortProperty(attr, asc);
 
         // create a read-only JPA container for a given domain class (eventually sorted) and filters
-        container = AQuery.getContainerRead(clazz, sort, manager, null);
+        container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
         for (Object id : container.getItemIds()) {
@@ -483,15 +488,19 @@ public abstract class AQuery {
 
 
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
-        return getListInt(clazz, attr, null, true);
+        return getListInt(clazz, attr, true, (EntityManager) null, (Filter) null);
     }// end of static method
 
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
-        return getListInt(clazz, attr, null, asc);
+        return getListInt(clazz, attr, asc, (EntityManager) null, (Filter) null);
     }// end of static method
 
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
-        return getListInt(clazz, attr, manager, true);
+        return getListInt(clazz, attr, true, manager, (Filter) null);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, Filter... filters) {
+        return getListInt(clazz, attr, asc, manager, new ArrayList<>(Arrays.asList(filters)));
     }// end of static method
 
     /**
@@ -505,9 +514,10 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return a list of founded values of the specified type
      */
-    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager, boolean asc) {
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
         ArrayList<Integer> lista = new ArrayList<>();
         int value;
         SortProperty sort;
@@ -527,7 +537,7 @@ public abstract class AQuery {
         sort = new SortProperty(attr, asc);
 
         // create a read-only JPA container for a given domain class (eventually sorted) and filters
-        container = AQuery.getContainerRead(clazz, sort, manager, null);
+        container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
         for (Object id : container.getItemIds()) {
@@ -641,6 +651,10 @@ public abstract class AQuery {
     }// end of method
 
 
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager, Filter... filters) {
+        return delete(clazz, attr, value, manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
     /**
      * Delete the records for a given domain class
      * <p>
@@ -659,9 +673,8 @@ public abstract class AQuery {
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
-    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager, Filter... filters) {
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager, ArrayList<Filter> filters) {
         int deleted = 0;
-        ArrayList<Container.Filter> filtroArray = null;
         Container.Filter filter;
         JPAContainer<BaseEntity> container;
         BaseEntity entity;
@@ -673,22 +686,17 @@ public abstract class AQuery {
             manager = EM.createEntityManager();
         }// end of if cycle
 
-        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
-        if (filters != null && filters.length > 0 && filters[0] != null) {
-            filtroArray = new ArrayList<>(Arrays.asList(filters));
-        }// end of if cycle
-
         // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
         if (attr != null) {
             filter = new Compare.Equal(attr.getName(), value);
-            if (filtroArray == null) {
-                filtroArray = new ArrayList<>();
+            if (filters == null) {
+                filters = new ArrayList<>();
             }// end of if cycle
-            filtroArray.add(filter);
+            filters.add(filter);
         }// end of if cycle
 
         // create a write JPA container for a given domain class and filters
-        container = getContainerWrite(clazz, manager, filtroArray);
+        container = getContainerWrite(clazz, manager, filters);
 
         try {
 
@@ -812,7 +820,7 @@ public abstract class AQuery {
         int max = 0;
         List<Integer> lista;
 
-        lista = AQuery.getListInt(clazz, attr, manager, false);
+        lista = AQuery.getListInt(clazz, attr, false, manager);
 
         if (lista != null && lista.size() > 0) {
             max = lista.get(0);

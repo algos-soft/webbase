@@ -460,12 +460,121 @@ public abstract class CompanyQuery {
     }// end of method
 
     //------------------------------------------------------------------------------------------------------------------------
+    // Find properties (list)
+    // Con e senza Sort
+    // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
+    // Con e senza EntityManager
+    // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
+    // Return una List di oggetti del tipo specificato (str, int, ecc)
+    //------------------------------------------------------------------------------------------------------------------------
+
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return getListStr(clazz, attr, true, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company) {
+        return getListStr(clazz, attr, true, company, (EntityManager) null);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
+        return getListStr(clazz, attr, asc, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, BaseCompany company) {
+        return getListStr(clazz, attr, asc, company, (EntityManager) null);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return getListStr(clazz, attr, true, CompanySessionLib.getCompany(), manager);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company, EntityManager manager) {
+        return getListStr(clazz, attr, true, company, manager);
+    }// end of static method
+
+    /**
+     * Search for the values of a given property of the given Entity class
+     * Ordinate sul valore della property indicata
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param asc     ordinamento (ascendente o discendente)
+     * @param company da filtrare
+     * @param manager the EntityManager to use
+     * @return a list of founded values of the specified type
+     */
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, BaseCompany company, EntityManager manager) {
+        Container.Filter filterCompany = null;
+
+        // aggiunge il vincolo della Company, trasformato in filtro
+        if (company != null) {
+            filterCompany = new Compare.Equal(CompanyEntity_.company.getName(), company);
+        }// end of if cycle
+
+        return AQuery.getListStr(clazz, attr, asc, manager, filterCompany);
+    }// end of static method
+
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return getListInt(clazz, attr, true, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company) {
+        return getListInt(clazz, attr, true, company, (EntityManager) null);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
+        return getListInt(clazz, attr, asc, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, BaseCompany company) {
+        return getListInt(clazz, attr, asc, company, (EntityManager) null);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return getListInt(clazz, attr, true, CompanySessionLib.getCompany(), manager);
+    }// end of static method
+
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company, EntityManager manager) {
+        return getListInt(clazz, attr, true, company, manager);
+    }// end of static method
+
+    /**
+     * Search for the values of a given property of the given Entity class
+     * Ordinate sul valore della property indicata
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param asc     ordinamento (ascendente o discendente)
+     * @param company da filtrare
+     * @param manager the EntityManager to use
+     * @return a list of founded values of the specified type
+     */
+    public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, BaseCompany company, EntityManager manager) {
+        Container.Filter filterCompany = null;
+
+        // aggiunge il vincolo della Company, trasformato in filtro
+        if (company != null) {
+            filterCompany = new Compare.Equal(CompanyEntity_.company.getName(), company);
+        }// end of if cycle
+
+        return AQuery.getListInt(clazz, attr, asc, manager, filterCompany);
+    }// end of static method
+
+    //------------------------------------------------------------------------------------------------------------------------
     // Delete entities
     // Con e senza Property (SingularAttribute)
     // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
     // Con e senza Sort
     // Con e senza EntityManager
-    // Rimanda a DUE metodi: Filters e CriteriaDelete
+    // Rimanda a DUE metodi: Filters (rimanda al metodo implementato in AQuery, aggiungendo il filtro della Company) e CriteriaDelete
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
     // Ritorna il numero di records cancellati
     //------------------------------------------------------------------------------------------------------------------------
@@ -588,6 +697,10 @@ public abstract class CompanyQuery {
         return delete(clazz, (SingularAttribute) null, null, company, manager, filters);
     }// end of static method
 
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager, Filter... filters) {
+        return delete(clazz, attr, value, company, manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
     /**
      * Delete the records for a given domain class
      * <p>
@@ -607,8 +720,16 @@ public abstract class CompanyQuery {
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
-    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager, Filter... filters) {
-        return deleted;
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager, ArrayList<Filter> filters) {
+        Container.Filter filterCompany;
+
+        // aggiunge il vincolo della Company, trasformato in filtro
+        if (company != null) {
+            filterCompany = new Compare.Equal(CompanyEntity_.company.getName(), company);
+            filters.add(filterCompany);
+        }// end of if cycle
+
+        return AQuery.delete(clazz, attr, value, manager, filters);
     }// end of static method
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -659,6 +780,50 @@ public abstract class CompanyQuery {
         return container;
     }// end of method
 
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return maxInt(clazz, attr, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of method
+
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company) {
+        return maxInt(clazz, attr, company, (EntityManager) null);
+    }// end of method
+
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return maxInt(clazz, attr, CompanySessionLib.getCompany(), manager);
+    }// end of method
+
+    /**
+     * Recupera il massimo valore intero di una property di una Entity
+     * Lista ordinata discendente
+     * Recupera il primo valore
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param manager the EntityManager to use
+     * @return il massimo numero della property, 0 se non ce ne sono
+     */
+    @SuppressWarnings("unchecked")
+    public static int maxInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, BaseCompany company, EntityManager manager) {
+        int max = 0;
+        Container.Filter filterCompany = null;
+        List<Integer> lista;
+
+        // aggiunge il vincolo della Company, trasformato in filtro
+        if (company != null) {
+            filterCompany = new Compare.Equal(CompanyEntity_.company.getName(), company);
+        }// end of if cycle
+
+        lista = AQuery.getListInt(clazz, attr, false, manager, filterCompany);
+
+        if (lista != null && lista.size() > 0) {
+            max = lista.get(0);
+        }// end of if cycle
+
+        return max;
+    }// end of method
 
     //------------------------------------------------------------------------------------------------------------------------
     // deprecated

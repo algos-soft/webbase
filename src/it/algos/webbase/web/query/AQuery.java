@@ -310,43 +310,54 @@ public abstract class AQuery {
     //------------------------------------------------------------------------------------------------------------------------
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz) {
-        return getList(clazz, null, null, null, null);
+        return getList(clazz, (SortProperty) null, (EntityManager) null, (ArrayList<Filter>) null);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager) {
-        return getList(clazz, null, null, null, manager);
+        return getList(clazz, (SortProperty) null, manager, (ArrayList<Filter>) null);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
-        return getList(clazz, attr, value, null, null);
+        return getList(clazz, attr, value, null, (EntityManager) null);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, Filter... filters) {
-        return getList(clazz, null, null, null, null, filters);
+        return getList(clazz, (SortProperty) null, (EntityManager) null, filters);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts) {
-        return getList(clazz, null, null, sorts, null);
+        return getList(clazz, sorts, (EntityManager) null, (ArrayList<Filter>) null);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
-        return getList(clazz, null, null, null, manager, filters);
+        return getList(clazz, (SortProperty) null, manager, filters);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
-        return getList(clazz, attr, value, null, manager);
+        return getList(clazz, attr, value, (SortProperty) null, manager);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
-        return getList(clazz, null, null, sorts, null, filters);
+        return getList(clazz, sorts, (EntityManager) null, filters);
     }// end of static method
 
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
-        return getList(clazz, null, null, sorts, manager, filters);
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts) {
+        return getList(clazz, attr, value, sorts, (EntityManager) null);
     }// end of static method
 
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
-        return getList(clazz, attr, value, sorts, manager, (Filter) null);
+        Container.Filter filter = null;
+
+        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        if (attr != null) {
+            filter = new Compare.Equal(attr.getName(), value);
+        }// end of if cycle
+
+        return getList(clazz, sorts, manager, filter);
+    }// end of static method
+
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
+        return getList(clazz, sorts, manager, new ArrayList<>(Arrays.asList(filters)));
     }// end of static method
 
     /**
@@ -361,17 +372,13 @@ public abstract class AQuery {
      * Se il manager è valido, lo usa (must be close by caller method)
      *
      * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
      * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return a list of founded entities
      */
-    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager, Filter... filters) {
+    public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
         ArrayList<BaseEntity> entities = new ArrayList<>();
-        ArrayList<Container.Filter> filtroArray = null;
-        Container.Filter filter;
         JPAContainer<BaseEntity> container;
         EntityItem<BaseEntity> item;
 
@@ -382,22 +389,8 @@ public abstract class AQuery {
             manager = EM.createEntityManager();
         }// end of if cycle
 
-        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
-        if (filters != null && filters.length > 0 && filters[0] != null) {
-            filtroArray = new ArrayList<>(Arrays.asList(filters));
-        }// end of if cycle
-
-        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
-        if (attr != null) {
-            filter = new Compare.Equal(attr.getName(), value);
-            if (filtroArray == null) {
-                filtroArray = new ArrayList<>();
-            }// end of if cycle
-            filtroArray.add(filter);
-        }// end of if cycle
-
         // create a read-only JPA container for a given domain class (eventually sorted) and filters (eventually)
-        container = getContainerRead(clazz, sorts, manager, filtroArray);
+        container = getContainerRead(clazz, sorts, manager, filters);
 
         // costruisce la lista, spazzolando il container
         for (Object id : container.getItemIds()) {
@@ -412,7 +405,6 @@ public abstract class AQuery {
 
         return entities;
     }// end of static method
-
 
     //------------------------------------------------------------------------------------------------------------------------
     // Find properties (list)

@@ -224,67 +224,40 @@ public class Versione extends BaseEntity {
     // Return una List di oggetti col casting specifico a Versione
     //------------------------------------------------------------------------------------------------------------------------
 
-    /**
-     * Recupera una lista (array) di tutti i records della Entity
-     * Senza filtri.
-     * Usa l'EntityManager di default
-     *
-     * @return lista di tutte le entities
-     */
     public static List<Versione> getList() {
-        return getList(null, null, null, null);
+        return getList((SingularAttribute) null, null, (SortProperty) null, (EntityManager) null);
     }// end of static method
 
-
-    /**
-     * Recupera una lista (array) di tutti i records della Entity
-     * Senza filtri.
-     * Usa l'EntityManager passato come parametro
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
-     *
-     * @param manager the entity manager to use (if null, a new one is created on the fly)
-     * @return lista di tutte le entities
-     */
     public static List<Versione> getList(EntityManager manager) {
-        return getList(null, null, null, manager);
+        return getList((SingularAttribute) null, null, (SortProperty) null, manager);
     }// end of static method
-
 
     public static List<Versione> getList(SingularAttribute attr, Object value) {
-        return getList(attr, value, null, null);
+        return getList(attr, value, (SortProperty) null, (EntityManager) null);
     }// end of static method
 
     public static List<Versione> getList(Container.Filter... filters) {
-        return getList(null, null, null, null, filters);
+        return getList((SortProperty) null, (EntityManager) null, filters);
     }// end of static method
 
     public static List<Versione> getList(SortProperty sorts) {
-        return getList(null, null, sorts, null);
+        return getList((SingularAttribute) null, null, sorts, (EntityManager) null);
     }// end of static method
 
     public static List<Versione> getList(EntityManager manager, Container.Filter... filters) {
-        return getList(null, null, null, manager, filters);
+        return getList((SortProperty) null, manager, filters);
     }// end of static method
 
     public static List<Versione> getList(SingularAttribute attr, Object value, EntityManager manager) {
-        return getList(attr, value, null, manager);
+        return getList(attr, value, (SortProperty) null, manager);
     }// end of static method
 
     public static List<Versione> getList(SortProperty sorts, Container.Filter... filters) {
-        return getList(null, null, sorts, null, filters);
-    }// end of static method
-
-    public static List<Versione> getList(SortProperty sorts, EntityManager manager, Container.Filter... filters) {
-        return getList(null, null, sorts, manager, filters);
+        return getList(sorts, (EntityManager) null, filters);
     }// end of static method
 
     public static List<Versione> getList(SingularAttribute attr, Object value, SortProperty sorts) {
-        return getList(attr, value, sorts, null, (Container.Filter) null);
-    }// end of static method
-
-    public static List<Versione> getList(SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
-        return getList(attr, value, sorts, manager, (Container.Filter) null);
+        return getList(attr, value, sorts, (EntityManager) null);
     }// end of static method
 
     /**
@@ -302,11 +275,31 @@ public class Versione extends BaseEntity {
      * @param value   the value to search for
      * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return a list of founded entities
+     */
+    public static List<Versione> getList(SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
+        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, attr, value, sorts, manager);
+        return check(lista);
+    }// end of static method
+
+    /**
+     * Recupera una lista (array) di entities della Entity
+     * Filtrate sul valore (eventuale) della property indicata
+     * Filtrate sui filtri (eventuali) passati come parametro
+     * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
+     * Se manca sia la property sia i filtri, restituisce tutte le entities della Entity
+     * Ordinate secondo il filtro
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param sorts   ordinamento (ascendente o discendente)
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return a list of founded entities
      */
-    public static List<Versione> getList(SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager, Container.Filter... filters) {
-        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, attr, value, sorts, manager, filters);
+    public static List<Versione> getList(SortProperty sorts, EntityManager manager, Container.Filter... filters) {
+        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, sorts, manager, filters);
         return check(lista);
     }// end of static method
 

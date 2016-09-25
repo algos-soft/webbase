@@ -47,6 +47,7 @@ public abstract class CompanyQuery {
     /**
      * Numero totale di records della Entity specificata
      * Filtrati sulla company corrente.
+     * Se la company corrente è nulla, restituisce il numero di TUTTI i records
      * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
@@ -201,7 +202,7 @@ public abstract class CompanyQuery {
     //------------------------------------------------------------------------------------------------------------------------
     // Find entity by primary key
     // Con e senza EntityManager
-    // Rimanda ad un unico metodo
+    // I vari metodi con firme diverse, rimandano tutti ad un unico metodo implementato in AQuery
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
     // Parametro in ingresso di tipo long (all Algos primary key are long)
     //------------------------------------------------------------------------------------------------------------------------

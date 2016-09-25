@@ -68,7 +68,7 @@ public abstract class AQuery {
 
     /**
      * Numero di records della Entity
-     * Filtrato sul valore della property indicata
+     * Filtrati sul valore della property indicata
      * Se la property è nulla, restituisce il numero di tutti i records
      * Usa l'EntityManager di default
      *
@@ -84,7 +84,7 @@ public abstract class AQuery {
 
     /**
      * Numero di records della Entity
-     * Filtrato sul valore della property indicata
+     * Filtrati sul valore della property indicata
      * Se la property è nulla, restituisce il numero di tutti i records
      * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
@@ -114,9 +114,9 @@ public abstract class AQuery {
 
     /**
      * Numero di records della Entity
-     * Filtrate sui filtri (eventuali) passati come parametro
+     * Filtrati sui filtri (eventuali) passati come parametro
      * I filtri sono additivi (ADD) l'uno con l'altro
-     * Se mancano i filtri, calcola tutte le entities della Entity
+     * Se mancano i filtri, restituisce il numero di tutti i records
      * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)
@@ -132,9 +132,9 @@ public abstract class AQuery {
 
     /**
      * Numero di records della Entity
-     * Filtrate sui filtri (eventuali) passati come parametro
+     * Filtrati sui filtri (eventuali) passati come parametro
      * I filtri sono additivi (ADD) l'uno con l'altro
-     * Se mancano i filtri, calcola tutte le entities della Entity
+     * Se mancano i filtri, restituisce il numero di tutti i records
      * Usa l'EntityManager passato come parametro
      * Se il manager è nullo, costruisce al volo un manager standard (and close it)
      * Se il manager è valido, lo usa (must be close by caller method)

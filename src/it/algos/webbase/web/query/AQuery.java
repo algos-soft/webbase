@@ -98,7 +98,55 @@ public abstract class AQuery {
      */
     @SuppressWarnings({"unchecked"})
     public static int count(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
-        Long count = 0L;
+        Container.Filter filter = null;
+        ArrayList<Container.Filter> filtroArray = null;
+
+        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        if (attr != null) {
+            filtroArray = new ArrayList<>();
+            filter = new Compare.Equal(attr.getName(), value);
+            filtroArray.add(filter);
+        }// end of if cycle
+
+        return count(clazz, manager, filter);
+    }// end of static method
+
+
+    /**
+     * Numero di records della Entity
+     * Filtrate sui filtri (eventuali) passati come parametro
+     * I filtri sono additivi (ADD) l'uno con l'altro
+     * Se mancano i filtri, calcola tutte le entities della Entity
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return il numero filtrato di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        return count(clazz, manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
+    /**
+     * Numero di records della Entity
+     * Filtrate sui filtri (eventuali) passati come parametro
+     * I filtri sono additivi (ADD) l'uno con l'altro
+     * Se mancano i filtri, calcola tutte le entities della Entity
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return il numero filtrato di records nella Entity
+     */
+    public static int count(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Filter> filters) {
+        int count = 0;
+        JPAContainer<BaseEntity> container;
 
         // se non specificato l'EntityManager, ne crea uno locale
         boolean usaManagerLocale = false;
@@ -107,33 +155,19 @@ public abstract class AQuery {
             manager = EM.createEntityManager();
         }// end of if cycle
 
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<? extends BaseEntity> root = criteria.from(clazz);
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters (eventually)
+        container = getContainerRead(clazz, null, manager, filters);
 
-        // aggiunge eventualmente un filtro sul valore della property indicata
-        // Se la property è nulla, restituisce il numero di tutti i records
-        if (attr != null) {
-            Predicate predicate = builder.equal(root.get(attr), value);
-            criteria.where(predicate);
-        }// end of if cycle
+        // recupera le dimensioni del container
+        count = container.getItemIds().size();
 
-        CriteriaQuery<Long> select = criteria.select(builder.count(root));
-        TypedQuery<Long> typedQuery = manager.createQuery(select);
-
-        try { // prova ad eseguire il codice
-            count = typedQuery.getSingleResult();
-        } catch (Exception unErrore) { // intercetta l'errore
-        }// fine del blocco try-catch
-
-        // se usato, chiude l'EntityManager locale
+        // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
 
-        return count.intValue();
+        return count;
     }// end of static method
-
 
     //------------------------------------------------------------------------------------------------------------------------
     // Find single entity by primary key
@@ -360,7 +394,7 @@ public abstract class AQuery {
             filtroArray.add(filter);
         }// end of if cycle
 
-        // create a read-only JPA container for a given domain class (eventually sorted) and filters
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters (eventually)
         container = getContainerRead(clazz, sorts, manager, filtroArray);
 
         // costruisce la lista, spazzolando il container

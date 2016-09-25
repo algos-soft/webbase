@@ -557,6 +557,7 @@ public abstract class AQuery {
     // Con e senza EntityManager
     // Rimanda a DUE metodi: Filters e CriteriaDelete
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
+    // Ritorna il numero di records cancellati
     //------------------------------------------------------------------------------------------------------------------------
     public static int delete(Class<? extends BaseEntity> clazz) {
         return deleteBulk(clazz, (SingularAttribute) null, null, (EntityManager) null);
@@ -597,7 +598,7 @@ public abstract class AQuery {
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
-    public static int deleteBulk(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+    private static int deleteBulk(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         int deleted = 0;
         CriteriaBuilder builder;
 
@@ -717,9 +718,7 @@ public abstract class AQuery {
 
 
     //------------------------------------------------------------------------------------------------------------------------
-    //------------------------------------------------------------------------------------------------------------------------
     // utilities
-    //------------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
 
     /**

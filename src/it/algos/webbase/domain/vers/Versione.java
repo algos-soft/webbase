@@ -444,7 +444,7 @@ public class Versione extends BaseEntity {
      */
     @SuppressWarnings("unchecked")
     public static int deleteBulk(SingularAttribute attr, Object value, EntityManager manager) {
-        return AQuery.deleteBulk(Versione.class, attr, value, manager);
+        return AQuery.delete(Versione.class, attr, value, manager);
     }// end of method
 
 

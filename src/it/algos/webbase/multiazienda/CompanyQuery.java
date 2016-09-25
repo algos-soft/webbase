@@ -1,6 +1,5 @@
 package it.algos.webbase.multiazienda;
 
-import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.data.Container;
@@ -248,56 +247,17 @@ public abstract class CompanyQuery {
     // Return una entity di classe CompanyEntity (casting specifico nel metodo chiamante)
     //------------------------------------------------------------------------------------------------------------------------
 
-    /**
-     * Search for a single entity with a specified attribute value.
-     * If multiple entities exist, null is returned.
-     * Filtrato sulla azienda corrente.
-     * Usa l'EntityManager di default
-     *
-     * @param clazz the Entity class
-     * @param attr  the searched attribute
-     * @param value the value to search for
-     * @return the only entity corresponding to the specified criteria, or null
-     */
     public static CompanyEntity getEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value) {
-        return getEntity(clazz, attr, value, (EntityManager) null);
+        return getEntity(clazz, attr, value, CompanySessionLib.getCompany(), (EntityManager) null);
     }// end of static method
 
-    /**
-     * Search for a single entity with a specified attribute value.
-     * If multiple entities exist, null is returned.
-     * Filtrato sulla azienda corrente.
-     * Usa l'EntityManager passato come parametro
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
-     *
-     * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
-     * @param manager the EntityManager to use
-     * @return the only entity corresponding to the specified criteria, or null
-     */
     public static CompanyEntity getEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         return getEntity(clazz, attr, value, CompanySessionLib.getCompany(), manager);
     }// end of static method
 
-    /**
-     * Search for a single entity with a specified attribute value.
-     * If multiple entities exist, null is returned.
-     * Filtrato sulla azienda passata come parametro.
-     * Se la company è nulla, cerca per tutte le companies
-     * Usa l'EntityManager di default
-     *
-     * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param value   the value to search for
-     * @param company da filtrare
-     * @return the only entity corresponding to the specified criteria, or null
-     */
     public static CompanyEntity getEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value, BaseCompany company) {
-        return getEntity(clazz, attr, value, company, null);
+        return getEntity(clazz, attr, value, company, (EntityManager) null);
     }// end of static method
-
 
     /**
      * Search for a single entity with a specified attribute value.
@@ -372,7 +332,7 @@ public abstract class CompanyQuery {
     // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
     // Con e senza Sort
     // Con e senza EntityManager
-    // Rimanda ad un unico metodo
+    // I vari metodi con firme diverse, rimandano tutti ad un unico metodo implementato in AQuery
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
     // Return una List di oggetti CompanyEntity (casting specifico nel metodo chiamante)
     //------------------------------------------------------------------------------------------------------------------------
@@ -476,11 +436,92 @@ public abstract class CompanyQuery {
      * @return a list of founded entities
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, SortProperty sorts, BaseCompany company, EntityManager manager, Container.Filter... filters) {
-        ArrayList<BaseEntity> entities = new ArrayList<>();
-        ArrayList<Container.Filter> filtroArray = null;
+        ArrayList<Container.Filter> filtroArray = new ArrayList<>();
         Container.Filter filter;
-        JPAContainer<BaseEntity> container;
-        EntityItem<BaseEntity> item;
+
+        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
+        if (filters != null && filters.length > 0 && filters[0] != null) {
+            filtroArray = new ArrayList<>(Arrays.asList(filters));
+        }// end of if cycle
+
+        // aggiunge il vincolo della Company, trasformato in filtro
+        if (company != null) {
+            filter = new Compare.Equal(CompanyEntity_.company.getName(), company);
+            filtroArray.add(filter);
+        }// end of if cycle
+
+        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        if (attr != null) {
+            filter = new Compare.Equal(attr.getName(), value);
+            filtroArray.add(filter);
+        }// end of if cycle
+
+        return AQuery.getList(clazz, sorts, manager, filtroArray);
+    }// end of method
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Delete entities
+    // Con e senza Property (SingularAttribute)
+    // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
+    // Con e senza Sort
+    // Con e senza EntityManager
+    // Rimanda a DUE metodi: Filters e CriteriaDelete
+    // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
+    // Ritorna il numero di records cancellati
+    //------------------------------------------------------------------------------------------------------------------------
+
+    public static int delete(Class<? extends BaseEntity> clazz) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, BaseCompany company) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, company, (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, EntityManager manager) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, CompanySessionLib.getCompany(), manager);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, BaseCompany company, EntityManager manager) {
+        return deleteBulk(clazz, (SingularAttribute) null, null, company, manager);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
+        return deleteBulk(clazz, attr, value, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company) {
+        return deleteBulk(clazz, attr, value, company, (EntityManager) null);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
+        return deleteBulk(clazz, attr, value, CompanySessionLib.getCompany(), manager);
+    }// end of static method
+
+    public static int delete(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager) {
+        return deleteBulk(clazz, attr, value, company, manager);
+    }// end of static method
+
+    /**
+     * Bulk delete records with CriteriaDelete
+     * <p>
+     * Usa una Property (SingularAttribute)
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param manager the EntityManager to use
+     * @return il numero di records cancellati
+     */
+    @SuppressWarnings("all")
+    private static int deleteBulk(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager) {
+        int deleted = 0;
+        CriteriaBuilder builder;
+        List<Predicate> predicates = new ArrayList<>();
+        Predicate predicate;
 
         // se non specificato l'EntityManager, ne crea uno locale
         boolean usaManagerLocale = false;
@@ -489,36 +530,49 @@ public abstract class CompanyQuery {
             manager = EM.createEntityManager();
         }// end of if cycle
 
-        // converte in un ArrayList per poter eventualmente aggiungere il vincolo della Property (SingularAttribute attr)
-        if (filters != null && filters.length > 0 && filters[0] != null) {
-            filtroArray = new ArrayList<>(Arrays.asList(filters));
-        }// end of if cycle
+        // create delete
+        builder = manager.getCriteriaBuilder();
+        CriteriaDelete delete = builder.createCriteriaDelete(clazz);
 
-        // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
+        // set the root class
+        Root root = delete.from(clazz);
+
+        // set where clause
         if (attr != null) {
-            filter = new Compare.Equal(attr.getName(), value);
-            if (filtroArray == null) {
-                filtroArray = new ArrayList<>();
-            }// end of if cycle
-            filtroArray.add(filter);
+            predicate = builder.equal(root.get(attr), value);
+            predicates.add(predicate);
         }// end of if cycle
 
-        // create a read-only JPA container for a given domain class (eventually sorted) and filters
-        container = getContainer(clazz, sorts, company, manager, filtroArray);
+        // questo predicato è opzionale
+        // se la company è nulla, cerca per tutte le companies
+        if (company != null) {
+            predicate = builder.equal(root.get(CompanyEntity_.company), company);
+            predicates.add(predicate);
+        }// end of if cycle
 
-        // costruisce la lista, spazzolando il container
-        for (Object id : container.getItemIds()) {
-            item = container.getItem(id);
-            entities.add(item.getEntity());
-        }// end of for cycle
+        delete.where(predicates.toArray(new Predicate[]{}));
+
+        // perform update
+        try {
+            manager.getTransaction().begin();
+            deleted = manager.createQuery(delete).executeUpdate();
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            deleted = 0;
+        }// fine del blocco try-catch
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
 
-        return entities;
+        return deleted;
     }// end of method
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // utilities
+    //------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Create a read-only JPA container for a given domain class and filters.

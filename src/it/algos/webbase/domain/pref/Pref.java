@@ -8,6 +8,7 @@ import it.algos.webbase.multiazienda.CompanyQuery;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibText;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.persistence.annotations.Index;
@@ -130,19 +131,6 @@ public class Pref extends CompanyEntity {
     /**
      * Costruttore minimo con tutte le properties obbligatorie
      *
-     * @param code   sigla di riferimento interna (obbligatoria)
-     * @param classe nome della classe del tipo di dato (obbligatoria)
-     * @deprecated
-     */
-    public Pref(String code, String classe) {
-        super();
-        this.setCode(code);
-        this.setClasse(classe);
-    }// end of constructor
-
-    /**
-     * Costruttore minimo con tutte le properties obbligatorie
-     *
      * @param code sigla di riferimento interna (obbligatoria)
      * @param tipo di dato (obbligatoria)
      */
@@ -152,21 +140,6 @@ public class Pref extends CompanyEntity {
         this.setTipo(tipo);
     }// end of constructor
 
-
-    /**
-     * Costruttore completo con tutte le properties obbligatorie
-     *
-     * @param code    sigla di riferimento interna (obbligatoria)
-     * @param classe  nome della classe del tipo di dato (obbligatoria)
-     * @param company di appartenenza
-     * @deprecated
-     */
-    public Pref(String code, String classe, BaseCompany company) {
-        super();
-        this.setCode(code);
-        this.setClasse(classe);
-        super.setCompany(company);
-    }// end of constructor
 
     /**
      * Costruttore completo con tutte le properties obbligatorie
@@ -197,6 +170,34 @@ public class Pref extends CompanyEntity {
         this.setTipo(tipo);
         super.setCompany(company);
         this.setValore(value);
+    }// end of constructor
+
+    /**
+     * Costruttore minimo con tutte le properties obbligatorie
+     *
+     * @param code   sigla di riferimento interna (obbligatoria)
+     * @param classe nome della classe del tipo di dato (obbligatoria)
+     * @deprecated
+     */
+    public Pref(String code, String classe) {
+        super();
+        this.setCode(code);
+        this.setClasse(classe);
+    }// end of constructor
+
+    /**
+     * Costruttore completo con tutte le properties obbligatorie
+     *
+     * @param code    sigla di riferimento interna (obbligatoria)
+     * @param classe  nome della classe del tipo di dato (obbligatoria)
+     * @param company di appartenenza
+     * @deprecated
+     */
+    public Pref(String code, String classe, BaseCompany company) {
+        super();
+        this.setCode(code);
+        this.setClasse(classe);
+        super.setCompany(company);
     }// end of constructor
 
     /**
@@ -302,8 +303,17 @@ public class Pref extends CompanyEntity {
      * @return istanza di Pref, null se non trovata
      */
     public static Pref find(long id) {
+        return find(id,null);
+    }// end of method
+
+    /**
+     * Recupera una istanza di Pref usando la query specifica
+     *
+     * @return istanza di Pref, null se non trovata
+     */
+    public static Pref find(long id,EntityManager manager) {
         Pref instance = null;
-        BaseEntity entity = AQuery.queryById(Pref.class, id);
+        BaseEntity entity = AQuery.find(Pref.class, id, manager);
 
         if (entity != null) {
             if (entity instanceof Pref) {
@@ -961,7 +971,7 @@ public class Pref extends CompanyEntity {
      */
     @Override
     public BaseEntity save() {
-        return this.save(null);
+        return this.save(null, null);
     }// end of method
 
     /**
@@ -983,20 +993,95 @@ public class Pref extends CompanyEntity {
      * Otherwise, a new transaction is used to save this single entity.
      *
      * @param company azienda da filtrare
+     * @return the merged Entity (new entity, unmanaged, has the id)
+     */
+    public BaseEntity save(BaseCompany company) {
+        return save(company, null);
+    }// end of method
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param company azienda da filtrare
      * @param manager the entity manager to use (if null, a new one is created on the fly)
      * @return the merged Entity (new entity, unmanaged, has the id)
      */
-    public Pref save(BaseCompany company, EntityManager manager) {
+    public BaseEntity save(BaseCompany company, EntityManager manager) {
         boolean valido;
 
         valido = checkChiave(company);
 
         if (valido) {
-            return (Pref) super.save(manager);
+            return super.save(manager);
         } else {
             return null;
         }// end of if/else cycle
 
+    }// end of method
+
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @return the merged Entity (new entity, unmanaged, has the id), casted as Pref
+     */
+    public Pref saveSafe() {
+        return saveSafe(null, null);
+    }// end of method
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return the merged Entity (new entity, unmanaged, has the id), casted as Pref
+     */
+    public Pref saveSafe(EntityManager manager) {
+        return saveSafe(CompanySessionLib.getCompany(), manager);
+    }// end of method
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param company azienda da filtrare
+     * @return the merged Entity (new entity, unmanaged, has the id), casted as Pref
+     */
+    public Pref saveSafe(BaseCompany company) {
+        return saveSafe(company, null);
+    }// end of method
+
+    /**
+     * Saves this entity to the database.
+     * <p>
+     * If the provided EntityManager has an active transaction, the operation is performed inside the transaction.<br>
+     * Otherwise, a new transaction is used to save this single entity.
+     *
+     * @param company azienda da filtrare
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return the merged Entity (new entity, unmanaged, has the id), casted as Pref
+     */
+    public Pref saveSafe(BaseCompany company, EntityManager manager) {
+        Pref pref = null;
+        BaseEntity entity;
+
+        entity = save(company, manager);
+
+        if (entity != null && entity instanceof Pref) {
+            pref = (Pref) entity;
+        }// end of if cycle
+
+        return pref;
     }// end of method
 
 
@@ -1007,22 +1092,34 @@ public class Pref extends CompanyEntity {
      * @param company azienda da filtrare
      */
     private boolean checkChiave(BaseCompany company) {
-        boolean valido = false;
+        String codeCompany = "";
 
         if (getCode() == null || getCode().equals("")) {
-            codeCompanyUnico = "";
-        } else {
-            if (company == null) {
-                company = getCompany();
-            }// end of if cycle
-            if (company != null) {
-                codeCompanyUnico = company.getCompanyCode();
-            }// end of if cycle
-            codeCompanyUnico += getCode();
-            valido = true;
-        }// end of if/else cycle
+            return false;
+        }// end of if cycle
 
-        return valido;
+        if (company == null) {
+            company = getCompany();
+        }// end of if cycle
+        if (company != null) {
+            codeCompany = LibText.primaMaiuscola(company.getCompanyCode());
+        }// end of if cycle
+        codeCompanyUnico = codeCompany + LibText.primaMaiuscola(getCode());
+
+//        if (getCode() == null || getCode().equals("")) {
+//            codeCompanyUnico = "";
+//        } else {
+//            if (company == null) {
+//                company = getCompany();
+//            }// end of if cycle
+//            if (company != null) {
+//                codeCompanyUnico = LibText.primaMaiuscola(company.getCompanyCode());
+//            }// end of if cycle
+//            codeCompanyUnico += LibText.primaMaiuscola(getCode());
+//            valido = true;
+//        }// end of if/else cycle
+
+        return true;
     } // end of method
 
     public Integer getInteger() {

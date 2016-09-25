@@ -120,6 +120,24 @@ public abstract class CompanyQuery {
         return count(clazz, null, null, company, manager);
     }// end of static method
 
+    /**
+     * Numero di records della Entity specificata
+     * Filtrato sul valore della property indicata
+     * Se la property è nulla, restituisce il numero di tutti i records della company
+     * Filtrato sulla company passata come parametro.
+     * Se la company è nulla, restituisce il numero dei records di tutte le company, filtrati sulla property
+     * Usa l'EntityManager di default
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param value   the value to search for
+     * @param company da filtrare
+     * @return il numero filtrato di records nella Entity
+     */
+    @SuppressWarnings({"all"})
+    public static int count(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value, BaseCompany company) {
+        return count(clazz, attr, value, company, null);
+    }// end of static method
 
     /**
      * Numero di records della Entity specificata

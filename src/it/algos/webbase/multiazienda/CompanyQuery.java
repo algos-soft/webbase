@@ -36,8 +36,8 @@ public abstract class CompanyQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Count records
-    // Con e senza Property
-    // Con e senza Company (corrente o specifica)
+    // Con e senza Property. Se la property è nulla, restituisce il numero dei records della Company
+    // Con e senza Company (corrente o specifica). Se la company è nulla, calcola per tutte le companies (con eventuale filtro Property)
     // Con e senza EntityManager
     // I vari metodi con firme diverse, rimandano tutti ad un unico metodo implementato in AQuery
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
@@ -202,6 +202,7 @@ public abstract class CompanyQuery {
     //------------------------------------------------------------------------------------------------------------------------
     // Find entity by primary key
     // Con e senza EntityManager
+    // Senza Company (la primary key è univoca ed indipendente dalla company)
     // I vari metodi con firme diverse, rimandano tutti ad un unico metodo implementato in AQuery
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
     // Parametro in ingresso di tipo long (all Algos primary key are long)
@@ -240,8 +241,7 @@ public abstract class CompanyQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Find entity by SingularAttribute
-    // Con e senza Company (corrente o specifica)
-    // Se la company è nulla, cerca per tutte le companies
+    // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
     // Con e senza EntityManager
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.ACompanyTest
@@ -367,10 +367,9 @@ public abstract class CompanyQuery {
     }// end of static method
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Find entities (list) by SingularAttribute
-    // Con e senza Property
-    // Con e senza Company (corrente o specifica)
-    // Se la company è nulla, cerca per tutte le companies
+    // Find entities (list)
+    // Con e senza Property (SingularAttribute)
+    // Con e senza Company (corrente o specifica). Se la company è nulla, cerca per tutte le companies
     // Con e senza Sort
     // Con e senza EntityManager
     // Rimanda ad un unico metodo

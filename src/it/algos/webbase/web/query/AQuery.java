@@ -31,7 +31,7 @@ public abstract class AQuery {
 
     //------------------------------------------------------------------------------------------------------------------------
     // Count records
-    // Con e senza Property
+    // Con e senza Property. Se la property è nulla, restituisce il numero di tutti i records
     // Con e senza EntityManager
     // Rimanda ad un unico metodo
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
@@ -278,6 +278,8 @@ public abstract class AQuery {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<? extends BaseEntity> criteria = builder.createQuery(clazz);
         Root<? extends BaseEntity> root = criteria.from(clazz);
+
+        // questo predicato è obbligatorio
         Predicate pred = builder.equal(root.get(attr), value);
         criteria.where(pred);
         TypedQuery<? extends BaseEntity> query = manager.createQuery(criteria);

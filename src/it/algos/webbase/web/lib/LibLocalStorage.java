@@ -1,5 +1,6 @@
 package it.algos.webbase.web.lib;
 
+import com.google.gwt.storage.client.Storage;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.ui.JavaScript;
@@ -36,8 +37,11 @@ public class LibLocalStorage {
 
 //        JavaScript.getCurrent().execute("alert('Hello')");
 
-//        String jsFunc = "if (typeof(Storage) !== 'undefined') { alert('supported');return true;} else {alert('not supported');return false;} ";
+//        String testStorageFunc = "if (typeof(Storage) !== 'undefined') { alert('supported');return true;} else {alert('not supported');return false;} ";
 //        JavaScript.getCurrent().execute(jsFunc);
+
+        String defFunc="function myFunction(p1, p2) {return p1 * p2;}";
+        JavaScript.getCurrent().execute(defFunc);
 
         JavaScriptFunction jsFunc2 = new JavaScriptFunction() {
             @Override
@@ -46,15 +50,53 @@ public class LibLocalStorage {
             }
         };
 
-        JavaScript.getCurrent().addFunction("com.example.foo.myfunc", jsFunc2);
+        JavaScript.getCurrent().addFunction("notify", new JavaScriptFunction() {
+            @Override
+            public void call(JsonArray jsonArray) {
+                Notification.show(jsonArray.getString(0));
+            }
+        });
 
-        JavaScript.getCurrent().execute("com.example.foo.myfunc");
+        JavaScript.getCurrent().addFunction("checkLocalStorage", jsFunc2);
+//
+//        JavaScript.getCurrent().execute("com.example.foo.myfunc");
 
+//        JavaScript.getCurrent().addFunction("com.example.foo.myfunc", testStorageFunc);
+//        JavaScript.getCurrent().execute("com.example.foo.myfunc");
+
+        String testStorageFunc = "checkLocalStorage = if (typeof(Storage) !== 'undefined') { notify();return true;} else {alert('not supported');return false;} ";
+
+//        String jsFunc = "checkLocalStorage = function myFunction(p) {"
+//                +"alert(p);"
+//                +"}";
+
+        JavaScript.getCurrent().execute(testStorageFunc);
+        JavaScript.getCurrent().execute("checkLocalStorage('Hello');");
 
 
         return false;
     }
 
+
+    public static void pippo(){
+
+        JavaScript.getCurrent().addFunction("notify", new JavaScriptFunction() {
+            public void call(JsonArray arguments) {
+                Notification.show(arguments.getString(0));
+            }
+        });
+
+        Page.getCurrent().getJavaScript().execute("notify('ciao')");
+
+
+//        JavaScript.getCurrent().execute("function myFunction(p1, p2) {return p1 * p2;}");
+
+
+//        String testStorageFunc = "checkLocalStorage = if (typeof(Storage) !== 'undefined') { alert('supported');return true;} else {alert('not supported');return false;} ";
+//        JavaScript.getCurrent().execute(testStorageFunc);
+//        JavaScript.getCurrent().execute("checkLocalStorage();");
+
+    }
 
 //    /**
 //     * Create or update a local storage entry in the browser.

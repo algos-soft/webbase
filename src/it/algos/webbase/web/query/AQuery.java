@@ -375,10 +375,10 @@ public abstract class AQuery {
      * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     * @return a list of founded entities
+     * @return a list of founded entities, null if there are no entities
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<BaseEntity> entities = new ArrayList<>();
+        ArrayList<BaseEntity> entities = null;
         JPAContainer<BaseEntity> container;
         EntityItem<BaseEntity> item;
 
@@ -393,10 +393,14 @@ public abstract class AQuery {
         container = getContainerRead(clazz, sorts, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        for (Object id : container.getItemIds()) {
-            item = container.getItem(id);
-            entities.add(item.getEntity());
-        }// end of for cycle
+        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
+        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
+            entities = new ArrayList<>();
+            for (Object id : container.getItemIds()) {
+                item = container.getItem(id);
+                entities.add(item.getEntity());
+            }// end of for cycle
+        }// end of if cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
@@ -442,10 +446,10 @@ public abstract class AQuery {
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     * @return a list of founded values of the specified type
+     * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<String> lista = new ArrayList<>();
+        ArrayList<String> entities = null;
         String value;
         SortProperty sort;
         JPAContainer<BaseEntity> container;
@@ -467,23 +471,27 @@ public abstract class AQuery {
         container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        for (Object id : container.getItemIds()) {
-            item = container.getItem(id);
-            property = item.getItemProperty(attr.getName());
-            objValue = property.getValue();
+        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
+        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
+            entities = new ArrayList<>();
+            for (Object id : container.getItemIds()) {
+                item = container.getItem(id);
+                property = item.getItemProperty(attr.getName());
+                objValue = property.getValue();
 
-            if (objValue instanceof String) {
-                value = (String) objValue;
-                lista.add(value);
-            }// end of if cycle
-        }// end of for cycle
+                if (objValue instanceof String) {
+                    value = (String) objValue;
+                    entities.add(value);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
 
-        return lista;
+        return entities;
     }// end of static method
 
 
@@ -515,10 +523,10 @@ public abstract class AQuery {
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     * @return a list of founded values of the specified type
+     * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<Integer> lista = new ArrayList<>();
+        ArrayList<Integer> entities = null;
         int value;
         SortProperty sort;
         JPAContainer<BaseEntity> container;
@@ -540,23 +548,27 @@ public abstract class AQuery {
         container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        for (Object id : container.getItemIds()) {
-            item = container.getItem(id);
-            property = item.getItemProperty(attr.getName());
-            objValue = property.getValue();
+        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
+        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
+            entities = new ArrayList<>();
+            for (Object id : container.getItemIds()) {
+                item = container.getItem(id);
+                property = item.getItemProperty(attr.getName());
+                objValue = property.getValue();
 
-            if (objValue instanceof Integer) {
-                value = (Integer) objValue;
-                lista.add(value);
-            }// end of if cycle
-        }// end of for cycle
+                if (objValue instanceof Integer) {
+                    value = (Integer) objValue;
+                    entities.add(value);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
 
-        return lista;
+        return entities;
     }// end of static method
 
 

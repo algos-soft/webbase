@@ -25,4 +25,5 @@ public abstract class BaseTest {
     protected String contenuto;
     protected BaseCompany company;
 
+
 }// end of abstract class

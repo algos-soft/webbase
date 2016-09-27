@@ -201,8 +201,7 @@ public class Versione extends BaseEntity {
      * @return istanza della Entity, null se non trovata
      */
     public static Versione find(long id, EntityManager manager) {
-        BaseEntity entity = AQuery.find(Versione.class, id, manager);
-        return check(entity);
+        return (Versione) AQuery.find(Versione.class, id, manager);
     }// end of static method
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -278,8 +277,9 @@ public class Versione extends BaseEntity {
      * @return a list of founded entities
      */
     public static List<Versione> getList(SingularAttribute attr, Object value, SortProperty sorts, EntityManager manager) {
-        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, attr, value, sorts, manager);
-        return check(lista);
+        return (List<Versione>) AQuery.getList(Versione.class, attr, value, sorts, manager);
+//        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, attr, value, sorts, manager);
+//        return check(lista);
     }// end of static method
 
     /**
@@ -299,8 +299,9 @@ public class Versione extends BaseEntity {
      * @return a list of founded entities
      */
     public static List<Versione> getList(SortProperty sorts, EntityManager manager, Container.Filter... filters) {
-        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, sorts, manager, filters);
-        return check(lista);
+        return (List<Versione>)AQuery.getList(Versione.class, sorts, manager, filters);
+//        List<? extends BaseEntity> lista = AQuery.getList(Versione.class, sorts, manager, filters);
+//        return check(lista);
     }// end of static method
 
 
@@ -476,22 +477,6 @@ public class Versione extends BaseEntity {
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }// end of getter method
-
-    /**
-     * Controlla se l'istanza della Entity esiste ed è della classe corretta
-     *
-     * @param entity (BaseEntity) restituita dalla query generica
-     * @return istanza della Entity specifica, null se non trovata
-     */
-    private static Versione check(BaseEntity entity) {
-        Versione instance = null;
-
-        if (entity != null && entity instanceof Versione) {
-            instance = (Versione) entity;
-        }// end of if cycle
-
-        return instance;
-    }// end of static method
 
     /**
      * Controlla se la lista (array) di entities esiste ed è della classe corretta

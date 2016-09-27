@@ -82,7 +82,6 @@ public class AQueryTest {
      * Azzera le variabili d'istanza
      */
     private void reset() {
-        versioneUno = null;
         versioneDue = null;
         versioneTre = null;
         versioneQuattro = null;

@@ -121,6 +121,14 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-push/jars/vaadin-push-7.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client-compiled/jars/vaadin-client-compiled-7.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/jars/vaadin-client-7.6.4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.intellij/javac2/jars/javac2-7.0.3.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm-commons/jars/asm-commons-3.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm-tree/jars/asm-tree-3.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm/jars/asm-3.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/jdom/jdom/jars/jdom-1.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/jars/ant-1.7.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.7.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.jgoodies/forms/jars/forms-1.1-preview.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-sass-compiler/javadocs/vaadin-sass-compiler-0.9.13-javadoc.jar!/" />
@@ -225,6 +233,9 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.6.4-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.6.4-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.6.4-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm/sources/asm-3.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/jdom/jdom/sources/jdom-1.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/sources/ant-1.7.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

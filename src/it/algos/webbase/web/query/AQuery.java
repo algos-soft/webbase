@@ -378,7 +378,7 @@ public abstract class AQuery {
      * @return a list of founded entities, null if there are no entities
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<BaseEntity> entities = null;
+        ArrayList<BaseEntity> entities = new ArrayList<>();
         JPAContainer<BaseEntity> container;
         EntityItem<BaseEntity> item;
 
@@ -393,14 +393,10 @@ public abstract class AQuery {
         container = getContainerRead(clazz, sorts, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
-        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
-            entities = new ArrayList<>();
-            for (Object id : container.getItemIds()) {
-                item = container.getItem(id);
-                entities.add(item.getEntity());
-            }// end of for cycle
-        }// end of if cycle
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            entities.add(item.getEntity());
+        }// end of for cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
@@ -449,7 +445,7 @@ public abstract class AQuery {
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<String> entities = null;
+        ArrayList<String> entities = new ArrayList<>();
         String value;
         SortProperty sort;
         JPAContainer<BaseEntity> container;
@@ -471,20 +467,16 @@ public abstract class AQuery {
         container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
-        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
-            entities = new ArrayList<>();
-            for (Object id : container.getItemIds()) {
-                item = container.getItem(id);
-                property = item.getItemProperty(attr.getName());
-                objValue = property.getValue();
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
 
-                if (objValue instanceof String) {
-                    value = (String) objValue;
-                    entities.add(value);
-                }// end of if cycle
-            }// end of for cycle
-        }// end of if cycle
+            if (objValue instanceof String) {
+                value = (String) objValue;
+                entities.add(value);
+            }// end of if cycle
+        }// end of for cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
@@ -526,7 +518,7 @@ public abstract class AQuery {
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<Integer> entities = null;
+        ArrayList<Integer> entities = new ArrayList<>();
         int value;
         SortProperty sort;
         JPAContainer<BaseEntity> container;
@@ -548,20 +540,16 @@ public abstract class AQuery {
         container = AQuery.getContainerRead(clazz, sort, manager, filters);
 
         // costruisce la lista, spazzolando il container
-        // controllo quante entities ha trovatop e costruisce la lista SOLO se ce ne sono
-        if (container.getItemIds() != null && container.getItemIds().size() > 0) {
-            entities = new ArrayList<>();
-            for (Object id : container.getItemIds()) {
-                item = container.getItem(id);
-                property = item.getItemProperty(attr.getName());
-                objValue = property.getValue();
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
 
-                if (objValue instanceof Integer) {
-                    value = (Integer) objValue;
-                    entities.add(value);
-                }// end of if cycle
-            }// end of for cycle
-        }// end of if cycle
+            if (objValue instanceof Integer) {
+                value = (Integer) objValue;
+                entities.add(value);
+            }// end of if cycle
+        }// end of for cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {

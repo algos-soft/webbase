@@ -96,7 +96,7 @@ public abstract class AQuery {
      * @param manager the EntityManager to use
      * @return il numero filtrato di records nella Entity
      */
-    @SuppressWarnings({"unchecked"})
+//    @SuppressWarnings({"unchecked"})
     public static int count(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         Container.Filter filter = null;
         ArrayList<Container.Filter> filtroArray = null;

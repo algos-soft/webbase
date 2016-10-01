@@ -3,9 +3,7 @@ package it.algos.webbase.web.form;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.UI;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.lib.LibBean;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.EntityManager;
@@ -29,15 +27,15 @@ public class ModuleForm extends AForm {
     @Override
     protected void init() {
 
-        Item item=getItem();
+        Item item = getItem();
 
         // if the item exists and it is a bean item, refresh the entity
         // from the persistence layer before displaying data
-        if(item!=null && item instanceof BeanItem){
-            BeanItem bi = (BeanItem)item;
-            BaseEntity entity = (BaseEntity)bi.getBean();
+        if (item != null && item instanceof BeanItem) {
+            BeanItem bi = (BeanItem) item;
+            BaseEntity entity = (BaseEntity) bi.getBean();
             EntityManager em = getEntityManager();
-            if(em!=null){
+            if (em != null) {
                 em.refresh(entity);
             }
         }
@@ -99,7 +97,9 @@ public class ModuleForm extends AForm {
         // merge the bean (creates or updates the record(s) in the db)
         EntityManager em = getEntityManager();
         if (em != null) {
-            getEntity().save(em);
+            BaseEntity entity = getEntity();
+            entity = getEntity().save(em);
+            int a=87;
         }
 
     }

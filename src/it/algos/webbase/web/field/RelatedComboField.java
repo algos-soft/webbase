@@ -32,30 +32,67 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
     public static final int EDIT_TYPE_NEW = 1;
     public static final int EDIT_TYPE_EDIT = 2;
     public static final int EDIT_TYPE_BOTH = 3;
-
+    protected EntityManager entityManager;
     private ArrayList<RecordEditedListener> listeners = new ArrayList();
-
     @SuppressWarnings("rawtypes")
     private Class entityClass;
-    protected EntityManager entityManager;
     private Component editComponent;
     private String filterString;
 
-    @SuppressWarnings("rawtypes")
-    public RelatedComboField(Class entityClass, String caption) {
-        super(caption);
-        this.entityClass = entityClass;
-        setImmediate(true);
-        init();
-    }
-
+    /**
+     * Costruttore
+     *
+     * @param entityClass the Entity class
+     */
     @SuppressWarnings("rawtypes")
     public RelatedComboField(Class entityClass) {
         this(entityClass, null);
-    }
+    }// end of constructor
+
+    /**
+     * Costruttore
+     *
+     * @param entityClass the Entity class
+     * @param caption     da visualizzare nella UI
+     */
+    @SuppressWarnings("rawtypes")
+    public RelatedComboField(Class entityClass, String caption) {
+        this(entityClass, caption, true);
+    }// end of constructor
+
+    /**
+     * Costruttore
+     *
+     * @param entityClass the Entity class
+     * @param usaInit     flag per usare subito il metodo init()
+     */
+    @SuppressWarnings("rawtypes")
+    public RelatedComboField(Class entityClass, boolean usaInit) {
+        this(entityClass, null, usaInit);
+    }// end of constructor
+
+    /**
+     * Costruttore
+     *
+     * @param entityClass the Entity class
+     * @param caption     da visualizzare nella UI
+     * @param usaInit     flag per usare subito il metodo init()
+     */
+    @SuppressWarnings("rawtypes")
+    public RelatedComboField(Class entityClass, String caption, boolean usaInit) {
+        super(caption);
+        this.entityClass = entityClass;
+        setImmediate(true);
+
+        if (usaInit) {
+            init();
+        }// end of if cycle
+
+    }// end of constructor
+
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void init() {
+    protected void init() {
         initField();
 
         //create and register the EntityManager
@@ -90,20 +127,21 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
      * By default the container is sorted based on the default sort order declared
      * in the entity class via the @DefaultSort annotation.
      * If the annotation is not present the container is not sorted.
-     *
+     * <p>
      * For a custom sort of the container in a RelatedCombo field you have 2 options:
      * 1) call the sort() method after the creation of the object passing the properties on which to sort
      * 2) override this method (needs subclassing).
+     *
      * @param cont the container to be sorted.
      */
-    protected void sortContainer(Container cont){
+    protected void sortContainer(Container cont) {
 
         // retrieve the default sort properties from the class by annotation
         SortProperties props = BaseEntity.getSortProperties(getEntityClass());
 
         // sort the container on the sort properties
-        if(cont instanceof Sortable){
-            Sortable sortable=(Sortable)cont;
+        if (cont instanceof Sortable) {
+            Sortable sortable = (Sortable) cont;
             sortable.sort(props.getProperties(), props.getDirections());
         }
 
@@ -226,8 +264,8 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         }
 
         Container cont = getContainerDataSource();
-        if(cont instanceof Sortable){
-            Sortable sCont=(Sortable)cont;
+        if (cont instanceof Sortable) {
+            Sortable sCont = (Sortable) cont;
             sCont.sort(attrArray, attrOrders);
         }
 
@@ -249,12 +287,12 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
 
 
     /**
+     * @param type EDIT_TYPE_NEW to show tne NEW button, EDIT_TYPE_EDIT to
+     *             show the EDIT button, EDIT_TYPE_BOTH to show both buttons
      * @return a Component containing this field and the new/edit buttons,
      * all wrapped in a layout.
      * <p>
      * When the new/edit buttons are pressed, the edit form is presented.
-     * @param type EDIT_TYPE_NEW to show tne NEW button, EDIT_TYPE_EDIT to
-     *             show the EDIT button, EDIT_TYPE_BOTH to show both buttons
      */
     public Component getEditComponent(int type) {
 
@@ -326,7 +364,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         if ((handler != null) && (handler instanceof ComboNewItemHandler)) {
             ComboNewItemHandler cHandler = (ComboNewItemHandler) handler;
             cHandler.addNewItem(filterString);
-            filterString=null;
+            filterString = null;
         }
     }
 
@@ -336,10 +374,8 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
         super.changeVariables(source, variables);
 
         // save the filter string for later use
-        filterString= (String) variables.get("filter");
+        filterString = (String) variables.get("filter");
     }
-
-
 
 
     /**
@@ -363,7 +399,7 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
          * The record has been saved after being edited in the form.
          * <p>
          *
-         * @param item        the saved item
+         * @param item      the saved item
          * @param newRecord true for new record, false for editing existing record
          */
         public void save_(Item item, boolean newRecord);

@@ -445,7 +445,7 @@ public abstract class AQuery {
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
-        ArrayList<String> entities = new ArrayList<>();
+        ArrayList<String> properties = new ArrayList<>();
         String value;
         SortProperty sort;
         JPAContainer<BaseEntity> container;
@@ -474,7 +474,7 @@ public abstract class AQuery {
 
             if (objValue instanceof String) {
                 value = (String) objValue;
-                entities.add(value);
+                properties.add(value);
             }// end of if cycle
         }// end of for cycle
 
@@ -483,7 +483,7 @@ public abstract class AQuery {
             manager.close();
         }// end of if cycle
 
-        return entities;
+        return properties;
     }// end of static method
 
 

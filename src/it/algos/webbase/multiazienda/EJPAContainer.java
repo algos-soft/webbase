@@ -17,6 +17,18 @@ public class EJPAContainer extends JPAContainer<CompanyEntity> {
     private static BaseCompany company;
 
     /**
+     * Create a container filtered on the current Company.
+     *
+     * @param entityClass the entity class
+     * @param manager     the entity manager
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public EJPAContainer(Class entityClass, EntityManager manager) {
+        this(entityClass, manager, CompanySessionLib.getCompany());
+    }// end of constructor
+
+
+    /**
      * Create a container filtered on a given company.
      *
      * @param entityClass the entity class
@@ -30,18 +42,8 @@ public class EJPAContainer extends JPAContainer<CompanyEntity> {
         EntityProvider entityProvider = new LocalEntityProvider<CompanyEntity>(entityClass, manager);
         setEntityProvider(entityProvider);
         addContainerFilter(createCompanyFilter());
-    }
+    }// end of constructor
 
-    /**
-     * Create a container filtered on the current Company.
-     *
-     * @param entityClass the entity class
-     * @param manager     the entity manager
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public EJPAContainer(Class entityClass, EntityManager manager) {
-        this(entityClass, manager, CompanySessionLib.getCompany());
-    }
 
 
 
@@ -59,4 +61,4 @@ public class EJPAContainer extends JPAContainer<CompanyEntity> {
     }
 
 
-}
+}// end of class

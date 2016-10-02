@@ -156,7 +156,7 @@ public abstract class AQuery {
         }// end of if cycle
 
         // create a read-only JPA container for a given domain class (eventually sorted) and filters (eventually)
-        container = getContainerRead(clazz, null, manager, filters);
+        container = getContainerRead(clazz, manager, filters);
 
         // recupera le dimensioni del container
         count = container.getItemIds().size();
@@ -290,6 +290,60 @@ public abstract class AQuery {
         }// fine del blocco try-catch
 
         // se usato, chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return entity;
+    }// end of static method
+
+
+    public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, Filter... filters) {
+        return getEntity(clazz, (EntityManager) null, filters);
+    }// end of static method
+
+    public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
+        return getEntity(clazz, manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
+    /**
+     * Search for a single entity.
+     * Filtrate sui filtri passati come parametro
+     * I filtri sono additivi (ADD) l'uno con l'altro
+     * If multiple entities exist, null is returned.
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Filter> filters) {
+        BaseEntity entity = null;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters (eventually)
+        container = getContainerRead(clazz, manager, filters);
+
+        // il container deve contenere solo un item perchè la richiesta sia valida
+        if (container != null && container.getItemIds() != null && container.getItemIds().size() == 1) {
+            for (Object id : container.getItemIds()) {
+                item = container.getItem(id);
+                entity = item.getEntity();
+            }// end of for cycle
+        }// end of if cycle
+
+        // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
         }// end of if cycle
@@ -728,6 +782,10 @@ public abstract class AQuery {
     //------------------------------------------------------------------------------------------------------------------------
     // utilities
     //------------------------------------------------------------------------------------------------------------------------
+
+    public static JPAContainer<BaseEntity> getContainerRead(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Filter> filters) {
+        return getContainerRead(clazz, (SortProperty) null, manager, filters);
+    }// end of static method
 
     /**
      * Create a read-only JPA container for a given domain class and filters.
@@ -1451,24 +1509,24 @@ public abstract class AQuery {
         return list;
     }// end of method
 
-    /**
-     * Return a single entity for a given domain class and filters.
-     * <p>
-     *
-     * @param entityClass - the entity class
-     * @param arguments   - an array of filters (you can use FilterFactory to build
-     *                    filters, or create them as Compare....)
-     * @return the single (or first) entity found
-     * @deprecated
-     */
-    public static BaseEntity getEntity(Class<? extends BaseEntity> entityClass, Filter... arguments) {
-        BaseEntity entity = null;
-        ArrayList<BaseEntity> list = getListOld(entityClass, arguments);
-        if (list.size() > 0) {
-            entity = list.get(0);
-        }
-        return entity;
-    }
+//    /**
+//     * Return a single entity for a given domain class and filters.
+//     * <p>
+//     *
+//     * @param entityClass - the entity class
+//     * @param arguments   - an array of filters (you can use FilterFactory to build
+//     *                    filters, or create them as Compare....)
+//     * @return the single (or first) entity found
+//     * @deprecated
+//     */
+//    public static BaseEntity getEntity(Class<? extends BaseEntity> entityClass, Filter... arguments) {
+//        BaseEntity entity = null;
+//        ArrayList<BaseEntity> list = getListOld(entityClass, arguments);
+//        if (list.size() > 0) {
+//            entity = list.get(0);
+//        }
+//        return entity;
+//}
 
     /**
      * Searches for a single entity by id

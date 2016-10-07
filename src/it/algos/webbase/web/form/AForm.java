@@ -227,7 +227,7 @@ public abstract class AForm extends VerticalLayout {
 
 
             // if this is an Association field, validate the associated bean
-            if(attr.isAssociation()){
+            if (attr.isAssociation()) {
 
                 // remove any existing validators
                 // (if you want more validators, add them after the field is added to the form)
@@ -246,8 +246,13 @@ public abstract class AForm extends VerticalLayout {
             // reassign the the key as the member name
             key = attr.getName();
         }
-
+        //--@todo patch (di gac, ovvio)x
+        //--@todo xAlex: se non vedi, leva il todo
+        //--siccome la funzione binder si 'mangia' il valore enabled() -lo forza sempre a true-
+        //--me lo metto da parte e lo ripristino successivamente alla chiamata
+        boolean statusEnabled = field.isEnabled(); //--aggiunta
         this.binder.bind(field, key);
+        field.setEnabled(statusEnabled); //--aggiunta
 
     }
 
@@ -300,15 +305,15 @@ public abstract class AForm extends VerticalLayout {
     protected Component creaCompDetail(FormLayout layout) {
         Collection<Field<?>> fields = binder.getFields();
 
-        boolean focused=false;
+        boolean focused = false;
         for (Field<?> field : fields) {
 
             layout.addComponent(field);
 
             // focus to first field
-            if(!focused){
+            if (!focused) {
                 field.focus();
-                focused=true;
+                focused = true;
             }
 
         }// end of for cycle

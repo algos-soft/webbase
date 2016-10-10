@@ -159,7 +159,9 @@ public abstract class AQuery {
         container = getContainerRead(clazz, manager, filters);
 
         // recupera le dimensioni del container
-        count = container.getItemIds().size();
+        if (container.getItemIds()!=null) {
+            count = container.getItemIds().size();
+        }// end of if cycle
 
         // eventualmente chiude l'EntityManager locale
         if (usaManagerLocale) {
@@ -601,6 +603,79 @@ public abstract class AQuery {
 
             if (objValue instanceof Integer) {
                 value = (Integer) objValue;
+                entities.add(value);
+            }// end of if cycle
+        }// end of for cycle
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return entities;
+    }// end of static method
+
+
+    public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
+        return getListLong(clazz, attr, true, (EntityManager) null, (Filter) null);
+    }// end of static method
+
+    public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc) {
+        return getListLong(clazz, attr, asc, (EntityManager) null, (Filter) null);
+    }// end of static method
+
+    public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager) {
+        return getListLong(clazz, attr, true, manager, (Filter) null);
+    }// end of static method
+
+    public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, Filter... filters) {
+        return getListLong(clazz, attr, asc, manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
+    /**
+     * Search for the values of a given property of the given Entity class
+     * Ordinate sul valore della property indicata
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr    the searched attribute
+     * @param asc     ordinamento (ascendente o discendente)
+     * @param manager the EntityManager to use
+     * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
+     * @return a list of founded values of the specified type, null if there are no entities
+     */
+    public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
+        ArrayList<Long> entities = new ArrayList<>();
+        long value;
+        SortProperty sort;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
+        EntityItemProperty property;
+        Object objValue;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // ordinamento
+        sort = new SortProperty(attr, asc);
+
+        // create a read-only JPA container for a given domain class (eventually sorted) and filters
+        container = AQuery.getContainerRead(clazz, sort, manager, filters);
+
+        // costruisce la lista, spazzolando il container
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
+
+            if (objValue instanceof Long) {
+                value = (Long) objValue;
                 entities.add(value);
             }// end of if cycle
         }// end of for cycle

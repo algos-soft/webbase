@@ -277,12 +277,63 @@ public abstract class CompanyQuery {
      */
     @SuppressWarnings({"all"})
     public static CompanyEntity getEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value, BaseCompany company, EntityManager manager) {
+        return getEntity(clazz, attr, value, (SingularAttribute) null, (Object) null, company, manager);
+    }// end of static method
+
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * If multiple entities exist, null is returned.
+     * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, cerca per tutte le companies
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz  the Entity class
+     * @param attr1  the searched attribute
+     * @param value1 the value to search for
+     * @param attr2  the searched attribute
+     * @param value2 the value to search for
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    public static CompanyEntity getEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr1, Object value1, SingularAttribute attr2, Object value2) {
+        return getEntity(clazz, attr1, value1, attr2, value2, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+    /**
+     * Search for a single entity with a specified attribute value.
+     * If multiple entities exist, null is returned.
+     * Filtrato sulla azienda passata come parametro.
+     * Se la company è nulla, cerca per tutte le companies
+     * Usa l'EntityManager passato come parametro
+     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+     * Se il manager è valido, lo usa (must be close by caller method)
+     *
+     * @param clazz   the Entity class
+     * @param attr1   the searched attribute
+     * @param value1  the value to search for
+     * @param attr2   the searched attribute
+     * @param value2  the value to search for
+     * @param company da filtrare
+     * @param manager the EntityManager to use
+     * @return the only entity corresponding to the specified criteria, or null
+     */
+    @SuppressWarnings({"all"})
+    public static CompanyEntity getEntity(
+            Class<? extends CompanyEntity> clazz,
+            SingularAttribute attr1,
+            Object value1,
+            SingularAttribute attr2,
+            Object value2,
+            BaseCompany company,
+            EntityManager manager) {
         CompanyEntity entity = null;
         List<Predicate> predicates = new ArrayList<>();
         Predicate predicate;
 
         // the specified attribute is mandatory
-        if (attr == null) {
+        if (attr1 == null) {
             return null;
         }// end of if cycle
 
@@ -298,8 +349,14 @@ public abstract class CompanyQuery {
         Root<? extends CompanyEntity> root = criteria.from(clazz);
 
         // questo predicato è obbligatorio
-        if (value != null) {
-            predicate = builder.equal(root.get(attr), value);
+        if (value1 != null) {
+            predicate = builder.equal(root.get(attr1), value1);
+            predicates.add(predicate);
+        }// end of if cycle
+
+        // questo predicato è opzionale
+        if (value2 != null) {
+            predicate = builder.equal(root.get(attr2), value2);
             predicates.add(predicate);
         }// end of if cycle
 

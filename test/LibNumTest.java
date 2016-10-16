@@ -1,7 +1,9 @@
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.lib.LibNum;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -10,8 +12,23 @@ import static org.junit.Assert.assertNull;
  * Created by gac on 12 set 2015.
  * .
  */
-public  class LibNumTest extends BaseTest {
+public  class LibNumTest  {
 
+    // alcuni parametri utilizzati
+    protected int numSorgente = 0;
+    protected int numPrevisto = 0;
+    protected int numOttenuto = 0;
+    protected boolean boolPrevisto = false;
+    protected boolean boolOttenuto = false;
+    protected String sorgente = "";
+    protected String previsto = "";
+    protected String ottenuto = "";
+    protected String tag = "";
+    protected HashMap mappaTxt;
+    protected HashMap mappaObj;
+    protected HashMap mappaDB;
+    protected String contenuto;
+    protected BaseCompany company;
 
     @Test
     /**

@@ -41,7 +41,6 @@ public class BaseCompany extends BaseEntity {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pref> preferenze;
 
-
     //--sigla di riferimento interna (interna, obbligatoria ed unica)
     @NotEmpty
     @Column(length = 20, unique = true)
@@ -74,18 +73,19 @@ public class BaseCompany extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date contractEnd;
 
-
     /**
      * Costruttore senza argomenti
      * Obbligatorio per le specifiche JavaBean
+     * Da non usare MAI per la creazione diretta di una nuova istanza (si perdono i controlli)
      */
     public BaseCompany() {
-        this("", "");
-    }// end of null constructor
-
+    }// end of JavaBean constructor
 
     /**
      * Costruttore minimo con tutte le properties obbligatorie
+     * Filtrato sulla company corrente (che viene regolata nella superclasse CompanyEntity)
+     * Il codeCompanyUnico (obbligatorio) viene calcolato in automatico prima del persist
+     * Se manca l'ordine di presentazione o è uguale a zero, viene calcolato in automatico prima del persist
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
      * @param companyName descrizione della company (obbligatoria)
@@ -95,7 +95,6 @@ public class BaseCompany extends BaseEntity {
         this.setCompanyCode(companyCode);
         this.setName(companyName);
     }// end of constructor
-
 
     /**
      * Recupera il totale dei records di questa classe
@@ -116,7 +115,6 @@ public class BaseCompany extends BaseEntity {
         return totRec;
     }// end of method
 
-
     /**
      * Recupera una lista di tutti i records
      * Senza filtri.
@@ -135,11 +133,11 @@ public class BaseCompany extends BaseEntity {
         return lista;
     }// end of method
 
-
     /**
      * Controlla l'esistenza del record usando la property unica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     *
      * @return istanza della classe, null se non trovata
      */
     public static boolean isEsiste(String companyCode) {
@@ -153,11 +151,11 @@ public class BaseCompany extends BaseEntity {
         return esiste;
     }// end of static method
 
-
     /**
      * Controlla la non-esistenza del record usando la property unica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     *
      * @return istanza della classe, null se non trovata
      */
     public static boolean isNonEsiste(String companyCode) {
@@ -168,6 +166,7 @@ public class BaseCompany extends BaseEntity {
      * Recupera una istanza della classe usando la primary key
      *
      * @param idKey primary key (automatica)
+     *
      * @return istanza della classe, null se non trovata
      */
     public static BaseCompany find(long idKey) {
@@ -183,11 +182,11 @@ public class BaseCompany extends BaseEntity {
         return instance;
     }// end of static method
 
-
     /**
      * Recupera una istanza della classe usando la query specifica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     *
      * @return istanza della classe, null se non trovata
      */
     public static BaseCompany findByCode(String companyCode) {
@@ -203,6 +202,25 @@ public class BaseCompany extends BaseEntity {
         return instance;
     }// end of static method
 
+    /**
+     * Recupera una istanza della classe usando la query specifica
+     *
+     * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
+     *
+     * @return istanza della classe, null se non trovata
+     */
+    public static BaseCompany findByCode(String companyCode, EntityManager manager) {
+        BaseCompany instance = null;
+        BaseEntity entity = AQuery.getEntity(BaseCompany.class, BaseCompany_.companyCode, companyCode, manager);
+
+        if (entity != null) {
+            if (entity instanceof BaseCompany) {
+                instance = (BaseCompany) entity;
+            }// end of if cycle
+        }// end of if cycle
+
+        return instance;
+    }// end of static method
 
     /**
      * Creazione iniziale di una istanza della classe
@@ -210,12 +228,12 @@ public class BaseCompany extends BaseEntity {
      *
      * @param companyCode sigla di riferimento interna (obbligatoria)
      * @param companyName descrizione della company (obbligatoria)
+     *
      * @return istanza della classe
      */
     public static BaseCompany crea(String companyCode, String companyName) {
         return crea(companyCode, companyName, "", "", "", "", null, null);
     }// end of static method
-
 
     /**
      * Creazione iniziale di una istanza della classe
@@ -229,6 +247,7 @@ public class BaseCompany extends BaseEntity {
      * @param contractType  tipologia del contratto (eventuale)
      * @param contractStart inizio del contratto (eventuale)
      * @param contractEnd   fine del contratto (eventuale)
+     *
      * @return istanza della classe
      */
     public static BaseCompany crea(
@@ -258,7 +277,6 @@ public class BaseCompany extends BaseEntity {
         return company;
     }// end of static method
 
-
 //    /**
 //     * Cancellazione di tutti i records
 //     */
@@ -267,7 +285,6 @@ public class BaseCompany extends BaseEntity {
 //            company.delete();
 //        }// end of for cycle
 //    }// end of static method
-
 
     /**
      * Delete all the records for the Entity class
@@ -288,9 +305,6 @@ public class BaseCompany extends BaseEntity {
     public static void deleteAll(EntityManager manager) {
         AQuery.deleteAll(BaseCompany.class, manager);
     }// end of static method
-
-
-
 
     /**
      * Ritorna la Company corrente.
@@ -464,7 +478,6 @@ public class BaseCompany extends BaseEntity {
         manager.close();
     }// end of method
 
-
     /**
      * Elimina l'azienda.
      *
@@ -484,7 +497,6 @@ public class BaseCompany extends BaseEntity {
         manager.close();
     }// end of method
 
-
     /**
      * Elimina tutti i dati di questa azienda.
      * <p>
@@ -501,7 +513,6 @@ public class BaseCompany extends BaseEntity {
         // elimina le preferenze
         AQuery.deleteOld(Pref.class, CompanyEntity_.company, this, manager);
     }// end of method
-
 
 }// end of entity class
 

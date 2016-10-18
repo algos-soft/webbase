@@ -87,16 +87,13 @@ public class LibField {
                     ((PasswordField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     break;
                 default: // caso non definito
-                    return createFieldJavaType(attr);
-//                    vaadinField = new TextField();
-//                    ((TextField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
-//                    ((TextField) vaadinField).setDescription(fieldAnnotation.help());
-//                    ((TextField) vaadinField).setEnabled(fieldAnnotation.enabled());
-//                    break;
+                    vaadinField = createFieldJavaType(attr);
             } // fine del blocco switch
+
             vaadinField.setRequired(fieldAnnotation.required());
             vaadinField.setCaption(fieldAnnotation.caption());
             vaadinField.setWidth(fieldAnnotation.width());
+            vaadinField.setRequiredError(fieldAnnotation.error());
 
             return vaadinField;
         } else {

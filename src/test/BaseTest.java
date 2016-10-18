@@ -6,13 +6,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by gac on 12 set 2015.
  * .
  */
+
 /**
  * Created by gac on 01 set 2016.
  * .
@@ -21,10 +21,15 @@ public abstract class BaseTest {
 
     protected final static String COMPANY_UNO_CODE = "Alfa";
     protected final static String COMPANY_DUE_CODE = "Beta";
+    private final static String DEFAULT_DB_NAME = "TEST";
     protected static EntityManager MANAGER;
     // alcuni parametri utilizzati
     protected static BaseCompany COMPANY_UNO;
     protected static BaseCompany COMPANY_DUE;
+    private static String DB_NAME;
+    protected String titolo1 = "Setup";
+    protected String titolo2 = "Database";
+    protected String titolo3 = "Utenti";
     protected String code1 = "uno";
     protected String code2 = "due";
     protected String code3 = "tre";
@@ -36,6 +41,8 @@ public abstract class BaseTest {
     protected String desc1 = "Prima descrizione";
     protected String desc2 = "Seconda descrizione";
     protected String desc3 = "Terza descrizione";
+    protected String desc4 = "Cancellazione completa";
+    protected String desc5 = "Patch password errata";
     protected String nome1 = "Mario";
     protected String nome2 = "Ilaria";
     protected String nome3 = "Giovanni";
@@ -50,20 +57,20 @@ public abstract class BaseTest {
     protected int ordine;
     protected String previsto = "";
     protected String ottenuto = "";
-
     protected ArrayList<Long> chiavi = new ArrayList<>();
     protected ArrayList<Long> chiaviUno = new ArrayList<>();
     protected ArrayList<Long> chiaviDue = new ArrayList<>();
+    protected ArrayList<Long> chiaviBase = new ArrayList<>();
+    protected ArrayList<Long> chiaviTest = new ArrayList<>();
     protected List<String> listStr = new ArrayList<>();
-
     protected ArrayList<String> listaCodeCompanyUnici = new ArrayList<>();
 
     /**
      * SetUp iniziale eseguito solo una volta alla creazione della sottoclasse
      */
-    protected static void setUpClass() {
+    protected static void setUpClass(String dbName) {
         // creazione del MANAGER statico per questa singola classe di test
-        creaManager();
+        creaManager(dbName);
 
         // crea alcune company di prova
         creaCompanyUno();
@@ -85,9 +92,14 @@ public abstract class BaseTest {
      * Creazione di un MANAGER specifico
      * DEVE essere chiuso (must be close by caller method)
      */
-    private static void creaManager() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("WAMTEST");
+    private static void creaManager(String dbName) {
+        EntityManagerFactory factory = null;
 
+        if (dbName == null || dbName.equals("")) {
+            dbName = DB_NAME;
+        }// end of if cycle
+
+        factory = Persistence.createEntityManagerFactory(dbName);
         if (factory != null) {
             MANAGER = factory.createEntityManager();
         }// end of if cycle
@@ -199,7 +211,6 @@ public abstract class BaseTest {
         chiaviUno = new ArrayList<>();
         chiaviDue = new ArrayList<>();
     }// end of method
-
 
 
 }// end of abstract class

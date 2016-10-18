@@ -73,9 +73,10 @@ public class Versione extends BaseEntity {
     /**
      * Costruttore senza argomenti
      * Obbligatorio per le specifiche JavaBean
+     * Da non usare MAI per la creazione diretta di una nuova istanza (si perdono i controlli)
      */
     public Versione() {
-    }// end of constructor
+    }// end of JavaBean constructor
 
     /**
      * Costruttore minimo con tutte le properties obbligatorie

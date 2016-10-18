@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
 import it.algos.webbase.web.entity.BaseEntity;
+import it.algos.webbase.web.lib.LibField;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.EntityManager;
@@ -72,7 +73,7 @@ public class ModuleForm extends AForm {
         Attribute[] attributes = this.getAttributesList();
 
         for (Attribute attr : attributes) {
-            field = createField(attr);
+            field = LibField.createField(attr);
             if (field != null) {
                 addField(attr, field);
             }// end of if cycle

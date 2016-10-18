@@ -12,6 +12,7 @@ import it.algos.webbase.web.field.ArrayComboField;
 import it.algos.webbase.web.form.AForm;
 import it.algos.webbase.web.form.AFormLayout;
 import it.algos.webbase.web.form.ModuleForm;
+import it.algos.webbase.web.lib.LibField;
 import it.algos.webbase.web.module.ModulePop;
 
 import javax.persistence.metamodel.Attribute;
@@ -71,7 +72,6 @@ public class PrefForm extends ModuleForm {
     }// end of method
 
 
-    @Override
     protected Field createField(Attribute attr) {
         Field field = super.createField(attr);
 

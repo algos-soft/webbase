@@ -7,21 +7,15 @@ import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.field.*;
-import it.algos.webbase.web.field.DateField;
-import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.lib.Lib;
 import it.algos.webbase.web.lib.LibBean;
+import it.algos.webbase.web.lib.LibField;
 import it.algos.webbase.web.toolbar.FormToolbar;
 
 import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.PluralAttribute;
-import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * A generic form to edit one Item.
@@ -117,95 +111,100 @@ public abstract class AForm extends VerticalLayout {
      */
     public abstract void createFields();
 
-    /**
-     * Create a single field.
-     * The field type is chosen according to the Java type.
-     *
-     * @param attr the metamodel Attribute
-     */
     protected Field createField(Attribute attr) {
-        Field field = null;
-
-        if (attr != null) {
-
-
-            try {
-
-                if (attr.isAssociation()) { // questo può fallire!!
-
-                    // relazione OneToMany - usiamo un campo lista (?)
-                    if (attr instanceof PluralAttribute) {
-                        PluralAttribute pa = (PluralAttribute) attr;
-                        Class clazz = pa.getElementType().getJavaType();
-                        //field = new RelatedComboField(clazz);
-                        //field=null;// todo qui ci vuole una lista
-                    }
-
-                    // relazione ManyToOne - usiamo un campo combo
-                    if (attr instanceof SingularAttribute) {
-                        SingularAttribute sa = (SingularAttribute) attr;
-                        Class clazz = sa.getJavaType();
-                        field = new RelatedComboField(clazz);
-                    }
-
-                } else {
-
-                    Class clazz = attr.getJavaType();
-
-                    if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
-                        field = new CheckBoxField();
-                    }
-
-                    if (clazz.equals(String.class)) {
-                        field = new TextField();
-                    }
-
-                    if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
-                        field = new IntegerField();
-                    }
-
-                    if (clazz.equals(Long.class) || clazz.equals(long.class)) {
-                        field = new LongField();
-                    }
-
-                    if (clazz.equals(Date.class)) {
-                        field = new DateField();
-                    }
-
-                    if (clazz.equals(BigDecimal.class)) {
-                        field = new DecimalField();
-                    }
-
-                    if (clazz.equals(Timestamp.class)) {
-                        field = new DateField();
-                    }
-
-                    if (clazz.isEnum()) {
-                        Object[] values = clazz.getEnumConstants();
-                        ArrayComboField acf = new ArrayComboField(values);
-                        acf.setNullSelectionAllowed(true);
-                        field = acf;
-                    }
-
-                }
-
-                // create and assign the caption
-                if (field != null) {
-                    String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
-                    field.setCaption(caption);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-
-        return field;
-
+        return LibField.createField(attr);
     }
+
+
+//    /**
+//     * Create a single field.
+//     * The field type is chosen according to the Java type.
+//     *
+//     * @param attr the metamodel Attribute
+//     */
+//    protected Field createField(Attribute attr) {
+//        Field field = null;
+//
+//        if (attr != null) {
+//
+//
+//            try {
+//
+//                if (attr.isAssociation()) { // questo può fallire!!
+//
+//                    // relazione OneToMany - usiamo un campo lista (?)
+//                    if (attr instanceof PluralAttribute) {
+//                        PluralAttribute pa = (PluralAttribute) attr;
+//                        Class clazz = pa.getElementType().getJavaType();
+//                        //field = new RelatedComboField(clazz);
+//                        //field=null;// todo qui ci vuole una lista
+//                    }
+//
+//                    // relazione ManyToOne - usiamo un campo combo
+//                    if (attr instanceof SingularAttribute) {
+//                        SingularAttribute sa = (SingularAttribute) attr;
+//                        Class clazz = sa.getJavaType();
+//                        field = new RelatedComboField(clazz);
+//                    }
+//
+//                } else {
+//
+//                    Class clazz = attr.getJavaType();
+//
+//                    if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
+//                        field = new CheckBoxField();
+//                    }
+//
+//                    if (clazz.equals(String.class)) {
+//                        field = new TextField();
+//                    }
+//
+//                    if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
+//                        field = new IntegerField();
+//                    }
+//
+//                    if (clazz.equals(Long.class) || clazz.equals(long.class)) {
+//                        field = new LongField();
+//                    }
+//
+//                    if (clazz.equals(Date.class)) {
+//                        field = new DateField();
+//                    }
+//
+//                    if (clazz.equals(BigDecimal.class)) {
+//                        field = new DecimalField();
+//                    }
+//
+//                    if (clazz.equals(Timestamp.class)) {
+//                        field = new DateField();
+//                    }
+//
+//                    if (clazz.isEnum()) {
+//                        Object[] values = clazz.getEnumConstants();
+//                        ArrayComboField acf = new ArrayComboField(values);
+//                        acf.setNullSelectionAllowed(true);
+//                        field = acf;
+//                    }
+//
+//                }
+//
+//                // create and assign the caption
+//                if (field != null) {
+//                    String caption = DefaultFieldFactory.createCaptionByPropertyId(attr.getName());
+//                    field.setCaption(caption);
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//        }
+//
+//
+//        return field;
+//
+//    }
 
 
     /**

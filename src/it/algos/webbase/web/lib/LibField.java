@@ -58,6 +58,11 @@ public class LibField {
                     ((TextField) vaadinField).setDescription(fieldAnnotation.help());
                     ((TextField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     break;
+                case integer:
+                    vaadinField = new IntegerField();
+                    ((IntegerField) vaadinField).setDescription(fieldAnnotation.help());
+                    ((IntegerField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    break;
                 case email:
                     vaadinField = new EmailField();
                     ((EmailField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
@@ -82,11 +87,12 @@ public class LibField {
                     ((PasswordField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     break;
                 default: // caso non definito
-                    vaadinField = new TextField();
-                    ((TextField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
-                    ((TextField) vaadinField).setDescription(fieldAnnotation.help());
-                    ((TextField) vaadinField).setEnabled(fieldAnnotation.enabled());
-                    break;
+                    return createFieldJavaType(attr);
+//                    vaadinField = new TextField();
+//                    ((TextField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
+//                    ((TextField) vaadinField).setDescription(fieldAnnotation.help());
+//                    ((TextField) vaadinField).setEnabled(fieldAnnotation.enabled());
+//                    break;
             } // fine del blocco switch
             vaadinField.setRequired(fieldAnnotation.required());
             vaadinField.setCaption(fieldAnnotation.caption());

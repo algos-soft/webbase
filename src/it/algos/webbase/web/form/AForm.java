@@ -117,7 +117,6 @@ public abstract class AForm extends VerticalLayout {
      */
     public abstract void createFields();
 
-
     /**
      * Create a single field.
      * The field type is chosen according to the Java type.

@@ -110,6 +110,13 @@ public abstract class AlgosApp {
     public static boolean COMBO_BOX_NULL_SELECTION_ALLOWED = true;
 
     /**
+     * Display only the new record in the table, after successful editing (persisted).<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxApp class
+     */
+    public static boolean DISPLAY_NEW_RECORD_ONLY = true;
+
+    /**
      * Returns the path to the Uploads folder.
      *
      * @return the path to the Uploads folder

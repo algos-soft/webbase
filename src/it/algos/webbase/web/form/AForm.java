@@ -281,7 +281,7 @@ public abstract class AForm extends VerticalLayout {
     /**
      * Create the detail component (the upper part containing the fields).
      * <p>
-     * Usa il FormLayout che ha le label a sinsitra dei campi (standard)
+     * Usa il FormLayout che ha le label a sinistra dei campi (standard)
      * Se si vogliono le label sopra i campi, sovrascivere questo metodo e usare un VerticalLayout
      *
      * @return the detail component containing the fields

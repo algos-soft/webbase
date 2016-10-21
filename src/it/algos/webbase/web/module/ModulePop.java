@@ -16,6 +16,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
@@ -53,6 +54,8 @@ public abstract class ModulePop extends Module {
 
     private final static Resource ICONA_STANDARD = FontAwesome.BARS;
     private static boolean MOSTRA_ID = false;
+    // entity manager del modulo
+    public EntityManager entityManager;
     protected Class<BaseEntity> entityClass;
     protected TablePortal tablePortal;
     // elenco dei campi da mostrare (ordinati) nel list, nel form e nel search
@@ -72,9 +75,6 @@ public abstract class ModulePop extends Module {
     private String menuLabel = "";
     // icona del modulo (serve nei menu)
     private Resource menuIcon = null;
-    // entity manager del modulo
-    public EntityManager entityManager;
-
     private ArrayList<RecordSavedListener> recordSavedListeners = new ArrayList<>();
     private ArrayList<RecordDeletedListener> recordDeletedListeners = new ArrayList<>();
 
@@ -108,13 +108,13 @@ public abstract class ModulePop extends Module {
     }// end of constructor
 
 
-        /**
-         * Costruttore standard
-         *
-         * @param entity    di riferimento del modulo
-         * @param menuLabel etichetta visibile nella menu bar
-         * @param menuIcon  icona del menu
-         */
+    /**
+     * Costruttore standard
+     *
+     * @param entity    di riferimento del modulo
+     * @param menuLabel etichetta visibile nella menu bar
+     * @param menuIcon  icona del menu
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ModulePop(Class entity, String menuLabel, Resource menuIcon) {
         super();
@@ -193,7 +193,7 @@ public abstract class ModulePop extends Module {
                 public void remembercollapsed_() {
                     boolean state = getTable().isRememberColumnCollapsedStateCookie();
                     getTable().setRememberColumnCollapsedState(!state);
-                    if(!state){
+                    if (!state) {
                         getTable().writeColumnStateCookie(true, false);    // remember immediately on activation
                     }
                 }
@@ -202,7 +202,7 @@ public abstract class ModulePop extends Module {
                 public void rememberwidth_() {
                     boolean state = getTable().isRememberColumnWidthCookie();
                     getTable().setRememberColumnWidth(!state);
-                    if(!state){
+                    if (!state) {
                         getTable().writeColumnStateCookie(false, true);    // remember immediately on activation
                     }
                 }
@@ -246,6 +246,7 @@ public abstract class ModulePop extends Module {
     /**
      * Registers a new action handler for this container
      * Sovrascritto
+     *
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
     protected void addActionHandler(ATable tavola) {
@@ -253,7 +254,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella lista (table)
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella lista <br>
@@ -264,7 +265,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella scheda (form)
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -275,7 +276,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili nella scheda (search)
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * Serve anche per l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -286,7 +287,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i campi visibili
-     * <p/>
+     * <p>
      * Come default spazzola tutti i campi della Entity <br>
      * Può essere sovrascritto (facoltativo) nelle sottoclassi specifiche <br>
      * NON garantisce l'ordine con cui vengono presentati i campi nella scheda <br>
@@ -326,7 +327,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Regola i titoli (caption) dei dialoghi specifici.
-     * <p/>
+     * <p>
      * Regola il titolo (caption) dei dialogo nuovo record. <br>
      * Regola il titolo (caption) dei dialogo di modifica. <br>
      * Regola il titolo (caption) dei dialogo di ricerca. <br>
@@ -387,7 +388,6 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
-
     /**
      * Create the Search Manager
      *
@@ -399,10 +399,9 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
-
     /**
      * Create the MenuBar Item for this module
-     * <p/>
+     * <p>
      * Invocato dal metodo AlgosUI.creaMenu()
      * PUO essere sovrascritto dalla sottoclasse
      *
@@ -424,7 +423,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Crea i sottomenu specifici del modulo
-     * <p/>
+     * <p>
      * Invocato dal metodo AlgosUI.addModulo()
      * Sovrascritto dalla sottoclasse
      *
@@ -434,17 +433,15 @@ public abstract class ModulePop extends Module {
     }// end of method
 
 
-
     /**
      * Create button pressed in table
-     * <p/>
+     * <p>
      * Create a new item and edit it in a form
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void create() {
         editItem(null, true, getTitoloNew());
     }// end of method
-
 
 
     /**
@@ -466,9 +463,9 @@ public abstract class ModulePop extends Module {
         // new 6 apr-2016
         // prima di andare alla scheda ricarico l'entity dal database per essere sicuro che sia aggiornata
         Object id = getTable().getSelectedId();
-        if(id!=null){
+        if (id != null) {
             BaseEntity e = getEntityManager().find(getEntityClass(), id);
-            Item item=new BeanItem(e);
+            Item item = new BeanItem(e);
             editItem(item, false, getTitoloEdit());
         }
 
@@ -521,7 +518,7 @@ public abstract class ModulePop extends Module {
             }
 
             // make a copy of the original entity, in case it is modified
-            final BaseEntity origEntity=cloneEntity(form.getEntity());
+            final BaseEntity origEntity = cloneEntity(form.getEntity());
 
             // add the FormListener
             form.addFormListener(new FormListener() {
@@ -538,26 +535,35 @@ public abstract class ModulePop extends Module {
                         BaseEntity newEntity = form.getEntity();
                         if (newEntity != null) {
 
-                            long id = newEntity.getId();
-                            Container cont = getTable().getContainerDataSource();
-                            if (cont instanceof Container.Filterable) {
-                                Container.Filterable filterable = (Container.Filterable) cont;
-                                filterable.removeAllContainerFilters();
-                                Filter filter = new Compare.Equal(BaseEntity_.id.getName(), id);
-                                filterable.addContainerFilter(filter);
-                                getTable().deselectAll();
-                                getTable().select(id);
-                            }
+                            if (AlgosApp.DISPLAY_NEW_RECORD_ONLY) {
+                                long id = newEntity.getId();
+                                Container cont = getTable().getContainerDataSource();
+                                if (cont instanceof Container.Filterable) {
+                                    Container.Filterable filterable = (Container.Filterable) cont;
+                                    filterable.removeAllContainerFilters();
+                                    Filter filter = new Compare.Equal(BaseEntity_.id.getName(), id);
+                                    filterable.addContainerFilter(filter);
+                                    getTable().deselectAll();
+                                    getTable().select(id);
+                                }
+                            }// end of if cycle
 
                             // fire the recordCreated listener in the Table
                             ATable table = getTable();
                             if (table != null) {
                                 RecordEvent e = new RecordEvent(newEntity);
-                                for(RecordSavedListener l : recordSavedListeners){
+                                for (RecordSavedListener l : recordSavedListeners) {
                                     l.recordCreated(e); // created
                                     l.recordSaved(e);   // and saved
                                 }
                             }
+                            // after editing, refresh the table's container
+                            getTable().refresh();
+
+                            // This is needed to update generated columns in the table.
+                            // (standard columns which are bound to properties are updated
+                            // automatically when the item changes)
+                            getTable().refreshRowCache();
 
                         }
 
@@ -576,7 +582,7 @@ public abstract class ModulePop extends Module {
                         if (table != null) {
                             BaseEntity newEntity = form.getEntity();
                             RecordEvent e = new RecordEvent(newEntity, origEntity);
-                            for(RecordSavedListener l : recordSavedListeners){
+                            for (RecordSavedListener l : recordSavedListeners) {
                                 l.recordSaved(e);
                             }
                         }
@@ -625,10 +631,10 @@ public abstract class ModulePop extends Module {
     /**
      * Make a clone of an Entity
      */
-    private BaseEntity cloneEntity(BaseEntity origEntity){
-        BaseEntity entityCopy=null;
+    private BaseEntity cloneEntity(BaseEntity origEntity) {
+        BaseEntity entityCopy = null;
         try {
-            entityCopy = (BaseEntity)BeanUtils.cloneBean(origEntity);
+            entityCopy = (BaseEntity) BeanUtils.cloneBean(origEntity);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -643,7 +649,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Invoked before any single deletion.
-     * <p/>
+     * <p>
      *
      * @return true to proceed, false to abort
      */
@@ -693,8 +699,8 @@ public abstract class ModulePop extends Module {
         for (Object id : ids) {
             delete(id);
 
-            for(RecordDeletedListener l : recordDeletedListeners){
-                long num = (long)id;
+            for (RecordDeletedListener l : recordDeletedListeners) {
+                long num = (long) id;
                 RecordEvent e = new RecordEvent(num);
                 l.recordDeleted(e);
             }
@@ -714,7 +720,7 @@ public abstract class ModulePop extends Module {
 
     /**
      * Search button pressed in table
-     * <p/>
+     * <p>
      * Displays the Search dialog
      */
     public void search() {
@@ -820,7 +826,6 @@ public abstract class ModulePop extends Module {
         }// end of if cycle
 
     }// end of method
-
 
 
     /**
@@ -1064,6 +1069,7 @@ public abstract class ModulePop extends Module {
      */
     public interface RecordSavedListener {
         void recordCreated(ModulePop.RecordEvent e);
+
         void recordSaved(ModulePop.RecordEvent e);
     }
 
@@ -1087,8 +1093,8 @@ public abstract class ModulePop extends Module {
 
         public RecordEvent(BaseEntity newEntity, BaseEntity oldEntity) {
             super(ModulePop.this);
-            this.newEntity=newEntity;
-            this.oldEntity=oldEntity;
+            this.newEntity = newEntity;
+            this.oldEntity = oldEntity;
         }
 
         public RecordEvent(BaseEntity newEntity) {
@@ -1098,7 +1104,7 @@ public abstract class ModulePop extends Module {
 
         public RecordEvent(long id) {
             this(null, null);
-            this.id=id;
+            this.id = id;
         }
 
         public BaseEntity getNewEntity() {
@@ -1110,23 +1116,23 @@ public abstract class ModulePop extends Module {
         }
 
         public long getId() {
-            if(isDeleted()){
+            if (isDeleted()) {
                 return id;
-            }else{
-                if(isNewRecord()){
+            } else {
+                if (isNewRecord()) {
                     return getNewEntity().getId();
-                }else{
+                } else {
                     return getOldEntity().getId();
                 }
             }
         }
 
-        public boolean isNewRecord(){
-            return (newEntity!=null && oldEntity==null);
+        public boolean isNewRecord() {
+            return (newEntity != null && oldEntity == null);
         }
 
-        public boolean isDeleted(){
-            return (newEntity==null && oldEntity==null);
+        public boolean isDeleted() {
+            return (newEntity == null && oldEntity == null);
         }
 
 

@@ -130,6 +130,7 @@ public class TablePortal extends VerticalLayout implements ATable.SelectionChang
     public void selectionChanged(ATable.SelectionChangeEvent e) {
     }// end of method
 
+
     /*
      * Elimina un comando dalla GUI.
      */

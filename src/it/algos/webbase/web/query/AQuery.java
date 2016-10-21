@@ -43,7 +43,6 @@ public abstract class AQuery {
      * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
-     *
      * @return il numero totale di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz) {
@@ -59,7 +58,6 @@ public abstract class AQuery {
      *
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
-     *
      * @return il numero totale di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz, EntityManager manager) {
@@ -75,7 +73,6 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return il numero filtrato di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -94,7 +91,6 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return il numero filtrato di records nella Entity
      */
 //    @SuppressWarnings({"unchecked"})
@@ -124,7 +120,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return il numero filtrato di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz, EntityManager manager, Filter... filters) {
@@ -143,7 +138,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return il numero filtrato di records nella Entity
      */
     public static int count(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Filter> filters) {
@@ -188,7 +182,6 @@ public abstract class AQuery {
      *
      * @param clazz the Entity class
      * @param id    the item long id (unico) della Primary Key
-     *
      * @return the entity corresponding to the key, or null
      */
     public static BaseEntity find(Class<? extends BaseEntity> clazz, long id) {
@@ -205,7 +198,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param id      the item long id (unico) della Primary Key
      * @param manager the EntityManager to use
-     *
      * @return the entity corresponding to the key, or null
      */
     public static BaseEntity find(Class<? extends BaseEntity> clazz, long id, EntityManager manager) {
@@ -244,7 +236,6 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -262,7 +253,6 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     @SuppressWarnings({"unchecked"})
@@ -323,7 +313,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the only entity corresponding to the specified criteria, or null
      */
     public static BaseEntity getEntity(Class<? extends BaseEntity> clazz, EntityManager manager, ArrayList<Filter> filters) {
@@ -434,7 +423,6 @@ public abstract class AQuery {
      * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return a list of founded entities, null if there are no entities
      */
     public static List<? extends BaseEntity> getList(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, ArrayList<Filter> filters) {
@@ -502,7 +490,6 @@ public abstract class AQuery {
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
@@ -575,7 +562,6 @@ public abstract class AQuery {
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
@@ -648,7 +634,6 @@ public abstract class AQuery {
      * @param asc     ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return a list of founded values of the specified type, null if there are no entities
      */
     public static List<Long> getListLong(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
@@ -738,7 +723,6 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
@@ -772,7 +756,6 @@ public abstract class AQuery {
             deleted = manager.createQuery(delete).executeUpdate();
             manager.getTransaction().commit();
         } catch (Exception e) {
-            manager.getTransaction().rollback();
             deleted = 0;
         }// fine del blocco try-catch
 
@@ -803,7 +786,6 @@ public abstract class AQuery {
      * @param value   the value to search for
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
@@ -876,7 +858,6 @@ public abstract class AQuery {
      * @param sorts   ordinamento (ascendente o discendente)
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the JPA container
      */
     @SuppressWarnings("unchecked")
@@ -910,7 +891,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the JPA container
      */
     @SuppressWarnings("unchecked")
@@ -933,7 +913,6 @@ public abstract class AQuery {
      * Usa l'EntityManager di default
      *
      * @param clazz the Entity class
-     *
      * @return il massimo numero della property, 0 se non ce ne sono
      */
     @SuppressWarnings("unchecked")
@@ -952,7 +931,6 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param attr    the searched attribute
      * @param manager the EntityManager to use
-     *
      * @return il massimo numero della property, 0 se non ce ne sono
      */
     @SuppressWarnings("unchecked")
@@ -980,9 +958,7 @@ public abstract class AQuery {
      * Senza filtri.
      *
      * @param clazz the Entity class
-     *
      * @return a list of all entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz) {
@@ -1003,9 +979,7 @@ public abstract class AQuery {
      *
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
-     *
      * @return a list of all entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
@@ -1042,9 +1016,7 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param sorts   an array of sort wrapper
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the list of founded entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, Filter... filters) {
@@ -1055,7 +1027,6 @@ public abstract class AQuery {
      * Delete all the records for a given domain class
      *
      * @param clazz the entity class
-     *
      * @deprecated
      */
     public static void deleteAll(Class<? extends BaseEntity> clazz) {
@@ -1069,7 +1040,6 @@ public abstract class AQuery {
      *
      * @param clazz   the entity class
      * @param manager the EntityManager to use
-     *
      * @deprecated
      */
     public static void deleteAll(Class<? extends BaseEntity> clazz, EntityManager manager) {
@@ -1083,7 +1053,6 @@ public abstract class AQuery {
      * @param clazz the domain class
      * @param attr  the attribute to filter - null for no filtering
      * @param value the value to search for
-     *
      * @deprecated
      */
     public static void deleteOld(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -1100,7 +1069,6 @@ public abstract class AQuery {
      * @param attr    the attribute to filter - null for no filtering
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -1136,7 +1104,6 @@ public abstract class AQuery {
      *
      * @param entityClass the domain class
      * @param filter      the Filter for the records to delete (null for all records)
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -1178,9 +1145,7 @@ public abstract class AQuery {
      * @param sorts   an array of sort wrapper
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the list of founded entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SortProperty sorts, EntityManager manager, Filter... filters) {
@@ -1227,9 +1192,7 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the list of founded entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> findAll(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -1247,9 +1210,7 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return the list of founded entities
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -1286,9 +1247,7 @@ public abstract class AQuery {
      *
      * @param clazz   the Entity class
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the JPA container
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -1310,9 +1269,7 @@ public abstract class AQuery {
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
-     *
      * @return the JPA container
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -1333,9 +1290,7 @@ public abstract class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return a list of entities corresponding to the specified criteria
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -1359,9 +1314,7 @@ public abstract class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return a list of entities corresponding to the specified criteria
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -1383,9 +1336,7 @@ public abstract class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return a list of entities corresponding to the specified criteria
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -1407,9 +1358,7 @@ public abstract class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the first entity corresponding to the specified criteria
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
@@ -1432,9 +1381,7 @@ public abstract class AQuery {
      * @param clazz the entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the only entity corresponding to the specified criteria, or null
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
@@ -1457,9 +1404,7 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return the only entity corresponding to the specified criteria, or null
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes"})
@@ -1478,9 +1423,7 @@ public abstract class AQuery {
      * Search for the all entities
      *
      * @param entityClass the entity class
-     *
      * @return a list of entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> getListOld(Class<? extends BaseEntity> entityClass) {
@@ -1498,9 +1441,7 @@ public abstract class AQuery {
      *
      * @param entityClass the entity class
      * @param manager     the EntityManager to use
-     *
      * @return a list of entities
-     *
      * @deprecated
      */
     public static List<? extends BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, EntityManager manager) {
@@ -1521,9 +1462,7 @@ public abstract class AQuery {
      * Search for the all entities
      *
      * @param entityClass the entity class
-     *
      * @return an ArrayList of entities
-     *
      * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass) {
@@ -1541,9 +1480,7 @@ public abstract class AQuery {
      *
      * @param entityClass the entity class
      * @param manager     the EntityManager to use
-     *
      * @return an ArrayList of entities
-     *
      * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, EntityManager manager) {
@@ -1564,9 +1501,7 @@ public abstract class AQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
-     *
      * @return the list with the entities found
-     *
      * @deprecated
      */
     public static ArrayList<BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, Filter... filters) {
@@ -1580,9 +1515,7 @@ public abstract class AQuery {
      * @param entityClass - the entity class
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
-     *
      * @return an ArrayList of entities
-     *
      * @deprecated
      */
     public static ArrayList<? extends BaseEntity> getLista(Class<? extends BaseEntity> entityClass, Filter... filters) {
@@ -1604,9 +1537,7 @@ public abstract class AQuery {
      * @param sorts       - an array of sort wrapper
      * @param filters     - an array of filters (you can use FilterFactory to build
      *                    filters, or create them as Compare....)
-     *
      * @return the list with the entities found
-     *
      * @deprecated
      */
     public static ArrayList<BaseEntity> getListOld(Class<? extends BaseEntity> entityClass, SortProperty sorts, Filter... filters) {
@@ -1659,7 +1590,6 @@ public abstract class AQuery {
      *
      * @param clazz the Entity class
      * @param id    the item id
-     *
      * @deprecated
      */
     public static BaseEntity queryById(Class<? extends BaseEntity> clazz, Object id) {
@@ -1674,9 +1604,7 @@ public abstract class AQuery {
      * Senza filtri.
      *
      * @param clazz the Entity class
-     *
      * @return il numero totale di record nella Entity
-     *
      * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz) {
@@ -1688,9 +1616,7 @@ public abstract class AQuery {
      *
      * @param clazz   the Entity class
      * @param manager the EntityManager to use
-     *
      * @return il numero totale di record nella Entity
-     *
      * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, EntityManager manager) {
@@ -1704,9 +1630,7 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return il numero di record filtrati nella Entity
-     *
      * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value) {
@@ -1723,9 +1647,7 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return il numero di record filtrati nella Entity
-     *
      * @deprecated -> return long, use count() instead
      */
     public static long getCount(Class<? extends BaseEntity> clazz, Attribute attr, Object value, EntityManager manager) {
@@ -1772,9 +1694,7 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the only entity corresponding to the specified criteria, or null
-     *
      * @deprecated
      */
     public static BaseEntity findOne(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -1797,9 +1717,7 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return the only entity corresponding to the specified criteria, or null
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -1829,9 +1747,7 @@ public abstract class AQuery {
      * @param clazz the Entity class
      * @param attr  the searched attribute
      * @param value the value to search for
-     *
      * @return the first entity corresponding to the specified criteria
-     *
      * @deprecated
      */
     public static BaseEntity findFirst(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value) {
@@ -1853,9 +1769,7 @@ public abstract class AQuery {
      * @param attr    the searched attribute
      * @param value   the value to search for
      * @param manager the EntityManager to use
-     *
      * @return the first entity corresponding to the specified criteria
-     *
      * @deprecated
      */
     @SuppressWarnings({"rawtypes"})

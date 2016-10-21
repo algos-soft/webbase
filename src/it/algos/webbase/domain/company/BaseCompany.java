@@ -137,7 +137,6 @@ public class BaseCompany extends BaseEntity {
      * Controlla l'esistenza del record usando la property unica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
-     *
      * @return istanza della classe, null se non trovata
      */
     public static boolean isEsiste(String companyCode) {
@@ -155,7 +154,6 @@ public class BaseCompany extends BaseEntity {
      * Controlla la non-esistenza del record usando la property unica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
-     *
      * @return istanza della classe, null se non trovata
      */
     public static boolean isNonEsiste(String companyCode) {
@@ -166,7 +164,6 @@ public class BaseCompany extends BaseEntity {
      * Recupera una istanza della classe usando la primary key
      *
      * @param idKey primary key (automatica)
-     *
      * @return istanza della classe, null se non trovata
      */
     public static BaseCompany find(long idKey) {
@@ -186,7 +183,6 @@ public class BaseCompany extends BaseEntity {
      * Recupera una istanza della classe usando la query specifica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
-     *
      * @return istanza della classe, null se non trovata
      */
     public static BaseCompany findByCode(String companyCode) {
@@ -206,7 +202,6 @@ public class BaseCompany extends BaseEntity {
      * Recupera una istanza della classe usando la query specifica
      *
      * @param companyCode sigla di riferimento interna (obbligatoria ed unica)
-     *
      * @return istanza della classe, null se non trovata
      */
     public static BaseCompany findByCode(String companyCode, EntityManager manager) {
@@ -228,7 +223,6 @@ public class BaseCompany extends BaseEntity {
      *
      * @param companyCode sigla di riferimento interna (obbligatoria)
      * @param companyName descrizione della company (obbligatoria)
-     *
      * @return istanza della classe
      */
     public static BaseCompany crea(String companyCode, String companyName) {
@@ -247,7 +241,6 @@ public class BaseCompany extends BaseEntity {
      * @param contractType  tipologia del contratto (eventuale)
      * @param contractStart inizio del contratto (eventuale)
      * @param contractEnd   fine del contratto (eventuale)
-     *
      * @return istanza della classe
      */
     public static BaseCompany crea(
@@ -473,9 +466,7 @@ public class BaseCompany extends BaseEntity {
      * Elimina l'azienda.
      */
     public void delete() {
-        EntityManager manager = EM.createEntityManager();
-        delete(manager);
-        manager.close();
+        delete((EntityManager) null);
     }// end of method
 
     /**
@@ -484,8 +475,7 @@ public class BaseCompany extends BaseEntity {
      * @param manager the EntityManager to use
      */
     public void delete(EntityManager manager) {
-        deleteAllData(manager);
-        super.delete(manager);
+        AQuery.delete(BaseCompany.class, manager);
     }// end of method
 
     /**

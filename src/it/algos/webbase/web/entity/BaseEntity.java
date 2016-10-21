@@ -274,6 +274,9 @@ public abstract class BaseEntity implements Serializable {
             localEm = true;
         }
 
+        boolean alfa = manager.isJoinedToTransaction();
+        EntityTransaction trans = manager.getTransaction();
+        boolean createTramsaction2 = (trans == null);
         boolean createTransaction = !manager.isJoinedToTransaction();
 
         try {

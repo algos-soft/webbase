@@ -1,5 +1,7 @@
 package it.algos.webbase.web.lib;
 
+import it.algos.webbase.domain.company.BaseCompany;
+
 import java.util.ArrayList;
 
 public abstract class LibText {
@@ -465,6 +467,32 @@ public abstract class LibText {
     public static int getPos(String testo, String... lista) {
         return getPos(testo, (ArrayList) LibArray.fromString(lista));
     } // fine del metodo
+
+    /**
+     * Costruisce una codifica unica col codice della company seguito da uno o più campi chiave
+     */
+    public static String creaChiave(BaseCompany company, String... chiavi) {
+        String chiaveUnica = "";
+        String companyCode = "";
+
+        if (company != null) {
+            companyCode = company.getCompanyCode();
+            companyCode = companyCode.toLowerCase();
+            companyCode = LibText.primaMaiuscola(companyCode);
+        }// end of if cycle
+
+        chiaveUnica += companyCode;
+        for (String chiave : chiavi) {
+            chiave = chiave.replaceAll("\\s", "");
+            if (chiaveUnica.equals("")) {
+                chiaveUnica += chiave;
+            } else {
+                chiaveUnica += LibText.primaMaiuscola(chiave);
+            }// end of if/else cycle
+        }// end of for cycle
+
+        return chiaveUnica;
+    }// end of static method
 
     /**
      * Enumeration locale per il flag del primo carattere

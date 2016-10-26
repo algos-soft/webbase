@@ -75,7 +75,7 @@ public abstract class LibArray {
 
         if (parti != null) {
             for (String elemento : parti) {
-                array.add(elemento);
+                array.add(elemento.trim());
             }// end of for cycle
         }// end of if cycle
 

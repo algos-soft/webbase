@@ -91,7 +91,7 @@ public class PrefMod extends ModulePop {
      */
     @Override
     protected Attribute<?, ?>[] creaFieldsForm() {
-        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.type,};
+        return new Attribute[]{Pref_.ordine, Pref_.code, Pref_.descrizione, Pref_.tipo,};
     }// end of method
 
     /**

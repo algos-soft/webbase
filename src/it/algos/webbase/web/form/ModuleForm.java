@@ -100,7 +100,6 @@ public class ModuleForm extends AForm {
         if (em != null) {
             BaseEntity entity = getEntity();
             entity = getEntity().save(em);
-            int a=87;
         }
 
     }

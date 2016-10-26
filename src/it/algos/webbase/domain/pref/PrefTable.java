@@ -95,10 +95,12 @@ public class PrefTable extends ETable {
                     return generateBoolean(value);
                 case integer:
                     return generateInteger(value);
-                case decimal:
-                    return generateDecimal(value);
                 case date:
                     return generateDate(value);
+                case email:
+                    return generateEmail(value);
+                case decimal:
+                    return generateDecimal(value);
                 case bytes:
                     return generateBytes(value);
                 default: // caso non definito
@@ -131,16 +133,24 @@ public class PrefTable extends ETable {
         /**
          * Componente specifico.
          */
-        private Component generateDecimal(Object value) {
-            return null;
+        private Component generateDate(Object value) {
+            return new Label(LibDate.toStringDDMMYYYYHHMM((Date)value));
         }// end of method
 
         /**
          * Componente specifico.
          */
-        private Component generateDate(Object value) {
-            return new Label(LibDate.toStringDDMMYYYYHHMM((Date)value));
+        private Component generateEmail(Object value) {
+            return new Label(value.toString());
         }// end of method
+
+        /**
+         * Componente specifico.
+         */
+        private Component generateDecimal(Object value) {
+            return null;
+        }// end of method
+
 
         /**
          * Componente specifico.

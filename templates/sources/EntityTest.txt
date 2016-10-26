@@ -37,8 +37,8 @@ public class @NAME@Test extends QueryTest {
      * Prima di inizare a creare e modificare i records, cancello tutti i precedenti
      */
     private static void cancellaRecords() {
-        @NAME@.deleteAll();
-        @NAME@.deleteAll(MANAGER);
+      //  @NAME@.deleteAll();
+      //  @NAME@.deleteAll(MANAGER);
     }// end of static method
 
     /**

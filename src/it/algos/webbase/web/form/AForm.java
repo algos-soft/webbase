@@ -70,6 +70,10 @@ public abstract class AForm extends VerticalLayout {
         Component detail = createComponent();
         this.addComponent(detail);
 
+        //--modifica nelle sottoclassi (eventualmente) i fields appena creati in automatico
+        //--tipicamente, aggiunge dei listeneres
+        this.modificaFields();
+
         // queste due righe sembra che non servano - alex 23-05-2016
         detail.setHeight("100%");
         this.setExpandRatio(detail, 1);
@@ -110,6 +114,15 @@ public abstract class AForm extends VerticalLayout {
      * Create and add a field for each property declared for this form
      */
     public abstract void createFields();
+
+
+    /**
+     * Opportunità per le sottoclassi di modificare alcune caratteristiche dei fields
+     * Tipicamente, aggiunge dei listeneres
+     * Sovrascritto
+     */
+    protected  void modificaFields(){
+    }// end of method
 
     protected Field createField(Attribute attr) {
         return LibField.createField(attr);
@@ -245,7 +258,7 @@ public abstract class AForm extends VerticalLayout {
             key = attr.getName();
         }
         //--@todo patch (di gac, ovvio)x
-        //--@todo xAlex: se non vedi, leva il todo
+        //--@todo xAlex: se non vedi problemi, leva il todo
         //--siccome la funzione binder si 'mangia' il valore enabled() -lo forza sempre a true-
         //--me lo metto da parte e lo ripristino successivamente alla chiamata
         boolean statusEnabled = field.isEnabled(); //--aggiunta

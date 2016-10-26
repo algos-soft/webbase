@@ -3,6 +3,7 @@ package it.algos.@LOWERPROGETTO@;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import it.algos.webbase.web.ui.AlgosUI;
+import it.algos.multicompany.entity.*;
 
 /**
  * Crea l'interfaccia utente (User Interface) iniziale dell'applicazione
@@ -16,7 +17,6 @@ import it.algos.webbase.web.ui.AlgosUI;
  * Se le applicazioni specifiche vogliono una UI completamente differente,
  * possono sovrascrivere il metodo startUI() della superclasse
  */
-//@Theme("valo")
 @Theme("algos")
 public class @PROGETTO@UI extends AlgosUI {
 

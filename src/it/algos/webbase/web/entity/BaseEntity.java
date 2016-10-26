@@ -1,6 +1,8 @@
 package it.algos.webbase.web.entity;
 
 
+import it.algos.webbase.web.lib.LibQuery;
+
 import javax.persistence.*;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -184,49 +186,6 @@ public abstract class BaseEntity implements Serializable {
     }// end of method
 
 
-//	/**
-//	 * Persists this entity to the database.
-//	 * <p>
-//	 */
-//	@SuppressWarnings("rawtypes")
-//	public void save() {
-//
-//		EntityManager manager = EM.createEntityManager();
-//
-//		try {
-//
-//			manager.getTransaction().begin();
-//			if ((getId() != null) && (getId()!=0)) {
-//				manager.merge(this);
-//			} else {
-//				manager.persist(this);
-//			}
-//
-//			manager.getTransaction().commit();
-//
-//		} catch (ConstraintViolationException e) {
-//			// rollback transaction and log
-//			manager.getTransaction().rollback();
-//			String violations = "";
-//			for (ConstraintViolation v : e.getConstraintViolations()) {
-//				if (!violations.equals("")) {
-//					violations += "\n";
-//				}
-//				violations += "- " + v.toString();
-//			}
-//			logger.log(Level.WARNING, "The record cannot be saved due to the following constraint violations:\n"
-//					+ violations, e);
-//
-//		} catch (Exception e) {
-//			manager.getTransaction().rollback();
-//			logger.log(Level.WARNING, "The record cannot be saved ", e);
-//			e.printStackTrace();
-//		}
-//
-//		manager.close();
-//
-//	}// end of method
-
     protected void preRemove(Class<?> entityClass, long id) {
     }// end of method
 
@@ -246,13 +205,12 @@ public abstract class BaseEntity implements Serializable {
 
     /**
      * Saves this entity to the database using a local EntityManager
-     * <p>
      *
      * @return the merged Entity (new entity, unmanaged, has the id)
      */
     public BaseEntity save() {
-        return save(null);
-    }
+        return save((EntityManager) null);
+    }// end of method
 
     /**
      * Saves this entity to the database.
@@ -267,65 +225,61 @@ public abstract class BaseEntity implements Serializable {
     @SuppressWarnings("rawtypes")
     public BaseEntity save(EntityManager manager) {
         BaseEntity mergedEntity = null;
-        boolean localEm = false;
+        boolean usaManagerLocale = false;
+        boolean createTransaction = false;
 
+        // se non specificato l'EntityManager, ne crea uno locale
         if (manager == null) {
             manager = EM.createEntityManager();
-            localEm = true;
-        }
+            usaManagerLocale = true;
+        }// end of if cycle
 
-        boolean alfa = manager.isJoinedToTransaction();
-        EntityTransaction trans = manager.getTransaction();
-        boolean createTramsaction2 = (trans == null);
-        boolean createTransaction = !manager.isJoinedToTransaction();
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         try {
-
             if (createTransaction) {
                 manager.getTransaction().begin();
-            }
+            }// end of if cycle
 
             mergedEntity = manager.merge(this);
 
             if (createTransaction) {
                 manager.getTransaction().commit();
-            }
+            }// end of if cycle
 
             // assign the new id to this entity
             if (this.id == null) {
                 this.setId(mergedEntity.getId());
-            }
-
+            }// end of if cycle
         } catch (ConstraintViolationException e) {
-
             // rollback transaction
             if (createTransaction) {
                 manager.getTransaction().rollback();
-            }
+            }// end of if cycle
 
             // log the error
             String violations = "";
             for (ConstraintViolation v : e.getConstraintViolations()) {
                 if (!violations.equals("")) {
                     violations += "\n";
-                }
+                }// end of if cycle
                 violations += "- " + v.toString();
             }
             logger.log(Level.SEVERE, "The record cannot be saved due to the following constraint violations:\n"
                     + violations, e);
-
         } catch (Exception e) {
             // log the error
             manager.getTransaction().rollback();
             logger.log(Level.SEVERE, "The record cannot be saved ", e);
-        }
+        }// fine del blocco try-catch
 
-        if (localEm) {
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
             manager.close();
-        }
+        }// end of if cycle
 
         return mergedEntity;
-
     }// end of method
 
 
@@ -342,12 +296,11 @@ public abstract class BaseEntity implements Serializable {
 
     /**
      * Removes this entity from the database using a local EntityManager
-     * <p>
+     *
+     * @return true if the entity was successfully removed
      */
-    public void delete() {
-        EntityManager manager = EM.createEntityManager();
-        delete(manager);
-        manager.close();
+    public boolean delete() {
+        return delete((EntityManager) null);
     }// end of method
 
 
@@ -358,35 +311,52 @@ public abstract class BaseEntity implements Serializable {
      * inside the transaction.<br>
      * Otherwise, a new transaction is used to delete this single entity.
      *
-     * @param manager the EntityManager
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
+     * @return true if the entity was successful removed
      */
-    public void delete(EntityManager manager) {
+    public boolean delete(EntityManager manager) {
+        boolean successfullyDeleted = false;
+        BaseEntity entityToBeRemoved;
+        boolean usaManagerLocale = false;
+        boolean createTransaction = false;
 
-        boolean createTransaction = !manager.isJoinedToTransaction();
+        // se non specificato l'EntityManager, ne crea uno locale
+        if (manager == null) {
+            manager = EM.createEntityManager();
+            usaManagerLocale = true;
+        }// end of if cycle
+
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         try {
-
             if (createTransaction) {
                 manager.getTransaction().begin();
-            }
+            }// end of if cycle
 
-            BaseEntity entityToBeRemoved = manager.getReference(this.getClass(), this.getId());
+            entityToBeRemoved = manager.getReference(this.getClass(), this.getId());
             manager.remove(entityToBeRemoved);
 
             if (createTransaction) {
                 manager.getTransaction().commit();
-            }
+            }// end of if cycle
 
+            successfullyDeleted = true;
         } catch (Exception e) {
-
             // rollback transaction
             if (createTransaction) {
                 manager.getTransaction().rollback();
-            }
+            }// end of if cycle
 
             logger.log(Level.WARNING, "The record cannot be deleted ", e);
-        }
+        }// fine del blocco try-catch
 
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return successfullyDeleted;
     }// end of method
 
 

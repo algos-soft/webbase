@@ -43,7 +43,7 @@
         <input addproperty="modulo" message="Nome (maiuscolo) del nuovo modulo:" defaultvalue="Bolla"/>
         <lower string="${progetto}" to="lowerProgetto"/>
         <lower string="${modulo}" to="lowerModuloOld"/>
-        <property name="lowerModulo" value="entity/${lowerModuloOld}"/>
+        <property name="lowerModulo" value="entity.${lowerModuloOld}"/>
 
         <property name="destDir" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}/${lowerModulo}"/>
         <property name="destDirBase" value="${baseDest}/${lowerProgetto}${discesa}${lowerProgetto}"/>

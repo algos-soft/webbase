@@ -9,6 +9,7 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Compare;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibQuery;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -715,27 +716,31 @@ public abstract class AQuery {
      * Bulk delete records with CriteriaDelete
      * <p>
      * Usa una Property (SingularAttribute)
-     * Usa l'EntityManager passato come parametro
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to delete this single entity.
      *
      * @param clazz   the Entity class
      * @param attr    the searched attribute
      * @param value   the value to search for
-     * @param manager the EntityManager to use
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
      * @return il numero di records cancellati
      */
     @SuppressWarnings("unchecked")
     private static int deleteBulk(Class<? extends BaseEntity> clazz, SingularAttribute attr, Object value, EntityManager manager) {
         int deleted = 0;
         CriteriaBuilder builder;
+        boolean usaManagerLocale = false;
+        boolean createTransaction;
 
         // se non specificato l'EntityManager, ne crea uno locale
-        boolean usaManagerLocale = false;
         if (manager == null) {
-            usaManagerLocale = true;
             manager = EM.createEntityManager();
+            usaManagerLocale = true;
         }// end of if cycle
+
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         // create delete
         builder = manager.getCriteriaBuilder();
@@ -752,10 +757,19 @@ public abstract class AQuery {
 
         // perform update
         try {
-            manager.getTransaction().begin();
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }// end of if cycle
+
             deleted = manager.createQuery(delete).executeUpdate();
-            manager.getTransaction().commit();
+
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }// end of if cycle
         } catch (Exception e) {
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }// end of if cycle
             deleted = 0;
         }// fine del blocco try-catch
 
@@ -777,14 +791,14 @@ public abstract class AQuery {
      * Usa una Property (SingularAttribute)
      * Usa i Filters
      * Sia la property che i filtri sono additivi (ADD) l'uno con l'altro
-     * Usa l'EntityManager passato come parametro
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
+     * If the provided EntityManager has an active transaction, the operation is performed
+     * inside the transaction.<br>
+     * Otherwise, a new transaction is used to delete this single entity.
      *
      * @param clazz   the Entity class
      * @param attr    the searched attribute
      * @param value   the value to search for
-     * @param manager the EntityManager to use
+     * @param manager the entity manager to use (if null, a new one is created on the fly)
      * @param filters an array of filters (you can use FilterFactory to build filters, or create them as Compare....)
      * @return il numero di records cancellati
      */
@@ -794,13 +808,17 @@ public abstract class AQuery {
         Container.Filter filter;
         JPAContainer<BaseEntity> container;
         BaseEntity entity;
+        boolean usaManagerLocale = false;
+        boolean createTransaction = false;
 
         // se non specificato l'EntityManager, ne crea uno locale
-        boolean usaManagerLocale = false;
         if (manager == null) {
             usaManagerLocale = true;
             manager = EM.createEntityManager();
         }// end of if cycle
+
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         // aggiunge il vincolo della Property (SingularAttribute attr), trasformato in filtro
         if (attr != null) {
@@ -815,8 +833,9 @@ public abstract class AQuery {
         container = getContainerWrite(clazz, manager, filters);
 
         try {
-
-            manager.getTransaction().begin();
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }// end of if cycle
 
             for (Object id : container.getItemIds()) {
                 entity = container.getItem(id).getEntity();
@@ -827,8 +846,14 @@ public abstract class AQuery {
 
             manager.getTransaction().commit();
 
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }// end of if cycle
         } catch (Exception e) {
-            manager.getTransaction().rollback();
+            // rollback transaction
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }// end of if cycle
             deleted = 0;
         }// fine del blocco try-catch
 

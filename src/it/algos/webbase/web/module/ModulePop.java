@@ -705,6 +705,7 @@ public abstract class ModulePop extends Module {
                 l.recordDeleted(e);
             }
         }
+        getTable().refresh();
         getTable().refreshRowCache();
     }
 

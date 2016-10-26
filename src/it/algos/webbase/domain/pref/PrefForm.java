@@ -1,21 +1,15 @@
 package it.algos.webbase.domain.pref;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
-import it.algos.webbase.web.AlgosApp;
-import it.algos.webbase.web.field.ArrayComboField;
-import it.algos.webbase.web.form.AForm;
+import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.form.AFormLayout;
 import it.algos.webbase.web.form.ModuleForm;
-import it.algos.webbase.web.lib.LibField;
 import it.algos.webbase.web.module.ModulePop;
-
-import javax.persistence.metamodel.Attribute;
 
 /**
  * Created by gac on 13 set 2015.
@@ -23,76 +17,75 @@ import javax.persistence.metamodel.Attribute;
  */
 public class PrefForm extends ModuleForm {
 
-    protected FormLayout body; //usato per i fields aggiuntivi che vengono visualizzati a comando sotto gli altri
-
-//    public PrefForm(ModulePop modulo, Container cont) {
-//        super(modulo, null, cont);
-//    }// end of constructor
-
-    public PrefForm(Item item, ModulePop modulo) {
-        super(item, modulo);
-    }// end of constructor
-
+    private FormLayout extra; //usato per i fields aggiuntivi che vengono visualizzati a comando sotto gli altri
+    private Field fValore;
 
     /**
-     * Create the UI component.
+     * The form used to edit an item.
      * <p>
-     * Retrieve the fields from the map and place them in the UI. Implementazione di default nella superclasse. I campi
-     * vengono allineati verticalmente. Se si vuole aggiungere un campo, usare il metodo sovrascritto nella sottoclasse
-     * richiamando prima il metodo della superclasse. Se si vuole un layout completamente differente, implementare il
-     * metodo sovrascritto da solo.
+     * Invoca la superclasse passando i parametri:
+     *
+     * @param item   singola istanza della classe (obbligatorio in modifica e nullo per newRecord)
+     * @param module di riferimento (obbligatorio)
+     */
+    public PrefForm(Item item, ModulePop module) {
+        super(item, module);
+    }// end of constructor
+
+    /**
+     * Create the detail component (the upper part containing the fields).
+     * <p>
+     * Usa il FormLayout che ha le label a sinistra dei campi (standard)
+     * Se si vogliono le label sopra i campi, sovrascivere questo metodo e usare un VerticalLayout
+     *
+     * @return the detail component containing the fields
      */
     protected Component createComponent() {
-        VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setSpacing(false);
-        verticalLayout.setMargin(true);
+        VerticalLayout layout = new VerticalLayout();
 
-        FormLayout formLayoutTop = new AFormLayout();
-        formLayoutTop.setMargin(false);
+        Component comp = creaFieldsLayoutStandard();
+        layout.addComponent(comp);
+        extra = creaFieldsLayoutExtra();
+        if (extra != null) {
+            layout.addComponent(extra);
+        }// end of if cycle
 
-//        if (bindMap != null) {
-//            for (Object key : bindMap.keySet()) {
-//                formLayoutTop.addComponent(this.getField(key));
-//            }// end of for cycle
-//        }// end of if cycle
+        return layout;
+    }// end of method
 
-        for(Field field : getFields()){
-            formLayoutTop.addComponent(field);
-        }
-        verticalLayout.addComponent(formLayoutTop);
+    protected Component creaFieldsLayoutStandard() {
+        FormLayout layout = new AFormLayout();
+        layout.setMargin(true);
+        return super.creaCompDetail(layout);
+    }// end of method
 
-        FormLayout formLayoutBottom = new AFormLayout();
-        body = new AFormLayout();
-        body.setSpacing(false);
-        body.setMargin(false);
-        formLayoutBottom.addComponent(body);
-        verticalLayout.addComponent(formLayoutBottom);
-
-        return verticalLayout;
+    protected FormLayout creaFieldsLayoutExtra() {
+        FormLayout layout = new AFormLayout();
+        layout.setMargin(true);
+        return layout;
     }// end of method
 
 
-    protected Field createField(Attribute attr) {
-        Field field = super.createField(attr);
+    @Override
+    protected void modificaFields() {
+        Field field = this.getField(Pref_.tipo);
+        PrefType type = null;
 
-        // se è un ArrayComboField aggiunge un listener
-        if(field instanceof ArrayComboField){
-            ArrayComboField acf = (ArrayComboField)field;
-            acf.setNullSelectionAllowed(false);
-//            if (AlgosApp.COMBO_BOX_NULL_SELECTION_ALLOWED) {
-//                ((ArrayComboField) field).setNullSelectionAllowed(true);
-//            } else {
-//                ((ArrayComboField) field).setNullSelectionAllowed(false);
-//            }// fine del blocco if-else
+        if (field != null && field instanceof ArrayComboField) {
+            field.setEnabled(isNewRecord());
             field.addValueChangeListener(new Property.ValueChangeListener() {
                 @Override
                 public void valueChange(Property.ValueChangeEvent event) {
                     arrayComboBoxValueChanged(event);
                 }// end of method
             });// end of anonymous class
-        }
-        return field;
-    }
+
+            type = getPreferenza().getTipo();
+            syncFieldValore(type);
+        }// end of if cycle
+
+    }// end of method
+
 
     /**
      * Intercetta i cambiamenti nel combobox.
@@ -100,63 +93,91 @@ public class PrefForm extends ModuleForm {
      * Sovrascritto nella classe specifica
      */
     protected void arrayComboBoxValueChanged(Property.ValueChangeEvent event) {
-        String value = "";
         Property property = event.getProperty();
         Object objValue = property.getValue();
+        PrefType type = null;
 
-        if (objValue instanceof TypePref) {
-            value = objValue.toString();
-            if (body != null) {
-                if (body.getComponentCount() > 0) {
-                    body.removeAllComponents();
-                }// fine del blocco if
-            }// fine del blocco if
-        } else {
-            return;
-        }// fine del blocco if-else
+        if (objValue instanceof PrefType) {
+            type = (PrefType) objValue;
+        }// end of if cycle
 
-        if (value.equals(TypePref.booleano.toString())) {
-            addBodyField(Pref_.bool);
-        }// fine del blocco if
-
-        if (value.equals(TypePref.stringa.toString())) {
-            addBodyField(Pref_.stringa);
-        }// fine del blocco if
-
-        if (value.equals(TypePref.intero.toString())) {
-            addBodyField(Pref_.intero);
-        }// fine del blocco if
-
+        syncFieldValore(type);
     }// end of method
-
 
     /**
-     * Aggiunge al volo un fields
-     * <p>
-     * Il fields viene aggiunto in un body di tipo FormLayout posizionato SOTTO gli altri campi
-     * Viene usato un FormLayout per avere la caption a sinistra
-     * Il body viene viene (eventualmente) costruito nella sottoclasse (sovrascrivendo il metodo createComponent), solo se serve.
-     * La sottoclasse decide se inserire più di un field nel body, oppure di svuotarlo ogni volta che cambia il field
-     * <p>
-     * Metodo invocato dalla sottoclasse
+     * Regola il tipo di campo ed il valore.
      */
-    protected void addBodyField(Attribute attr) {
-        String fieldName = attr.getName();
-//        Field field = bindMap.get(fieldName);
-        Field field = getField(fieldName);
-
-        if (field == null) {
-            field = createField(attr);
-            if (field != null) {
-                addField(attr, field);
+    protected void syncFieldValore(PrefType type) {
+        if (fValore != null) {
+            removeComponent(fValore);
+            if (extra != null) {
+                extra.removeAllComponents();
             }// end of if cycle
-        }// fine del blocco if
+        }// end of if cycle
 
-        if (body != null) {
-            body.addComponent(field);
-        }// fine del blocco if
+        if (type != null) {
+            switch (type) {
+                case string:
+                    fValore = new TextField();
+                    break;
+                case bool:
+                    fValore = new CheckBoxField();
+                    break;
+                case integer:
+                    fValore = new IntegerField();
+                    break;
+                case date:
+                    fValore = new DateField();
+                    break;
+                case email:
+                    fValore = new EmailField();
+                    break;
+                case decimal:
+                    fValore = new IntegerField();
+                    break;
+                default: // caso non definito
+            } // fine del blocco switch
+        }// end of if cycle
+
+        if (fValore != null) {
+            if (fValore instanceof CheckBoxField) {
+                fValore.setCaption("Valore booleano true/false");
+            } else {
+                fValore.setCaption("Valore");
+            }// end of if/else cycle
+
+            extra.addComponent(fValore);
+        }// end of if cycle
+
+        if (fValore != null && !isNewRecord()) {
+            Pref pref = getPreferenza();
+            byte[] bytes = pref.getValue();
+            Object value = type.bytesToObject(bytes);
+            fValore.setValue(value);
+        }// end of if cycle
+
     }// end of method
 
+
+    @Override
+    public void postCommit() {
+        Pref pref = getPreferenza();
+        Object objValue;
+
+        if (fValore != null) {
+            objValue = fValore.getValue();
+            pref.setValore(objValue);
+        }// end of if cycle
+
+        super.postCommit();
+    }// end of method
+
+    /**
+     * Restituisce la funzione di questo Form
+     */
+    private Pref getPreferenza() {
+        return (Pref) super.getEntity();
+    }// end of method
 
 }// end of class
 

@@ -86,6 +86,20 @@ public class LibField {
                     ((PasswordField) vaadinField).setDescription(fieldAnnotation.help());
                     ((PasswordField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     break;
+                case combo:
+                    vaadinField = new RelatedComboField(fieldAnnotation.clazz());
+                    ((RelatedComboField) vaadinField).setDescription(fieldAnnotation.help());
+                    ((RelatedComboField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    ((RelatedComboField) vaadinField).setNullSelectionAllowed(fieldAnnotation.nullSelectionAllowed());
+                    break;
+                case enumeration:
+                    Class clazz = fieldAnnotation.clazz();
+                    Object[] values = clazz.getEnumConstants();
+                    vaadinField = new ArrayComboField(values);
+                    ((ArrayComboField) vaadinField).setDescription(fieldAnnotation.help());
+                    ((ArrayComboField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    ((ArrayComboField) vaadinField).setNullSelectionAllowed(fieldAnnotation.nullSelectionAllowed());
+                    break;
                 default: // caso non definito
                     vaadinField = createFieldJavaType(attr);
             } // fine del blocco switch

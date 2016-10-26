@@ -8,6 +8,8 @@ import it.algos.webbase.multiazienda.CompanyQuery;
 import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibSession;
+import it.algos.webbase.web.lib.LibText;
 import it.algos.webbase.web.query.AQuery;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.persistence.annotations.Index;
@@ -621,14 +623,9 @@ public class Pref extends CompanyEntity {
      * @param company di appartenenza
      * @return istanza di Pref, null se non trovata
      */
-    @SuppressWarnings("unchecked")
     public static Pref findByCode(String code, BaseCompany company) {
-
-        if (company != null) {
-            code += company.getCompanyCode();
-        }// end of if cycle
-
-        return findByCodeUnico(code);
+        String codeUnico = LibText.creaChiave(company, code);
+        return findByCodeUnico(codeUnico);
     }// end of method
 
     /**
@@ -743,6 +740,28 @@ public class Pref extends CompanyEntity {
      * @param descrizione visibile
      * @return istanza di Prefm
      */
+    public static Pref crea(String code,  PrefType tipo, Object value) {
+        BaseCompany company = CompanySessionLib.getCompany();
+        Pref pref = Pref.findByCode(code, company);
+
+        if (pref == null) {
+            pref = new Pref(company, code, tipo);
+            pref.save();
+        }// end of if cycle
+
+        return pref;
+    }// end of static method
+
+    /**
+     * Creazione iniziale di una istanza della classe
+     * La crea SOLO se non esiste già
+     *
+     * @param code        sigla di riferimento interna (obbligatoria)
+     * @param company     di appartenenza
+     * @param tipo        di dato (obbligatoria)
+     * @param descrizione visibile
+     * @return istanza di Prefm
+     */
     public static Pref crea(String code, BaseCompany company, PrefType tipo, String descrizione) {
         Pref pref = Pref.findByCode(code, company);
 
@@ -777,6 +796,9 @@ public class Pref extends CompanyEntity {
 
         return pref;
     }// end of static method
+
+
+
 
     public static Object get(String code) {
         return findByCode(code).getBoolean();
@@ -1265,20 +1287,8 @@ public class Pref extends CompanyEntity {
      */
     private boolean checkChiave(EntityManager manager) {
         boolean valido = true;
-        BaseCompany company = this.getCompany();
-        String companyCode = "";
-        String prefCode = this.getCode();
 
-        if (company != null) {
-            companyCode = company.getCompanyCode();
-        }// end of if cycle
-
-        if (prefCode == null) {
-            prefCode = "";
-        }// end of if cycle
-
-        codeCompanyUnico = companyCode + prefCode;
-
+        codeCompanyUnico = LibText.creaChiave(getCompany(), code);
         if (codeCompanyUnico.equals("") || isEsistente(codeCompanyUnico, manager)) {
             valido = false;
         }// end of if cycle

@@ -2,6 +2,7 @@ package it.algos.@LOWERPROGETTO@.@LOWERNAME@;
 
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import it.algos.webbase.web.module.ModulePop;
 import javax.persistence.metamodel.Attribute;
 

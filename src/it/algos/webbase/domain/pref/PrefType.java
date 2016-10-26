@@ -77,23 +77,6 @@ public enum PrefType {
         }// end of method
     },// end of single enumeration
 
-    decimal("decimale") {
-        @Override
-        public byte[] objectToBytes(Object obj) {
-            byte[] bytes = new byte[0];
-            if (obj instanceof BigDecimal) {
-                BigDecimal bd = (BigDecimal) obj;
-                bytes = LibByte.bigDecimalToByteArray(bd);
-            }// end of if cycle
-            return bytes;
-        }// end of method
-
-        @Override
-        public Object bytesToObject(byte[] bytes) {
-            return LibByte.byteArrayToBigDecimal(bytes);
-        }// end of method
-    },// end of single enumeration
-
     date("data") {
         @Override
         public byte[] objectToBytes(Object obj) {
@@ -109,6 +92,42 @@ public enum PrefType {
         @Override
         public Object bytesToObject(byte[] bytes) {
             return new Date(Longs.fromByteArray(bytes));
+        }// end of method
+    },// end of single enumeration
+
+    email("email") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof String) {
+                String stringa = (String) obj;
+                bytes = stringa.getBytes(Charset.forName("UTF-8"));
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            Object obj = null;
+            obj = new String(bytes, Charset.forName("UTF-8"));
+            return obj;
+        }// end of method
+    },// end of single enumeration
+
+    decimal("decimale") {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof BigDecimal) {
+                BigDecimal bd = (BigDecimal) obj;
+                bytes = LibByte.bigDecimalToByteArray(bd);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return LibByte.byteArrayToBigDecimal(bytes);
         }// end of method
     },// end of single enumeration
 

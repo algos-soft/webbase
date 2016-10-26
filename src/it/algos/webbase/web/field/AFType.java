@@ -6,5 +6,5 @@ package it.algos.webbase.web.field;
  * Enumeration of type used with AIField
  */
 public enum AFType {
-    text, integer, lungo, email, password, combo, date, decimal, checkbox, image, area, time, yesno
+    text, integer, lungo, email, password, combo, enumeration, date, decimal, checkbox, image, area, time, yesno
 }// fine della classe Enumeration

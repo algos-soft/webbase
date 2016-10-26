@@ -16,8 +16,8 @@ import java.util.Date;
 @StaticMetamodel(Pref.class)
 public class Pref_ extends BaseEntity_ {
     public static volatile SingularAttribute<Pref, String> code;
-    public static volatile SingularAttribute<Pref, byte[]> value;
     public static volatile SingularAttribute<Pref, PrefType> tipo;
+    public static volatile SingularAttribute<Pref, byte[]> value;
     public static volatile SingularAttribute<Pref, BaseCompany> company;
     public static volatile SingularAttribute<Pref, String> codeCompanyUnico;
 

@@ -15,6 +15,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD) //can use in field only.
 public @interface AIField {
 
+    Class<? extends Object> clazz() default Object.class;
+
     AFType type() default AFType.text;
 
     String width() default "12em";
@@ -30,5 +32,7 @@ public @interface AIField {
     boolean required() default false;
 
     String error() default "";
+
+    boolean nullSelectionAllowed() default true;
 
 }// end of interface annotation

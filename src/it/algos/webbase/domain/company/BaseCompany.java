@@ -465,8 +465,8 @@ public class BaseCompany extends BaseEntity {
     /**
      * Elimina l'azienda.
      */
-    public void delete() {
-        delete((EntityManager) null);
+    public boolean delete() {
+        return delete((EntityManager) null);
     }// end of method
 
     /**
@@ -474,18 +474,19 @@ public class BaseCompany extends BaseEntity {
      *
      * @param manager the EntityManager to use
      */
-    public void delete(EntityManager manager) {
-        AQuery.delete(BaseCompany.class, manager);
+    public boolean delete(EntityManager manager) {
+//        AQuery.delete(BaseCompany.class, manager);
+        deleteAllData(manager);
+        return super.delete(manager);
     }// end of method
 
-    /**
-     * Elimina tutti i dati di questa azienda.
-     */
-    public void deleteAllData() {
-        EntityManager manager = EM.createEntityManager();
-        deleteAllData(manager);
-        manager.close();
-    }// end of method
+
+//    /**
+//     * Elimina tutti i dati di questa azienda.
+//     */
+//    public void deleteAllData() {
+//        deleteAllData((EntityManager) null);
+//    }// end of method
 
     /**
      * Elimina tutti i dati di questa azienda.
@@ -495,13 +496,8 @@ public class BaseCompany extends BaseEntity {
      * @param manager the EntityManager to use
      */
     public void deleteAllData(EntityManager manager) {
-
-        // elimina le tabelle
-
-        // elimina gli utenti
-
         // elimina le preferenze
-        AQuery.deleteOld(Pref.class, CompanyEntity_.company, this, manager);
+        AQuery.delete(Pref.class, CompanyEntity_.company, this, manager);
     }// end of method
 
 }// end of entity class

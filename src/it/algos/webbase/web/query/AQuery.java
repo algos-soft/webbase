@@ -462,6 +462,44 @@ public abstract class AQuery {
     // @todo Funzionamento testato nel progetto MultyCompany.AQueryTest
     // Return una List di oggetti del tipo specificato (str, int, ecc)
     //------------------------------------------------------------------------------------------------------------------------
+    public static List<? extends BaseEntity> getListProperty(Class<? extends BaseEntity> clazz, SingularAttribute attr, EntityManager manager, Filter... filters) {
+        ArrayList<BaseEntity> entities = new ArrayList<>();
+        BaseEntity value;
+        SortProperty sort;
+        JPAContainer<BaseEntity> container;
+        EntityItem<BaseEntity> item;
+        EntityItemProperty property;
+        Object objValue;
+
+        // se non specificato l'EntityManager, ne crea uno locale
+        boolean usaManagerLocale = false;
+        if (manager == null) {
+            usaManagerLocale = true;
+            manager = EM.createEntityManager();
+        }// end of if cycle
+
+        // create a read-only JPA container for a given domain class (not sorted) and filters
+        container = AQuery.getContainerRead(clazz, null, manager, new ArrayList<>(Arrays.asList(filters)));
+
+        // costruisce la lista, spazzolando il container
+        for (Object id : container.getItemIds()) {
+            item = container.getItem(id);
+            property = item.getItemProperty(attr.getName());
+            objValue = property.getValue();
+
+            if (objValue instanceof BaseEntity) {
+                value = (BaseEntity) objValue;
+                entities.add(value);
+            }// end of if cycle
+        }// end of for cycle
+
+        // eventualmente chiude l'EntityManager locale
+        if (usaManagerLocale) {
+            manager.close();
+        }// end of if cycle
+
+        return entities;
+    }// end of static method
 
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
         return getListStr(clazz, attr, true, (EntityManager) null, (Filter) null);
@@ -843,8 +881,6 @@ public abstract class AQuery {
                 manager.remove(entity);
                 deleted++;
             }// end of for cycle
-
-            manager.getTransaction().commit();
 
             if (createTransaction) {
                 manager.getTransaction().commit();

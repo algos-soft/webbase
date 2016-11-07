@@ -28,9 +28,9 @@ public class Login {
     private static final boolean DEFAULT_RENEW_COOKIES_ON_LOGIN = true;    // renews the cookies on login
 
     // default cookie names
-    private static final String COOKIENAME_LOGIN = "login_username";
-    private static final String COOKIENAME_PASSWORD = "login_password";
-    private static final String COOKIENAME_REMEMBER = "login_remember";
+    public static final String COOKIENAME_LOGIN = "login_username";
+    public static final String COOKIENAME_PASSWORD = "login_password";
+    public static final String COOKIENAME_REMEMBER = "login_remember";
 
     /**
      * Evento lanciato quando viene tentato un login.

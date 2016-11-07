@@ -4,6 +4,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import it.algos.webbase.domain.pref.Pref;
+import it.algos.webbase.domain.pref.PrefType;
 import it.algos.webbase.domain.pref.TypePref;
 import it.algos.webbase.web.pref.AbsPref;
 
@@ -25,7 +26,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newBool(String code, Boolean value, String descPref) {
-        newBase(false, code, value, descPref, TypePref.booleano);
+        newBase(false, code, value, descPref, PrefType.bool);
     }// end of static method
 
 
@@ -38,7 +39,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newStr(String code, String value, String descPref) {
-        newBase(false, code, value, descPref, TypePref.stringa);
+        newBase(false, code, value, descPref, PrefType.string);
     }// end of static method
 
 
@@ -51,7 +52,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newInt(String code, int value, String descPref) {
-        newBase(false, code, value, descPref, TypePref.intero);
+        newBase(false, code, value, descPref, PrefType.integer);
     }// end of static method
 
 
@@ -64,7 +65,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newData(String code, Date value, String descPref) {
-        newBase(false, code, value, descPref, TypePref.data);
+        newBase(false, code, value, descPref, PrefType.date);
     }// end of static method
 
 
@@ -78,7 +79,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newVersBool(String code, boolean value, String descPref) {
-        newBase(true, code, value, descPref, "", TypePref.booleano);
+        newBase(true, code, value, descPref, "", PrefType.bool);
     }// end of method
 
 
@@ -93,7 +94,7 @@ public abstract class LibPref {
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
     public static void newVersStr(String code, String value, String descPref, String descVers) {
-        newBase(true, code, value, descPref, descVers, TypePref.stringa);
+        newBase(true, code, value, descPref, descVers, PrefType.string);
     }// end of static method
 
 
@@ -107,7 +108,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newVersInt(String code, int value, String descPref) {
-        newBase(true, code, value, descPref, "", TypePref.intero);
+        newBase(true, code, value, descPref, "", PrefType.integer);
     }// end of static method
 
 
@@ -121,7 +122,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newVersData(String code, Date value, String descPref) {
-        newBase(true, code, value, descPref, "", TypePref.data);
+        newBase(true, code, value, descPref, "", PrefType.date);
     }// end of static method
 
 
@@ -136,7 +137,7 @@ public abstract class LibPref {
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
     public static void newVersBool(String code, boolean value, String descPref, String descVers) {
-        newBase(true, code, value, descPref, descVers, TypePref.booleano);
+        newBase(true, code, value, descPref, descVers, PrefType.bool);
     }// end of static method
 
 
@@ -150,7 +151,7 @@ public abstract class LibPref {
      * @param descPref dettagliata (obbligatoria per Pref)
      */
     public static void newVersStr(String code, String value, String descPref) {
-        newBase(true, code, value, descPref, "", TypePref.stringa);
+        newBase(true, code, value, descPref, "", PrefType.string);
     }// end of static method
 
     /**
@@ -164,7 +165,7 @@ public abstract class LibPref {
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
     public static void newVersInt(String code, int value, String descPref, String descVers) {
-        newBase(true, code, value, descPref, descVers, TypePref.intero);
+        newBase(true, code, value, descPref, descVers, PrefType.integer);
     }// end of static method
 
     /**
@@ -178,7 +179,7 @@ public abstract class LibPref {
      * @param descVers dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      */
     public static void newVersInt(String code, Date value, String descPref, String descVers) {
-        newBase(true, code, value, descPref, descVers, TypePref.data);
+        newBase(true, code, value, descPref, descVers, PrefType.date);
     }// end of static method
 
 
@@ -191,7 +192,7 @@ public abstract class LibPref {
      * @param descPref    dettagliata (obbligatoria per Pref)
      * @param type        di valore
      */
-    private static void newBase(boolean logVersione, String code, Object value, String descPref, TypePref type) {
+    private static void newBase(boolean logVersione, String code, Object value, String descPref, PrefType type) {
         newBase(logVersione, code, value, descPref, "", type);
     }// end of static method
 
@@ -205,7 +206,7 @@ public abstract class LibPref {
      * @param descVers    dettagliata (facoltativa e aggiuntiva a quella automatica di Versione)
      * @param type        di valore
      */
-    private static void newBase(boolean logVersione, String code, Object value, String descPref, String descVers, TypePref type) {
+    private static void newBase(boolean logVersione, String code, Object value, String descPref, String descVers, PrefType type) {
         Pref pref;
         String commento;
         String strValue = "";
@@ -216,43 +217,44 @@ public abstract class LibPref {
             pref.setOrdine(Pref.count() + 1);
             pref.setCode(code);
             pref.setDescrizione(descPref);
-            pref.setType(type);
+            pref.setTipo(type);
+            pref.setValore(value);
 
-            if (type == TypePref.booleano) {
-                try { // prova ad eseguire il codice
-                    pref.setBool((Boolean) value);
-                    strValue = (boolean) value ? "true" : "false";
-                } catch (Exception unErrore) { // intercetta l'errore
-                    Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
-                }// fine del blocco try-catch
-            }// fine del blocco if
-
-            if (type == TypePref.stringa) {
-                try { // prova ad eseguire il codice
-                    pref.setStringa((String) value);
-                    strValue = (String) value;
-                } catch (Exception unErrore) { // intercetta l'errore
-                    Notification.show("La preferenza " + code + " non è di tipo stringa", Notification.Type.ERROR_MESSAGE);
-                }// fine del blocco try-catch
-            }// fine del blocco if
-
-            if (type == TypePref.intero) {
-                try { // prova ad eseguire il codice
-                    pref.setIntero((Integer) value);
-                    strValue = LibNum.format(value);
-                } catch (Exception unErrore) { // intercetta l'errore
-                    Notification.show("La preferenza " + code + " non è di tipo intero", Notification.Type.ERROR_MESSAGE);
-                }// fine del blocco try-catch
-            }// fine del blocco if
-
-            if (type == TypePref.data) {
-                try { // prova ad eseguire il codice
-                    pref.setData((Date) value);
-                    strValue = LibDate.toStringDMYY((Date)value);
-                } catch (Exception unErrore) { // intercetta l'errore
-                    Notification.show("La preferenza " + code + " non è di tipo data", Notification.Type.ERROR_MESSAGE);
-                }// fine del blocco try-catch
-            }// fine del blocco if
+//            if (type == PrefType.bool) {
+//                try { // prova ad eseguire il codice
+//                    pref.setValore(value);
+//                    strValue = (boolean) value ? "true" : "false";
+//                } catch (Exception unErrore) { // intercetta l'errore
+//                    Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
+//                }// fine del blocco try-catch
+//            }// fine del blocco if
+//
+//            if (type == PrefType.stringa) {
+//                try { // prova ad eseguire il codice
+//                    pref.setStringa((String) value);
+//                    strValue = (String) value;
+//                } catch (Exception unErrore) { // intercetta l'errore
+//                    Notification.show("La preferenza " + code + " non è di tipo stringa", Notification.Type.ERROR_MESSAGE);
+//                }// fine del blocco try-catch
+//            }// fine del blocco if
+//
+//            if (type == PrefType.intero) {
+//                try { // prova ad eseguire il codice
+//                    pref.setIntero((Integer) value);
+//                    strValue = LibNum.format(value);
+//                } catch (Exception unErrore) { // intercetta l'errore
+//                    Notification.show("La preferenza " + code + " non è di tipo intero", Notification.Type.ERROR_MESSAGE);
+//                }// fine del blocco try-catch
+//            }// fine del blocco if
+//
+//            if (type == PrefType.data) {
+//                try { // prova ad eseguire il codice
+//                    pref.setData((Date) value);
+//                    strValue = LibDate.toStringDMYY((Date)value);
+//                } catch (Exception unErrore) { // intercetta l'errore
+//                    Notification.show("La preferenza " + code + " non è di tipo data", Notification.Type.ERROR_MESSAGE);
+//                }// fine del blocco try-catch
+//            }// fine del blocco if
 
             pref.save();
 

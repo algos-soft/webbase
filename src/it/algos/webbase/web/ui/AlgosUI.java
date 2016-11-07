@@ -119,11 +119,11 @@ public abstract class AlgosUI extends UI implements LoginListener, LogoutListene
         // Store the current cookies in the service session
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(Cost.COOKIE_LOGIN_NICK)) {
-                    LibSession.setAttribute(Cost.COOKIE_LOGIN_NICK, cookie.getValue());
+                if (cookie.getName().equals(Login.COOKIENAME_LOGIN)) {
+                    LibSession.setAttribute(Login.COOKIENAME_LOGIN, cookie.getValue());
                 }// fine del blocco if
-                if (cookie.getName().equals(Cost.COOKIE_LOGIN_PASS)) {
-                    LibSession.setAttribute(Cost.COOKIE_LOGIN_PASS, cookie.getValue());
+                if (cookie.getName().equals(Login.COOKIENAME_PASSWORD)) {
+                    LibSession.setAttribute(Login.COOKIENAME_PASSWORD, cookie.getValue());
                 }// fine del blocco if
                 if (cookie.getName().equals(Cost.COOKIE_LOGIN_ROLE)) {
                     LibSession.setAttribute(Cost.COOKIE_LOGIN_ROLE, cookie.getValue());

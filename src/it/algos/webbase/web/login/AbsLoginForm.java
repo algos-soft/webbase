@@ -38,7 +38,7 @@ public abstract class AbsLoginForm extends ConfirmDialog  {
     /**
      * Initialization <br>
      */
-    private void init() {
+    protected void init() {
         FormLayout layout = new AFormLayout();
         layout.setSpacing(true);
 

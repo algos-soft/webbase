@@ -16,6 +16,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
+import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.entity.BaseEntity;
@@ -28,6 +29,7 @@ import it.algos.webbase.web.lib.LibNum;
 import it.algos.webbase.web.menu.AMenuBar;
 import it.algos.webbase.web.navigator.MenuCommand;
 import it.algos.webbase.web.navigator.NavPlaceholder;
+import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.search.SearchManager;
 import it.algos.webbase.web.table.ATable;
 import it.algos.webbase.web.table.ModuleTable;
@@ -710,13 +712,18 @@ public abstract class ModulePop extends Module {
     }
 
     public void delete(Object id) {
-        // delegate to the table's Container
-        Container cont = getTable().getContainerDataSource();
-        cont.removeItem(id);
-        if (cont instanceof Buffered) {
-            Buffered bf = (Buffered) cont;
-            bf.commit();
-        }
+        BaseEntity entity =  AQuery.find(getEntityClass(), (long)id);
+        if (entity!=null) {
+            entity.delete();
+        }// end of if cycle
+
+//        // delegate to the table's Container
+//        Container cont = getTable().getContainerDataSource();
+//        cont.removeItem(id);
+//        if (cont instanceof Buffered) {
+//            Buffered bf = (Buffered) cont;
+//            bf.commit();
+//        }
     }
 
     /**

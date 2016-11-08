@@ -69,7 +69,7 @@ public class BaseCompanyModule extends ModulePop implements View {
     public void delete(Object id) {
 
         // cancella prima tutti i dati
-        BaseCompany company = (BaseCompany) AQuery.queryById(BaseCompany.class, id);
+        BaseCompany company = (BaseCompany) AQuery.find(BaseCompany.class, (long)id);
         company.deleteAllData(null);
 
         // poi cancella la company

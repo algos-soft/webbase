@@ -86,35 +86,35 @@ public abstract class LibSession {
         setBool(Attribute.debug, status);
     }// end of static method
 
-    /**
-     * Recupera dalla sessione l'attributo firstTime
-     * Se l'attributo manca, di default ritorna 'true'
-     *
-     * @return false se manca l'attributo
-     */
-    public static boolean isFirstTime() {
-        boolean status = true;
-        Object devObj = null;
-        VaadinSession sessione = VaadinSession.getCurrent();
+//    /**
+//     * Recupera dalla sessione l'attributo firstTime
+//     * Se l'attributo manca, di default ritorna 'true'
+//     *
+//     * @return false se manca l'attributo
+//     */
+//    public static boolean isFirstTime() {
+//        boolean status = true;
+//        Object devObj = null;
+//        VaadinSession sessione = VaadinSession.getCurrent();
+//
+//        if (sessione != null) {
+//            devObj = sessione.getAttribute(Attribute.firstTime.toString());
+//            if (devObj != null) {
+//                if (devObj instanceof Boolean) {
+//                    status = (Boolean) devObj;
+//                }// fine del blocco if
+//            }// fine del blocco if
+//        }// fine del blocco if
+//
+//        return status;
+//    }// end of static method
 
-        if (sessione != null) {
-            devObj = sessione.getAttribute(Attribute.firstTime.toString());
-            if (devObj != null) {
-                if (devObj instanceof Boolean) {
-                    status = (Boolean) devObj;
-                }// fine del blocco if
-            }// fine del blocco if
-        }// fine del blocco if
-
-        return status;
-    }// end of static method
-
-    /**
-     * Regola per la sessione corrente l'attributo firstTime
-     */
-    public static void setFirstTime(boolean status) {
-        setBool(Attribute.firstTime, status);
-    }// end of static method
+//    /**
+//     * Regola per la sessione corrente l'attributo firstTime
+//     */
+//    public static void setFirstTime(boolean status) {
+//        setBool(Attribute.firstTime, status);
+//    }// end of static method
 
     /**
      * @return true if a user is logged in

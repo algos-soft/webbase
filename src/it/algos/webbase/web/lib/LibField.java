@@ -2,6 +2,7 @@ package it.algos.webbase.web.lib;
 
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.field.*;
 
 import javax.persistence.metamodel.Attribute;
@@ -55,50 +56,68 @@ public class LibField {
                 case text:
                     vaadinField = new TextField();
                     ((TextField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
-                    ((TextField) vaadinField).setDescription(fieldAnnotation.help());
                     ((TextField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((TextField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case integer:
                     vaadinField = new IntegerField();
-                    ((IntegerField) vaadinField).setDescription(fieldAnnotation.help());
                     ((IntegerField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((IntegerField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case email:
                     vaadinField = new EmailField();
                     ((EmailField) vaadinField).setInputPrompt(fieldAnnotation.prompt());
-                    ((EmailField) vaadinField).setDescription(fieldAnnotation.help());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((EmailField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case checkbox:
                     vaadinField = new CheckBoxField();
-                    ((CheckBoxField) vaadinField).setDescription(fieldAnnotation.help());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((CheckBoxField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case area:
                     vaadinField = new TextArea();
                     ((TextArea) vaadinField).setInputPrompt(fieldAnnotation.prompt());
-                    ((TextArea) vaadinField).setDescription(fieldAnnotation.help());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((TextArea) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case date:
                     vaadinField = new DateField();
-                    ((DateField) vaadinField).setDescription(fieldAnnotation.help());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((DateField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case password:
                     vaadinField = new PasswordField();
-                    ((PasswordField) vaadinField).setDescription(fieldAnnotation.help());
                     ((PasswordField) vaadinField).setEnabled(fieldAnnotation.enabled());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((PasswordField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case combo:
                     vaadinField = new RelatedComboField(fieldAnnotation.clazz());
-                    ((RelatedComboField) vaadinField).setDescription(fieldAnnotation.help());
                     ((RelatedComboField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     ((RelatedComboField) vaadinField).setNullSelectionAllowed(fieldAnnotation.nullSelectionAllowed());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((RelatedComboField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 case enumeration:
                     Class clazz = fieldAnnotation.clazz();
                     Object[] values = clazz.getEnumConstants();
                     vaadinField = new ArrayComboField(values);
-                    ((ArrayComboField) vaadinField).setDescription(fieldAnnotation.help());
                     ((ArrayComboField) vaadinField).setEnabled(fieldAnnotation.enabled());
                     ((ArrayComboField) vaadinField).setNullSelectionAllowed(fieldAnnotation.nullSelectionAllowed());
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((ArrayComboField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
                     break;
                 default: // caso non definito
                     vaadinField = createFieldJavaType(attr);

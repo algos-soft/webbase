@@ -95,26 +95,29 @@ public abstract class AlgosApp {
      * Not final<br>
      */
     public static String COMPANY_CODE = "";
-
-    /**
-     * Servlet context<br>
-     * registered as soon as possible to make it available to every component
-     */
-    private static ServletContext servletContext;
-
     /**
      * Null selection allowed in combobox.<br>
      * Not final<br>
      * Can be overwritten on local xxxBootStrap.contextInitialized() method
      */
     public static boolean COMBO_BOX_NULL_SELECTION_ALLOWED = true;
-
     /**
      * Display only the new record in the table, after successful editing (persisted).<br>
      * Not final flag<br>
      * Can be overwritten on local xxxApp class
      */
     public static boolean DISPLAY_NEW_RECORD_ONLY = true;
+    /**
+     * Display tooltips on rollover the field<br>
+     * Not final flag<br>
+     * Can be overwritten on local xxxApp class
+     */
+    public static boolean DISPLAY_TOOLTIPS = false;
+    /**
+     * Servlet context<br>
+     * registered as soon as possible to make it available to every component
+     */
+    private static ServletContext servletContext;
 
     /**
      * Returns the path to the Uploads folder.

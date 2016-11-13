@@ -219,47 +219,10 @@ public abstract class LibPref {
             pref.setDescrizione(descPref);
             pref.setTipo(type);
             pref.setValore(value);
-
-//            if (type == PrefType.bool) {
-//                try { // prova ad eseguire il codice
-//                    pref.setValore(value);
-//                    strValue = (boolean) value ? "true" : "false";
-//                } catch (Exception unErrore) { // intercetta l'errore
-//                    Notification.show("La preferenza " + code + " non è di tipo booleano", Notification.Type.ERROR_MESSAGE);
-//                }// fine del blocco try-catch
-//            }// fine del blocco if
-//
-//            if (type == PrefType.stringa) {
-//                try { // prova ad eseguire il codice
-//                    pref.setStringa((String) value);
-//                    strValue = (String) value;
-//                } catch (Exception unErrore) { // intercetta l'errore
-//                    Notification.show("La preferenza " + code + " non è di tipo stringa", Notification.Type.ERROR_MESSAGE);
-//                }// fine del blocco try-catch
-//            }// fine del blocco if
-//
-//            if (type == PrefType.intero) {
-//                try { // prova ad eseguire il codice
-//                    pref.setIntero((Integer) value);
-//                    strValue = LibNum.format(value);
-//                } catch (Exception unErrore) { // intercetta l'errore
-//                    Notification.show("La preferenza " + code + " non è di tipo intero", Notification.Type.ERROR_MESSAGE);
-//                }// fine del blocco try-catch
-//            }// fine del blocco if
-//
-//            if (type == PrefType.data) {
-//                try { // prova ad eseguire il codice
-//                    pref.setData((Date) value);
-//                    strValue = LibDate.toStringDMYY((Date)value);
-//                } catch (Exception unErrore) { // intercetta l'errore
-//                    Notification.show("La preferenza " + code + " non è di tipo data", Notification.Type.ERROR_MESSAGE);
-//                }// fine del blocco try-catch
-//            }// fine del blocco if
-
             pref.save();
 
             if (logVersione) {
-                commento = code + ", di default " + strValue + ".";
+                commento = code + ", di default " + value;
                 if (!descVers.equals("")) {
                     commento += " " + descVers;
                 }// fine del blocco if

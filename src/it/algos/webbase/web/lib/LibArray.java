@@ -748,4 +748,28 @@ public abstract class LibArray {
         return mappaOrdinata;
     }// end of static method
 
+    /**
+     * Controlla che l'array esista e non sia vuoto
+     *
+     * @return true se esiste e non è vuoto
+     */
+    public static boolean isValido(List lista) {
+        boolean valido = false;
+
+        if (lista != null && lista.size() > 0) {
+            valido = true;
+        }// end of if cycle
+
+        return valido;
+    }// end of static method
+
+    /**
+     * Controlla che l'array non esista o che sia vuoto
+     *
+     * @return true se non è valido
+     */
+    public static boolean isNotValido(List lista) {
+        return !isValido(lista);
+    }// end of static method
+
 }// end of abstract static class

@@ -494,6 +494,26 @@ public abstract class LibText {
         return chiaveUnica;
     }// end of static method
 
+    public static boolean isValida(String stringa) {
+        boolean valida = false;
+
+        if (stringa != null && stringa.length() > 0) {
+            valida = true;
+        }// end of if cycle
+
+        return valida;
+    }// end of method
+
+    public static String getValida(String stringa) {
+        String valida = null;
+
+        if (stringa != null && stringa.length() > 0) {
+            valida = stringa;
+        }// end of if cycle
+
+        return valida;
+    }// end of method
+
     /**
      * Enumeration locale per il flag del primo carattere
      */

@@ -2,7 +2,6 @@ package it.algos.webbase.multiazienda;
 
 import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.domain.company.BaseCompany_;
-import it.algos.webbase.domain.utente.Utente;
 import it.algos.webbase.web.lib.LibSession;
 import it.algos.webbase.web.login.Login;
 import it.algos.webbase.web.login.UserIF;
@@ -12,14 +11,16 @@ import it.algos.webbase.web.login.UserIF;
  */
 public class CompanySessionLib {
 
+    private final static String KEY_COMPANY = "company";
 
     /**
      * Ritorna la Company corrente.
+     *
      * @return la Company corrente
      */
     public static BaseCompany getCompany() {
         BaseCompany company = null;
-        Object attr = LibSession.getAttribute("company");
+        Object attr = LibSession.getAttribute(KEY_COMPANY);
         if ((attr != null) & (attr instanceof BaseCompany)) {
             company = (BaseCompany) attr;
         }// fine del blocco if
@@ -28,8 +29,12 @@ public class CompanySessionLib {
     }
 
     public static void setCompany(BaseCompany company) {
-        LibSession.setAttribute("company", company);
-    }
+        LibSession.setAttribute(KEY_COMPANY, company);
+    }// end of method
+
+    public static boolean isCompanySet() {
+        return getCompany() != null;
+    }// end of method
 
 
     /**
@@ -37,16 +42,16 @@ public class CompanySessionLib {
      * e la registra nella sessione corrente.
      * Se non è stata inviduata una Company ritorna false.
      */
-    public static boolean registerCompanyByUser(UserIF user){
+    public static boolean registerCompanyByUser(UserIF user) {
 
-        boolean success=false;
+        boolean success = false;
 
         // cerca una company con lo stesso nome
-        String username=user.getNickname();
+        String username = user.getNickname();
         BaseCompany company = BaseCompany.query.queryOne(BaseCompany_.companyCode, username);
-        if(company!=null){
+        if (company != null) {
             setCompany(company);
-            success=true;
+            success = true;
         }
         return success;
 
@@ -63,14 +68,14 @@ public class CompanySessionLib {
      * Returns a customized Login object for the Admin session.
      * (The Login object has a custom cookie prefix)
      * To retrieve Admin login, always use this method instead of Login.getLogin()
+     *
      * @return the customized Login object
      */
-    public static Login getAdminLogin(){
+    public static Login getAdminLogin() {
         Login login = Login.getLogin();
         login.setCookiePrefix("admin");
         return login;
     }
-
 
 
 }// end of class

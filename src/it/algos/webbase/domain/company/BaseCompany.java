@@ -481,12 +481,12 @@ public class BaseCompany extends BaseEntity {
     }// end of method
 
 
-//    /**
-//     * Elimina tutti i dati di questa azienda.
-//     */
-//    public void deleteAllData() {
-//        deleteAllData((EntityManager) null);
-//    }// end of method
+    /**
+     * Elimina tutti i dati di questa azienda.
+     */
+    public void deleteAllData() {
+        deleteAllData((EntityManager) null);
+    }// end of method
 
     /**
      * Elimina tutti i dati di questa azienda.

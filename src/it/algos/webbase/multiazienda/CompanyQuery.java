@@ -8,6 +8,7 @@ import com.vaadin.data.util.filter.Compare;
 import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.lib.LibQuery;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.SortProperty;
 
@@ -331,6 +332,7 @@ public abstract class CompanyQuery {
         CompanyEntity entity = null;
         List<Predicate> predicates = new ArrayList<>();
         Predicate predicate;
+        boolean createTransaction;
 
         // the specified attribute is mandatory
         if (attr1 == null) {
@@ -343,6 +345,9 @@ public abstract class CompanyQuery {
             usaManagerLocale = true;
             manager = EM.createEntityManager();
         }// end of if cycle
+
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<? extends BaseEntity> criteria = builder.createQuery(clazz);
@@ -378,6 +383,47 @@ public abstract class CompanyQuery {
         // se usato, chiude l'EntityManager locale
         if (usaManagerLocale) {
             manager.close();
+        }// end of if cycle
+
+        return entity;
+    }// end of static method
+
+    /**
+     * Search for the first entities with a specified attribute value.
+     * <p>
+     *
+     * @param clazz the entity class
+     * @param attr  the searched attribute
+     * @param value the value to search for
+     * @return the first entity corresponding to the specified criteria
+     */
+    @SuppressWarnings({"rawtypes"})
+    public static BaseEntity getFirstEntity(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value) {
+        BaseEntity entity = null;
+        List<? extends BaseEntity> entities = getList(clazz, attr, value);
+
+        if (entities.size() > 0) {
+            entity = entities.get(0);
+        }// end of if cycle
+
+        return entity;
+    }// end of static method
+
+    /**
+     * Return a single entity for a given domain class and filters.
+     * <p>
+     *
+     * @param entityClass - the entity class
+     * @param filters     - an array of filters (you can use FilterFactory
+     *                    to build filters, or create them as Compare....)
+     * @return the single (or first) entity found
+     */
+    public static BaseEntity getFirstEntity(Class<? extends CompanyEntity> entityClass, Filter... filters) {
+        BaseEntity entity = null;
+        List<? extends BaseEntity> list = getList(entityClass, filters);
+
+        if (list.size() > 0) {
+            entity = list.get(0);
         }// end of if cycle
 
         return entity;
@@ -689,13 +735,17 @@ public abstract class CompanyQuery {
         CriteriaBuilder builder;
         List<Predicate> predicates = new ArrayList<>();
         Predicate predicate;
+        boolean usaManagerLocale = false;
+        boolean createTransaction;
 
         // se non specificato l'EntityManager, ne crea uno locale
-        boolean usaManagerLocale = false;
         if (manager == null) {
             usaManagerLocale = true;
             manager = EM.createEntityManager();
         }// end of if cycle
+
+        //--controlla se la transazione è attiva
+        createTransaction = LibQuery.isTransactionNotActive(manager);
 
         // create delete
         builder = manager.getCriteriaBuilder();
@@ -721,11 +771,19 @@ public abstract class CompanyQuery {
 
         // perform update
         try {
-            manager.getTransaction().begin();
+            if (createTransaction) {
+                manager.getTransaction().begin();
+            }// end of if cycle
+
             deleted = manager.createQuery(delete).executeUpdate();
-            manager.getTransaction().commit();
+
+            if (createTransaction) {
+                manager.getTransaction().commit();
+            }// end of if cycle
         } catch (Exception e) {
-            manager.getTransaction().rollback();
+            if (createTransaction) {
+                manager.getTransaction().rollback();
+            }// end of if cycle
             deleted = 0;
         }// fine del blocco try-catch
 
@@ -1111,25 +1169,6 @@ public abstract class CompanyQuery {
         return bean;
     }// end of method
 
-    /**
-     * Search for the first entities with a specified attribute value.
-     * <p>
-     *
-     * @param clazz the entity class
-     * @param attr  the searched attribute
-     * @param value the value to search for
-     * @return the first entity corresponding to the specified criteria
-     * @deprecated
-     */
-    @SuppressWarnings({"rawtypes"})
-    public static BaseEntity queryFirst(Class<? extends CompanyEntity> clazz, SingularAttribute attr, Object value) {
-        BaseEntity bean = null;
-        List<? extends CompanyEntity> entities = queryList(clazz, attr, value);
-        if (entities.size() > 0) {
-            bean = entities.get(0);
-        }
-        return bean;
-    }
 
     /**
      * Search for the all entities
@@ -1180,24 +1219,6 @@ public abstract class CompanyQuery {
         return list;
     }
 
-    /**
-     * Return a single entity for a given domain class and filters.
-     * <p>
-     *
-     * @param entityClass - the entity class
-     * @param filters     - an array of filters (you can use FilterFactory
-     *                    to build filters, or create them as Compare....)
-     * @return the single (or first) entity found
-     * @deprecated
-     */
-    public static CompanyEntity getEntity(Class<? extends CompanyEntity> entityClass, Filter... filters) {
-        CompanyEntity entity = null;
-        List<? extends CompanyEntity> list = getListOld(entityClass, filters);
-        if (list.size() > 0) {
-            entity = list.get(0);
-        }
-        return entity;
-    }
 
     /**
      * Bulk delete records with CriteriaDelete

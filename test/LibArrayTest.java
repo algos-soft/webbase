@@ -680,84 +680,6 @@ public class LibArrayTest {
         assertEquals(ottenuta, prevista);
     }// fine tests
 
-    @Test
-    /**
-     * Ordina la lista
-     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
-     *
-     * @param listaDisordinata in ingresso
-     * @return lista ordinata, null se listaDisordinata è null
-     */
-    public void testSort() throws Exception {
-        List ottenuta;
-        ArrayList<String> disordinata;
-        ArrayList<Integer> disordinati;
-        ArrayList prevista;
-        disordinata = new ArrayList();
-        disordinata.add("Beta");
-        disordinata.add("Mercoledi");
-        disordinata.add("Alfa");
-        disordinati = new ArrayList();
-        disordinati.add(27);
-        disordinati.add(1235);
-        disordinati.add(4);
-        disordinati.add(15);
-
-        prevista = new ArrayList();
-        prevista.add("Alfa");
-        prevista.add("Beta");
-        prevista.add("Mercoledi");
-        ottenuta = LibArray.sort(disordinata);
-        assertEquals(ottenuta, prevista);
-
-        prevista = new ArrayList();
-        prevista.add(4);
-        prevista.add(15);
-        prevista.add(27);
-        prevista.add(1235);
-        ottenuta = LibArray.sort(disordinati);
-        assertEquals(ottenuta, prevista);
-    }// fine tests
-
-    @Test
-    /**
-     * Recupera una lista delle chiavi di una mappa
-     *
-     * @param mappa in ingresso
-     * @return lista delle chiavi
-     */
-    public void getKeyFromMap() {
-        String chiave1 = "xyz";
-        String chiave2 = "postCommit";
-        String chiave3 = "forse";
-        String chiave4 = "nonrilevante";
-        String chiave5 = "nessuna";
-        long value1 = 4567;
-        String value2 = "secondovalorestringa";
-        boolean value3 = false;
-        Label value4 = new Label();
-        Date value5 = new Date();
-        ArrayList listaPrevista = new ArrayList();
-        ArrayList listaOttenuta;
-        listaPrevista.add(chiave1);
-        listaPrevista.add(chiave2);
-        listaPrevista.add(chiave3);
-        listaPrevista.add(chiave4);
-        listaPrevista.add(chiave5);
-
-        HashMap<String, Object> mappa = new HashMap<String, Object>();
-        mappa.put(chiave1, value1);
-        mappa.put(chiave2, value2);
-        mappa.put(chiave3, value3);
-        mappa.put(chiave4, value4);
-        mappa.put(chiave5, value5);
-
-        listaOttenuta = LibArray.getKeyFromMap(mappa);
-        boolOttenuto = LibArray.isArrayEquals(listaOttenuta, listaPrevista);
-        assertTrue(boolOttenuto);
-
-    }// fine tests
-
 
     @Test
     /**
@@ -854,6 +776,111 @@ public class LibArrayTest {
         erratoValore.add(value4);
         erratoValore.add(value5);
         boolOttenuto = LibArray.isArrayEquals(erratoValore, actual);
+        assertFalse(boolOttenuto);
+
+    }// fine tests
+
+    @Test
+    /**
+     * Controlla l'eguaglianza di due array
+     * <p>
+     * Confronta tutti i valori ORDINATI
+     *
+     * @param expected previsto
+     * @param actual   effettivo
+     * @return vero, se gli array sono lunghi uguali ed hanno gli stessi valori (ordinati)
+     */
+    public void isArrayEqualsOrdinati() {
+        ArrayList expected;
+        ArrayList actual;
+        ArrayList errataLunghezza;
+        ArrayList errataChiave;
+        ArrayList erratoValore;
+        String chiave1 = "xyz";
+        String chiave2 = "postCommit";
+        String chiave3 = "forse";
+        String chiave4 = "nonrilevante";
+        String chiave5 = "nessuna";
+        String chiaveErrata = "zzz";
+        long value1 = 4567;
+        String value2 = "secondovalorestringa";
+        boolean value3 = false;
+        Label value4 = new Label();
+        Date value5 = new Date();
+        String valueErrato = "xxx";
+
+        expected = new ArrayList();
+        expected.add(chiave1);
+        expected.add(chiave2);
+        expected.add(chiave3);
+        expected.add(chiave4);
+        expected.add(chiave5);
+
+        actual = new ArrayList();
+        actual.add(chiave2);
+        actual.add(chiave5);
+        actual.add(chiave1);
+        actual.add(chiave3);
+        actual.add(chiave4);
+
+        boolOttenuto = LibArray.isArrayEquals(expected, actual);
+        assertTrue(boolOttenuto);
+
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(expected, actual);
+        assertFalse(boolOttenuto);
+
+        expected = new ArrayList();
+        expected.add(value1);
+        expected.add(value2);
+        expected.add(value3);
+        expected.add(value4);
+        expected.add(value5);
+
+        actual = new ArrayList();
+        actual.add(value1);
+        actual.add(value3);
+        actual.add(value2);
+        actual.add(value5);
+        actual.add(value4);
+
+        boolOttenuto = LibArray.isArrayEquals(expected, actual);
+        assertTrue(boolOttenuto);
+
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(expected, actual);
+        assertFalse(boolOttenuto);
+
+        errataLunghezza = new ArrayList();
+        errataLunghezza.add(chiave1);
+        errataLunghezza.add(chiave2);
+        errataLunghezza.add(chiave4);
+        errataLunghezza.add(chiave5);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(errataLunghezza, actual);
+        assertFalse(boolOttenuto);
+
+        errataLunghezza = new ArrayList();
+        errataLunghezza.add(value1);
+        errataLunghezza.add(value3);
+        errataLunghezza.add(value5);
+        errataLunghezza.add(value4);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(errataLunghezza, actual);
+        assertFalse(boolOttenuto);
+
+        errataChiave = new ArrayList();
+        errataChiave.add(chiave1);
+        errataChiave.add(chiave2);
+        errataChiave.add(chiaveErrata);
+        errataChiave.add(chiave4);
+        errataChiave.add(chiave5);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(errataChiave, actual);
+        assertFalse(boolOttenuto);
+
+        erratoValore = new ArrayList();
+        erratoValore.add(value1);
+        erratoValore.add(value2);
+        erratoValore.add(valueErrato);
+        erratoValore.add(value4);
+        erratoValore.add(value5);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(erratoValore, actual);
         assertFalse(boolOttenuto);
 
     }// fine tests
@@ -1084,6 +1111,124 @@ public class LibArrayTest {
 //        assert listaStr == richiestoStr
 //    }// fine tests
 
+
+    @Test
+    /**
+     * Ordina la lista
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param listaDisordinata in ingresso
+     * @return lista ordinata, null se listaDisordinata è null
+     */
+    public void testSort() throws Exception {
+        List ottenuta;
+        ArrayList<String> disordinata;
+        ArrayList<Integer> disordinati;
+        ArrayList prevista;
+        disordinata = new ArrayList();
+        disordinata.add("Beta");
+        disordinata.add("Mercoledi");
+        disordinata.add("Alfa");
+        disordinati = new ArrayList();
+        disordinati.add(27);
+        disordinati.add(1235);
+        disordinati.add(4);
+        disordinati.add(15);
+
+        prevista = new ArrayList();
+        prevista.add("Alfa");
+        prevista.add("Beta");
+        prevista.add("Mercoledi");
+        ottenuta = LibArray.sort(disordinata);
+        assertEquals(ottenuta, prevista);
+
+        prevista = new ArrayList();
+        prevista.add(4);
+        prevista.add(15);
+        prevista.add(27);
+        prevista.add(1235);
+        ottenuta = LibArray.sort(disordinati);
+        assertEquals(ottenuta, prevista);
+    }// fine tests
+
+
+    @Test
+    /**
+     * Ordina la lista
+     * L'ordinamento funziona SOLO se la lista è omogenea (oggetti della stessa classe)
+     *
+     * @param listaDisordinata in ingresso
+     * @return lista ordinata, null se listaDisordinata è null
+     */
+    public void testSort2() throws Exception {
+        ArrayList ottenuta;
+        ArrayList<String> disordinata;
+        ArrayList<Integer> disordinati;
+        ArrayList prevista;
+        disordinata = new ArrayList();
+        disordinata.add("Beta");
+        disordinata.add("Álvaro");
+        disordinata.add("Venerdi");
+        disordinati = new ArrayList();
+
+        prevista = new ArrayList();
+        prevista.add("Álvaro");
+        prevista.add("Beta");
+        prevista.add("Venerdi");
+
+        ottenuta = LibArray.sort(disordinata);
+        boolOttenuto = LibArray.isArrayEquals(ottenuta, prevista);
+        assertTrue(boolOttenuto);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(ottenuta, prevista);
+        assertFalse(boolOttenuto);
+
+        ottenuta = LibArray.sortAccentiSensibile(disordinata);
+        boolOttenuto = LibArray.isArrayEquals(ottenuta, prevista);
+        assertTrue(boolOttenuto);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(ottenuta, prevista);
+        assertTrue(boolOttenuto);
+    }// fine tests
+
+    @Test
+    /**
+     * Recupera una lista delle chiavi di una mappa
+     *
+     * @param mappa in ingresso
+     * @return lista delle chiavi
+     */
+    public void getKeyFromMap() {
+        String chiave1 = "xyz";
+        String chiave2 = "postCommit";
+        String chiave3 = "forse";
+        String chiave4 = "nonrilevante";
+        String chiave5 = "nessuna";
+        long value1 = 4567;
+        String value2 = "secondovalorestringa";
+        boolean value3 = false;
+        Label value4 = new Label();
+        Date value5 = new Date();
+        ArrayList listaPrevista = new ArrayList();
+        ArrayList listaOttenuta;
+        listaPrevista.add(chiave1);
+        listaPrevista.add(chiave2);
+        listaPrevista.add(chiave3);
+        listaPrevista.add(chiave4);
+        listaPrevista.add(chiave5);
+
+        HashMap<String, Object> mappa = new HashMap<String, Object>();
+        mappa.put(chiave1, value1);
+        mappa.put(chiave2, value2);
+        mappa.put(chiave3, value3);
+        mappa.put(chiave4, value4);
+        mappa.put(chiave5, value5);
+
+        listaOttenuta = LibArray.getKeyFromMap(mappa);
+        boolOttenuto = LibArray.isArrayEquals(listaOttenuta, listaPrevista);
+        assertTrue(boolOttenuto);
+
+    }// fine tests
+
+
     @Test
     /**
      * Ordina una mappa secondo le chiavi
@@ -1135,6 +1280,53 @@ public class LibArrayTest {
         for (Object key : mappaOttenuta.keySet()) {
             assert mappaOttenuta.get(key) == mappaOrdinata.get(key);
         }// end of for cycle
+
+    }// fine tests
+
+
+    @Test
+    /**
+     * Ordina una mappa secondo le chiavi
+     *
+     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
+     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
+     *
+     * @param mappaIn ingresso da ordinare
+     *
+     * @return mappa ordinata
+     */
+    public void ordinaMappa2() {
+        HashMap mappa;
+        LinkedHashMap mappaOrdinata;
+        LinkedHashMap mappaOttenuta;
+        String strUno = "Beta";
+        String strDue = "Álvaro";
+        String strTre = "Venerdi";
+
+        // mappa semplice non ordinata in creazione e che si ordina secondo le chiavi
+        mappa = new HashMap();
+        mappa.put(strTre, strTre);
+        mappa.put(strDue, strDue);
+        mappa.put(strUno, strUno);
+
+        mappaOrdinata = new LinkedHashMap();
+        mappaOrdinata.put(strDue, strDue);
+        mappaOrdinata.put(strUno, strUno);
+        mappaOrdinata.put(strTre, strTre);
+
+        mappaOttenuta = LibArray.ordinaMappaAccentiSensibile(mappa);
+        assert mappaOttenuta.size() == 3;
+        Set set = mappaOttenuta.keySet();
+        Set set2 = mappaOrdinata.keySet();
+        Object[] matrice = set.toArray();
+        Object[] matrice2 = set2.toArray();
+        ArrayList lista = LibArray.fromObj(matrice);
+        ArrayList lista2 = LibArray.fromObj(matrice2);
+
+        boolOttenuto = LibArray.isArrayEquals(lista, lista2);
+        assertTrue(boolOttenuto);
+        boolOttenuto = LibArray.isArrayEqualsOrdinati(lista, lista2);
+        assertTrue(boolOttenuto);
 
     }// fine tests
 

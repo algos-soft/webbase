@@ -84,12 +84,22 @@ public class LibField {
                 case area:
                     vaadinField = new TextArea();
                     ((TextArea) vaadinField).setInputPrompt(fieldAnnotation.prompt());
+                    ((TextArea) vaadinField).setColumns(fieldAnnotation.columns());
+                    ((TextArea) vaadinField).setRows(fieldAnnotation.rows());
                     if (AlgosApp.DISPLAY_TOOLTIPS) {
                         ((TextArea) vaadinField).setDescription(fieldAnnotation.help());
                     }// end of if cycle
                     break;
                 case date:
                     vaadinField = new DateField();
+                    if (AlgosApp.DISPLAY_TOOLTIPS) {
+                        ((DateField) vaadinField).setDescription(fieldAnnotation.help());
+                    }// end of if cycle
+                    break;
+                case time:
+                    vaadinField = new DateField();
+                    vaadinField.setWidth("220px");
+                    ((DateField) vaadinField).setResolution(DateField.RESOLUTION_SEC);
                     if (AlgosApp.DISPLAY_TOOLTIPS) {
                         ((DateField) vaadinField).setDescription(fieldAnnotation.help());
                     }// end of if cycle

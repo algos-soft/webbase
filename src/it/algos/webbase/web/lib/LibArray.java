@@ -1,5 +1,6 @@
 package it.algos.webbase.web.lib;
 
+import java.text.Collator;
 import java.util.*;
 
 
@@ -268,6 +269,22 @@ public abstract class LibArray {
         objList = fromObj(objArray);
 
         return objList;
+    }// end of static method
+
+
+    /**
+     * Ordina la lista, tenendo conto degli accenti
+     *
+     * @param listaDisordinata in ingresso
+     * @return lista ordinata, null se listaDisordinata è null
+     */
+    public static ArrayList<String> sortAccentiSensibile(ArrayList<String> listaDisordinata) {
+        ArrayList<Object> objList;
+        Collator usCollator = Collator.getInstance(Locale.US); //Your locale here
+        usCollator.setStrength(Collator.PRIMARY); //desired strength
+        Collections.sort(listaDisordinata, usCollator);
+
+        return listaDisordinata;
     }// end of static method
 
 
@@ -572,6 +589,31 @@ public abstract class LibArray {
     }// end of static method
 
     /**
+     * Controlla l'eguaglianza di due array
+     * <p>
+     * Confronta tutti i valori ORDINATI
+     *
+     * @param expected previsto
+     * @param actual   effettivo
+     * @return vero, se gli array sono lunghi uguali ed hanno gli stessi valori (ordinati)
+     */
+    public static boolean isArrayEqualsOrdinati(ArrayList expected, ArrayList actual) {
+        boolean uguali = true;
+
+        if (!isArrayEquals(expected, actual)) {
+            return false;
+        }// end of if cycle
+
+        for (int k = 0; k < actual.size(); k++) {
+            if (!actual.get(k).equals(expected.get(k))) {
+                uguali = false;
+            }// end of if cycle
+        }// end of for cycle
+
+        return uguali;
+    }// end of static method
+
+    /**
      * Controlla l'eguaglianza di due mappe
      * <p>
      * Confronta la lunghezza
@@ -726,6 +768,77 @@ public abstract class LibArray {
      * @return mappa ordinata
      */
     public static LinkedHashMap ordinaMappa(Map mappaIn) {
+//        LinkedHashMap mappaOrdinata = new LinkedHashMap();
+//        Set insieme;
+//        Object[] matrice;
+//        ArrayList listaChiavi;
+//        Object valore;
+//
+//        try { // prova ad eseguire il codice
+//            insieme = mappaIn.keySet();
+//            matrice = insieme.toArray();
+//            listaChiavi = new ArrayList(Arrays.asList(matrice));
+//            Collections.sort(listaChiavi);
+//
+//            for (Object chiave : listaChiavi) {
+//                valore = mappaIn.get(chiave);
+//                mappaOrdinata.put(chiave, valore);
+//            } // fine del ciclo for-each
+//        } catch (Exception unErrore) { // intercetta l'errore
+//        }// fine del blocco try-catch
+//
+//        return mappaOrdinata;
+        return ordinaMappaBase(mappaIn, (Collator) null);
+    }// end of static method
+
+
+    /**
+     * Ordina una mappa secondo le chiavi, tenendo conto degli accenti
+     * <p>
+     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
+     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
+     *
+     * @param mappaIn ingresso da ordinare
+     * @return mappa ordinata
+     */
+    public static LinkedHashMap<String, Object> ordinaMappaAccentiSensibile(Map mappaIn) {
+//        LinkedHashMap<String, Object> mappaOrdinata = new LinkedHashMap();
+//        Set insieme;
+//        Object[] matrice;
+//        ArrayList<String> listaChiavi;
+//        Object valore;
+//        Collator usCollator = Collator.getInstance(Locale.US); //Your locale here
+//        usCollator.setStrength(Collator.PRIMARY); //desired strength
+//
+//        try { // prova ad eseguire il codice
+//            insieme = mappaIn.keySet();
+//            matrice = insieme.toArray();
+//            listaChiavi = new ArrayList(Arrays.asList(matrice));
+//            Collections.sort(listaChiavi, usCollator);
+//
+//            for (String chiave : listaChiavi) {
+//                valore = mappaIn.get(chiave);
+//                mappaOrdinata.put(chiave, valore);
+//            } // fine del ciclo for-each
+//        } catch (Exception unErrore) { // intercetta l'errore
+//        }// fine del blocco try-catch
+//
+//        return mappaOrdinata;
+
+        return ordinaMappaBase(mappaIn, Collator.getInstance(Locale.US));
+    }// end of static method
+
+
+    /**
+     * Ordina una mappa secondo le chiavi, eventualmente tenendo conto degli accenti
+     * <p>
+     * Una HashMap è -automaticamente- ordinata secondo le proprie chiavi
+     * Viceversa una LinkedHashMap ha un -proprio ordine interno- fissato alla creazione
+     *
+     * @param mappaIn ingresso da ordinare
+     * @return mappa ordinata
+     */
+    private static LinkedHashMap ordinaMappaBase(Map mappaIn, Collator usCollator) {
         LinkedHashMap mappaOrdinata = new LinkedHashMap();
         Set insieme;
         Object[] matrice;
@@ -736,7 +849,13 @@ public abstract class LibArray {
             insieme = mappaIn.keySet();
             matrice = insieme.toArray();
             listaChiavi = new ArrayList(Arrays.asList(matrice));
-            Collections.sort(listaChiavi);
+
+            if (usCollator != null) {
+                usCollator.setStrength(Collator.PRIMARY); //desired strength
+                Collections.sort(listaChiavi, usCollator);
+            } else {
+                Collections.sort(listaChiavi);
+            }// end of if/else cycle
 
             for (Object chiave : listaChiavi) {
                 valore = mappaIn.get(chiave);
@@ -747,6 +866,7 @@ public abstract class LibArray {
 
         return mappaOrdinata;
     }// end of static method
+
 
     /**
      * Controlla che l'array esista e non sia vuoto

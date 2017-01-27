@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
-@DefaultSort({"timestamp"})
+@DefaultSort({"timestamp,false"})
 public class Log extends BaseEntity {
 
     @NotNull

@@ -21,6 +21,10 @@ public @interface AIField {
 
     String width() default "12em";
 
+    int columns() default 20;
+
+    int rows() default 4;
+
     String caption() default "";
 
     String prompt() default "";

@@ -18,6 +18,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Table;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.converter.StringToBigDecimalConverter;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.BaseEntity_;
@@ -51,7 +52,7 @@ import java.util.logging.Logger;
 public abstract class ATable extends Table {
 
     private final static Logger logger = Logger.getLogger(ATable.class.getName());
-    private final static int TEN_YEARS= 10 * 365 * 24 * 60 * 60;    // 10 years, cookie expiry time
+    private final static int TEN_YEARS = 10 * 365 * 24 * 60 * 60;    // 10 years, cookie expiry time
 
     protected Action actionEdit = new Action("Modifica", FontAwesome.PENCIL);
     protected Action actionDelete = new Action("Elimina", FontAwesome.TRASH_O);
@@ -71,7 +72,7 @@ public abstract class ATable extends Table {
     private boolean columnsAreSetting;
 
     // prefix to eventually add to the table cookies
-    private String cookiePrefix="";
+    private String cookiePrefix = "";
 
     /**
      * Creates a new table for a given module.
@@ -329,21 +330,21 @@ public abstract class ATable extends Table {
      * Name of the cookie holding the columns state
      */
     private String getColumnsCookieKey() {
-        return getCookiePrefix()+"#"+getClass().getName() + "#columnstate";
+        return getCookiePrefix() + "#" + getClass().getName() + "#columnstate";
     }
 
     /**
      * Name of the cookie holding the "remember columns collapsed state" option
      */
     private String getRememberColumnCollapsedStateCookieKey() {
-        return getCookiePrefix()+"#"+getClass().getName() + "#columnCollapsedStateOption";
+        return getCookiePrefix() + "#" + getClass().getName() + "#columnCollapsedStateOption";
     }
 
     /**
      * Name of the cookie holding the "remember columns width" option
      */
     private String getRememberColumnWidthCookieKey() {
-        return getCookiePrefix()+"#"+getClass().getName() + "#columnWidthOption";
+        return getCookiePrefix() + "#" + getClass().getName() + "#columnWidthOption";
     }
 
 
@@ -356,6 +357,7 @@ public abstract class ATable extends Table {
 
     /**
      * Writes the current columns state in a cookie
+     *
      * @param forceState true to force write the collapsed state even if the corresponding option is off
      * @param forceState true to force write the width even if the corresponding option is off
      */
@@ -1226,9 +1228,9 @@ public abstract class ATable extends Table {
     public void setRememberColumnCollapsedState(boolean remember) {
         String name = getRememberColumnCollapsedStateCookieKey();
         if (remember) {
-            LibCookie.setCookie(name, "true",TEN_YEARS);
+            LibCookie.setCookie(name, "true", AlgosApp.COOKIES_PATH, TEN_YEARS);
         } else {
-            LibCookie.deleteCookie(name);
+            LibCookie.deleteCookie(name, AlgosApp.COOKIES_PATH);
         }
     }
 
@@ -1253,7 +1255,7 @@ public abstract class ATable extends Table {
     public void setRememberColumnWidth(boolean remember) {
         String name = getRememberColumnWidthCookieKey();
         if (remember) {
-            LibCookie.setCookie(name, "true",TEN_YEARS);
+            LibCookie.setCookie(name, "true", TEN_YEARS);
         } else {
             LibCookie.deleteCookie(name);
         }

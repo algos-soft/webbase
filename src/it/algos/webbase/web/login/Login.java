@@ -3,6 +3,7 @@ package it.algos.webbase.web.login;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import it.algos.webbase.domain.utente.Utente;
+import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.lib.LibCookie;
 import it.algos.webbase.web.lib.LibCrypto;
@@ -54,8 +55,8 @@ public class Login {
     private AbsUserProfileForm profileForm;
 
     public Login() {
-        loginForm=new DefaultLoginForm();
-        profileForm=new DefaultUserProfileForm();
+        loginForm = new DefaultLoginForm();
+        profileForm = new DefaultUserProfileForm();
     }
 
     /**
@@ -88,26 +89,29 @@ public class Login {
 
     /**
      * Verifica se l'oggetto Login esiste nella sessione.
+     *
      * @return true se esiste.
      */
     public static boolean isEsisteLoginInSessione() {
         Object obj = LibSession.getAttribute(Login.LOGIN_KEY_IN_SESSION);
-        return obj!=null;
+        return obj != null;
     }
 
     /**
      * Retrieve the Login form
+     *
      * @return the Login form to show
      */
-    public AbsLoginForm getLoginForm(){
+    public AbsLoginForm getLoginForm() {
         return loginForm;
     }
 
     /**
      * Retrieve the User Profile form
+     *
      * @return the User Profile form to show
      */
-    public AbsUserProfileForm getUserProfileForm(){
+    public AbsUserProfileForm getUserProfileForm() {
         return profileForm;
     }
 
@@ -149,7 +153,7 @@ public class Login {
             @Override
             public void confirmed(ConfirmDialog dialog) {
                 ProfileChangeEvent e = new ProfileChangeEvent(Login.this, user);
-                for(ProfileChangeListener listener : profileListeners){
+                for (ProfileChangeListener listener : profileListeners) {
                     listener.profileChanged(e);
                 }
             }
@@ -162,23 +166,21 @@ public class Login {
     }
 
 
-
-
     /**
      * Tenta il login con i dati presenti nela UI.
      * Se riesce, notifica i LoginListener(s)
      *
      * @return true se riuscito
      */
-    public boolean attemptLogin(){
-        boolean riuscito=false;
-        boolean remember=false;
+    public boolean attemptLogin() {
+        boolean riuscito = false;
+        boolean remember = false;
 
         UserIF user = getLoginForm().getSelectedUser();
-        if(user!=null){
+        if (user != null) {
             String pass = getLoginForm().getPassField().getValue();
-            if(pass!=null && !pass.isEmpty()){
-                if(user.validatePassword(pass)) {
+            if (pass != null && !pass.isEmpty()) {
+                if (user.validatePassword(pass)) {
 
                     setUser(user);
                     remember = getLoginForm().getRememberField().getValue();
@@ -186,7 +188,7 @@ public class Login {
                     // create/update the cookies
                     if (remember) {
                         writeCookies();
-                    }else{
+                    } else {
                         deleteCookies();
                     }
 
@@ -219,16 +221,16 @@ public class Login {
     /**
      * Reads data from the fields and writes the cookies
      */
-    public void writeCookies(){
+    public void writeCookies() {
         AbsLoginForm loginForm = getLoginForm();
-        boolean remember=loginForm.getRememberField().getValue();
+        boolean remember = loginForm.getRememberField().getValue();
         UserIF user = loginForm.getSelectedUser();
 
-        LibCookie.setCookie(getLoginKey(), user.getNickname(), expiryTime);
-        LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), expiryTime);
-        if(remember){
-            LibCookie.setCookie(getRememberKey(), "true", expiryTime);
-        }else{
+        LibCookie.setCookie(getLoginKey(), user.getNickname(), getLoginPath(), expiryTime);
+        LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), getLoginPath(), expiryTime);
+        if (remember) {
+            LibCookie.setCookie(getRememberKey(), "true", getLoginPath(), expiryTime);
+        } else {
             LibCookie.deleteCookie(getRememberKey());
         }
 
@@ -238,7 +240,7 @@ public class Login {
     /**
      * Reads the cookies and puts the data in the fields
      */
-    public void readCookies(){
+    public void readCookies() {
 
         String username = LibCookie.getCookieValue(getLoginKey());
         String encPass = LibCookie.getCookieValue(getPasswordKey());
@@ -260,20 +262,20 @@ public class Login {
     private void renewCookies() {
         Cookie cookie;
         cookie = LibCookie.getCookie(getLoginKey());
-        LibCookie.setCookie(getLoginKey(), cookie.getValue(), expiryTime);
+        LibCookie.setCookie(getLoginKey(), cookie.getValue(),getLoginPath(), expiryTime);
         cookie = LibCookie.getCookie(getPasswordKey());
-        LibCookie.setCookie(getPasswordKey(), cookie.getValue(), expiryTime);
+        LibCookie.setCookie(getPasswordKey(), cookie.getValue(),getLoginPath(), expiryTime);
         cookie = LibCookie.getCookie(getRememberKey());
-        LibCookie.setCookie(getRememberKey(), cookie.getValue(), expiryTime);
+        LibCookie.setCookie(getRememberKey(), cookie.getValue(),getLoginPath(), expiryTime);
     }
 
     /**
      * Delete all the cookies
      */
     private void deleteCookies() {
-        LibCookie.deleteCookie(getLoginKey());
-        LibCookie.deleteCookie(getPasswordKey());
-        LibCookie.deleteCookie(getRememberKey());
+        LibCookie.deleteCookie(getLoginKey(),getLoginPath());
+        LibCookie.deleteCookie(getPasswordKey(),getLoginPath());
+        LibCookie.deleteCookie(getRememberKey(),getLoginPath());
     }
 
 
@@ -290,9 +292,9 @@ public class Login {
 
         UserIF user = userFromNick(username);
 
-        if(user!=null){
-            if(user.validatePassword(clearPass)){
-                this.user=user;
+        if (user != null) {
+            if (user.validatePassword(clearPass)) {
+                this.user = user;
                 success = true;
             }
         }
@@ -317,9 +319,10 @@ public class Login {
 
     /**
      * Retrieves the user from a given username
+     *
      * @return the user corresponding to a given username
      */
-    protected UserIF userFromNick(String username){
+    protected UserIF userFromNick(String username) {
         Utente aUser = Utente.read(username);
         return aUser;
     }
@@ -362,6 +365,10 @@ public class Login {
     public void setCookiePrefix(String cookiePrefix) {
         this.cookiePrefix = cookiePrefix;
     }
+
+    protected String getLoginPath() {
+        return AlgosApp.COOKIES_PATH;
+    }// end of method
 
     private String getLoginKey() {
         String name = "";
@@ -449,17 +456,17 @@ public class Login {
     }
 
 
-
     /**
      * Notifica i LoginListeners.
      * Esegue l'iterazione su una copia della ArrayList.
      * Inquesto modo chi viene notificato può aggiungere dei LoginListeners
      * senza causare una ConcurrentModificationException
+     *
      * @param e il LoginEvent
      */
-    private void fireLoginListeners(LoginEvent e){
+    private void fireLoginListeners(LoginEvent e) {
         if (loginListeners != null) {
-            ArrayList<LoginListener> listenersCopy = (ArrayList<LoginListener>)loginListeners.clone();
+            ArrayList<LoginListener> listenersCopy = (ArrayList<LoginListener>) loginListeners.clone();
             for (LoginListener listener : listenersCopy) {
                 listener.onUserLogin(e);
             }

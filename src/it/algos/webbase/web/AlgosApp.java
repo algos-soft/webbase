@@ -96,6 +96,11 @@ public abstract class AlgosApp {
      */
     public static String COMPANY_CODE = "";
     /**
+     * Path for the cookies.<br>
+     * Not final<br>
+     */
+    public static String COOKIES_PATH = "/";
+    /**
      * Null selection allowed in combobox.<br>
      * Not final<br>
      * Can be overwritten on local xxxBootStrap.contextInitialized() method
@@ -113,6 +118,7 @@ public abstract class AlgosApp {
      * Can be overwritten on local xxxApp class
      */
     public static boolean DISPLAY_TOOLTIPS = false;
+
     /**
      * Servlet context<br>
      * registered as soon as possible to make it available to every component

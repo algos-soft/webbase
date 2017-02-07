@@ -41,6 +41,7 @@ public class LibCookie {
      *                  A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits.
      *                  A zero value causes the cookie to be deleted.
      */
+    @Deprecated
     public static void setCookie(String key, String value, int expirySec) {
         setCookie(key, value, getPath(), expirySec);
     }
@@ -100,8 +101,19 @@ public class LibCookie {
      *
      * @param key the key
      */
+    @Deprecated
     public static void deleteCookie(String key) {
         setCookie(key, "", getPath(), 0);
+    }
+
+    /**
+     * Deletes a cookie in the browser.
+     * Uses the default path
+     *
+     * @param key the key
+     */
+    public static void deleteCookie(String key,String path) {
+        setCookie(key, "", path, 0);
     }
 
 
@@ -160,7 +172,7 @@ public class LibCookie {
      * @return the path for the cookie
      */
     private static String getPath() {
-        String path = "";
+        String path = "/";
         return path;
     }
 

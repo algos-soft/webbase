@@ -226,11 +226,6 @@ public class Login {
         boolean remember = loginForm.getRememberField().getValue();
         UserIF user = loginForm.getSelectedUser();
 
-
-        String alfa=   user.getEncryptedPassword();
-        String beta=   user.getPassword();
-
-
         LibCookie.setCookie(getLoginKey(), user.getNickname(), getLoginPath(), expiryTime);
         LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), getLoginPath(), expiryTime);
         if (remember) {

@@ -226,6 +226,11 @@ public class Login {
         boolean remember = loginForm.getRememberField().getValue();
         UserIF user = loginForm.getSelectedUser();
 
+
+        String alfa=   user.getEncryptedPassword();
+        String beta=   user.getPassword();
+
+
         LibCookie.setCookie(getLoginKey(), user.getNickname(), getLoginPath(), expiryTime);
         LibCookie.setCookie(getPasswordKey(), user.getEncryptedPassword(), getLoginPath(), expiryTime);
         if (remember) {
@@ -262,20 +267,20 @@ public class Login {
     private void renewCookies() {
         Cookie cookie;
         cookie = LibCookie.getCookie(getLoginKey());
-        LibCookie.setCookie(getLoginKey(), cookie.getValue(),getLoginPath(), expiryTime);
+        LibCookie.setCookie(getLoginKey(), cookie.getValue(), getLoginPath(), expiryTime);
         cookie = LibCookie.getCookie(getPasswordKey());
-        LibCookie.setCookie(getPasswordKey(), cookie.getValue(),getLoginPath(), expiryTime);
+        LibCookie.setCookie(getPasswordKey(), cookie.getValue(), getLoginPath(), expiryTime);
         cookie = LibCookie.getCookie(getRememberKey());
-        LibCookie.setCookie(getRememberKey(), cookie.getValue(),getLoginPath(), expiryTime);
+        LibCookie.setCookie(getRememberKey(), cookie.getValue(), getLoginPath(), expiryTime);
     }
 
     /**
      * Delete all the cookies
      */
     private void deleteCookies() {
-        LibCookie.deleteCookie(getLoginKey(),getLoginPath());
-        LibCookie.deleteCookie(getPasswordKey(),getLoginPath());
-        LibCookie.deleteCookie(getRememberKey(),getLoginPath());
+        LibCookie.deleteCookie(getLoginKey(), getLoginPath());
+        LibCookie.deleteCookie(getPasswordKey(), getLoginPath());
+        LibCookie.deleteCookie(getRememberKey(), getLoginPath());
     }
 
 

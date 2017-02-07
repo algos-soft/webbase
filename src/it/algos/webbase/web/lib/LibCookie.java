@@ -2,6 +2,7 @@ package it.algos.webbase.web.lib;
 
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.JavaScript;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.Cookie;
 import java.text.SimpleDateFormat;
@@ -65,8 +66,12 @@ public class LibCookie {
             // protects the value
             value = protect(value);
 
+            if (StringUtils.isEmpty(path)) {
+                path="/";
+            }// end of if cycle
+
             if (expirySec == 0) {
-                String cmd = String.format("document.cookie = '%s=; expires=Thu, 01 Jan 1970 00:00:01 GMT';", key);
+                String cmd = String.format("document.cookie = '%s=; path=%s; expires=Thu, 01 Jan 1970 00:00:01 GMT';", key,path);
                 js.execute(cmd);
                 return;
             }

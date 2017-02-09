@@ -124,8 +124,6 @@ public class LibCookie {
         // Fetch all cookies from the request
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
-        int a=87;
-        a=45;
         // Iterate to find cookie by its name
         if (name != null && cookies != null) {
             for (Cookie cookie : cookies) {

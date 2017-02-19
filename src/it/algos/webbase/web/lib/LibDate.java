@@ -1025,6 +1025,42 @@ public abstract class LibDate {
     }// end of static method
 
     /**
+     * Restituisce la data minore (più vecchia) delle due.
+     * <p>
+     * Esegue solo se le date sono valide (non nulle e non vuote) <br>
+     *
+     * @param dataUno   data da controllare
+     * @param dataDue   data da controllare
+     *
+     * @return data maggiore delle due
+     */
+    public static Date minore(Date dataUno, Date dataDue) {
+        if (isPrecedente(dataUno,dataDue)) {
+            return dataUno;
+        } else {
+            return dataDue;
+        }// end of if/else cycle
+    }// end of static method
+
+    /**
+     * Restituisce la data maggiore (più recente) delle due.
+     * <p>
+     * Esegue solo se le date sono valide (non nulle e non vuote) <br>
+     *
+     * @param dataUno   data da controllare
+     * @param dataDue   data da controllare
+     *
+     * @return data maggiore delle due
+     */
+    public static Date maggiore(Date dataUno, Date dataDue) {
+        if (isSuccessiva(dataUno,dataDue)) {
+            return dataUno;
+        } else {
+            return dataDue;
+        }// end of if/else cycle
+    }// end of static method
+
+    /**
      * Ritorna la data del primo giorno del mese relativo a una data fornita.
      * <p>
      *

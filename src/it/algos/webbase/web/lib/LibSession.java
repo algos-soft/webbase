@@ -12,6 +12,66 @@ import it.algos.webbase.web.login.UserIF;
 public abstract class LibSession {
 
     /**
+     * Recupera dalla sessione l'attributo developer
+     */
+    public static boolean isDeveloper() {
+        return isBool(Attribute.developer);
+    }// end of static method
+
+    /**
+     * Regola per la sessione corrente l'attributo developer
+     */
+    public static void setDeveloper(boolean status) {
+        setBool(Attribute.developer, status);
+    }// end of static method
+
+    /**
+     * Recupera dalla sessione l'attributo debug
+     */
+    public static boolean isDebug() {
+        return isBool(Attribute.debug);
+    }// end of static method
+
+    /**
+     * Regola per la sessione corrente l'attributo debug
+     */
+    public static void setDebug(boolean status) {
+        setBool(Attribute.debug, status);
+    }// end of static method
+
+
+    /**
+     * Recupera dalla sessione l'attributo login
+     */
+    public static Login getLogin() {
+        Login login = null;
+        Object value = null;
+        VaadinSession session = VaadinSession.getCurrent();
+
+        if (session != null) {
+            value = session.getAttribute(Attribute.login.toString());
+        }// fine del blocco if
+
+        if (value != null && value instanceof Login) {
+            login = (Login) value;
+        }// fine del blocco if
+
+        return login;
+    }// end of static method
+
+    /**
+     * Regola per la sessione corrente l'attributo login
+     */
+    public static void setLogin(Login login) {
+        VaadinSession sessione = VaadinSession.getCurrent();
+
+        if (sessione != null) {
+            sessione.setAttribute(Attribute.login.toString(), login);
+        }// fine del blocco if
+    }// end of static method
+
+
+    /**
      * Recupera dalla request l'attributo developer (se esiste)
      * Regola la variabile statica
      */
@@ -27,19 +87,6 @@ public abstract class LibSession {
         LibSession.checkBool(request, Attribute.debug);
     }// end of static method
 
-    /**
-     * Recupera dalla sessione l'attributo developer
-     */
-    public static boolean isDeveloper() {
-        return isBool(Attribute.developer);
-    }// end of static method
-
-    /**
-     * Regola per la sessione corrente l'attributo developer
-     */
-    public static void setDeveloper(boolean status) {
-        setBool(Attribute.developer, status);
-    }// end of static method
 
     /**
      * Recupera dalla sessione l'attributo admin
@@ -53,7 +100,7 @@ public abstract class LibSession {
             return true;
         }// end of if cycle
 
-       login = Login.getLogin();
+        login = Login.getLogin();
 
         if (login != null) {
             user = login.getUser();
@@ -72,19 +119,6 @@ public abstract class LibSession {
 //        setBool(Attribute.admin, status);
 //    }// end of static method
 
-    /**
-     * Recupera dalla sessione l'attributo debug
-     */
-    public static boolean isDebug() {
-        return isBool(Attribute.debug);
-    }// end of static method
-
-    /**
-     * Regola per la sessione corrente l'attributo debug
-     */
-    public static void setDebug(boolean status) {
-        setBool(Attribute.debug, status);
-    }// end of static method
 
 //    /**
 //     * Recupera dalla sessione l'attributo firstTime
@@ -153,7 +187,6 @@ public abstract class LibSession {
      * Regola lo specifico attributo
      */
     public static void setBool(Attribute attributo, boolean status) {
-        Object devObj = null;
         VaadinSession sessione = VaadinSession.getCurrent();
 
         if (attributo != null && sessione != null) {
@@ -199,7 +232,7 @@ public abstract class LibSession {
             value = session.getAttribute(name);
         }// fine del blocco if
 
-        return (value!=null);
+        return (value != null);
     }// end of static method
 
 
@@ -267,7 +300,7 @@ public abstract class LibSession {
     }// end of static method
 
     public enum Attribute {
-        developer, admin, debug, firstTime
+        developer, admin, debug, firstTime, login
     }// end of inner enumeration
 
 }// end of abstract static class

@@ -215,6 +215,7 @@ public class Login {
         for (LogoutListener l : logoutListeners) {
             l.onUserLogout(e);
         }
+        deleteCookies();//@todo aggiunta di gac 12.2.17
     }
 
 
@@ -370,7 +371,7 @@ public class Login {
         return AlgosApp.COOKIES_PATH;
     }// end of method
 
-    private String getLoginKey() {
+    protected String getLoginKey() {
         String name = "";
         if (!cookiePrefix.equals("")) {
             name += cookiePrefix + ".";
@@ -378,7 +379,7 @@ public class Login {
         return name += COOKIENAME_LOGIN;
     }// end of method
 
-    private String getPasswordKey() {
+    protected String getPasswordKey() {
         String name = "";
         if (!cookiePrefix.equals("")) {
             name += cookiePrefix + ".";
@@ -386,7 +387,7 @@ public class Login {
         return name += COOKIENAME_PASSWORD;
     }
 
-    private String getRememberKey() {
+    protected String getRememberKey() {
         String name = "";
         if (!cookiePrefix.equals("")) {
             name += cookiePrefix + ".";

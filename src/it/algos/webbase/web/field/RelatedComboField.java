@@ -23,6 +23,7 @@ import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("serial")
@@ -393,6 +394,12 @@ public class RelatedComboField extends ComboBox implements FieldInterface<Object
 
     }// end of method
 
+    /**
+     *
+     */
+    public List<?> getLista() {
+        return this.getFilteredOptions();
+    }// end of method
 
     public interface RecordEditedListener {
         /**

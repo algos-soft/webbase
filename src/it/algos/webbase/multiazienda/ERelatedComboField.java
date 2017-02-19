@@ -4,6 +4,8 @@ import com.vaadin.data.Container;
 import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.field.RelatedComboField;
 
+import java.util.List;
+
 @SuppressWarnings("serial")
 public class ERelatedComboField extends RelatedComboField {
 
@@ -66,5 +68,6 @@ public class ERelatedComboField extends RelatedComboField {
             return new EJPAContainer(getEntityClass(), getEntityManager());
         }// end of if/else cycle
     }// end of method
+
 
 }// end of class

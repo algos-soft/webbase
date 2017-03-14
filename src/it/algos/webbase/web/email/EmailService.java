@@ -1,5 +1,6 @@
 package it.algos.webbase.web.email;
 
+import it.algos.webbase.domain.log.Log;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
@@ -96,8 +97,14 @@ public class EmailService {
         }
 
         // send the email
-        email.send();
-        spedita = true;
+        try {
+            email.send();
+            spedita = true;
+            Log.debug("email", "email sent successfully to "+email.getToAddresses());
+        }catch (EmailException e){
+            Log.error("email", "error sending email to "+email.getToAddresses());
+            throw e;
+        }
 
         return spedita;
     }

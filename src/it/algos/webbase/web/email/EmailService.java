@@ -100,9 +100,9 @@ public class EmailService {
         try {
             email.send();
             spedita = true;
-            Log.debug("email", "email sent successfully to "+email.getToAddresses());
+            Log.debug("email", "email sent successfully");
         }catch (EmailException e){
-            Log.error("email", "error sending email to "+email.getToAddresses());
+            Log.error("email", "error sending email: " + e.getMessage());
             throw e;
         }
 

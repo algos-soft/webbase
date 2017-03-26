@@ -36,4 +36,11 @@ public class ExportManager extends ConfirmDialog {
 		return config;
 	}
 
+	public ExportConfiguration getConfig() {
+		return config;
+	}
+
+	public AbstractComponent getComp() {
+		return comp;
+	}
 }

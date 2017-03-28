@@ -118,7 +118,10 @@ public class ExportStreamSource implements StreamResource.StreamSource {
     }
 
     protected Row addRow(){
-        Row row = sheet.createRow(sheet.getLastRowNum());
+        int last=sheet.getLastRowNum();
+        sheet.shiftRows(last,last,1);
+        Row row = sheet.createRow(last+1);
+        int newLast=sheet.getLastRowNum();
         return row;
     }
 

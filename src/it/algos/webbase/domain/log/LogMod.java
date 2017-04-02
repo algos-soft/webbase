@@ -51,6 +51,27 @@ public class LogMod extends ModulePop {
     }// end of method
 
     /**
+     * Returns the form used to edit an item. <br>
+     * The concrete subclass must override for a specific Form.
+     *
+     * @return the Form
+     */
+    @Override
+    public ModuleForm createForm(Item item) {
+        return (new LogForm(item, this));
+    }// end of method
+
+    /**
+     * Create the Table Portal
+     *
+     * @return the TablePortal
+     */
+    @Override
+    public TablePortal createTablePortal() {
+        return new LogTablePortal(this);
+    }// end of method
+
+    /**
      * Crea i campi visibili nella lista (table)
      * <p>
      * Come default spazzola tutti i campi della Entity <br>
@@ -85,26 +106,6 @@ public class LogMod extends ModulePop {
         return new Attribute[]{Log_.livello, Log_.code, Log_.descrizione};
     }// end of method
 
-    /**
-     * Returns the form used to edit an item. <br>
-     * The concrete subclass must override for a specific Form.
-     *
-     * @return the Form
-     */
-    @Override
-    public ModuleForm createForm(Item item) {
-        return (new LogForm(item, this));
-    }// end of method
-
-    /**
-     * Create the Table Portal
-     *
-     * @return the TablePortal
-     */
-    @Override
-    public TablePortal createTablePortal() {
-        return new LogTablePortal(this);
-    }// end of method
 
 
 }// end of class

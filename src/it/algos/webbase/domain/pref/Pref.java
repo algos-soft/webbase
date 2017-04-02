@@ -80,6 +80,7 @@ public class Pref extends CompanyEntity {
     @Index
     private String codeCompanyUnico = "";
 
+
     //--tipo di dato memorizzato (obbligatorio)
     private PrefType tipo;
 

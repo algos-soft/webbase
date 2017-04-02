@@ -1,5 +1,7 @@
 package it.algos.webbase.web.field;
 
+import it.algos.webbase.web.search.SearchManager;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,5 +40,7 @@ public @interface AIField {
     String error() default "";
 
     boolean nullSelectionAllowed() default true;
+
+    SearchManager.SearchType search() default SearchManager.SearchType.CONTAINS;
 
 }// end of interface annotation

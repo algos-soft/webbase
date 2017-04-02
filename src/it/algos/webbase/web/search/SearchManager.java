@@ -10,6 +10,7 @@ import it.algos.webbase.web.field.*;
 import it.algos.webbase.web.field.TextField;
 import it.algos.webbase.web.form.AFormLayout;
 import it.algos.webbase.web.lib.Lib;
+import it.algos.webbase.web.lib.LibField;
 import it.algos.webbase.web.module.ModulePop;
 import it.algos.webbase.web.query.AQuery;
 
@@ -183,8 +184,12 @@ public class SearchManager extends ConfirmDialog {
             }
 
             if (clazz.equals(String.class)) {
-                filter = createStringFilter(attr, SearchType.CONTAINS);
-            }
+                if (LibField.getAnnotation(attr) != null) {
+                    filter = createStringFilter(attr, LibField.getAnnotation(attr).search());
+                } else {
+                    filter = createStringFilter(attr, SearchType.CONTAINS);
+                }// end of if/else cycle
+            }// end of if cycle
 
             if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
                 filter = createBoolFilter(attr);
@@ -253,7 +258,7 @@ public class SearchManager extends ConfirmDialog {
             if (!value.equals("")) {
                 switch (type) {
                     case STARTS_WITH:
-                        filter = new SimpleStringFilter(attr.getName(), value.toString(), true, true);
+                        filter = new SimpleStringFilter(attr.getName(), value.toString(), false, true);
                         break;
                     case CONTAINS:
                         filter = new SimpleStringFilter(attr.getName(), value.toString(), true, false);

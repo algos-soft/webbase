@@ -234,4 +234,25 @@ public class LibField {
 
     }// end of static method
 
+    /**
+     * Restituisce una singola Annotation.
+     *
+     * @param attr the metamodel Attribute
+     * @return valore dell'Annotation - Valore di default, se non la trova
+     */
+    public static AIField getAnnotation(Attribute attr) {
+        AIField fieldAnnotation = null;
+        java.lang.reflect.Field javaField = null;
+        Annotation annotation = null;
+
+        try { // prova ad eseguire il codice
+            javaField = attr.getJavaMember().getDeclaringClass().getDeclaredField(attr.getName());
+            annotation = javaField.getAnnotation(AIField.class);
+            fieldAnnotation = (AIField) annotation;
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return fieldAnnotation;
+    }// end of static method
+
 }// end of abstract static class

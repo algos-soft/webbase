@@ -1,19 +1,13 @@
 package it.algos.webbase.web.updown;
 
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.server.StreamResource;
-import it.algos.webbase.web.entity.BaseEntity;
-import it.algos.webbase.web.entity.BaseEntity_;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.importexport.ExportConfiguration;
 import it.algos.webbase.web.importexport.ExportProvider;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.vaadin.addons.lazyquerycontainer.LazyEntityContainer;
-import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
 
 import javax.persistence.EntityManager;
 import java.io.ByteArrayInputStream;
@@ -32,37 +26,51 @@ public class ExportStreamSource implements StreamResource.StreamSource {
     private ExportConfiguration config;
     private CellStyle dateCellStyle;
 
+    private Workbook workbook;
+    private Sheet sheet;
+
     public ExportStreamSource(ExportConfiguration config) {
         this.config=config;
     }
 
     @Override
     public InputStream getStream() {
-        ByteArrayInputStream is = null;
-        Workbook wb = createWorkbook();
 
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            wb.write(os);
-            is = new ByteArrayInputStream(os.toByteArray());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createWorkbook();
+
+        populateWorkbook();
+
+        InputStream is = writeWorkbook();
+
         return is;
+
     }
 
 
-    private Workbook createWorkbook() {
-        Workbook wb = new HSSFWorkbook();
+    /**
+     * Create and populate the workbook
+     */
+    protected Workbook createWorkbook() {
+        workbook = new HSSFWorkbook();
+        return workbook;
+    }
 
+
+    protected Sheet createSheet(){
+        sheet = workbook.createSheet(config.getDomainClass().getSimpleName());
+        return sheet;
+    }
+
+
+    protected void populateWorkbook(){
         // create Date cell style
-        dateCellStyle = wb.createCellStyle();
-        CreationHelper createHelper = wb.getCreationHelper();
+        dateCellStyle = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
         dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
         // create the worksheet and the header row
-        Sheet sheet = wb.createSheet(config.getDomainClass().getSimpleName());
-        createFirstRow(sheet); // create row 0
+        createSheet();
+        createFirstRow(); // create row 0
 
         // create or use the container
         EntityManager manager = EM.createEntityManager();
@@ -74,7 +82,7 @@ public class ExportStreamSource implements StreamResource.StreamSource {
             for (int i = 0; i < container.size(); i++) {
                 Object id = iCont.getIdByIndex(i);
                 Item item = iCont.getItem(id);
-                Row row = sheet.createRow((short) i + 1);
+                Row row = createRow(i + 1);
                 createCells(item, row);
             }
         }
@@ -88,7 +96,31 @@ public class ExportStreamSource implements StreamResource.StreamSource {
             sheet.autoSizeColumn(i);
         }
 
-        return wb;
+    }
+
+
+    protected InputStream writeWorkbook(){
+        ByteArrayInputStream is = null;
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            workbook.write(os);
+            is = new ByteArrayInputStream(os.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return is;
+    }
+
+
+    protected Row createRow(int i){
+        Row row = sheet.createRow((short) i + 1);
+        return row;
+    }
+
+    protected Row addRow(){
+        int last=sheet.getLastRowNum()+1;
+        Row row = sheet.createRow(last);
+        return row;
     }
 
 
@@ -96,7 +128,7 @@ public class ExportStreamSource implements StreamResource.StreamSource {
     /**
      * Create first row with titles
      */
-    private void createFirstRow(Sheet sheet) {
+    private void createFirstRow() {
         Row row = sheet.createRow((short) 0);
         CellStyle style = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
@@ -141,7 +173,7 @@ public class ExportStreamSource implements StreamResource.StreamSource {
         if(value!=null){
             if(value instanceof String){
                 cell.setCellType(Cell.CELL_TYPE_STRING);
-                cell.setCellValue((String)value);
+                cell.setCellValue((String) value);
                 return;
             }
             if(value instanceof Number){
@@ -178,5 +210,13 @@ public class ExportStreamSource implements StreamResource.StreamSource {
 
     public ExportConfiguration getExportConfiguration() {
         return config;
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
+    }
+
+    public Sheet getSheet() {
+        return sheet;
     }
 }

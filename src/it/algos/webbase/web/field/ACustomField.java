@@ -29,5 +29,4 @@ public abstract class ACustomField<T> extends CustomField<T> {
         getContent().setStyleName(style);
     }
 
-
 }

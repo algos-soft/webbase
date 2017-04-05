@@ -1114,6 +1114,33 @@ public abstract class ATable extends Table {
 
     }
 
+
+    /**
+     * Ritorna il filtro corrente della table come singolo filtro
+     * dato dalla combinazione di tutti i filtri presenti
+     */
+    public Filter getCurrentFilter() {
+
+        // crea una nuova lista con i filtri correnti della table
+        ArrayList<Filter> filterList = new ArrayList();
+        Collection<Filter> currFilters = getContainerFilters();
+        for (Filter f : currFilters) {
+            filterList.add(f);
+        }
+
+        // create a single Filter
+        Container.Filter singleFilter;
+        if (filterList.size() == 1) {
+            singleFilter = Iterables.get(filterList, 0);
+        } else {
+            Container.Filter[] aFilters = filterList.toArray(new Container.Filter[filterList.size()]);
+            singleFilter = new And(aFilters);
+        }
+
+        return singleFilter;
+    }
+
+
 //    protected void fire(TableEvent event) {
 //        for (TableListener l : listeners) {
 //            switch (event) {

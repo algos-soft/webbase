@@ -6,6 +6,7 @@ import com.vaadin.server.StreamResource;
 import it.algos.webbase.web.entity.EM;
 import it.algos.webbase.web.importexport.ExportConfiguration;
 import it.algos.webbase.web.importexport.ExportProvider;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
@@ -28,6 +29,8 @@ public class ExportStreamSource implements StreamResource.StreamSource {
 
     private Workbook workbook;
     private Sheet sheet;
+
+    int totRows;
 
     public ExportStreamSource(ExportConfiguration config) {
         this.config=config;
@@ -79,12 +82,17 @@ public class ExportStreamSource implements StreamResource.StreamSource {
         // iterate the container and create the rows
         if(container instanceof Container.Indexed){
             Container.Indexed iCont=(Container.Indexed)container;
-            for (int i = 0; i < container.size(); i++) {
+            int i;
+            for (i = 0; i < container.size(); i++) {
                 Object id = iCont.getIdByIndex(i);
                 Item item = iCont.getItem(id);
                 Row row = createRow(i + 1);
                 createCells(item, row);
             }
+
+            i++;
+            createTotalsRow(i+1);
+
         }
 
 
@@ -206,6 +214,45 @@ public class ExportStreamSource implements StreamResource.StreamSource {
             cell.setCellValue(value.toString());
 
         }
+    }
+
+
+
+    protected void createTotalsRow(int pos){
+        Row row = sheet.createRow((short) pos);
+        CellStyle style = sheet.getWorkbook().createCellStyle();
+        Font font = sheet.getWorkbook().createFont();
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        int columnIdx = 0;
+        for(String title : config.getExportProvider().getTitles()){
+            Cell cell = row.createCell(columnIdx);
+            cell.setCellStyle(style);
+            cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+
+            String columnName=toName(columnIdx+1);
+            String formula="SUM("+columnName+"1:"+columnName+"10)";
+            cell.setCellFormula(formula);
+            columnIdx++;
+        }
+    }
+
+
+    public static int toNumber(String name) {
+        int number = 0;
+        for (int i = 0; i < name.length(); i++) {
+            number = number * 26 + (name.charAt(i) - ('A' - 1));
+        }
+        return number;
+    }
+
+    public static String toName(int number) {
+        StringBuilder sb = new StringBuilder();
+        while (number-- > 0) {
+            sb.append((char)('A' + (number % 26)));
+            number /= 26;
+        }
+        return sb.reverse().toString();
     }
 
     public ExportConfiguration getExportConfiguration() {

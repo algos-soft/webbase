@@ -19,11 +19,22 @@ public abstract class ExportProvider {
      */
     public abstract String[] getTitles();
 
+
+    /**
+     * @return the indexes of the columns to totalize
+     * (0-based array)
+     */
+    public int[] getTotalizableColumns(){
+        return new int[0];
+    }
+
+
     /**
      * Returns the export values for one source item.
      * @param item the source item
      * @return the values to be exported
      */
     public abstract Object[] getExportValues(Item item);
+
 
 }

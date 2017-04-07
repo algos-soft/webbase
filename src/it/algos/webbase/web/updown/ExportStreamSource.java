@@ -83,18 +83,22 @@ public class ExportStreamSource implements StreamResource.StreamSource {
         if(container instanceof Container.Indexed){
             Container.Indexed iCont=(Container.Indexed)container;
             int i;
+            int rowIndex=0;
             for (i = 0; i < container.size(); i++) {
                 Object id = iCont.getIdByIndex(i);
                 Item item = iCont.getItem(id);
-                Row row = createRow(i + 1);
+                rowIndex=i+1;
+                Row row = sheet.createRow(rowIndex);
                 createCells(item, row);
             }
 
-            i++;
-            createTotalsRow(i+1);
+            // create the row for the totals
+            int[] totalizable=getExportConfiguration().getExportProvider().getTotalizableColumns();
+            if(totalizable!=null && totalizable.length>0){
+                createTotalsRow(rowIndex+1);
+            }
 
         }
-
 
         manager.close();
 
@@ -120,10 +124,10 @@ public class ExportStreamSource implements StreamResource.StreamSource {
     }
 
 
-    protected Row createRow(int i){
-        Row row = sheet.createRow((short) i + 1);
-        return row;
-    }
+//    protected Row createRow(int i){
+//        Row row = sheet.createRow((short) i + 1);
+//        return row;
+//    }
 
     protected Row addRow(){
         int last=sheet.getLastRowNum()+1;
@@ -218,27 +222,33 @@ public class ExportStreamSource implements StreamResource.StreamSource {
 
 
 
+    /**
+     * Create the row for the totals.
+     * Only the columns declared as totalizable by the exportProvider are totalized.
+     */
     protected void createTotalsRow(int pos){
-        Row row = sheet.createRow((short) pos);
+
+        int startRowIndex=2;
+        int endRowIndex=pos;
+
+        Row row = sheet.createRow(pos);
         CellStyle style = sheet.getWorkbook().createCellStyle();
         Font font = sheet.getWorkbook().createFont();
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         style.setFont(font);
-        int columnIdx = 0;
-        for(String title : config.getExportProvider().getTitles()){
+        int[] totalizables=getExportConfiguration().getExportProvider().getTotalizableColumns();
+        for(int columnIdx:totalizables){
             Cell cell = row.createCell(columnIdx);
             cell.setCellStyle(style);
             cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-
-            String columnName=toName(columnIdx+1);
-            String formula="SUM("+columnName+"1:"+columnName+"10)";
+            String columnName= colNumberToName(columnIdx+1);
+            String formula="SUM("+columnName+startRowIndex+":"+columnName+endRowIndex+")";
             cell.setCellFormula(formula);
-            columnIdx++;
         }
     }
 
 
-    public static int toNumber(String name) {
+    public static int colNameToNumber(String name) {
         int number = 0;
         for (int i = 0; i < name.length(); i++) {
             number = number * 26 + (name.charAt(i) - ('A' - 1));
@@ -246,7 +256,7 @@ public class ExportStreamSource implements StreamResource.StreamSource {
         return number;
     }
 
-    public static String toName(int number) {
+    public static String colNumberToName(int number) {
         StringBuilder sb = new StringBuilder();
         while (number-- > 0) {
             sb.append((char)('A' + (number % 26)));

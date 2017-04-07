@@ -64,7 +64,7 @@ public class TableToolbar extends Toolbar implements ATable.SelectionChangedList
 
 
     public void setCreateButtonVisible(boolean visible){
-        setButtonVisible(itemSelect, visible);
+        setButtonVisible(itemCreate, visible);
     }
 
     public void setEditButtonVisible(boolean visible){

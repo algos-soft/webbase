@@ -1,5 +1,6 @@
 package it.algos.webbase.web.search;
 
+import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.*;
 import com.vaadin.ui.DateField;
@@ -258,7 +259,7 @@ public class SearchManager extends ConfirmDialog {
             if (!value.equals("")) {
                 switch (type) {
                     case STARTS_WITH:
-                        filter = new SimpleStringFilter(attr.getName(), value.toString(), false, true);
+                        filter =  new Like(attr.getName(), value.toString()+"%",true);
                         break;
                     case CONTAINS:
                         filter = new SimpleStringFilter(attr.getName(), value.toString(), true, false);

@@ -1,5 +1,6 @@
 package it.algos.webbase.web.search;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.*;
@@ -173,7 +174,7 @@ public class SearchManager extends ConfirmDialog {
      * @param attr l'attribute per recuperare il field dalla mappa
      * @return il filtro creato
      */
-    private Filter createFilter(Attribute attr) {
+    protected Filter createFilter(Attribute attr) {
         Filter filter = null;
         Class clazz;
 
@@ -200,13 +201,15 @@ public class SearchManager extends ConfirmDialog {
                 filter = createIntegerFilter(attr);
             }
 
+            if (clazz.equals(Date.class)) {
+                filter = createDateFilter(attr);
+            }
+
             // altre classi sono di difficile interpretazione a livello generale
             // e vanno gestite nelo specifico
             if (clazz.equals(BigDecimal.class)) {
             }
 
-            if (clazz.equals(Date.class)) {
-            }
 
         }
 
@@ -330,6 +333,34 @@ public class SearchManager extends ConfirmDialog {
         }
         return filter;
     }
+
+    /**
+     * Create a filter for Date searches.
+     *
+     * @param attr the StaticMetamodel attribute
+     */
+    protected Filter createDateFilter(Attribute attr) {
+        Field field = getFieldMap().get(attr);
+        return createDateFilter(field, attr);
+    }// end of method
+
+    /**
+     * Create a filter for Date searches.
+     *
+     * @param field the field containing the Date value
+     * @param attr  the StaticMetamodel attribute
+     */
+    protected Filter createDateFilter(Field field, Attribute attr) {
+        Container.Filter filter = null;
+        Object value = field.getValue();
+        Date dateVal = Lib.getDate(value);
+
+        if (dateVal != null) {
+            filter = new Compare.Equal(attr.getName(), dateVal);
+        }// end of if cycle
+
+        return filter;
+    }// end of method
 
     /**
      * Create a filter for Combo Popup searches.

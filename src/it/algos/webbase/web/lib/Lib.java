@@ -88,6 +88,26 @@ public abstract class Lib {
     }// end of static method
 
 
+    /**
+     * Tries to convert an Object in Date.
+     *
+     * @param obj to convert
+     * @return the corresponding date
+     */
+    public static Date getDate(Object obj) {
+        Date date = null;
+
+        if (obj == null) {
+            return null;
+        }// end of if cycle
+
+        if (obj instanceof Date) {
+            date = (Date) obj;
+        }// end of if cycle
+
+        return date;
+    }// end of static method
+
 
     /**
      * Tries to convert an Object in BigDecimal.

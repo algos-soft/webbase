@@ -32,7 +32,7 @@ import com.vaadin.data.util.filter.Compare;
 @SuppressWarnings("serial")
 public class SearchManager extends ConfirmDialog {
 
-    private ModulePop module;
+    protected ModulePop module;
     @SuppressWarnings("rawtypes")
     private LinkedHashMap<Attribute, Field> fieldMap;
 
@@ -579,6 +579,42 @@ public class SearchManager extends ConfirmDialog {
 
         super.onConfirm();
     }
+
+
+    protected Attribute getAttr(String fieldName) {
+        Attribute attribute = null;
+        ArrayList<Attribute<?, ?>> lista = module.getAttributesList();
+
+        for (Attribute attr : lista) {
+            if (attr.getName().equals(fieldName)) {
+                attribute = attr;
+            }// end of if cycle
+        }// end of for cycle
+
+        return attribute;
+    }// end of constructor
+
+    protected Field getField(String fieldName) {
+        Field field = null;
+        Attribute attr = getAttr(fieldName);
+
+        if (attr != null) {
+            field = getField(attr);
+        }// end of if cycle
+
+        return field;
+    }// end of constructor
+
+    protected Object getFieldValue(String fieldName) {
+        Object value = null;
+        Field field = getField(fieldName);
+
+        if (field != null) {
+            value = field.getValue();
+        }// end of if cycle
+
+        return value;
+    }// end of constructor
 
     /**
      * Enum for search types

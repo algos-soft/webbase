@@ -686,6 +686,17 @@ public abstract class LibDate {
     }// end of static method
 
     /**
+     * Costruisce la data per il 1° gennaio dell'anno corrente.
+     * <p>
+     *
+     * @return primo gennaio dell'anno
+     */
+    public static Date getPrimoGennaio() {
+        return creaData(1, 1, LibDate.getYear());
+    }// end of static method
+
+
+    /**
      * Costruisce la data per il 1° gennaio dell'anno indicato.
      * <p>
      *

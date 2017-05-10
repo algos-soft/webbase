@@ -262,7 +262,7 @@ public class SearchManager extends ConfirmDialog {
             if (!value.equals("")) {
                 switch (type) {
                     case STARTS_WITH:
-                        filter =  new Like(attr.getName(), value.toString()+"%",true);
+                        filter = new Like(attr.getName(), value.toString() + "%", true);
                         break;
                     case CONTAINS:
                         filter = new SimpleStringFilter(attr.getName(), value.toString(), true, false);
@@ -438,16 +438,18 @@ public class SearchManager extends ConfirmDialog {
     }
 
     /**
+     * Create and add a field for each property declared for this search
+     * <p>
      * Crea e aggiunge i campi.
-     * <p>
      * Implementazione di default nella superclasse. <br>
-     * I campi vengono recuperati dal Modello. <br>
+     * I campi vengono recuperati dal Modello (di default) <br>
      * I campi vengono creati del tipo grafico previsto nella Entity. <br>
-     * Se si vuole aggiungere un campo (solo nel search e non nel Modello), usare il metodo sovrascritto nella
-     * sottoclasse richiamando prima il metodo della superclasse.
+     * Se si vuole aggiungere un campo (solo nel search e non nel Modello),
+     * usare il metodo sovrascritto nella sottoclasse
+     * invocando prima (o dopo) il metodo della superclasse.
      * <p>
-     * Per sovrascrivere completamente questo metodo, creare i campi, aggiungerli alla mappa con addField() e
-     * aggiungerli al layout passato nei parametri.
+     * Per sovrascrivere completamente questo metodo, creare i campi,
+     * aggiungerli alla mappa con addField() e aggiungerli al layout passato nei parametri.
      * <code>
      * Field field = new TextField("cognome");
      * addField(Insegnante_.cognome.getName(), field);
@@ -460,14 +462,13 @@ public class SearchManager extends ConfirmDialog {
         Field field = null;
 
         if (module != null) {
-            attributes = module.getFieldsSearch();
+            attributes = getAttributesList();
             if (attributes != null) {
                 // create a field for each attribute
                 // and add it to the UI
                 for (Attribute<?, ?> attr : attributes) {
                     field = creaField(attr);
                     if (field != null) {
-//						addField(attr.getName(), field);
                         addField(attr, field);
                         layout.addComponent(field);
                     }
@@ -475,7 +476,18 @@ public class SearchManager extends ConfirmDialog {
             }
         }
 
-    }
+    }// end of method
+
+    /**
+     * Attributes used in this search
+     * Di default prende dal modulo
+     * Può essere sovrascritto se c'è un Search specifico
+     *
+     * @return a list containing all the attributes used in this search
+     */
+    protected Attribute<?, ?>[] getAttributesList() {
+        return this.module.getFieldsSearch();
+    }// end of method
 
 
     /**
@@ -536,8 +548,11 @@ public class SearchManager extends ConfirmDialog {
      * @return the combo field
      */
     protected RelatedComboField createCombo(Class clazz) {
-        RelatedComboField field = new RelatedComboField(clazz);
-        return field;
+        if (BaseEntity.class.isAssignableFrom(clazz)) {
+            return new RelatedComboField(clazz);
+        } else {
+            return null;
+        }// end of if/else cycle
     }
 
     /**

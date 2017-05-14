@@ -65,6 +65,9 @@ public class BaseCompany extends BaseEntity {
     // persona di riferimento (facoltativo)
     private String contact = "";
 
+    //--eventuali note (facoltativo)
+    private String note = "";
+
     private String contractType = "";
 
     @Temporal(TemporalType.DATE)
@@ -400,6 +403,14 @@ public class BaseCompany extends BaseEntity {
      */
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     /**

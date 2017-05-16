@@ -6,6 +6,8 @@ import it.algos.webbase.multiazienda.CompanySessionLib;
 import it.algos.webbase.web.entity.BaseEntity;
 import it.algos.webbase.web.entity.DefaultSort;
 import it.algos.webbase.web.entity.EM;
+import it.algos.webbase.web.field.AIField;
+import it.algos.webbase.web.field.AFType;
 import it.algos.webbase.web.query.AQuery;
 import it.algos.webbase.web.query.EntityQuery;
 import org.eclipse.persistence.annotations.Index;
@@ -49,6 +51,7 @@ public class BaseCompany extends BaseEntity {
 
     //--ragione sociale o descrizione della company (visibile - obbligatoria)
     @NotEmpty
+    @AIField(type = AFType.text, required = true, width = "27em", caption = "Nome", prompt = "nome", help = "Descrizione completa", error = "Manca il nome")
     private String name = "";
 
     @Email

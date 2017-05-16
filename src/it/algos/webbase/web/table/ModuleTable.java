@@ -31,6 +31,19 @@ public class ModuleTable extends ATable{
     }
 
     /**
+     * Creates the container whit the filter
+     * <p>
+     *
+     * @return the container
+     */
+    public Container createContainer(final Filter filter) {
+        LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), getContainerPageSize(), BaseEntity_.id.getName(), true, true, true);
+        entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
+        entityContainer.addContainerFilter(filter);
+        return entityContainer;
+    }// end of method
+
+    /**
      * Creates the container
      * <p>
      * The id property is added here by default.
@@ -41,7 +54,7 @@ public class ModuleTable extends ATable{
         LazyEntityContainer entityContainer = new LazyEntityContainer<BaseEntity>(getEntityManager(), getEntityClass(), getContainerPageSize(), BaseEntity_.id.getName(), true, true, true);
         entityContainer.addContainerProperty(BaseEntity_.id.getName(), Long.class, 0L, true, true);
         return entityContainer;
-    }
+    }// end of method
 
 
     /**

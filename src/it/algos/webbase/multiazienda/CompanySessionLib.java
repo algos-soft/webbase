@@ -26,7 +26,23 @@ public class CompanySessionLib {
         }// fine del blocco if
 
         return company;
-    }
+    }// end of method
+
+    /**
+     * Ritorna il companyCode della company corrente.
+     *
+     * @return il companyCode corrente
+     */
+    public static String getCompanyCode() {
+        String companyCode = "";
+        BaseCompany company = getCompany();
+
+        if (company != null) {
+            companyCode = company.getCompanyCode();
+        }// end of if cycle
+
+        return companyCode;
+    }// end of method
 
     public static void setCompany(BaseCompany company) {
         LibSession.setAttribute(KEY_COMPANY, company);

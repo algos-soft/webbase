@@ -55,20 +55,24 @@ public class BaseCompany extends BaseEntity {
     private String name = "";
 
     @Email
+    @AIField(type = AFType.text, width = "20em", caption = "Mail", prompt = "pinco.pallino@mail.com", help = "Indirizzo di posta elettronica.")
     private String email = "";
 
     private String username = "";
 
     private String password = "";
 
+    @AIField(type = AFType.text, width = "27em", caption = "Indirizzo", help = "Indirizzo postale.")
     private String address1 = "";
 
     private String address2 = "";
 
     // persona di riferimento (facoltativo)
+    @AIField(type = AFType.text, width = "20em", caption = "Riferimento", help = "Persona di riferimento.")
     private String contact = "";
 
     //--eventuali note (facoltativo)
+    @AIField(type = AFType.text, width = "27em", caption = "Note", help = "Eventuali note aggiuntive.")
     private String note = "";
 
     private String contractType = "";

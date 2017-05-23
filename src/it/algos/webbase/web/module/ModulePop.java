@@ -66,9 +66,6 @@ public abstract class ModulePop extends Module {
     protected MenuBar.MenuItem menuItem;
 
 
-    // if the window is modal
-    private boolean modalWindow = true;
-
     // titolo del dialogo nuovo
     private String titoloNew;
     // titolo del dialogo di modifica
@@ -81,6 +78,8 @@ public abstract class ModulePop extends Module {
     private Resource menuIcon = null;
     private ArrayList<RecordSavedListener> recordSavedListeners = new ArrayList<>();
     private ArrayList<RecordDeletedListener> recordDeletedListeners = new ArrayList<>();
+
+    private Window window;
 
     /**
      * Costruttore minimo
@@ -130,12 +129,20 @@ public abstract class ModulePop extends Module {
             this.menuLabel = entity.getSimpleName();
         } else {
             this.menuLabel = menuLabel;
-        }// end of if/else cycle
+        }
+
         if (menuIcon == null) {
             this.menuIcon = ICONA_STANDARD;
         } else {
             this.menuIcon = menuIcon;
-        }// end of if/else cycle
+        }
+
+        // create the window
+        window = new Window();
+        window.setResizable(true);
+        window.setModal(true);
+        window.setHeightUndefined();
+
 
         if (entity != null) {
             this.entityClass = (Class<BaseEntity>) entity;
@@ -499,11 +506,12 @@ public abstract class ModulePop extends Module {
 
         if (form != null) {
 
-            final Window window = new Window();
+//            final Window window = new Window();
+//            window.setResizable(false);
+//            window.setHeightUndefined();
+
             window.setCaption(caption);
             window.setContent(form);
-            window.setResizable(false);
-            window.setHeightUndefined();
 
 
 //            // fisso l'altezza della finestra perché se è undefined
@@ -517,9 +525,6 @@ public abstract class ModulePop extends Module {
 //            window.setHeight("90%");
 
 
-            if (this.isModalWindow()) {
-                window.setModal(true);
-            }
 
             // make a copy of the original entity, in case it is modified
             final BaseEntity origEntity = cloneEntity(form.getEntity());
@@ -1052,13 +1057,10 @@ public abstract class ModulePop extends Module {
         this.menuItem = menuItem;
     }//end of setter method
 
-    public boolean isModalWindow() {
-        return modalWindow;
-    }// end of getter method
 
-    public void setModalWindow(boolean modalWindow) {
-        this.modalWindow = modalWindow;
-    }//end of setter method
+    public Window getWindow() {
+        return window;
+    }
 
     public EntityManager getEntityManager() {
         return entityManager;

@@ -51,12 +51,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-sass-compiler/jars/vaadin-sass-compiler-0.9.13.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.w3c.css/sac/jars/sac-1.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.flute/flute/jars/flute-1.3.0.gg2.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.yahoo.platform.yui/yuicompressor/jars/yuicompressor-2.4.8.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/rhino/js/jars/js-1.7R2.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.streamhtmlparser/streamhtmlparser-jsilver/jars/streamhtmlparser-jsilver-0.0.10.vaadin1.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.google/guava/jars/guava-16.0.1.vaadin1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.jsoup/jsoup/jars/jsoup-1.8.3.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/bundles/atmosphere-runtime-2.2.7.vaadin1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.slf4j/vaadin-slf4j-jdk14/jars/vaadin-slf4j-jdk14-1.6.1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.addon/jpacontainer/jars/jpacontainer-3.2.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.persistence/eclipselink/jars/eclipselink-2.6.2.jar!/" />
@@ -116,12 +111,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.googlecode.json-simple/json-simple/jars/json-simple-1.1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.validation/validation-api/jars/validation-api-1.0.0.GA-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.servlet/javax.servlet-api/jars/javax.servlet-api-3.0.1.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/jars/vaadin-server-7.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/jars/vaadin-shared-7.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-themes/jars/vaadin-themes-7.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-push/jars/vaadin-push-7.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client-compiled/jars/vaadin-client-compiled-7.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/jars/vaadin-client-7.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.intellij/javac2/jars/javac2-7.0.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm-commons/jars/asm-commons-3.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm-tree/jars/asm-tree-3.0.jar!/" />
@@ -130,16 +119,20 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/jars/ant-1.7.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.7.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.jgoodies/forms/jars/forms-1.1-preview.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/jars/vaadin-server-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/jars/vaadin-shared-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-themes/jars/vaadin-themes-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-push/jars/vaadin-push-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/bundles/atmosphere-runtime-2.2.9.vaadin2.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client-compiled/jars/vaadin-client-compiled-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/jars/vaadin-client-7.7.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-elemental/jars/gwt-elemental-2.7.0.vaadin4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-user/jars/gwt-user-2.7.0.vaadin4.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-sass-compiler/javadocs/vaadin-sass-compiler-0.9.13-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.flute/flute/javadocs/flute-1.3.0.gg2-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.yahoo.platform.yui/yuicompressor/javadocs/yuicompressor-2.4.8-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/rhino/js/javadocs/js-1.7R2-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.streamhtmlparser/streamhtmlparser-jsilver/javadocs/streamhtmlparser-jsilver-0.0.10.vaadin1-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.google/guava/javadocs/guava-16.0.1.vaadin1-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.jsoup/jsoup/javadocs/jsoup-1.8.3-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/javadocs/atmosphere-runtime-2.2.7.vaadin1-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.slf4j/vaadin-slf4j-jdk14/javadocs/vaadin-slf4j-jdk14-1.6.1-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.addon/jpacontainer/javadocs/jpacontainer-3.2.0-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.persistence/eclipselink/javadocs/eclipselink-2.6.2-javadoc.jar!/" />
@@ -172,20 +165,18 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/commons-codec/commons-codec/javadocs/commons-codec-1.5-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.validation/validation-api/javadocs/validation-api-1.0.0.GA-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.servlet/javax.servlet-api/javadocs/javax.servlet-api-3.0.1-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/javadocs/vaadin-server-7.6.4-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/javadocs/vaadin-shared-7.6.4-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/javadocs/vaadin-client-7.6.4-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/javadocs/vaadin-server-7.7.6-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/javadocs/vaadin-shared-7.7.6-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/javadocs/atmosphere-runtime-2.2.9.vaadin2-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/javadocs/vaadin-client-7.7.6-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-elemental/javadocs/gwt-elemental-2.7.0.vaadin4-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-user/javadocs/gwt-user-2.7.0.vaadin4-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-sass-compiler/sources/vaadin-sass-compiler-0.9.13-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.w3c.css/sac/sources/sac-1.3-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.flute/flute/sources/flute-1.3.0.gg2-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.yahoo.platform.yui/yuicompressor/sources/yuicompressor-2.4.8-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/rhino/js/sources/js-1.7R2-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.streamhtmlparser/streamhtmlparser-jsilver/sources/streamhtmlparser-jsilver-0.0.10.vaadin1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.google/guava/sources/guava-16.0.1.vaadin1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.jsoup/jsoup/sources/jsoup-1.8.3-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/sources/atmosphere-runtime-2.2.7.vaadin1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.slf4j/vaadin-slf4j-jdk14/sources/vaadin-slf4j-jdk14-1.6.1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.addon/jpacontainer/sources/jpacontainer-3.2.0-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.persistence/eclipselink/sources/eclipselink-2.6.2-sources.jar!/" />
@@ -231,12 +222,15 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/com.googlecode.json-simple/json-simple/sources/json-simple-1.1-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.validation/validation-api/sources/validation-api-1.0.0.GA-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/javax.servlet/javax.servlet-api/sources/javax.servlet-api-3.0.1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.6.4-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.6.4-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.6.4-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/asm/asm/sources/asm-3.0-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/jdom/jdom/sources/jdom-1.0-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/sources/ant-1.7.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-server/sources/vaadin-server-7.7.6-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-shared/sources/vaadin-shared-7.7.6-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.atmosphere/atmosphere-runtime/sources/atmosphere-runtime-2.2.9.vaadin2-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin/vaadin-client/sources/vaadin-client-7.7.6-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-elemental/sources/gwt-elemental-2.7.0.vaadin4-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.vaadin.external.gwt/gwt-user/sources/gwt-user-2.7.0.vaadin4-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

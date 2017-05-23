@@ -1,7 +1,6 @@
 package it.algos.webbase.web.module;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
@@ -16,7 +15,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Window;
-import it.algos.webbase.domain.company.BaseCompany;
 import it.algos.webbase.web.AlgosApp;
 import it.algos.webbase.web.dialog.ConfirmDialog;
 import it.algos.webbase.web.entity.BaseEntity;
@@ -66,7 +64,11 @@ public abstract class ModulePop extends Module {
     protected Attribute<?, ?>[] fieldsSearch;
     // menuitem del modulo (serve nei menu)
     protected MenuBar.MenuItem menuItem;
-    private boolean modale = false;
+
+
+    // if the window is modal
+    private boolean modalWindow = true;
+
     // titolo del dialogo nuovo
     private String titoloNew;
     // titolo del dialogo di modifica
@@ -515,7 +517,7 @@ public abstract class ModulePop extends Module {
 //            window.setHeight("90%");
 
 
-            if (this.isModale()) {
+            if (this.isModalWindow()) {
                 window.setModal(true);
             }
 
@@ -1050,12 +1052,12 @@ public abstract class ModulePop extends Module {
         this.menuItem = menuItem;
     }//end of setter method
 
-    public boolean isModale() {
-        return modale;
+    public boolean isModalWindow() {
+        return modalWindow;
     }// end of getter method
 
-    public void setModale(boolean modale) {
-        this.modale = modale;
+    public void setModalWindow(boolean modalWindow) {
+        this.modalWindow = modalWindow;
     }//end of setter method
 
     public EntityManager getEntityManager() {

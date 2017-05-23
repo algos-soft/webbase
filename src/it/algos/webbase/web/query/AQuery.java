@@ -534,7 +534,15 @@ public abstract class AQuery {
     }// end of static method
 
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, Filter... filters) {
-        return getListStr(clazz, attr, asc, manager, new ArrayList<>(Arrays.asList(filters)));
+        return getListStr(clazz, attr, new SortProperty(attr, asc), manager, new ArrayList<>(Arrays.asList(filters)));
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
+        return getListStr(clazz, attr, new SortProperty(attr, asc), manager, filters);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, SortProperty sort, EntityManager manager, Filter... filters) {
+        return getListStr(clazz, attr, sort, manager, new ArrayList<>(Arrays.asList(filters)));
     }// end of static method
 
     /**
@@ -552,10 +560,9 @@ public abstract class AQuery {
      *
      * @return a list of founded values of the specified type, null if there are no entities
      */
-    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, EntityManager manager, ArrayList<Filter> filters) {
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, SortProperty sort, EntityManager manager, ArrayList<Filter> filters) {
         ArrayList<String> properties = new ArrayList<>();
         String value;
-        SortProperty sort;
         JPAContainer<BaseEntity> container;
         EntityItem<BaseEntity> item;
         EntityItemProperty property;
@@ -567,9 +574,6 @@ public abstract class AQuery {
             usaManagerLocale = true;
             manager = EM.createEntityManager();
         }// end of if cycle
-
-        // ordinamento
-        sort = new SortProperty(attr, asc);
 
         // create a read-only JPA container for a given domain class (eventually sorted) and filters
         container = AQuery.getContainerRead(clazz, sort, manager, filters);
@@ -593,6 +597,8 @@ public abstract class AQuery {
 
         return properties;
     }// end of static method
+
+
 
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {
         return getListInt(clazz, attr, true, (EntityManager) null, (Filter) null);

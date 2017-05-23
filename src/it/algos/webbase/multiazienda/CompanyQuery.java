@@ -596,21 +596,29 @@ public abstract class CompanyQuery {
         return getListStr(clazz, attr, true, company, manager);
     }// end of static method
 
-    /**
-     * Search for the values of a given property of the given Entity class
-     * Ordinate sul valore della property indicata
-     * Usa l'EntityManager passato come parametro
-     * Se il manager è nullo, costruisce al volo un manager standard (and close it)
-     * Se il manager è valido, lo usa (must be close by caller method)
-     *
-     * @param clazz   the Entity class
-     * @param attr    the searched attribute
-     * @param asc     ordinamento (ascendente o discendente)
-     * @param company da filtrare
-     * @param manager the EntityManager to use
-     * @return a list of founded values of the specified type
-     */
     public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, boolean asc, BaseCompany company, EntityManager manager) {
+        return getListStr(clazz, attr, new SortProperty(attr, asc), company, manager);
+    }// end of static method
+
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, SortProperty sort) {
+        return getListStr(clazz, attr, sort, CompanySessionLib.getCompany(), (EntityManager) null);
+    }// end of static method
+
+        /**
+          * Search for the values of a given property of the given Entity class
+          * Ordinate sul valore della property indicata
+          * Usa l'EntityManager passato come parametro
+          * Se il manager è nullo, costruisce al volo un manager standard (and close it)
+          * Se il manager è valido, lo usa (must be close by caller method)
+          *
+          * @param clazz   the Entity class
+          * @param attr    the searched attribute
+          * @param asc     ordinamento (ascendente o discendente)
+          * @param company da filtrare
+          * @param manager the EntityManager to use
+          * @return a list of founded values of the specified type
+          */
+    public static List<String> getListStr(Class<? extends BaseEntity> clazz, SingularAttribute attr, SortProperty sort, BaseCompany company, EntityManager manager) {
         Container.Filter filterCompany = null;
 
         // aggiunge il vincolo della Company, trasformato in filtro
@@ -618,8 +626,10 @@ public abstract class CompanyQuery {
             filterCompany = new Compare.Equal(CompanyEntity_.company.getName(), company);
         }// end of if cycle
 
-        return AQuery.getListStr(clazz, attr, asc, manager, filterCompany);
+        return AQuery.getListStr(clazz, attr,sort,manager,filterCompany);
     }// end of static method
+
+
 
 
     public static List<Integer> getListInt(Class<? extends BaseEntity> clazz, SingularAttribute attr) {

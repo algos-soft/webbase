@@ -467,12 +467,6 @@ public class SearchManager extends ConfirmDialog {
                 // create a field for each attribute
                 // and add it to the UI
                 for (Attribute<?, ?> attr : attributes) {
-                 String nome=   attr.getName();
-                    Object obj= attr.getDeclaringType();
-                    Object member= attr.getJavaMember();
-                    Object type= attr.getJavaType();
-                    Object pippo= attr.getPersistentAttributeType();
-                    Object classe= attr.getClass();
                     field = creaField(attr);
                     if (field != null) {
                         addField(attr, field);

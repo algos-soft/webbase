@@ -1,0 +1,27 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="webapp">
+    <output-path>$PROJECT_DIR$/../evento/webapp</output-path>
+    <root id="root">
+      <element id="directory" name="VAADIN">
+        <element id="dir-copy" path="$PROJECT_DIR$/../evento/evento/vaadin" />
+      </element>
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="webbase" />
+          <element id="module-output" name="evento" />
+          <element id="directory" name="META-INF">
+            <element id="file-copy" path="$PROJECT_DIR$/../evento/evento/persistence.xml" />
+          </element>
+        </element>
+        <element id="directory" name="data">
+          <element id="dir-copy" path="$PROJECT_DIR$/../evento/evento/data" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="IvyIDEA" module-name="webbase" />
+          <element id="library" level="module" name="IvyIDEA" module-name="evento" />
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/../evento/evento/web.xml" />
+      </element>
+    </root>
+  </artifact>
+</component>
